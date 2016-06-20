@@ -1,0 +1,23 @@
+<!doctype>
+<html>
+  <head>
+    <script src="./dist/ldclient.js"></script>
+  </head>
+  <body>
+    <p>Value for <code>clientside</code>: <span class="result"></span></p>
+    
+    <script>
+      var user = {key: 'foobar.com'};
+      var client = window.ld = LDClient.initialize('ENVIRONMENT_ID', user);
+
+      function main() {
+        var value = client.toggle('clientside', false);
+        var el = document.querySelector('.result');
+        el.innerHTML = value.toString();
+        setTimeout(main, 1000);
+      }
+
+      main();
+    </script>
+  </body>
+</html>
