@@ -1,34 +1,16 @@
+var EventEmitter = require('./EventEmitter');
+var Stream = require('./Stream');
+var Requestor = require('./Requestor');
 var utils = require('./utils');
 
 var flags = {};
 var environment;
 var stream;
+var emitter;
 var hash;
 var user;
 var baseUrl;
 var streamUrl;
-
-function fetchFlagSettings() {
-  const data = utils.base64URLEncode(JSON.stringify(user));
-  const endpoint = [baseUrl, '/sdk/eval/', environment,  '/users/', data, hash ? '?h=' + hash : ''].join('');
-
-  var xhr = new XMLHttpRequest();
-  
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      if (xhr.getResponseHeader('Content-type')) {
-        flags = JSON.parse(xhr.responseText);
-      }
-    }
-  };
-  
-  xhr.open('GET', endpoint);
-  xhr.send();
-}
-
-function handlePing(event) {
-  fetchFlagSettings();
-}
 
 function identify(user) {}
 
@@ -40,10 +22,50 @@ function toggle(key, defaultValue) {
   }
 }
 
-var clientInterface = {
+function connectStream(onPing) {
+  stream.connect(function() {
+    requestor.fetchFlagSettings(user, hash, function(err, settings) {
+      onPing(settings);
+    });
+  });
+}
+
+function updateSettings(settings) {
+  const changes = utils.modifications(flags, settings);
+  
+  // update store
+  flags = settings;
+  
+  for (var key in changes) {
+    emitter.emit('change:' + key, changes[key].current, changes[key].previous);
+  }
+
+  emitter.emit('change', utils.clone(flags));
+}
+
+var changeEvent = 'change';
+
+function on(event, handler, context) {
+  if (event.substr(0, changeEvent.length) === changeEvent) {
+    if (!stream.isConnected()) {
+      connectStream(updateSettings);
+    }
+    emitter.on.apply(emitter, [event, handler, context]);
+  } else {
+    emitter.on.apply(emitter, Array.prototype.slice.call(arguments));
+  }
+}
+
+function off() {
+  emitter.off.apply(emitter, Array.prototype.slice.call(arguments));
+}
+
+var client = {
   identify: identify,
   toggle: toggle,
-  variation: toggle
+  variation: toggle,
+  on: on,
+  off: off
 };
 
 function initialize(env, u, options) {
@@ -54,11 +76,22 @@ function initialize(env, u, options) {
   hash = options.hash;
   baseUrl = options.baseUrl || 'https://app.launchdarkly.com';
   streamUrl = options.streamUrl || 'https://stream.launchdarkly.com';
-
-  stream = new EventSource(streamUrl + '/ping/' + environment);
-  stream.addEventListener('ping', handlePing);
+  stream = Stream(streamUrl, environment);
+  emitter = EventEmitter();
+  requestor = Requestor(baseUrl, environment);
   
-  return clientInterface;
+  if (options.bootstrap) {
+    // Emitting the event here will happen before the consumer
+    // can register a listener, so defer to next tick.
+    setTimeout(function() { emitter.emit('ready') }, 0);
+  } else {
+    requestor.fetchFlagSettings(user, hash, function(err, settings) {
+      flags = settings;
+      emitter.emit('ready');
+    });
+  }
+  
+  return client;
 }
 
 module.exports = {

@@ -5,6 +5,30 @@ function fromBase64(base64string) {
     .replace(/\//g, '_');
 }
 
-exports.base64URLEncode = function(stringOrBuffer, encoding) {
+function base64URLEncode(stringOrBuffer, encoding) {
   return fromBase64(Buffer(stringOrBuffer, encoding).toString('base64'));
 }
+
+function clone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+function modifications(oldObj, newObj) {
+  var mods = {};
+  
+  for (var prop in oldObj) {
+    if (oldObj.hasOwnProperty(prop)) {
+      if (newObj[prop] !== oldObj[prop]) {
+        mods[prop] = {previous: oldObj[prop], current: newObj[prop]};
+      }
+    }
+  }
+  
+  return mods;
+}
+
+module.exports = {
+  base64URLEncode: base64URLEncode,
+  clone: clone,
+  modifications: modifications
+};

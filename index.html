@@ -1,27 +1,51 @@
 <!doctype>
 <html>
   <head>
+    <meta charset="utf-8">
     <script src="./dist/ldclient.js"></script>
   </head>
   <body>
-    <p>Value for <code>clientside</code>: <span class="result"></span></p>
+    <h1>Settings</h1>
+    <ul>
+      <li><code>client-side-flag</code>: <span class="client-side-flag">initializing…</span></li>
+      <li><code>another-client-side</code>: <span class="another-client-side">initializing…</span></li>
+    </ul>
     
     <script>
       var user = {key: 'foobar.com'};
       var client = window.ld = LDClient.initialize('569f514183f2164430000004', user, {
         bootstrap: {
-          'client-side-flag': true
+          'client-side-flag': false,
+          'another-client-side': false
         },
         hash: 'c31e052b7b474e6e5f0c182144907e6fb6e55f20f5e7bc41b0b61624b16b5316',
         baseUrl: 'http://dockerhost',
         streamUrl: 'http://dockerhost:7999'
       });
-
-      function main() {
-        var value = client.toggle('client-side-flag', false);
-        var el = document.querySelector('.result');
+      
+      function render(key) {
+        var value = client.toggle(key, false);
+        var el = document.querySelector('.' + key);
         el.innerHTML = value.toString();
-        setTimeout(main, 1000);
+      }
+      
+      client.on('ready', function() {
+        console.log('client is ready');
+      });
+      
+      client.on('change', function(settings) {
+        console.log('flags changed:', settings);
+      });
+      
+      client.on('change:another-client-side', function(value, previous) {
+        console.log('another-client-side changed:', value, '(' + previous + ')');
+        render('another-client-side');
+      });
+      
+      function main() {
+        render('client-side-flag');
+        render('another-client-side');
+        setTimeout(main, 2000);
       }
 
       main();
