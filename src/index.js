@@ -1,3 +1,5 @@
+var utils = require('./utils');
+
 var flags = {};
 var environment;
 var stream;
@@ -7,8 +9,8 @@ var baseUrl;
 var streamUrl;
 
 function fetchFlagSettings() {
-  const data = encodeURIComponent(base64url(JSON.stringify(user)));
-  const endpoint = [baseUrl, '/sdk/eval/', environment,  '/users/', data, hash ? "?h=" + encodeURIComponent(hash) : ""].join('');
+  const data = encodeURIComponent(utils.base64URLEncode(JSON.stringify(user)));
+  const endpoint = [baseUrl, '/sdk/eval/', environment,  '/users/', data, hash ? '?h=' + hash : ''].join('');
 
   var xhr = new XMLHttpRequest();
   
@@ -62,16 +64,3 @@ function initialize(env, u, options) {
 module.exports = {
   initialize
 };
-
-function fromBase64(base64string) {
-  return (
-    base64string
-      .replace(/=/g, '')
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-  );
-}
-
-function base64url(stringOrBuffer, encoding) {
-  return fromBase64(Buffer(stringOrBuffer, encoding).toString('base64'));
-}
