@@ -9,10 +9,10 @@
     "analytics",
     "client"
   ],
-  "main": "index.js",
+  "main": "src",
   "scripts": {
-    "build": "browserify index.js --standalone LDClient -o dist/ldclient.js",
-    "watch": "watchify index.js --debug --verbose --standalone LDClient -o dist/ldclient.js"
+    "build": "browserify src/index.js --standalone LDClient -o dist/ldclient.js",
+    "watch": "watchify src/index.js --debug --verbose --standalone LDClient -o dist/ldclient.js"
   },
   "dependencies": {
     "browserify": "13.0.1",
