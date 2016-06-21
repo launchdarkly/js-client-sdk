@@ -16,15 +16,15 @@
       var client = window.ld = LDClient.initialize('569f514183f2164430000004', user, {
         bootstrap: {
           'client-side-flag': false,
-          'another-client-side': false
+          'another-client-side': 'def'
         },
         hash: 'c31e052b7b474e6e5f0c182144907e6fb6e55f20f5e7bc41b0b61624b16b5316',
         baseUrl: 'http://dockerhost',
         streamUrl: 'http://dockerhost:7999'
       });
       
-      function render(key) {
-        var value = client.toggle(key, false);
+      function render(key, defaultValue) {
+        var value = client.toggle(key, defaultValue);
         var el = document.querySelector('.' + key);
         el.innerHTML = value.toString();
       }
@@ -43,8 +43,8 @@
       });
       
       function main() {
-        render('client-side-flag');
-        render('another-client-side');
+        render('client-side-flag', false);
+        render('another-client-side', 'def');
         setTimeout(main, 2000);
       }
 
