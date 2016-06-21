@@ -9,7 +9,7 @@ var baseUrl;
 var streamUrl;
 
 function fetchFlagSettings() {
-  const data = encodeURIComponent(utils.base64URLEncode(JSON.stringify(user)));
+  const data = utils.base64URLEncode(JSON.stringify(user));
   const endpoint = [baseUrl, '/sdk/eval/', environment,  '/users/', data, hash ? '?h=' + hash : ''].join('');
 
   var xhr = new XMLHttpRequest();
@@ -47,13 +47,13 @@ var clientInterface = {
 };
 
 function initialize(env, u, options) {
-  options = options || {};  
+  options = options || {};
   environment = env;
   user = u;
   flags = options.bootstrap || {};
   hash = options.hash;
-  baseUrl = options.baseUrl || `https://app.launchdarkly.com`;
-  streamUrl = options.streamUrl || `https://stream.launchdarkly.com`;
+  baseUrl = options.baseUrl || 'https://app.launchdarkly.com';
+  streamUrl = options.streamUrl || 'https://stream.launchdarkly.com';
 
   stream = new EventSource(streamUrl + '/ping/' + environment);
   stream.addEventListener('ping', handlePing);
@@ -62,5 +62,5 @@ function initialize(env, u, options) {
 }
 
 module.exports = {
-  initialize
+  initialize: initialize
 };

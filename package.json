@@ -11,11 +11,14 @@
   ],
   "main": "src",
   "scripts": {
-    "build": "browserify src/index.js --standalone LDClient -o dist/ldclient.js",
+    "build-dev": "browserify src/index.js --standalone LDClient -o dist/ldclient.js",
+    "build-min": "browserify src/index.js --standalone LDClient | uglifyjs > dist/ldclient.min.js",
+    "build": "npm run build-dev && npm run build-min",
     "watch": "watchify src/index.js --debug --verbose --standalone LDClient -o dist/ldclient.js"
   },
   "dependencies": {
     "browserify": "13.0.1",
+    "uglify-js": "2.6.3",
     "watchify": "3.7.0"
   }
 }
