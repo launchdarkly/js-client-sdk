@@ -3,10 +3,12 @@ var environment;
 var stream;
 var hash;
 var user;
+var baseUrl;
+var streamUrl;
 
 function fetchFlagSettings() {
   const data = encodeURIComponent(base64url(JSON.stringify(user)));
-  const endpoint = ['http://dockerhost/sdk', '/eval/', environment,  '/users/', data, hash ? "?h=" + encodeURIComponent(hash) : ""].join('');
+  const endpoint = [baseUrl, '/sdk/eval/', environment,  '/users/', data, hash ? "?h=" + encodeURIComponent(hash) : ""].join('');
 
   var xhr = new XMLHttpRequest();
   
@@ -48,8 +50,10 @@ function initialize(env, u, options) {
   user = u;
   flags = options.bootstrap || {};
   hash = options.hash;
+  baseUrl = options.baseUrl || `https://app.launchdarkly.com`;
+  streamUrl = options.streamUrl || `https://stream.launchdarkly.com`;
 
-  stream = new EventSource('http://dockerhost:7999/ping/' + environment);
+  stream = new EventSource(streamUrl + '/ping/' + environment);
   stream.addEventListener('ping', handlePing);
   
   return clientInterface;
