@@ -8,10 +8,17 @@
     
     <script>
       var user = {key: 'foobar.com'};
-      var client = window.ld = LDClient.initialize('569f514183f2164430000004', user);
+      var client = window.ld = LDClient.initialize('569f514183f2164430000004', user, {
+        bootstrap: {
+          'client-side-flag': true
+        },
+        hash: 'c31e052b7b474e6e5f0c182144907e6fb6e55f20f5e7bc41b0b61624b16b5316',
+        baseUrl: 'http://dockerhost',
+        streamUrl: 'http://dockerhost:7999'
+      });
 
       function main() {
-        var value = client.toggle('clientside', false);
+        var value = client.toggle('client-side-flag', false);
         var el = document.querySelector('.result');
         el.innerHTML = value.toString();
         setTimeout(main, 1000);
