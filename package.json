@@ -16,10 +16,23 @@
     "build-gzip": "browserify src/index.js --standalone LDClient | uglifyjs | gzip > dist/ldclient.min.js.gz",
     "build": "npm run build-dev && npm run build-min && npm run build-gzip",
     "watch": "watchify src/index.js --debug --verbose --standalone LDClient -o dist/ldclient.js",
-    "test": ""
+    "test": "karma start --single-run",
+    "test:watch": "karma start --auto-watch --reporters=dots"
   },
   "devDependencies": {
     "browserify": "13.0.1",
+    "chai": "3.5.0",
+    "karma": "0.13.22",
+    "karma-browserify": "5.0.5",
+    "karma-chai": "0.1.0",
+    "karma-mocha": "1.0.1",
+    "karma-mocha-reporter": "2.0.4",
+    "karma-phantomjs-launcher": "0.2.1",
+    "karma-phantomjs-shim": "1.1.2",
+    "karma-sinon": "1.0.5",
+    "mocha": "2.5.3",
+    "phantomjs": "1.9.18",
+    "sinon": "1.17.4",
     "uglify-js": "2.6.3",
     "watchify": "3.7.0"
   }
