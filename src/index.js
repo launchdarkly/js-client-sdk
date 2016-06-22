@@ -35,14 +35,18 @@ function connectStream(onPing) {
 
 function updateSettings(settings) {
   const changes = utils.modifications(flags, settings);
+  const keys = Object.keys(changes);
   
   flags = settings;
-  
-  for (var key in changes) {
-    emitter.emit(changeEvent + ':' + key, changes[key].current, changes[key].previous);
-  }
 
-  emitter.emit(changeEvent, utils.clone(flags));
+  if (keys.length > 0) {
+    keys.forEach(function(key) {
+      console.log('emitting change for', key);
+      emitter.emit(changeEvent + ':' + key, changes[key].current, changes[key].previous);
+    });
+
+    emitter.emit(changeEvent, utils.clone(flags));
+  }
 }
 
 function on(event, handler, context) {

@@ -39,7 +39,7 @@
       
       client.on('change:another-client-side', function(value, previous) {
         console.log('another-client-side changed:', value, '(' + previous + ')');
-        render('another-client-side');
+        render('another-client-side', 'def');
       });
       
       function main() {
