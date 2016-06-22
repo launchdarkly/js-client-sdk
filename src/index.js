@@ -12,6 +12,9 @@ var user;
 var baseUrl;
 var streamUrl;
 
+var readyEvent = 'ready';
+var changeEvent = 'change';
+
 function identify(user) {}
 
 function toggle(key, defaultValue) {
@@ -33,17 +36,14 @@ function connectStream(onPing) {
 function updateSettings(settings) {
   const changes = utils.modifications(flags, settings);
   
-  // update store
   flags = settings;
   
   for (var key in changes) {
-    emitter.emit('change:' + key, changes[key].current, changes[key].previous);
+    emitter.emit(changeEvent + ':' + key, changes[key].current, changes[key].previous);
   }
 
-  emitter.emit('change', utils.clone(flags));
+  emitter.emit(changeEvent, utils.clone(flags));
 }
-
-var changeEvent = 'change';
 
 function on(event, handler, context) {
   if (event.substr(0, changeEvent.length) === changeEvent) {
@@ -83,11 +83,11 @@ function initialize(env, u, options) {
   if (options.bootstrap) {
     // Emitting the event here will happen before the consumer
     // can register a listener, so defer to next tick.
-    setTimeout(function() { emitter.emit('ready') }, 0);
+    setTimeout(function() { emitter.emit(readyEvent); }, 0);
   } else {
     requestor.fetchFlagSettings(user, hash, function(err, settings) {
       flags = settings;
-      emitter.emit('ready');
+      emitter.emit(readyEvent);
     });
   }
   
