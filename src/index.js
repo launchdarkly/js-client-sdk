@@ -41,7 +41,6 @@ function updateSettings(settings) {
 
   if (keys.length > 0) {
     keys.forEach(function(key) {
-      console.log('emitting change for', key);
       emitter.emit(changeEvent + ':' + key, changes[key].current, changes[key].previous);
     });
 
