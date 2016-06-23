@@ -1,12 +1,15 @@
-function fromBase64(base64string) {
-  return base64string
-    .replace(/=/g, '')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_');
+var Base64 = require('Base64');
+
+// See http://ecmanaut.blogspot.com/2006/07/encoding-decoding-utf8-in-javascript.html
+function btoa(s) {
+  return Base64.btoa(unescape(encodeURIComponent(s)));
 }
 
-function base64URLEncode(stringOrBuffer, encoding) {
-  return fromBase64(Buffer(stringOrBuffer, encoding).toString('base64'));
+function base64URLEncode(s) {
+  return btoa(s)
+  .replace(/=/g, '')
+  .replace(/\+/g, '-')
+  .replace(/\//g, '_');
 }
 
 function clone(obj) {
@@ -28,6 +31,7 @@ function modifications(oldObj, newObj) {
 }
 
 module.exports = {
+  btoa,
   base64URLEncode: base64URLEncode,
   clone: clone,
   modifications: modifications

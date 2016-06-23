@@ -1,0 +1,87 @@
+const escapeStringRegexp = require('escape-string-regexp');
+const Sizzle = require('sizzle');
+
+function doesUrlMatch(matcher, href, search, hash) {
+  var canonicalUrl = href.replace(search, '').replace(hash, '');
+  var regex;
+  var testUrl;
+  
+  switch (matcher.kind) {
+  case 'exact':
+    testUrl = href;
+    regex = new RegExp('^' + escapeStringRegexp(matcher.url) + '/?$');
+    break;
+  case 'canonical':
+    testUrl = canonicalUrl;
+    regex = new RegExp('^' + escapeStringRegexp(matcher.url) + '/?$');
+    break;
+  case 'substring':
+    testUrl = canonicalUrl;
+    regex = new RegExp('.*' + escapeStringRegexp(matcher.url) + '.*$');
+    break;
+  case 'regex':
+    testUrl = canonicalUrl;
+    regex = new RegExp(matcher.pattern);
+    break;
+  default:
+    return false;
+  }
+  return regex.test(testUrl);
+}
+
+function findGoalsForClick(event, clickGoals) {
+  var matches = [];
+  
+  for (var i = 0; i < clickGoals.length; i++) {
+    var target = event.target;
+    var goal = clickGoals[i];
+    var selector = goal.selector;
+    var elements = Sizzle(selector);
+    while (target && elements.length > 0) {
+      for (var j = 0; j < elements.length; j++) {
+        if (target === elements[j])
+          matches.push(goal);
+      }
+      target = target.parentNode;
+    }
+  }
+  
+  return matches;
+}
+
+function GoalTracker(goals, onEvent) {
+  var tracker = {};
+  var goals = goals;
+  
+  var clickGoals = [];
+  
+  for (var i = 0; i < goals.length; i++) {
+    var goal = goals[i];
+    var urls = goal.urls || [];
+    
+    for (var j = 0; j < urls.length; j++) {
+      if (doesUrlMatch(urls[j], location.href, location.search, location.hash)) {
+        if (goal.kind === 'pageview') {
+          onEvent('pageview', goal);
+        } else {
+          clickGoals.push(goal);
+          onEvent('click_pageview', goal);
+        }
+        break;
+      }
+    }
+  }
+  
+  if (clickGoals.length > 0) {
+    document.addEventListener('click', function(event) {
+      var goals = findGoalsForClick(event, clickGoals);
+      for (var i = 0; i < goals.length; i++) {
+        onEvent('click', goals[i]);
+      }
+    });
+  }
+  
+  return tracker;
+}
+
+module.exports = GoalTracker;

@@ -35,5 +35,10 @@
     "sinon": "1.17.4",
     "uglify-js": "2.6.3",
     "watchify": "3.7.0"
+  },
+  "dependencies": {
+    "Base64": "1.0.0",
+    "escape-string-regexp": "1.0.5",
+    "sizzle": "2.3.0"
   }
 }
