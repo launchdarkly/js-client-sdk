@@ -1,0 +1,22 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "mocha": true
+  },
+  "globals": {
+    
+  },
+  "rules": {
+    "quotes": [2, "single"],
+    "indent": [2, 2],
+    "eol-last": 1,
+    "camelcase": 2,
+    "no-unused-vars": 1,
+    "no-underscore-dangle": 0,
+    "no-array-constructor": 2,
+    "no-cond-assign": 2,
+    "eqeqeq": 2
+  }
+}
