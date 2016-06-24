@@ -11,15 +11,18 @@
       <li><code>another-client-side</code>: <span class="another-client-side">initializing…</span></li>
     </ul>
     
+    <button>click me</button>
+    
     <script>
       var user = {key: 'foobar.com'};
       var client = window.ld = LDClient.initialize('569f514183f2164430000004', user, {
         bootstrap: {
           'client-side-flag': false,
-          'another-client-side': 'def'
+          'another-client-side': false
         },
         hash: 'c31e052b7b474e6e5f0c182144907e6fb6e55f20f5e7bc41b0b61624b16b5316',
         baseUrl: 'http://dockerhost',
+        eventsUrl: 'http://dockerhost',
         streamUrl: 'http://dockerhost:7999'
       });
       
@@ -39,12 +42,12 @@
       
       client.on('change:another-client-side', function(value, previous) {
         console.log('another-client-side changed:', value, '(' + previous + ')');
-        render('another-client-side', 'def');
+        render('another-client-side', false);
       });
       
       function main() {
         render('client-side-flag', false);
-        render('another-client-side', 'def');
+        render('another-client-side', false);
         setTimeout(main, 2000);
       }
 
