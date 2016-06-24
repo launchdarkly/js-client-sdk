@@ -31,7 +31,7 @@ function modifications(oldObj, newObj) {
 }
 
 module.exports = {
-  btoa,
+  btoa: btoa,
   base64URLEncode: base64URLEncode,
   clone: clone,
   modifications: modifications
