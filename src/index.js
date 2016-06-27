@@ -104,7 +104,7 @@ function updateSettings(settings) {
       emitter.emit(changeEvent + ':' + key, changes[key].current, changes[key].previous);
     });
 
-    emitter.emit(changeEvent, utils.clone(flags));
+    emitter.emit(changeEvent, changes);
   }
 }
 
