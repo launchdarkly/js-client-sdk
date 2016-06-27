@@ -8,17 +8,18 @@
     <h1>Settings</h1>
     <ul>
       <li><code>client-side-flag</code>: <span class="client-side-flag">initializing…</span></li>
-      <li><code>another-client-side</code>: <span class="another-client-side">initializing…</span></li>
+      <li><code>another-client-side-flag</code>: <span class="another-client-side-flag">initializing…</span></li>
     </ul>
     
     <button>click me</button>
     
     <script>
+      var switched = false;
       var user = {key: 'foobar.com'};
       var client = window.ld = LDClient.initialize('569f514183f2164430000004', user, {
         bootstrap: {
           'client-side-flag': false,
-          'another-client-side': false
+          'another-client-side-flag': false
         },
         hash: 'c31e052b7b474e6e5f0c182144907e6fb6e55f20f5e7bc41b0b61624b16b5316',
         baseUrl: 'http://dockerhost',
@@ -40,18 +41,27 @@
         console.log('flags changed:', settings);
       });
       
-      client.on('change:another-client-side', function(value, previous) {
-        console.log('another-client-side changed:', value, '(' + previous + ')');
-        render('another-client-side', false);
+      client.on('change:another-client-side-flag', function(value, previous) {
+        console.log('another-client-side-flag changed:', value, '(' + previous + ')');
+        render('another-client-side-flag', false);
       });
       
       function main() {
         render('client-side-flag', false);
-        render('another-client-side', false);
-        setTimeout(main, 2000);
+        render('another-client-side-flag', false);
+        // setTimeout(main, 2000);
       }
 
       main();
+      
+      document.querySelector('button').addEventListener('click', function(event) {
+        var key = switched ? 'foobar.com' : 'barfoo.com';
+        client.identify({key: key}, null, function() {
+          switched = !switched;
+          console.log('switched to', key);
+          render('another-client-side-flag', false);
+        });
+      });
     </script>
   </body>
 </html>

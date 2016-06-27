@@ -59,8 +59,12 @@ function sendGoalEvent(kind, goal) {
   return events.enqueue(event);
 }
 
-function identify(user) {
+function identify(user, hash, onDone) {
   ident.setUser(user);
+  requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
+    flags = settings;
+    onDone();
+  });
 }
 
 function toggle(key, defaultValue) {
