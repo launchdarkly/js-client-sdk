@@ -36,7 +36,7 @@ function sendFlagEvent(key, value, defaultValue) {
   events.enqueue({
     kind: 'feature',
     key: key,
-    user: user,
+    user: ident.getUser(),
     value: value,
     'default': defaultValue,
     creationDate: (new Date()).getTime()
@@ -44,13 +44,19 @@ function sendFlagEvent(key, value, defaultValue) {
 }
 
 function sendGoalEvent(kind, goal) {
-  return events.enqueue({
+  const event = {
     kind: kind,
     key: goal.key,
     data: null,
     url: window.location.href,
     creationDate: (new Date()).getTime()
-  });
+  };
+  
+  if (kind === 'click') {
+    event.selector = goal.selector;
+  }
+  
+  return events.enqueue(event);
 }
 
 function identify(user) {
@@ -105,6 +111,10 @@ function updateSettings(settings) {
     });
 
     emitter.emit(changeEvent, changes);
+    
+    keys.forEach(function(key) {
+      sendFlagEvent(key, changes[key].current);
+    });
   }
 }
 
