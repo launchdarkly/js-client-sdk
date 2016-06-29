@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "LaunchDarkly SDK for JavaScript",
   "author": "LaunchDarkly <team@launchdarkly.com>",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "keywords": [
     "launchdarkly",
     "analytics",
@@ -40,5 +40,9 @@
     "Base64": "1.0.0",
     "escape-string-regexp": "1.0.5",
     "sizzle": "2.3.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/launchdarkly/js-client.git"
+  }  
 }

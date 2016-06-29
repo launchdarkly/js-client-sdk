@@ -1,5 +1,12 @@
 # LaunchDarkly SDK for Client-Side JavaScript
 
+## Introduction
+
+This is the official LaunchDarkly client-side JavaScript SDK. This SDK does two things:
+
+* Makes feature flags available to your client-side (front-end) JavaScript code.
+* Sends click, pageview, and custom events from your front-end for A/B tests and analytics.
+
 ## Installation
 
 There are two ways to install the client-side SDK:
@@ -12,14 +19,14 @@ There are two ways to install the client-side SDK:
 
         <script src="https://npmcdn.com/ldclient-js/dist/client.min.js">
 
-## Usage
-
-### Basics
+## Basics
 
 To create a client instance, pass your environment ID (available on your [account settings page](https://app.launchdarkly.com/settings#/projects)) and user context to the `LDClient.initialize` function:
 
         var user = {key: 'user.example.com'};
         var client = LDClient.initialize('YOUR_ENVIRONMENT_ID', user);
+
+## Feature flags
 
 The client will emit a `ready` event when it has been initialized. Once it has been initialized, call `toggle` or `variation` to access your feature flags:
 
@@ -34,7 +41,11 @@ The client will emit a `ready` event when it has been initialized. Once it has b
           }
         });
 
-Note that out of the box, initializing the client will make a remote request to LaunchDarkly, so it may take several milliseconds before the ready event is emitted. If you require feature flag values before rendering the page, we recommend bootstrapping the client. If the client is bootstrapped, it will emit the ready event immediately.
+
+Out of the box, initializing the client will make a remote request to LaunchDarkly, so it may take several milliseconds before the ready event is emitted. If you require feature flag values before rendering the page, we recommend bootstrapping the client. If the client is bootstrapped, it will emit the ready event immediately.
+
+*Note*: Feature flags must marked available to the client-side SDK (see your feature flag's settings page) before they can be used in toggle / variation calls on the front-end. If you request a feature flag that is not available, you'll receive the default value for that flag.
+
 
 ### Bootstrapping
 
@@ -43,7 +54,7 @@ Bootstrapping refers to providing the LaunchDarkly client object with an initial
 The preferred approach to bootstrapping is to populate the bootstrap values (a map of feature flag keys to flag values) from your backend. LaunchDarkly's server-side SDKs have a function called `all_flags`-- this function provides the initial set of bootstrap values. You can then provide these values to your front-end as a template. Depending on your templating language, this might look something like this:
 
         var user = {key: 'user.example.com'};
-        var client = window.ld = LDClient.initialize('YOUR_ENVIRONMENT_ID', user, options = {
+        var client = LDClient.initialize('YOUR_ENVIRONMENT_ID', user, options = {
           bootstrap: {
             {{ ldclient.all_flags(user) }}
           }
@@ -56,7 +67,7 @@ Secure mode ensures that feature flag settings for a user are kept private, and 
 You can enable secure mode for each environment on your [account settings page](https://app.launchdarkly.com/settings#/projects). You should send the computed hash for your user in the `options` array during client initialization:
 
         var user = {key: 'user.example.com'};
-        var client = window.ld = LDClient.initialize('YOUR_ENVIRONMENT_ID', user, options = {
+        var client = LDClient.initialize('YOUR_ENVIRONMENT_ID', user, options = {
           hash: "SERVER_GENERATED_HASH"
         });
 
@@ -81,12 +92,33 @@ The `settings` object will contain a map of updated feature flag keys and values
           console.log('YOUR_FLAG_KEY changed:', value, '(' + previous + ')');
         });
 
-### Changing the user context
+## Events
 
-You may wish to change the user context dynamically and receive the new set of feature flags for that user. For example, on a sign-in page in a single-page app, you may initialize the client with an anonymous user. When the user logs in, you'd want the feature flag settings for the authenticated user. To do this, you can call the `identify` function:
+### Click and pageview events
+
+If you've defined [click or pageview goals](http://docs.launchdarkly.com/docs/running-an-ab-test) in LaunchDarkly, they'll be sent automatically once the client has been initialized. You do not have to do anything else with the client to send click or pageview goals.
+
+### Custom events
+
+You can send custom events by calling the client's `track` method. For example:
+
+        client.track("Signed up")
+
+## Changing the user context
+
+You may wish to change the user context dynamically and receive the new set of feature flags for that user or generate events for hte new user. For example, on a sign-in page in a single-page app, you may initialize the client with an anonymous user. When the user logs in, you'd want the feature flag settings for the authenticated user. To do this, you can call the `identify` function:
 
         client.identify(newUser, hash, function() {
           console.log("New user's flags available");
         });
 
 The `hash` parameter is the hash for the new user, assuming that the user's key has changed. It is only required in secure mode-- if secure mode is not enabled, you can pass in `null` for the hash.
+
+
+## Development information
+
+To build the module, run `npm run build`. You can also run `npm run watch` to rebuild the module automatically on file change.
+
+To run the tests, run `npm run test`.
+
+
