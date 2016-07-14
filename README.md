@@ -106,7 +106,7 @@ You can send custom events by calling the client's `track` method. For example:
 
 ## Changing the user context
 
-You may wish to change the user context dynamically and receive the new set of feature flags for that user or generate events for hte new user. For example, on a sign-in page in a single-page app, you may initialize the client with an anonymous user. When the user logs in, you'd want the feature flag settings for the authenticated user. To do this, you can call the `identify` function:
+You may wish to change the user context dynamically and receive the new set of feature flags for that user or generate events for the new user. For example, on a sign-in page in a single-page app, you may initialize the client with an anonymous user. When the user logs in, you'd want the feature flag settings for the authenticated user. To do this, you can call the `identify` function:
 
         client.identify(newUser, hash, function() {
           console.log("New user's flags available");
