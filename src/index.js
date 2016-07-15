@@ -18,6 +18,7 @@ var eventsUrl;
 var streamUrl;
 var goalTracker;
 var useLocalStorage;
+var goals;
 
 var readyEvent = 'ready';
 var changeEvent = 'change';
@@ -231,9 +232,10 @@ function initialize(env, user, options) {
     });
   }
   
-  requestor.fetchGoals(function(err, goals) {
+  requestor.fetchGoals(function(err, g) {
     if (err) {/* TODO */}
-    if (goals && goals.length > 0) {
+    if (g && g.length > 0) {
+      goals = g;
       goalTracker = GoalTracker(goals, sendGoalEvent);
     }
   });
@@ -255,8 +257,24 @@ function initialize(env, user, options) {
     events.flush(ident.getUser(), true);
   });
   
+  function refreshGoalTracker() {
+    if (goalTracker != null) {
+      goalTracker.dispose();
+    }
+    if (goals && goals.length) {
+      goalTracker = GoalTracker(goals, sendGoalEvent);
+    } 
+  }
+
+  if (!!(window.history && history.pushState)) {
+    window.addEventListener('popstate', refreshGoalTracker);  
+  } else {
+    window.addEventListener('hashchange', refreshGoalTracker);
+  }
+
+
   window.addEventListener('message', handleMessage);
-  
+
   return client;
 }
 

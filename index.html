@@ -11,7 +11,9 @@
       <li><code>another-client-side-flag</code>: <span class="another-client-side-flag">initializing…</span></li>
     </ul>
     
-    <button>click me</button>
+    <button class="switchUser">Change user</button>
+    <button class="changeHash">Change hash fragment</button>
+    <button class="changeUrl">Change url</button>
     
     <script>
       var switched = false;
@@ -54,13 +56,19 @@
         // setTimeout(main, 2000);
       }
       
-      document.querySelector('button').addEventListener('click', function(event) {
+      document.querySelector('.switchUser').addEventListener('click', function(event) {
         var key = switched ? 'foobar.com' : 'barfoo.com';
         client.identify({key: key}, null, function() {
           switched = !switched;
           console.log('switched to', key);
           render('another-client-side-flag', false);
         });
+      });
+      document.querySelector('.changeHash').addEventListener('click', function(event) {
+        location.hash = new Date().getTime().toString();
+      });
+      document.querySelector('.changeUrl').addEventListener('click', function(event) {
+        history.pushState(null, null, new Date().getTime().toString());
       });
     </script>
   </body>
