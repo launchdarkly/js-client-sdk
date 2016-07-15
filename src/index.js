@@ -37,7 +37,7 @@ function sendIdentifyEvent(user) {
 
 function sendFlagEvent(key, value, defaultValue) {
   var user = ident.getUser();
-  var cacheKey = JSON.stringify(value) + (user && user.key ? user.key : "") + key;
+  var cacheKey = JSON.stringify(value) + (user && user.key ? user.key : '') + key;
   var now = new Date();
   var cached = seenRequests[cacheKey];
 
@@ -178,7 +178,7 @@ var client = {
 };
 
 function lsKey(env, user) {
-  var uKey = "";
+  var uKey = '';
   if (user && user.key) {
     uKey = user.key;
   }
