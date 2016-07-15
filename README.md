@@ -121,6 +121,10 @@ You can send custom events by calling the client's `track` method. For example:
 
         client.track("Signed up")
 
+### Single page apps
+
+The SDK automatically handles URL changes (made via the HTML5 history API or by changing the URL hash fragment), and will trigger pageview and click events correctly.
+
 ## Changing the user context
 
 You may wish to change the user context dynamically and receive the new set of feature flags for that user or generate events for the new user. For example, on a sign-in page in a single-page app, you may initialize the client with an anonymous user. When the user logs in, you'd want the feature flag settings for the authenticated user. To do this, you can call the `identify` function:
