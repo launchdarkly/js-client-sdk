@@ -263,14 +263,18 @@ function initialize(env, user, options) {
     if (goalTracker != null) {
       goalTracker.dispose();
     }
-    goalTracker = GoalTracker(goals, sendGoalEvent);
+    if (goals && goals.length) {
+      goalTracker = GoalTracker(goals, sendGoalEvent);
+    }
   });
 
   window.addEventListener('popstate', function() { 
     if (goalTracker != null) {
       goalTracker.dispose();
     }
-    goalTracker = GoalTracker(goals, sendGoalEvent);
+    if (goals && goals.length) {
+      goalTracker = GoalTracker(goals, sendGoalEvent);
+    }
   });  
   
   return client;
