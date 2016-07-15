@@ -35,15 +35,17 @@
       
       client.on('ready', function() {
         console.log('client is ready');
+        main();
       });
       
       client.on('change', function(settings) {
         console.log('flags changed:', settings);
+        main();
       });
       
       client.on('change:another-client-side-flag', function(value, previous) {
         console.log('another-client-side-flag changed:', value, '(' + previous + ')');
-        render('another-client-side-flag', false);
+        main();
       });
       
       function main() {
@@ -51,8 +53,6 @@
         render('another-client-side-flag', false);
         // setTimeout(main, 2000);
       }
-
-      main();
       
       document.querySelector('button').addEventListener('click', function(event) {
         var key = switched ? 'foobar.com' : 'barfoo.com';

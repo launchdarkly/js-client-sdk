@@ -24,6 +24,8 @@ var changeEvent = 'change';
 
 var flushInterval = 2000;
 
+var seenRequests = {};
+
 function sendIdentifyEvent(user) {
   events.enqueue({
     kind: 'identify',
@@ -34,13 +36,24 @@ function sendIdentifyEvent(user) {
 }
 
 function sendFlagEvent(key, value, defaultValue) {
+  var user = ident.getUser();
+  var cacheKey = JSON.stringify(value) + (user && user.key ? user.key : "") + key;
+  var now = new Date();
+  var cached = seenRequests[cacheKey];
+
+  if (cached && (now - cached) < 300000 /* five minutes, in ms */) {
+    return;
+  }
+
+  seenRequests[cacheKey] = now;
+
   events.enqueue({
     kind: 'feature',
     key: key,
-    user: ident.getUser(),
+    user: user,
     value: value,
     'default': defaultValue,
-    creationDate: (new Date()).getTime()
+    creationDate: now.getTime()
   });
 }
 
