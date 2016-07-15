@@ -42,7 +42,7 @@ The client will emit a `ready` event when it has been initialized. Once it has b
         });
 
 
-Out of the box, initializing the client will make a remote request to LaunchDarkly, so it may take several milliseconds before the ready event is emitted. If you require feature flag values before rendering the page, we recommend bootstrapping the client. If the client is bootstrapped, it will emit the ready event immediately.
+Out of the box, initializing the client will make a remote request to LaunchDarkly, so it may take approximately 100 milliseconds before the ready event is emitted. If you require feature flag values before rendering the page, we recommend bootstrapping the client. If the client is bootstrapped, it will emit the ready event immediately.
 
 *Note*: Feature flags must marked available to the client-side SDK (see your feature flag's settings page) before they can be used in toggle / variation calls on the front-end. If you request a feature flag that is not available, you'll receive the default value for that flag.
 
@@ -50,6 +50,8 @@ Out of the box, initializing the client will make a remote request to LaunchDark
 ### Bootstrapping
 
 Bootstrapping refers to providing the LaunchDarkly client object with an initial, immediately available set of feature flag values so that on page load `toggle` or `variation` can be called with no delay.
+
+#### From the server-side SDK 
 
 The preferred approach to bootstrapping is to populate the bootstrap values (a map of feature flag keys to flag values) from your backend. LaunchDarkly's server-side SDKs have a function called `all_flags`-- this function provides the initial set of bootstrap values. You can then provide these values to your front-end as a template. Depending on your templating language, this might look something like this:
 
@@ -59,6 +61,21 @@ The preferred approach to bootstrapping is to populate the bootstrap values (a m
             {{ ldclient.all_flags(user) }}
           }
         });
+
+If you bootstrap from the server-side, feature flags will be ready immediately, and clients will always receive the latest feature flag values.
+
+#### From Local Storage
+
+Alternatively, you can bootstrap feature flags from local storage. 
+
+        var client = LDClient.initialize('YOUR_ENVIRONMENT_ID', user, options = {
+          bootstrap: 'localStorage'
+        });
+
+When using local storage, the client will store the latest flag settings in local storage. On page load, the previous settings will be used and the 'ready' event will be emitted immediately. This means that on page load, the user may see cached flag values until the next page load. 
+
+You can still subscribe to flag changes if you're using local storage. 
+
 
 ### Secure mode
 

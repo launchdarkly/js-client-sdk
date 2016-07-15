@@ -17,6 +17,7 @@ var baseUrl;
 var eventsUrl;
 var streamUrl;
 var goalTracker;
+var useLocalStorage;
 
 var readyEvent = 'ready';
 var changeEvent = 'change';
@@ -62,7 +63,7 @@ function sendGoalEvent(kind, goal) {
 function identify(user, hash, onDone) {
   ident.setUser(user);
   requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
-    flags = settings;
+    updateSettings(settings);
     onDone();
   });
 }
@@ -95,10 +96,10 @@ function track(key, data) {
   });
 }
 
-function connectStream(onPing) {
+function connectStream() {
   stream.connect(function() {
     requestor.fetchFlagSettings(user, hash, function(err, settings) {
-      onPing(settings);
+      updateSettings(settings);
     });
   });
 }
@@ -108,6 +109,10 @@ function updateSettings(settings) {
   const keys = Object.keys(changes);
   
   flags = settings;
+
+  if (useLocalStorage) {
+    localStorage.setItem(lsKey(environment, ident.getUser()), JSON.stringify(flags));
+  }
 
   if (keys.length > 0) {
     keys.forEach(function(key) {
@@ -125,7 +130,7 @@ function updateSettings(settings) {
 function on(event, handler, context) {
   if (event.substr(0, changeEvent.length) === changeEvent) {
     if (!stream.isConnected()) {
-      connectStream(updateSettings);
+      connectStream();
     }
     emitter.on.apply(emitter, [event, handler, context]);
   } else {
@@ -159,10 +164,18 @@ var client = {
   off: off
 };
 
+function lsKey(env, user) {
+  var uKey = "";
+  if (user && user.key) {
+    uKey = user.key;
+  }
+  return "ld:" + env + ":" + uKey;
+}
+
 function initialize(env, user, options) {
   options = options || {};
   environment = env;
-  flags = options.bootstrap || {};
+  flags = typeof(options.bootstrap) === 'object' ? options.bootstrap : {};
   hash = options.hash;
   baseUrl = options.baseUrl || 'https://app.launchdarkly.com';
   eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
@@ -173,11 +186,32 @@ function initialize(env, user, options) {
   ident = Identity(user, sendIdentifyEvent);
   requestor = Requestor(baseUrl, environment);
   
-  if (options.bootstrap) {
+  if (typeof options.bootstrap === 'object') {
     // Emitting the event here will happen before the consumer
     // can register a listener, so defer to next tick.
     setTimeout(function() { emitter.emit(readyEvent); }, 0);
-  } else {
+  } 
+  else if (typeof(options.bootstrap) === 'string' && options.bootstrap.toUpperCase() === 'LOCALSTORAGE' && typeof(Storage) !== 'undefined') {
+    useLocalStorage = true;
+    flags = JSON.parse(localStorage.getItem(lsKey(environment, ident.getUser())));
+
+    if (flags === null) {
+      requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
+        flags = settings;
+        localStorage.setItem(lsKey(environment, ident.getUser()), JSON.stringify(flags));
+        emitter.emit(readyEvent);
+      });
+    } else {
+      // We're reading the flags from local storage. Signal that we're ready,
+      // then update localStorage for the next page load. We won't signal changes or update
+      // the in-memory flags unless you subscribe for changes
+      setTimeout(function() { emitter.emit(readyEvent); }, 0);
+      requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
+        localStorage.setItem(lsKey(environment, ident.getUser()), JSON.stringify(settings));
+      });
+    }
+  }
+  else {
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       flags = settings;
       emitter.emit(readyEvent);
@@ -186,7 +220,7 @@ function initialize(env, user, options) {
   
   requestor.fetchGoals(function(err, goals) {
     if (err) {/* TODO */}
-    if (goals.length > 0) {
+    if (goals && goals.length > 0) {
       goalTracker = GoalTracker(goals, sendGoalEvent);
     }
   });
