@@ -257,26 +257,24 @@ function initialize(env, user, options) {
     events.flush(ident.getUser(), true);
   });
   
+  function refreshGoalTracker() {
+    if (goalTracker != null) {
+      goalTracker.dispose();
+    }
+    if (goals && goals.length) {
+      goalTracker = GoalTracker(goals, sendGoalEvent);
+    } 
+  }
+
+  if (!!(window.history && history.pushState)) {
+    window.addEventListener('popstate', refreshGoalTracker);  
+  } else {
+    window.addEventListener('hashchange', refreshGoalTracker);
+  }
+
+
   window.addEventListener('message', handleMessage);
 
-  window.addEventListener('hashchange', function() { 
-    if (goalTracker != null) {
-      goalTracker.dispose();
-    }
-    if (goals && goals.length) {
-      goalTracker = GoalTracker(goals, sendGoalEvent);
-    }
-  });
-
-  window.addEventListener('popstate', function() { 
-    if (goalTracker != null) {
-      goalTracker.dispose();
-    }
-    if (goals && goals.length) {
-      goalTracker = GoalTracker(goals, sendGoalEvent);
-    }
-  });  
-  
   return client;
 }
 
