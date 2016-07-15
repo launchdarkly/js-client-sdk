@@ -52,6 +52,7 @@ function findGoalsForClick(event, clickGoals) {
 function GoalTracker(goals, onEvent) {
   var tracker = {};
   var goals = goals;
+  var listenerFn = null;
   
   var clickGoals = [];
   
@@ -73,12 +74,18 @@ function GoalTracker(goals, onEvent) {
   }
   
   if (clickGoals.length > 0) {
-    document.addEventListener('click', function(event) {
+    listenerFn = function(event) {
       var goals = findGoalsForClick(event, clickGoals);
       for (var i = 0; i < goals.length; i++) {
         onEvent('click', goals[i]);
       }
-    });
+    };
+
+    document.addEventListener('click', listenerFn);
+  }
+
+  tracker.dispose = function() {
+    document.removeEventListener('click', listenerFn);
   }
   
   return tracker;

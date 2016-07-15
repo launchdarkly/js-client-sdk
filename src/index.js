@@ -18,6 +18,7 @@ var eventsUrl;
 var streamUrl;
 var goalTracker;
 var useLocalStorage;
+var goals;
 
 var readyEvent = 'ready';
 var changeEvent = 'change';
@@ -231,9 +232,10 @@ function initialize(env, user, options) {
     });
   }
   
-  requestor.fetchGoals(function(err, goals) {
+  requestor.fetchGoals(function(err, g) {
     if (err) {/* TODO */}
-    if (goals && goals.length > 0) {
+    if (g && g.length > 0) {
+      goals = g;
       goalTracker = GoalTracker(goals, sendGoalEvent);
     }
   });
@@ -256,6 +258,20 @@ function initialize(env, user, options) {
   });
   
   window.addEventListener('message', handleMessage);
+
+  window.addEventListener('hashchange', function() { 
+    if (goalTracker != null) {
+      goalTracker.dispose();
+    }
+    goalTracker = GoalTracker(goals, sendGoalEvent);
+  });
+
+  window.addEventListener('popstate', function() { 
+    if (goalTracker != null) {
+      goalTracker.dispose();
+    }
+    goalTracker = GoalTracker(goals, sendGoalEvent);
+  });  
   
   return client;
 }
