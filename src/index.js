@@ -112,7 +112,7 @@ function track(key, data) {
 
 function connectStream() {
   stream.connect(function() {
-    requestor.fetchFlagSettings(user, hash, function(err, settings) {
+    requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       updateSettings(settings);
     });
   });
