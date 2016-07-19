@@ -17,7 +17,7 @@ function doesUrlMatch(matcher, href, search, hash) {
     break;
   case 'substring':
     testUrl = canonicalUrl;
-    regex = new RegExp('.*' + escapeStringRegexp(matcher.url) + '.*$');
+    regex = new RegExp('.*' + escapeStringRegexp(matcher.substring) + '.*$');
     break;
   case 'regex':
     testUrl = canonicalUrl;
