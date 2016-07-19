@@ -183,7 +183,7 @@ function lsKey(env, user) {
   if (user && user.key) {
     uKey = user.key;
   }
-  return "ld:" + env + ":" + uKey;
+  return 'ld:' + env + ':' + uKey;
 }
 
 function initialize(env, user, options) {
@@ -258,7 +258,7 @@ function initialize(env, user, options) {
   });
   
   function refreshGoalTracker() {
-    if (goalTracker != null) {
+    if (goalTracker !== null) {
       goalTracker.dispose();
     }
     if (goals && goals.length) {
