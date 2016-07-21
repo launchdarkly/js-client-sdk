@@ -17,7 +17,11 @@ function fetchJSON(endpoint, callback) {
   
   xhr.open('GET', endpoint);
   xhr.send();
+  
+  return xhr;
 }
+
+var flagSettingsRequest;
 
 function Requestor(baseUrl, environment) {
   var requestor = {};
@@ -25,7 +29,12 @@ function Requestor(baseUrl, environment) {
   requestor.fetchFlagSettings = function(user, hash, callback) {
     var data = utils.base64URLEncode(JSON.stringify(user));
     var endpoint = [baseUrl, '/sdk/eval/', environment,  '/users/', data, hash ? '?h=' + hash : ''].join('');
-    fetchJSON(endpoint, callback);
+    
+    if (flagSettingsRequest) {
+      flagSettingsRequest.abort();
+    }
+    
+    flagSettingsRequest = fetchJSON(endpoint, callback);
   };
   
   requestor.fetchGoals = function(callback) {
