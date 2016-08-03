@@ -16,7 +16,7 @@ describe('LDClient', function() {
     xhr.restore();
   });
   
-  it('should be true', function() {
+  it('should exist', function() {
     expect(LDClient).to.exist;
   });
   
@@ -42,7 +42,6 @@ describe('LDClient', function() {
         bootstrap: {}
       });
       
-      console.log(requests);
       var settingsRequest = requests[0];
       expect(/sdk\/eval/.test(settingsRequest.url)).to.be.false;
     });
