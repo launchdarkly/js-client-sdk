@@ -2,11 +2,12 @@ module.exports = function(config) {
   config.set({
     files: [
       'src/*.js',
-      'test/*.js'
+      'test/*-test.js'
     ],
     
     plugins: [
       'karma-browserify',
+      'karma-chrome-launcher',
       'karma-phantomjs-launcher',
       'karma-phantomjs-shim',
       'karma-mocha',
@@ -25,10 +26,10 @@ module.exports = function(config) {
     
     preprocessors: {
       'src/*.js': ['browserify'],
-      'test/*.js': ['browserify']
+      'test/*-test*.js': ['browserify']
     },
     
-    browsers: ['PhantomJS'],
+    browsers: ['Chrome'],
     
     autoWatch: false,
     
