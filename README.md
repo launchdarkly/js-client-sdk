@@ -28,11 +28,11 @@ To create a client instance, pass your environment ID (available on your [accoun
 
 ## Feature flags
 
-The client will emit a `ready` event when it has been initialized. Once it has been initialized, call `toggle` or `variation` to access your feature flags:
+The client will emit a `ready` event when it has been initialized. Once it has been initialized, call `variation` to access your feature flags:
 
         client.on('ready', function() {
           console.log("It's now safe to request feature flags");
-          var showFeature = client.toggle("YOUR_FEATURE_KEY", false);
+          var showFeature = client.variation("YOUR_FEATURE_KEY", false);
 
           if (showFeature) {
             ...
@@ -44,12 +44,12 @@ The client will emit a `ready` event when it has been initialized. Once it has b
 
 Out of the box, initializing the client will make a remote request to LaunchDarkly, so it may take approximately 100 milliseconds before the ready event is emitted. If you require feature flag values before rendering the page, we recommend bootstrapping the client. If the client is bootstrapped, it will emit the ready event immediately.
 
-*Note*: Feature flags must marked available to the client-side SDK (see your feature flag's settings page) before they can be used in toggle / variation calls on the front-end. If you request a feature flag that is not available, you'll receive the default value for that flag.
+*Note*: Feature flags must marked available to the client-side SDK (see your feature flag's settings page) before they can be used in variation calls on the front-end. If you request a feature flag that is not available, you'll receive the default value for that flag.
 
 
 ### Bootstrapping
 
-Bootstrapping refers to providing the LaunchDarkly client object with an initial, immediately available set of feature flag values so that on page load `toggle` or `variation` can be called with no delay.
+Bootstrapping refers to providing the LaunchDarkly client object with an initial, immediately available set of feature flag values so that on page load `variation` can be called with no delay.
 
 #### From the server-side SDK 
 
