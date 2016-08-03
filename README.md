@@ -90,8 +90,8 @@ You can enable secure mode for each environment on your [account settings page](
 
 To compute the hash, locate the SDK key for your environment on your account settings page. Then, compute an HMAC SHA256 hash of your user key, using your SDK key as a secret. Here's what this would look like in Node.js:
 
-        const crypto = require('crypto');
-        const hmac = crypto.createHmac('sha256', 'YOUR_SDK_KEY');
+        var crypto = require('crypto');
+        var hmac = crypto.createHmac('sha256', 'YOUR_SDK_KEY');
         hmac.update('YOUR_USER_KEY');
         hash = hmac.digest('hex');
 

@@ -59,7 +59,7 @@ function sendFlagEvent(key, value, defaultValue) {
 }
 
 function sendGoalEvent(kind, goal) {
-  const event = {
+  var event = {
     kind: kind,
     key: goal.key,
     data: null,
@@ -119,8 +119,8 @@ function connectStream() {
 }
 
 function updateSettings(settings) {
-  const changes = utils.modifications(flags, settings);
-  const keys = Object.keys(changes);
+  var changes = utils.modifications(flags, settings);
+  var keys = Object.keys(changes);
   
   flags = settings;
 

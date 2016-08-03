@@ -1,5 +1,5 @@
-const escapeStringRegexp = require('escape-string-regexp');
-const Sizzle = require('sizzle');
+var escapeStringRegexp = require('escape-string-regexp');
+var Sizzle = require('sizzle');
 
 function doesUrlMatch(matcher, href, search, hash) {
   var canonicalUrl = href.replace(search, '').replace(hash, '');
