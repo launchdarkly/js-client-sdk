@@ -82,7 +82,7 @@ function identify(user, hash, onDone) {
   });
 }
 
-function toggle(key, defaultValue) {
+function variation(key, defaultValue) {
   var value;
   
   if (flags.hasOwnProperty(key)) {
@@ -171,8 +171,7 @@ function handleMessage(event) {
 
 var client = {
   identify: identify,
-  toggle: toggle,
-  variation: toggle,
+  variation: variation,
   track: track,
   on: on,
   off: off
