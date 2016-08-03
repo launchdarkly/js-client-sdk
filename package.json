@@ -27,6 +27,7 @@
     "karma-chai": "0.1.0",
     "karma-mocha": "1.0.1",
     "karma-mocha-reporter": "2.0.4",
+    "karma-chrome-launcher": "1.0.1",
     "karma-phantomjs-launcher": "0.2.1",
     "karma-phantomjs-shim": "1.1.2",
     "karma-sinon": "1.0.5",

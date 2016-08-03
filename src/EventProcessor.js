@@ -4,7 +4,6 @@ function EventProcessor(eventsUrl) {
   var processor = {};
   var queue = [];
   var initialFlush = true;
-  var flushTimeoutId;
   
   processor.enqueue = function(event) {
     queue.push(event);
