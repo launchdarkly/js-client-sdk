@@ -28,6 +28,8 @@
     "karma-chrome-launcher": "1.0.1",
     "karma-phantomjs-launcher": "0.2.1",
     "karma-phantomjs-shim": "1.1.2",
+    "karma-sourcemap-loader": "0.3.7",
+    "karma-webpack": "1.7.0",
     "karma-sinon": "1.0.5",
     "mocha": "2.5.3",
     "phantomjs": "1.9.18",
@@ -41,8 +43,6 @@
   "dependencies": {
     "Base64": "1.0.0",
     "escape-string-regexp": "1.0.5",
-    "karma-sourcemap-loader": "0.3.7",
-    "karma-webpack": "1.7.0",
     "sizzle": "2.3.0"
   },
   "repository": {
