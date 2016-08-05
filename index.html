@@ -30,7 +30,7 @@
       });
       
       function render(key, defaultValue) {
-        var value = client.toggle(key, defaultValue);
+        var value = client.variation(key, defaultValue);
         var el = document.querySelector('.' + key);
         el.innerHTML = value.toString();
       }
