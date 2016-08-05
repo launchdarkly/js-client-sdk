@@ -11,19 +11,17 @@
   ],
   "main": "src",
   "scripts": {
-    "build-dev": "browserify src/index.js --standalone LDClient -o dist/ldclient.js",
-    "build-min": "browserify src/index.js --standalone LDClient | uglifyjs > dist/ldclient.min.js",
-    "build-gzip": "browserify src/index.js --standalone LDClient | uglifyjs | gzip > dist/ldclient.min.js.gz",
-    "build": "npm run build-dev && npm run build-min && npm run build-gzip",
-    "watch": "watchify src/index.js --debug --verbose --standalone LDClient -o dist/ldclient.js",
+    "build-lib": "webpack src/index.js dist/ldclient.js",
+    "build-min": "webpack -p src/index.js dist/ldclient.min.js",
+    "build": "node ./scripts/build.js",
+    "watch": "webpack --watch src/index.js dist/ldclient.js",
     "test": "karma start --single-run",
-    "test:watch": "karma start --auto-watch --reporters=dots"
+    "test:watch": "karma start --auto-watch --reporters=dots",
+    "prepublish": "node ./scripts/build.js"
   },
   "devDependencies": {
-    "browserify": "13.0.1",
     "chai": "3.5.0",
     "karma": "0.13.22",
-    "karma-browserify": "5.0.5",
     "karma-chai": "0.1.0",
     "karma-mocha": "1.0.1",
     "karma-mocha-reporter": "2.0.4",
@@ -34,16 +32,21 @@
     "mocha": "2.5.3",
     "phantomjs": "1.9.18",
     "sinon": "1.17.4",
-    "uglify-js": "2.6.3",
-    "watchify": "3.7.0"
+    "webpack": "1.13.1",
+    "gzip-size": "3.0.0",
+    "in-publish": "2.0.0",
+    "pretty-bytes": "3.0.1",
+    "readline-sync": "1.4.4"
   },
   "dependencies": {
     "Base64": "1.0.0",
     "escape-string-regexp": "1.0.5",
+    "karma-sourcemap-loader": "0.3.7",
+    "karma-webpack": "1.7.0",
     "sizzle": "2.3.0"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/launchdarkly/js-client.git"
-  }  
+  }
 }

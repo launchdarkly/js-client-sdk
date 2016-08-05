@@ -1,4 +1,4 @@
-var LDClient = require('../src/index');
+var LDClient = require('../index');
 
 describe('LDClient', function() {
   var xhr;

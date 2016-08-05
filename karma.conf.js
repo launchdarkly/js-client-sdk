@@ -1,38 +1,25 @@
 module.exports = function(config) {
   config.set({
     files: [
-      'src/*.js',
-      'test/*-test.js'
+      'tests.webpack.js'
     ],
     
-    plugins: [
-      'karma-browserify',
-      'karma-chrome-launcher',
-      'karma-phantomjs-launcher',
-      'karma-phantomjs-shim',
-      'karma-mocha',
-      'karma-mocha-reporter',
-      'karma-chai',
-      'karma-sinon'
-    ],
+    preprocessors: {
+      'tests.webpack.js': [ 'webpack', 'sourcemap' ]
+    },
     
     reporters: ['mocha'],
     
-    frameworks: ['browserify', 'mocha', 'chai', 'sinon'],
-    
-    browserify: {
-      debug: true
-    },
-    
-    preprocessors: {
-      'src/*.js': ['browserify'],
-      'test/*-test*.js': ['browserify']
-    },
+    frameworks: ['mocha', 'chai', 'sinon'],
     
     browsers: ['Chrome'],
     
-    autoWatch: false,
+    webpack: {
+      devtool: 'inline-source-map'
+    },
     
-    singleRun: false,
+    webpackServer: {
+      noInfo: true
+    }
   });
 };
