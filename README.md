@@ -88,7 +88,14 @@ You can enable secure mode for each environment on your [account settings page](
           hash: "SERVER_GENERATED_HASH"
         });
 
-To compute the hash, locate the SDK key for your environment on your account settings page. Then, compute an HMAC SHA256 hash of your user key, using your SDK key as a secret. Here's what this would look like in Node.js:
+Each of our server-side SDKs includes a method to compute the secure mode hash for a user. You can pass this to your front-end code in a template. For example:
+
+        var client = LDClient.initialize('YOUR_ENVIRONMENT_ID', user, options = {
+                hash: {{ ldclient.secure_mode_hash(user) }} // this is a template directive, and the ldclient instance here is your server-side SDK client
+        });
+
+
+To compute the hash yourself, locate the SDK key for your environment on your account settings page. Then, compute an HMAC SHA256 hash of your user key, using your SDK key as a secret. Here's what this would look like in Node.js:
 
         var crypto = require('crypto');
         var hmac = crypto.createHmac('sha256', 'YOUR_SDK_KEY');
