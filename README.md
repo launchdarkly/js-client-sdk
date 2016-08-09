@@ -17,7 +17,7 @@ There are two ways to install the client-side SDK:
 
 2. A minimized version of the script is also hosted on `npmcdn`, and can be included via a `script` tag:
 
-        <script src="https://npmcdn.com/ldclient-js/dist/client.min.js">
+        <script src="https://app.launchdarkly.com/snippet/ldclient.min.js">
 
 ## Basics
 
@@ -148,5 +148,3 @@ The `hash` parameter is the hash for the new user, assuming that the user's key 
 To build the module, run `npm run build`. You can also run `npm run watch` to rebuild the module automatically on file change.
 
 To run the tests, run `npm run test`.
-
-
