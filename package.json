@@ -1,5 +1,5 @@
 {
-  "name": "@launchdarkly/ldclient-js",
+  "name": "ldclient-js",
   "version": "1.0.2",
   "description": "LaunchDarkly SDK for JavaScript",
   "author": "LaunchDarkly <team@launchdarkly.com>",
