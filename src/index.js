@@ -9,6 +9,7 @@ var utils = require('./utils');
 var flags = {};
 var environment;
 var events;
+var requestor;
 var stream;
 var emitter;
 var hash;
