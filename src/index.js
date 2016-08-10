@@ -9,6 +9,7 @@ var utils = require('./utils');
 var flags = {};
 var environment;
 var events;
+var requestor;
 var stream;
 var emitter;
 var hash;
@@ -77,7 +78,9 @@ function sendGoalEvent(kind, goal) {
 function identify(user, hash, onDone) {
   ident.setUser(user);
   requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
-    updateSettings(settings);
+    if (settings) {
+      updateSettings(settings);
+    }
     onDone();
   });
 }

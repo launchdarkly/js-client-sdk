@@ -5,15 +5,17 @@ var json = 'application/json';
 function fetchJSON(endpoint, callback) {
   var xhr = new XMLHttpRequest();
   
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200 && xhr.getResponseHeader('Content-type') === json) {
-        callback(null, JSON.parse(xhr.responseText));
-      } else {
-        callback(xhr.statusText);
-      }
+  xhr.addEventListener('load', function() {
+    if (xhr.status === 200 && xhr.getResponseHeader('Content-type') === json) {
+      callback(null, JSON.parse(xhr.responseText));
+    } else {
+      callback(xhr.statusText);
     }
-  };
+  });
+  
+  xhr.addEventListener('error', function() {
+    callback(xhr.statusText);
+  });
   
   xhr.open('GET', endpoint);
   xhr.send();
