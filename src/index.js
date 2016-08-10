@@ -78,7 +78,9 @@ function sendGoalEvent(kind, goal) {
 function identify(user, hash, onDone) {
   ident.setUser(user);
   requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
-    updateSettings(settings);
+    if (settings) {
+      updateSettings(settings);
+    }
     onDone();
   });
 }
