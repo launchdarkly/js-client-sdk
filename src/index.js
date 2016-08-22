@@ -260,7 +260,7 @@ function initialize(env, user, options) {
   });
   
   function refreshGoalTracker() {
-    if (goalTracker !== null) {
+    if (goalTracker) {
       goalTracker.dispose();
     }
     if (goals && goals.length) {
@@ -268,12 +268,13 @@ function initialize(env, user, options) {
     } 
   }
 
-  if (!!(window.history && history.pushState)) {
-    window.addEventListener('popstate', refreshGoalTracker);  
-  } else {
-    window.addEventListener('hashchange', refreshGoalTracker);
+  if (goals && goals.length > 0) {
+    if (!!(window.history && history.pushState)) {
+      window.addEventListener('popstate', refreshGoalTracker);  
+    } else {
+      window.addEventListener('hashchange', refreshGoalTracker);
+    }
   }
-
 
   window.addEventListener('message', handleMessage);
 
