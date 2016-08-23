@@ -7,6 +7,19 @@ This is the official LaunchDarkly client-side JavaScript SDK. This SDK does two 
 * Makes feature flags available to your client-side (front-end) JavaScript code.
 * Sends click, pageview, and custom events from your front-end for A/B tests and analytics.
 
+## Browser Support
+
+The LaunchDarkly client-side JavaScript SDK supports the following browsers:
+
+* Chrome (any recent)
+* Firefox (any recent)
+* Safari (any recent)*
+* Internet Explorer (IE10+)*
+* Edge (any recent)*
+* Opera (any recent)*
+
+\* These browsers do not support streaming new flags to connected clients, even when `client.on('change')` is called.
+
 ## Installation
 
 There are two ways to install the client-side SDK:
@@ -51,7 +64,7 @@ Out of the box, initializing the client will make a remote request to LaunchDark
 
 Bootstrapping refers to providing the LaunchDarkly client object with an initial, immediately available set of feature flag values so that on page load `variation` can be called with no delay.
 
-#### From the server-side SDK 
+#### From the server-side SDK
 
 The preferred approach to bootstrapping is to populate the bootstrap values (a map of feature flag keys to flag values) from your backend. LaunchDarkly's server-side SDKs have a function called `all_flags`-- this function provides the initial set of bootstrap values. You can then provide these values to your front-end as a template. Depending on your templating language, this might look something like this:
 
@@ -66,15 +79,15 @@ If you bootstrap from the server-side, feature flags will be ready immediately, 
 
 #### From Local Storage
 
-Alternatively, you can bootstrap feature flags from local storage. 
+Alternatively, you can bootstrap feature flags from local storage.
 
         var client = LDClient.initialize('YOUR_ENVIRONMENT_ID', user, options = {
           bootstrap: 'localStorage'
         });
 
-When using local storage, the client will store the latest flag settings in local storage. On page load, the previous settings will be used and the 'ready' event will be emitted immediately. This means that on page load, the user may see cached flag values until the next page load. 
+When using local storage, the client will store the latest flag settings in local storage. On page load, the previous settings will be used and the 'ready' event will be emitted immediately. This means that on page load, the user may see cached flag values until the next page load.
 
-You can still subscribe to flag changes if you're using local storage. 
+You can still subscribe to flag changes if you're using local storage.
 
 
 ### Secure mode
