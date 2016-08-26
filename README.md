@@ -22,7 +22,7 @@ The LaunchDarkly client-side JavaScript SDK supports the following browsers:
 
 ### `EventSource` Polyfill
 
-If you need streaming support, but your browser does not support `EventSource` natively, you can install a polyfill, such
+If you need streaming support, and you wish to support browsers that do not support `EventSource` natively, you can install a polyfill, such
 as [eventsource](https://www.npmjs.com/package/eventsource).
 
 You can load the polyfill via a script tag in the `<head>` before the script where you initialize `LDClient`:
