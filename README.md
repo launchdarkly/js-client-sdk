@@ -20,6 +20,17 @@ The LaunchDarkly client-side JavaScript SDK supports the following browsers:
 
 \* These browsers do not support streaming new flags to connected clients, even when `client.on('change')` is called.
 
+### `EventSource` Polyfill
+
+If you need streaming support, but your browser does not support `EventSource` natively, you can install a polyfill, such
+as [eventsource](https://www.npmjs.com/package/eventsource).
+
+You can load the polyfill via a script tag in the `<head>` before the script where you initialize `LDClient`:
+
+    <script src="/public/eventsource-polyfill.js"></script>
+
+If you use [webpack](https://webpack.github.io/) or [browserify](http://browserify.org/), make sure to require the polyfill before `LDClient` is initialized.
+
 ## Installation
 
 There are two ways to install the client-side SDK:
