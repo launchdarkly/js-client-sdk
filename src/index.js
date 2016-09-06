@@ -282,5 +282,6 @@ function initialize(env, user, options) {
 }
 
 module.exports = {
-  initialize: initialize
+  initialize: initialize,
+  version: VERSION
 };
