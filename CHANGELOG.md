@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [1.0.7] - 2016-09-06
+### Changed
+- Expose SDK version at `LDClient.version`
+
 ## [1.0.6] - 2016-08-23
 ### Changed
 - Added check for EventSource before trying to connect Stream.
