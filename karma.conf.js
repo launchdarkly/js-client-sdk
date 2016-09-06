@@ -1,3 +1,5 @@
+const webpackConfig = require('./webpack.config');
+
 module.exports = function(config) {
   config.set({
     files: [
@@ -14,9 +16,7 @@ module.exports = function(config) {
     
     browsers: ['Chrome'],
     
-    webpack: {
-      devtool: 'inline-source-map'
-    },
+    webpack: webpackConfig,
     
     webpackServer: {
       noInfo: true
