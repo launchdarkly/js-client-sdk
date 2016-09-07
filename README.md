@@ -39,7 +39,7 @@ There are two ways to install the client-side SDK:
 
         npm install --save ldclient-js
 
-2. A minimized version of the script is also hosted on `npmcdn`, and can be included via a `script` tag:
+2. A minimized version of the script is also hosted on our CDN, and can be included via a `script` tag:
 
         <script src="https://app.launchdarkly.com/snippet/ldclient.min.js">
 
