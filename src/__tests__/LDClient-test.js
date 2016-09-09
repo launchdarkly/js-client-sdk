@@ -1,4 +1,5 @@
 var LDClient = require('../index');
+var semverCompare = require('semver-compare');
 
 describe('LDClient', function() {
   var xhr;
@@ -44,6 +45,18 @@ describe('LDClient', function() {
       
       var settingsRequest = requests[0];
       expect(/sdk\/eval/.test(settingsRequest.url)).to.be.false;
+    });
+
+    it('should contain package version', function () {
+      // Arrange
+      var version = LDClient.version;
+
+      // Act: all client bundles above 1.0.7 should contain package version
+      // https://github.com/substack/semver-compare
+      var result = semverCompare(version, '1.0.6');
+
+      // Assert
+      expect(result).to.equal(1);
     });
   });
   
