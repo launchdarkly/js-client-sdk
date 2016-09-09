@@ -282,6 +282,9 @@ function initialize(env, user, options) {
 }
 
 module.exports = {
-  initialize: initialize,
-  version: VERSION
+  initialize: initialize
 };
+
+if(typeof VERSION !== 'undefined') {
+  module.exports.version = VERSION;
+}
