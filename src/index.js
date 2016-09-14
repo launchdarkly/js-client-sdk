@@ -99,6 +99,17 @@ function variation(key, defaultValue) {
   return value;
 }
 
+function all_flags() {
+  var results = {};
+  for (var key in flags) {
+    if (flags.hasOwnProperty(key)) {
+      results[key] = variation(key, null);
+    }
+  }
+
+  return results;
+}
+
 function track(key, data) {
   if (typeof key !== 'string') {
     throw 'Event key must be a string';
@@ -177,7 +188,8 @@ var client = {
   variation: variation,
   track: track,
   on: on,
-  off: off
+  off: off,
+  all_flags: all_flags
 };
 
 function lsKey(env, user) {

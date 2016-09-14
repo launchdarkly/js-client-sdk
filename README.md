@@ -70,6 +70,12 @@ Out of the box, initializing the client will make a remote request to LaunchDark
 
 *Note*: Feature flags must marked available to the client-side SDK (see your feature flag's settings page) before they can be used in variation calls on the front-end. If you request a feature flag that is not available, you'll receive the default value for that flag.
 
+You can also fetch all feature flags for a user:
+
+
+          var flags = client.all_flags();
+
+This will return a key / value map of all your feature flags. The map will contain `null` values for any flags that would return the fallback value (the second argument that you normally pass to `variation`). Note that this will send analytics events to LaunchDarkly as if you'd called `variation` for every feature flag.
 
 ### Bootstrapping
 
