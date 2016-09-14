@@ -70,6 +70,12 @@ Out of the box, initializing the client will make a remote request to LaunchDark
 
 *Note*: Feature flags must marked available to the client-side SDK (see your feature flag's settings page) before they can be used in variation calls on the front-end. If you request a feature flag that is not available, you'll receive the default value for that flag.
 
+You can also fetch all feature flags for a user:
+
+
+          var flags = client.allFlags();
+
+This will return a key / value map of all your feature flags. The map will contain `null` values for any flags that would return the fallback value (the second argument that you normally pass to `variation`). Note that this will send analytics events to LaunchDarkly as if you'd called `variation` for every feature flag.
 
 ### Bootstrapping
 
@@ -77,7 +83,7 @@ Bootstrapping refers to providing the LaunchDarkly client object with an initial
 
 #### From the server-side SDK
 
-The preferred approach to bootstrapping is to populate the bootstrap values (a map of feature flag keys to flag values) from your backend. LaunchDarkly's server-side SDKs have a function called `all_flags`-- this function provides the initial set of bootstrap values. You can then provide these values to your front-end as a template. Depending on your templating language, this might look something like this:
+The preferred approach to bootstrapping is to populate the bootstrap values (a map of feature flag keys to flag values) from your backend. LaunchDarkly's server-side SDKs have a function called `allFlags`-- this function provides the initial set of bootstrap values. You can then provide these values to your front-end as a template. Depending on your templating language, this might look something like this:
 
         var user = {key: 'user.example.com'};
         var client = LDClient.initialize('YOUR_ENVIRONMENT_ID', user, options = {
