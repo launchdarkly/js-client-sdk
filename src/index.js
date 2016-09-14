@@ -99,7 +99,7 @@ function variation(key, defaultValue) {
   return value;
 }
 
-function all_flags() {
+function allFlags() {
   var results = {};
   for (var key in flags) {
     if (flags.hasOwnProperty(key)) {
@@ -189,7 +189,7 @@ var client = {
   track: track,
   on: on,
   off: off,
-  all_flags: all_flags
+  allFlags: allFlags
 };
 
 function lsKey(env, user) {
