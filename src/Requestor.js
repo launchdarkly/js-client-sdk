@@ -23,20 +23,13 @@ function fetchJSON(endpoint, callback) {
   return xhr;
 }
 
-var flagSettingsRequest;
-
 function Requestor(baseUrl, environment) {
   var requestor = {};
   
   requestor.fetchFlagSettings = function(user, hash, callback) {
     var data = utils.base64URLEncode(JSON.stringify(user));
     var endpoint = [baseUrl, '/sdk/eval/', environment,  '/users/', data, hash ? '?h=' + hash : ''].join('');
-    
-    if (flagSettingsRequest) {
-      flagSettingsRequest.abort();
-    }
-    
-    flagSettingsRequest = fetchJSON(endpoint, callback);
+    fetchJSON(endpoint, callback);
   };
   
   requestor.fetchGoals = function(callback) {
