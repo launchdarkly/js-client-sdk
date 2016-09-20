@@ -5,6 +5,7 @@ var Stream = require('./Stream');
 var Requestor = require('./Requestor');
 var Identity = require('./Identity');
 var utils = require('./utils');
+var dashify = require('dashify');
 
 var flags = {};
 var environment;
@@ -85,17 +86,23 @@ function identify(user, hash, onDone) {
   });
 }
 
+/**
+ * Retrieve a flag value for a given key from in-memory cache populated by initialize method
+ * @param key Retrieve value for this key. Can be of two formats: all-low-caps-dash-separated or camelCased
+ * @param defaultValue Use this value if flag does not exist in memory
+ * @returns {*} The value of the flag specified by key
+ */
 function variation(key, defaultValue) {
   var value;
+  var dashSeparatedKey = dashify(key);
   
-  if (flags.hasOwnProperty(key)) {
-    value = flags[key] === null ? defaultValue : flags[key];
+  if (flags.hasOwnProperty(dashSeparatedKey)) {
+    value = flags[dashSeparatedKey] === null ? defaultValue : flags[dashSeparatedKey];
   } else {
     value = defaultValue;
   }
   
-  sendFlagEvent(key, value, defaultValue);
-  
+  sendFlagEvent(dashSeparatedKey, value, defaultValue);
   return value;
 }
 
