@@ -34,16 +34,25 @@ function Requestor(baseUrl, environment) {
     var endpoint = [baseUrl, '/sdk/eval/', environment,  '/users/', data, hash ? '?h=' + hash : ''].join('');
     var cb;
 
+    var wrappedCallback = (function(currentCallback) {
+      return function() {
+        currentCallback.apply(null, arguments);
+        flagSettingsRequest = null;
+        lastFlagSettingsCallback = null;
+      };
+    })(callback);
+    
+
     if (flagSettingsRequest) {
       flagSettingsRequest.abort();
       cb = (function(prevCallback) {
         return function() {
-          prevCallback.apply(null, arguments);
-          callback.apply(null, arguments);
+          prevCallback && prevCallback.apply(null, arguments);
+          wrappedCallback.apply(null, arguments);
         };
       })(lastFlagSettingsCallback);
     } else {
-      cb = callback;
+      cb = wrappedCallback;
     }
 
     lastFlagSettingsCallback = cb;
