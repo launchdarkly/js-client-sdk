@@ -95,7 +95,7 @@ function identify(user, hash, onDone) {
 function variation(key, defaultValue) {
   var value;
   var dashSeparatedKey = dashify(key);
-  
+
   if (flags.hasOwnProperty(dashSeparatedKey)) {
     value = flags[dashSeparatedKey] === null ? defaultValue : flags[dashSeparatedKey];
   } else {
