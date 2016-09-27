@@ -47,7 +47,6 @@
   },
   "dependencies": {
     "Base64": "1.0.0",
-    "dashify": "^0.2.2",
     "escape-string-regexp": "1.0.5",
     "sizzle": "2.3.0"
   },

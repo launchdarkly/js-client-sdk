@@ -61,30 +61,60 @@ describe('LDClient', function() {
   });
 
   describe('variation', function() {
-    it('should return value for specified dashed-separated key', function(done) {
-      var user = {key: 'user'};
-      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
-        bootstrap: {'this-is-a-test-key': true}
+    it('should return value for dashed-separated key', function(done) {
+      const user = {key: 'user'};
+      const client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: {'this-is-a-test-key': 'protein', 'some-other-key': true}
       });
 
       client.on('ready', function(){
-        var dashedKey = 'this-is-a-test-key';
-        var flagValue = client.variation(dashedKey, false);
+        const dashedKey = 'this-is-a-test-key';
+        const flagValue = client.variation(dashedKey, false);
+        expect(flagValue).to.eq('protein');
+        done();
+      });
+    });
+
+    it('should return value for camelCased key', function(done) {
+      const user = {key: 'user'};
+      const client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: {'this-is-a-test-key': true, 'some-other-key': 'muscle'}
+      });
+
+      client.on('ready', function(){
+        const camelCasedKey = 'thisIsATestKey';
+        const flagValue = client.variation(camelCasedKey, false);
         expect(flagValue).to.be.true;
         done();
       });
     });
 
-    it.only('should return value for specified camelCased key', function(done) {
-      var user = {key: 'user'};
-      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
-        bootstrap: {'this-is-a-test-key': true}
+    it('should return default value for non-existent dashed key', function(done) {
+      const user = {key: 'user'};
+      const client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: {'this-is-a-test-key': 'protein', 'some-other-key': 'bar'}
       });
 
       client.on('ready', function(){
-        var camelCasedKey = 'thisIsATestKey'; // this fails, it becomes this-is-atest
-        var flagValue = client.variation(camelCasedKey, false);
-        expect(flagValue).to.be.true;
+        const defaultValue = 'cabbage';
+        const key = 'does-not-exist';
+        const flagValue = client.variation(key, defaultValue);
+        expect(flagValue).to.eq(defaultValue);
+        done();
+      });
+    });
+
+    it('should return default value for non-existent camelCased key', function(done) {
+      const user = {key: 'user'};
+      const client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: {'this-is-a-test-key': 'protein', 'some-other-key': 'bar'}
+      });
+
+      client.on('ready', function(){
+        const defaultValue = 'cabbage';
+        const key = 'doesNotExist';
+        const flagValue = client.variation(key, defaultValue);
+        expect(flagValue).to.eq(defaultValue);
         done();
       });
     });
