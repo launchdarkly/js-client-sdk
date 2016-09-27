@@ -2,6 +2,14 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [1.1.2] - 2016-09-21
+### Changed
+- Ensure callbacks only ever get called once
+
+## [1.1.1] - 2016-09-20
+### Changed
+- Fix flag setting request cancellation logic
+
 ## [1.1.0] - 2016-09-14
 ### Added
 - Add a new `allFlags` method that returns a map of all feature flag keys and their values for a user

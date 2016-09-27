@@ -24,6 +24,7 @@ function fetchJSON(endpoint, callback) {
 }
 
 var flagSettingsRequest;
+var lastFlagSettingsCallback;
 
 function Requestor(baseUrl, environment) {
   var requestor = {};
@@ -31,12 +32,31 @@ function Requestor(baseUrl, environment) {
   requestor.fetchFlagSettings = function(user, hash, callback) {
     var data = utils.base64URLEncode(JSON.stringify(user));
     var endpoint = [baseUrl, '/sdk/eval/', environment,  '/users/', data, hash ? '?h=' + hash : ''].join('');
+    var cb;
+
+    var wrappedCallback = (function(currentCallback) {
+      return function() {
+        currentCallback.apply(null, arguments);
+        flagSettingsRequest = null;
+        lastFlagSettingsCallback = null;
+      };
+    })(callback);
     
+
     if (flagSettingsRequest) {
       flagSettingsRequest.abort();
+      cb = (function(prevCallback) {
+        return function() {
+          prevCallback && prevCallback.apply(null, arguments);
+          wrappedCallback.apply(null, arguments);
+        };
+      })(lastFlagSettingsCallback);
+    } else {
+      cb = wrappedCallback;
     }
-    
-    flagSettingsRequest = fetchJSON(endpoint, callback);
+
+    lastFlagSettingsCallback = cb;
+    flagSettingsRequest = fetchJSON(endpoint, cb);
   };
   
   requestor.fetchGoals = function(callback) {
