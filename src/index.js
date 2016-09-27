@@ -5,7 +5,6 @@ var Stream = require('./Stream');
 var Requestor = require('./Requestor');
 var Identity = require('./Identity');
 var utils = require('./utils');
-var dashify = require('dashify');
 
 var flags = {};
 var environment;
@@ -91,26 +90,44 @@ function removeDashes(s) {
 }
 
 /**
+ * Transform string to lower case without dashes
+ * @param s the string to process
+ * @returns {string} Lower case string stripped off any dashes
+ */
+function toLowerCaseRemoveDashes(s) {
+  var result = s.toLowerCase();
+  if (result.includes('-')) {
+    result = removeDashes(result);
+  }
+  
+  return result;
+}
+
+function findDashedKey(someKey) {
+  var strippedLoweredKey = toLowerCaseRemoveDashes(someKey);
+
+  for (var dashedKey in flags) {
+    if (removeDashes(dashedKey) === strippedLoweredKey) {
+      return dashedKey;
+    }
+  }
+
+  return null;
+}
+
+/**
  * Retrieve a flag value for a given key from in-memory cache populated by initialize method.
  * @param key Retrieve value for this key. Can be of two formats: all-low-caps-dash-separated or camelCased
  * @param defaultValue Use this value if flag does not exist in memory
  * @returns {*} The value of the flag specified by key
  */
 function variation(key, defaultValue) {
-  // transform keys into all lower case without dashes
-  var strippedLoweredKey = key.toLowerCase();
-  if(key.includes('-')) {
-    strippedLoweredKey = removeDashes(strippedLoweredKey);
-  }
+  var dashedKey = findDashedKey(key);
 
-  // the keys in memory from the server are already in lower case,
-  // so we just need to strip dashes
-  for(const dashedKey in flags) {
-    if(removeDashes(dashedKey) === strippedLoweredKey) {
-      var value = flags[dashedKey] ? flags[dashedKey] : defaultValue;
-      sendFlagEvent(dashedKey, value, defaultValue);
-      return value;
-    }
+  if(dashedKey) {
+    var value = flags[dashedKey] ? flags[dashedKey] : defaultValue;
+    sendFlagEvent(dashedKey, value, defaultValue);
+    return value;
   }
 
   // key not found
@@ -121,9 +138,7 @@ function variation(key, defaultValue) {
 function allFlags() {
   var results = {};
   for (var key in flags) {
-    if (flags.hasOwnProperty(key)) {
-      results[key] = variation(key, null);
-    }
+    results[key] = variation(key, null);
   }
 
   return results;
@@ -175,12 +190,19 @@ function updateSettings(settings) {
 }
 
 function on(event, handler, context) {
-  if (event.substr(0, changeEvent.length) === changeEvent) {
+  if (event.startsWith(changeEvent)) {
+    // change event
     if (!stream.isConnected()) {
       connectStream();
     }
-    emitter.on.apply(emitter, [event, handler, context]);
+
+    var someKey = event.split(':').pop();
+    var dashedKey = findDashedKey(someKey);
+    var sanitisedEvent = changeEvent + ':' + dashedKey;
+    
+    emitter.on.apply(emitter, [sanitisedEvent, handler, context]);
   } else {
+    // ready event
     emitter.on.apply(emitter, Array.prototype.slice.call(arguments));
   }
 }

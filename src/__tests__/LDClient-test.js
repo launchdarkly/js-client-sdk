@@ -1,28 +1,28 @@
 var LDClient = require('../index');
 var semverCompare = require('semver-compare');
 
-describe('LDClient', function() {
+describe('LDClient', function () {
   var xhr;
   var requests = [];
 
-  beforeEach(function() {
+  beforeEach(function () {
     xhr = sinon.useFakeXMLHttpRequest();
-    xhr.onCreate = function(req) {
+    xhr.onCreate = function (req) {
       requests.push(req);
     };
   });
 
-  afterEach(function() {
+  afterEach(function () {
     requests = [];
     xhr.restore();
   });
 
-  it('should exist', function() {
+  it('should exist', function () {
     expect(LDClient).to.exist;
   });
 
-  describe('initialization', function() {
-    it('should trigger the ready event', function(done) {
+  describe('initialization', function () {
+    it('should trigger the ready event', function (done) {
       var user = {key: 'user'};
       var handleReady = sinon.spy();
       var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
@@ -31,13 +31,13 @@ describe('LDClient', function() {
 
       client.on('ready', handleReady);
 
-      setTimeout(function() {
+      setTimeout(function () {
         expect(handleReady.called).to.be.true;
         done();
       }, 0);
     });
 
-    it('should not fetch flag settings since bootstrap is provided', function() {
+    it('should not fetch flag settings since bootstrap is provided', function () {
       var user = {key: 'user'};
       var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
         bootstrap: {}
@@ -60,14 +60,14 @@ describe('LDClient', function() {
     });
   });
 
-  describe('variation', function() {
-    it('should return value for dashed-separated key', function(done) {
+  describe('variation', function () {
+    it('should return value for dashed-separated key', function (done) {
       const user = {key: 'user'};
       const client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
         bootstrap: {'this-is-a-test-key': 'protein', 'some-other-key': true}
       });
 
-      client.on('ready', function(){
+      client.on('ready', function () {
         const dashedKey = 'this-is-a-test-key';
         const flagValue = client.variation(dashedKey, false);
         expect(flagValue).to.eq('protein');
@@ -75,13 +75,13 @@ describe('LDClient', function() {
       });
     });
 
-    it('should return value for camelCased key', function(done) {
+    it('should return value for camelCased key', function (done) {
       const user = {key: 'user'};
       const client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
         bootstrap: {'this-is-a-test-key': true, 'some-other-key': 'muscle'}
       });
 
-      client.on('ready', function(){
+      client.on('ready', function () {
         const camelCasedKey = 'thisIsATestKey';
         const flagValue = client.variation(camelCasedKey, false);
         expect(flagValue).to.be.true;
@@ -89,13 +89,13 @@ describe('LDClient', function() {
       });
     });
 
-    it('should return default value for non-existent dashed key', function(done) {
+    it('should return default value for non-existent dashed key', function (done) {
       const user = {key: 'user'};
       const client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
         bootstrap: {'this-is-a-test-key': 'protein', 'some-other-key': 'bar'}
       });
 
-      client.on('ready', function(){
+      client.on('ready', function () {
         const defaultValue = 'cabbage';
         const key = 'does-not-exist';
         const flagValue = client.variation(key, defaultValue);
@@ -104,13 +104,13 @@ describe('LDClient', function() {
       });
     });
 
-    it('should return default value for non-existent camelCased key', function(done) {
+    it('should return default value for non-existent camelCased key', function (done) {
       const user = {key: 'user'};
       const client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
         bootstrap: {'this-is-a-test-key': 'protein', 'some-other-key': 'bar'}
       });
 
-      client.on('ready', function(){
+      client.on('ready', function () {
         const defaultValue = 'cabbage';
         const key = 'doesNotExist';
         const flagValue = client.variation(key, defaultValue);
@@ -120,4 +120,20 @@ describe('LDClient', function() {
     });
   });
 
+  describe('on subscribe to change event', function () {
+    it('should correctly subscribe to change event using camelCased key', function (done) {
+
+      // TODO: rewire require('./EventEmitter'); so we can check that emitter.on is called
+      // with the correct event name (line 203 index.js)
+      const user = {key: 'user'};
+      const client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: {'this-is-a-test-key': 'protein', 'some-other-key': true}
+      });
+
+      client.on('ready', function () {
+        client.on('change:thisIsATestKey');
+        done();
+      });
+    });
+  });
 });
