@@ -41,6 +41,8 @@
     "phantomjs": "1.9.18",
     "pretty-bytes": "3.0.1",
     "readline-sync": "1.4.4",
+    "rewire": "^2.5.2",
+    "rewire-webpack": "^1.0.1",
     "semver-compare": "^1.0.0",
     "sinon": "1.17.4",
     "webpack": "1.13.1"

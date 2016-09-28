@@ -90,7 +90,7 @@ function removeDashes(s) {
 }
 
 /**
- * Transform string to lower case without dashes
+ * Transform string to lower case and strip dashes
  * @param s the string to process
  * @returns {string} Lower case string stripped off any dashes
  */
@@ -99,7 +99,7 @@ function toLowerCaseRemoveDashes(s) {
   if (result.includes('-')) {
     result = removeDashes(result);
   }
-  
+
   return result;
 }
 
@@ -124,7 +124,7 @@ function findDashedKey(someKey) {
 function variation(key, defaultValue) {
   var dashedKey = findDashedKey(key);
 
-  if(dashedKey) {
+  if (dashedKey) {
     var value = flags[dashedKey] ? flags[dashedKey] : defaultValue;
     sendFlagEvent(dashedKey, value, defaultValue);
     return value;
@@ -189,26 +189,34 @@ function updateSettings(settings) {
   }
 }
 
+function dashifyChangeEvent(event) {
+  var someKey = event.split(':').pop();
+  var dashedKey = findDashedKey(someKey);
+  var result = dashedKey ? changeEvent + ':' + dashedKey : event;
+  return result;
+}
+
 function on(event, handler, context) {
   if (event.startsWith(changeEvent)) {
-    // change event
+    // change event, supports camelCasedKey and dashed-key
     if (!stream.isConnected()) {
       connectStream();
     }
-
-    var someKey = event.split(':').pop();
-    var dashedKey = findDashedKey(someKey);
-    var sanitisedEvent = changeEvent + ':' + dashedKey;
-    
-    emitter.on.apply(emitter, [sanitisedEvent, handler, context]);
+    var dashifiedEvent = dashifyChangeEvent(event);
+    emitter.on.apply(emitter, [dashifiedEvent, handler, context]);
   } else {
     // ready event
     emitter.on.apply(emitter, Array.prototype.slice.call(arguments));
   }
 }
 
-function off() {
-  emitter.off.apply(emitter, Array.prototype.slice.call(arguments));
+function off(event, handler, context) {
+  if (event.startsWith(changeEvent)) {
+    var dashifiedEvent = dashifyChangeEvent(event);
+    emitter.off.apply(emitter, [dashifiedEvent, handler, context]);
+  } else {
+    emitter.off.apply(emitter, Array.prototype.slice.call(arguments));
+  }
 }
 
 function handleMessage(event) {

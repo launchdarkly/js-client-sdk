@@ -1,9 +1,24 @@
-var LDClient = require('../index');
+var rewire = require('rewire');
 var semverCompare = require('semver-compare');
+var LDClient = rewire('../index');
 
 describe('LDClient', function () {
   var xhr;
   var requests = [];
+  var onSubscribeChangeEvent = '';
+  var unsubscribeChangeEvent = '';
+
+  var eventEmitterMock = function EventEmitter() {
+    var emitter = {};
+    emitter.on = function (event) {
+      onSubscribeChangeEvent = event;
+    };
+    emitter.off = function (event) {
+      unsubscribeChangeEvent = event;
+    };
+    emitter.emit = function () {};
+    return emitter;
+  };
 
   beforeEach(function () {
     xhr = sinon.useFakeXMLHttpRequest();
@@ -15,6 +30,8 @@ describe('LDClient', function () {
   afterEach(function () {
     requests = [];
     xhr.restore();
+    onSubscribeChangeEvent = '';
+    unsubscribeChangeEvent = '';
   });
 
   it('should exist', function () {
@@ -120,20 +137,85 @@ describe('LDClient', function () {
     });
   });
 
-  describe('on subscribe to change event', function () {
-    it('should correctly subscribe to change event using camelCased key', function (done) {
+  describe('subscribe to change event', function () {
+    it('should correctly subscribe to change event using camelCasedKey', function (done) {
+      var revertEventEmitter = LDClient.__set__("EventEmitter", eventEmitterMock);
 
-      // TODO: rewire require('./EventEmitter'); so we can check that emitter.on is called
-      // with the correct event name (line 203 index.js)
-      const user = {key: 'user'};
-      const client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
-        bootstrap: {'this-is-a-test-key': 'protein', 'some-other-key': true}
+      var user = {key: 'user'};
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: {'a-steak-will-be-nice': 'protein', 'some-other-key': true}
       });
 
-      client.on('ready', function () {
-        client.on('change:thisIsATestKey');
-        done();
+      client.on('change:ASteakWillBeNice');
+      expect(onSubscribeChangeEvent).to.eq('change:a-steak-will-be-nice');
+      done();
+    });
+
+    it('should correctly subscribe to change event using dashed-key', function (done) {
+      var revertEventEmitter = LDClient.__set__("EventEmitter", eventEmitterMock);
+
+      var user = {key: 'user'};
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: {'lack-of-sleep': 'insomnia', 'protein-bar-is-good': true}
       });
+
+      client.on('change:proteinBarIsGood');
+      expect(onSubscribeChangeEvent).to.eq('change:protein-bar-is-good');
+      done();
+    });
+
+    it('should default to passed event if flag does not exist', function (done) {
+      var revertEventEmitter = LDClient.__set__("EventEmitter", eventEmitterMock);
+
+      var user = {key: 'user'};
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: {'lack-of-sleep': 'insomnia', 'protein-bar-is-good': true}
+      });
+
+      client.on('change:IMissMyNutriBullet');
+      expect(onSubscribeChangeEvent).to.eq('change:IMissMyNutriBullet');
+      done();
+    });
+  });
+
+  describe('unsubscribe change events', function () {
+    it('should correctly unsubscribe camelCasedKey events', function (done) {
+      var revertEventEmitter = LDClient.__set__("EventEmitter", eventEmitterMock);
+
+      var user = {key: 'user'};
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: {'a-steak-will-be-nice': 'protein', 'some-other-key': true}
+      });
+
+      client.off('change:ASteakWillBeNice');
+      expect(unsubscribeChangeEvent).to.eq('change:a-steak-will-be-nice');
+      done();
+    });
+
+    it('should correctly unsubscribe dashed-key events', function (done) {
+      var revertEventEmitter = LDClient.__set__("EventEmitter", eventEmitterMock);
+
+      var user = {key: 'user'};
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: {'lack-of-sleep': 'insomnia', 'protein-bar-is-good': true}
+      });
+
+      client.off('change:proteinBarIsGood');
+      expect(unsubscribeChangeEvent).to.eq('change:protein-bar-is-good');
+      done();
+    });
+
+    it('should default to passed event if flag does not exist', function (done) {
+      var revertEventEmitter = LDClient.__set__("EventEmitter", eventEmitterMock);
+
+      var user = {key: 'user'};
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: {'lack-of-sleep': 'insomnia', 'protein-bar-is-good': true}
+      });
+
+      client.off('change:IMissMyNutriBullet');
+      expect(unsubscribeChangeEvent).to.eq('change:IMissMyNutriBullet');
+      done();
     });
   });
 });
