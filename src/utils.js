@@ -18,7 +18,7 @@ function clone(obj) {
 
 function modifications(oldObj, newObj) {
   var mods = {};
-  
+  if (!oldObj || !newObj) { return {}; }
   for (var prop in oldObj) {
     if (oldObj.hasOwnProperty(prop)) {
       if (newObj[prop] !== oldObj[prop]) {
