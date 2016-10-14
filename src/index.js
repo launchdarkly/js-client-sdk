@@ -138,8 +138,8 @@ function updateSettings(settings) {
   
   if (!settings) { return; }
 
-  utils.modifications(flags, settings);
-  Object.keys(changes);
+  changes = utils.modifications(flags, settings);
+  keys = Object.keys(changes);
 
   flags = settings;
 
