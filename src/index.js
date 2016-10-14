@@ -133,9 +133,14 @@ function connectStream() {
 }
 
 function updateSettings(settings) {
-  var changes = utils.modifications(flags, settings);
-  var keys = Object.keys(changes);
+  var changes;
+  var keys;
   
+  if (!settings) { return; }
+
+  utils.modifications(flags, settings);
+  Object.keys(changes);
+
   flags = settings;
 
   if (useLocalStorage) {
