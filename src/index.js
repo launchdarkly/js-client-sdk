@@ -87,8 +87,8 @@ function identify(user, hash, onDone) {
 
 function variation(key, defaultValue) {
   var value;
-  
-  if (flags.hasOwnProperty(key)) {
+    
+  if (flags && flags.hasOwnProperty(key)) {
     value = flags[key] === null ? defaultValue : flags[key];
   } else {
     value = defaultValue;
@@ -101,6 +101,9 @@ function variation(key, defaultValue) {
 
 function allFlags() {
   var results = {};
+
+  if (!flags) { return results; }
+
   for (var key in flags) {
     if (flags.hasOwnProperty(key)) {
       results[key] = variation(key, null);
