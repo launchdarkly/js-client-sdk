@@ -23,11 +23,11 @@ The LaunchDarkly client-side JavaScript SDK supports the following browsers:
 ### EventSource Polyfill
 
 If you need streaming support, and you wish to support browsers that do not support `EventSource` natively, you can install a polyfill, such
-as [eventsource](https://www.npmjs.com/package/eventsource).
+as [EventSource](https://github.com/Yaffle/EventSource).
 
 You can load the polyfill via a script tag in the `<head>` before the script where you initialize `LDClient`:
 
-    <script src="/public/eventsource-polyfill.js"></script>
+    <script src="/public/eventsource.js"></script>
 
 If you use [webpack](https://webpack.github.io/) or [browserify](http://browserify.org/), make sure to require the polyfill before `LDClient` is initialized.
 
