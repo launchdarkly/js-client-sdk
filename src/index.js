@@ -209,6 +209,7 @@ function lsKey(env, user) {
 }
 
 function initialize(env, user, options) {
+  var localStorageKey;
   options = options || {};
   environment = env;
   flags = typeof(options.bootstrap) === 'object' ? options.bootstrap : {};
@@ -221,7 +222,8 @@ function initialize(env, user, options) {
   emitter = EventEmitter();
   ident = Identity(user, sendIdentifyEvent);
   requestor = Requestor(baseUrl, environment);
-  
+  localStorageKey = lsKey(environment, ident.getUser());
+   
   if (typeof options.bootstrap === 'object') {
     // Emitting the event here will happen before the consumer
     // can register a listener, so defer to next tick.
@@ -229,12 +231,17 @@ function initialize(env, user, options) {
   } 
   else if (typeof(options.bootstrap) === 'string' && options.bootstrap.toUpperCase() === 'LOCALSTORAGE' && typeof(Storage) !== 'undefined') {
     useLocalStorage = true;
-    flags = JSON.parse(localStorage.getItem(lsKey(environment, ident.getUser())));
+    // check if localstorage data is corrupted, if so clear it
+    try {
+      flags = JSON.parse(localStorage.getItem(localStorageKey));
+    } catch (error) {
+      localStorage.setItem(localStorageKey, null);
+    }
 
     if (flags === null) {
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
         flags = settings;
-        localStorage.setItem(lsKey(environment, ident.getUser()), JSON.stringify(flags));
+        localStorage.setItem(localStorageKey, JSON.stringify(flags));
         emitter.emit(readyEvent);
       });
     } else {
@@ -243,7 +250,7 @@ function initialize(env, user, options) {
       // the in-memory flags unless you subscribe for changes
       setTimeout(function() { emitter.emit(readyEvent); }, 0);
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
-        localStorage.setItem(lsKey(environment, ident.getUser()), JSON.stringify(settings));
+        localStorage.setItem(localStorageKey, JSON.stringify(settings));
       });
     }
   }
