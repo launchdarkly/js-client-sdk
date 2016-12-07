@@ -11,7 +11,7 @@ function EventEmitter() {
     if (!events[event]) { return; }
     for (var i = 0; i < events[event].length ; i++) {
       if (events[event][i].handler === handler && events[event][i].context === context) {
-        events = events[event].slice(0, i).concat(events[event].slice(i + 1));
+        events[event] = events[event].slice(0, i).concat(events[event].slice(i + 1));
       }
     }
   };
