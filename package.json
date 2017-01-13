@@ -47,8 +47,7 @@
   },
   "dependencies": {
     "Base64": "1.0.0",
-    "escape-string-regexp": "1.0.5",
-    "sizzle": "2.3.0"
+    "escape-string-regexp": "1.0.5"
   },
   "repository": {
     "type": "git",

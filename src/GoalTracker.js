@@ -1,5 +1,4 @@
 var escapeStringRegexp = require('escape-string-regexp');
-var Sizzle = typeof window === 'undefined' ? function () {} : require('sizzle');
 
 function doesUrlMatch(matcher, href, search, hash) {
   var canonicalUrl = href.replace(search, '').replace(hash, '');
@@ -36,7 +35,7 @@ function findGoalsForClick(event, clickGoals) {
     var target = event.target;
     var goal = clickGoals[i];
     var selector = goal.selector;
-    var elements = Sizzle(selector);
+    var elements = document.querySelectorAll(selector);
     while (target && elements.length > 0) {
       for (var j = 0; j < elements.length; j++) {
         if (target === elements[j])
