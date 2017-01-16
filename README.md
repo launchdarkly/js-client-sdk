@@ -20,7 +20,7 @@ The LaunchDarkly client-side JavaScript SDK supports the following browsers:
 
 \* These browsers do not support streaming new flags to connected clients, even when `client.on('change')` is called.
 
-### EventSource Polyfill
+### EventSource polyfill
 
 If you need streaming support, and you wish to support browsers that do not support `EventSource` natively, you can install a polyfill, such
 as [EventSource](https://github.com/Yaffle/EventSource).
@@ -30,6 +30,16 @@ You can load the polyfill via a script tag in the `<head>` before the script whe
     <script src="/public/eventsource.js"></script>
 
 If you use [webpack](https://webpack.github.io/) or [browserify](http://browserify.org/), make sure to require the polyfill before `LDClient` is initialized.
+
+### Document.querySelectorAll() polyfill
+
+If you need to run A/B tests on IE7 or IE8 you will need to install a polyfill for `document.querySelector()` such as [polyfill-queryselector](https://github.com/cobbdb/polyfill-queryselector).
+
+You can load the polyfll via a script tag in the `<head>`:
+
+    <script src="/public/querySelector.js"></script>
+
+You can also install it with `npm install polyfill-queryselector` or `bower install polyfill-queryselector`.
 
 ## Installation
 
