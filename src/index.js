@@ -81,7 +81,7 @@ function identify(user, hash, onDone) {
     if (settings) {
       updateSettings(settings);
     }
-    onDone();
+    onDone && onDone();
   });
 }
 
