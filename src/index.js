@@ -240,8 +240,8 @@ function initialize(env, user, options) {
 
     if (flags === null) {
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
-        flags = settings;
-        localStorage.setItem(localStorageKey, JSON.stringify(flags));
+        flags = settings; 
+        settings && localStorage.setItem(localStorageKey, JSON.stringify(flags));          
         emitter.emit(readyEvent);
       });
     } else {
@@ -250,7 +250,7 @@ function initialize(env, user, options) {
       // the in-memory flags unless you subscribe for changes
       setTimeout(function() { emitter.emit(readyEvent); }, 0);
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
-        localStorage.setItem(localStorageKey, JSON.stringify(settings));
+        settings && localStorage.setItem(localStorageKey, JSON.stringify(settings));
       });
     }
   }
