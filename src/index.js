@@ -241,7 +241,7 @@ function initialize(env, user, options) {
     if (flags === null) {
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
         flags = settings; 
-        settings && localStorage.setItem(localStorageKey, JSON.stringify(flags));          
+        settings && localStorage.setItem(localStorageKey, JSON.stringify(flags));
         emitter.emit(readyEvent);
       });
     } else {
