@@ -67,11 +67,11 @@ function sendGoalEvent(kind, goal) {
     url: window.location.href,
     creationDate: (new Date()).getTime()
   };
-  
+
   if (kind === 'click') {
     event.selector = goal.selector;
   }
-  
+
   return events.enqueue(event);
 }
 
@@ -87,15 +87,15 @@ function identify(user, hash, onDone) {
 
 function variation(key, defaultValue) {
   var value;
-    
+
   if (flags && flags.hasOwnProperty(key)) {
     value = flags[key] === null ? defaultValue : flags[key];
   } else {
     value = defaultValue;
   }
-  
+
   sendFlagEvent(key, value, defaultValue);
-  
+
   return value;
 }
 
@@ -117,7 +117,7 @@ function track(key, data) {
   if (typeof key !== 'string') {
     throw 'Event key must be a string';
   }
-  
+
   events.enqueue({
     kind: 'custom',
     key: key,
@@ -138,7 +138,7 @@ function connectStream() {
 function updateSettings(settings) {
   var changes;
   var keys;
-  
+
   if (!settings) { return; }
 
   changes = utils.modifications(flags, settings);
@@ -156,7 +156,7 @@ function updateSettings(settings) {
     });
 
     emitter.emit(changeEvent, changes);
-    
+
     keys.forEach(function(key) {
       sendFlagEvent(key, changes[key].current);
     });
@@ -216,19 +216,19 @@ function initialize(env, user, options) {
   hash = options.hash;
   baseUrl = options.baseUrl || 'https://app.launchdarkly.com';
   eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
-  streamUrl = options.streamUrl || 'https://stream.launchdarkly.com';
+  streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
   stream = Stream(streamUrl, environment);
   events = EventProcessor(eventsUrl + '/a/' + environment + '.gif');
   emitter = EventEmitter();
   ident = Identity(user, sendIdentifyEvent);
   requestor = Requestor(baseUrl, environment);
   localStorageKey = lsKey(environment, ident.getUser());
-   
+
   if (typeof options.bootstrap === 'object') {
     // Emitting the event here will happen before the consumer
     // can register a listener, so defer to next tick.
     setTimeout(function() { emitter.emit(readyEvent); }, 0);
-  } 
+  }
   else if (typeof(options.bootstrap) === 'string' && options.bootstrap.toUpperCase() === 'LOCALSTORAGE' && typeof(Storage) !== 'undefined') {
     useLocalStorage = true;
     // check if localstorage data is corrupted, if so clear it
@@ -240,7 +240,7 @@ function initialize(env, user, options) {
 
     if (flags === null) {
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
-        flags = settings; 
+        flags = settings;
         settings && localStorage.setItem(localStorageKey, JSON.stringify(flags));
         emitter.emit(readyEvent);
       });
@@ -260,7 +260,7 @@ function initialize(env, user, options) {
       emitter.emit(readyEvent);
     });
   }
-  
+
   requestor.fetchGoals(function(err, g) {
     if (err) {/* TODO */}
     if (g && g.length > 0) {
@@ -268,7 +268,7 @@ function initialize(env, user, options) {
       goalTracker = GoalTracker(goals, sendGoalEvent);
     }
   });
-  
+
   function start() {
     setTimeout(function tick() {
       events.flush(ident.getUser());
@@ -281,23 +281,23 @@ function initialize(env, user, options) {
   } else {
     start();
   }
-  
+
   window.addEventListener('beforeunload', function() {
     events.flush(ident.getUser(), true);
   });
-  
+
   function refreshGoalTracker() {
     if (goalTracker) {
       goalTracker.dispose();
     }
     if (goals && goals.length) {
       goalTracker = GoalTracker(goals, sendGoalEvent);
-    } 
+    }
   }
 
   if (goals && goals.length > 0) {
     if (!!(window.history && history.pushState)) {
-      window.addEventListener('popstate', refreshGoalTracker);  
+      window.addEventListener('popstate', refreshGoalTracker);
     } else {
       window.addEventListener('hashchange', refreshGoalTracker);
     }
