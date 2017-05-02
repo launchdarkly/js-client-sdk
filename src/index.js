@@ -128,7 +128,7 @@ function customEventExists(key) {
 
 function track(key, data) {
   if (typeof key !== 'string') {
-    throw messages.invalidKey;
+    throw messages.invalidKey();
   }
 
   // Validate key if we have goals

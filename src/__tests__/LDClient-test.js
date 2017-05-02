@@ -169,11 +169,11 @@ describe('LDClient', function() {
       };
 
       client.on('ready', function() {
-        expect(track(123)).to.throw(messages.invalidKey);
-        expect(track([])).to.throw(messages.invalidKey);
-        expect(track({})).to.throw(messages.invalidKey);
-        expect(track(null)).to.throw(messages.invalidKey);
-        expect(track(undefined)).to.throw(messages.invalidKey);
+        expect(track(123)).to.throw(messages.invalidKey());
+        expect(track([])).to.throw(messages.invalidKey());
+        expect(track({})).to.throw(messages.invalidKey());
+        expect(track(null)).to.throw(messages.invalidKey());
+        expect(track(undefined)).to.throw(messages.invalidKey());
         done();
       });
     });
