@@ -5,6 +5,7 @@ var Stream = require('./Stream');
 var Requestor = require('./Requestor');
 var Identity = require('./Identity');
 var utils = require('./utils');
+var messages = require('./messages');
 
 var flags = {};
 var environment;
@@ -113,9 +114,26 @@ function allFlags() {
   return results;
 }
 
+function customEventExists(key) {
+  if (!goals || goals.length === 0) { return false; }
+
+  for (var i=0 ; i < goals.length ; i++) {
+    if (goals[i].kind === 'custom' && goals[i].key === key) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 function track(key, data) {
   if (typeof key !== 'string') {
-    throw 'Event key must be a string';
+    throw messages.invalidKey();
+  }
+
+  // Validate key if we have goals
+  if (!!goals && !customEventExists(key)) {
+    console.warn(messages.unknownCustomEventKey(key));
   }
 
   events.enqueue({

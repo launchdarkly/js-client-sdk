@@ -1,5 +1,7 @@
-var LDClient = require('../index');
 var semverCompare = require('semver-compare');
+
+var LDClient = require('../index');
+var messages = require('../messages');
 
 describe('LDClient', function() {
   var xhr;
@@ -129,6 +131,72 @@ describe('LDClient', function() {
           expect(window.localStorage.getItem(lsKey)).to.equal(json);
           done();
         }, 1);
+      });
+    });
+
+    it('should not warn when tracking an known custom goal event', function(done) {
+      var user = {key: 'user'};
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: {} // so the client doesn't request settings
+      });
+
+      var warnSpy = sinon.spy(console, 'warn');
+
+      requests[0].respond(
+        200,
+        { 'Content-Type': 'application/json' },
+        '[{"key": "known", "kind": "custom"}]'
+      );
+
+      client.on('ready', function() {
+        client.track('known');
+        expect(warnSpy.calledWith('Custom event key does not exist')).to.be.false;
+        warnSpy.restore();
+        done();
+      });
+    });
+
+    it('should throw when tracking a non-string custom goal event', function(done) {
+      var user = {key: 'user'};
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: {} // so the client doesn't request settings
+      });
+
+      const track = function(key) {
+        return function() {
+          client.track(key);
+        };
+      };
+
+      client.on('ready', function() {
+        expect(track(123)).to.throw(messages.invalidKey());
+        expect(track([])).to.throw(messages.invalidKey());
+        expect(track({})).to.throw(messages.invalidKey());
+        expect(track(null)).to.throw(messages.invalidKey());
+        expect(track(undefined)).to.throw(messages.invalidKey());
+        done();
+      });
+    });
+
+    it('should warn when tracking an unknown custom goal event', function(done) {
+      var user = {key: 'user'};
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: {} // so the client doesn't request settings
+      });
+
+      var warnSpy = sinon.spy(console, 'warn');
+
+      requests[0].respond(
+        200,
+        { 'Content-Type': 'application/json' },
+        '[{"key": "known", "kind": "custom"}]'
+      );
+
+      client.on('ready', function() {
+        client.track('unknown');
+        expect(warnSpy.calledWith(messages.unknownCustomEventKey('unknown'))).to.be.true;
+        warnSpy.restore();
+        done();
       });
     });
   });
