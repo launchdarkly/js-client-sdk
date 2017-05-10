@@ -79,6 +79,9 @@ function sendGoalEvent(kind, goal) {
 function identify(user, hash, onDone) {
   ident.setUser(user);
   requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
+    if (err) {
+      console.warn('Error fetching flag settings: ', err);
+    }
     if (settings) {
       updateSettings(settings);
     }
@@ -148,6 +151,9 @@ function track(key, data) {
 function connectStream() {
   stream.connect(function() {
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
+      if (err) {
+        console.warn('Error fetching flag settings: ', err);
+      }      
       updateSettings(settings);
     });
   });
@@ -258,6 +264,9 @@ function initialize(env, user, options) {
 
     if (flags === null) {
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
+        if (err) {
+          console.warn('Error fetching flag settings: ', err);
+        }        
         flags = settings;
         settings && localStorage.setItem(localStorageKey, JSON.stringify(flags));
         emitter.emit(readyEvent);
@@ -268,19 +277,28 @@ function initialize(env, user, options) {
       // the in-memory flags unless you subscribe for changes
       setTimeout(function() { emitter.emit(readyEvent); }, 0);
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
+        if (err) {
+          console.warn('Error fetching flag settings: ', err);
+        }
         settings && localStorage.setItem(localStorageKey, JSON.stringify(settings));
       });
     }
   }
   else {
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
+      if (err) {
+        console.warn('Error fetching flag settings: ', err);
+      }
+      
       flags = settings;
       emitter.emit(readyEvent);
     });
   }
 
   requestor.fetchGoals(function(err, g) {
-    if (err) {/* TODO */}
+    if (err) { 
+      console.warn('Error fetching goals: ', err);
+    }
     if (g && g.length > 0) {
       goals = g;
       goalTracker = GoalTracker(goals, sendGoalEvent);
