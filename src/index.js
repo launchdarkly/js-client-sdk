@@ -80,7 +80,7 @@ function identify(user, hash, onDone) {
   ident.setUser(user);
   requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
     if (err) {
-      console.warn("Error fetching flag settings: ", err);
+      console.warn('Error fetching flag settings: ', err);
     }
     if (settings) {
       updateSettings(settings);
@@ -152,7 +152,7 @@ function connectStream() {
   stream.connect(function() {
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       if (err) {
-        console.warn("Error fetching flag settings: ", err);
+        console.warn('Error fetching flag settings: ', err);
       }      
       updateSettings(settings);
     });
@@ -265,7 +265,7 @@ function initialize(env, user, options) {
     if (flags === null) {
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
         if (err) {
-          console.warn("Error fetching flag settings: ", err);
+          console.warn('Error fetching flag settings: ', err);
         }        
         flags = settings;
         settings && localStorage.setItem(localStorageKey, JSON.stringify(flags));
@@ -278,7 +278,7 @@ function initialize(env, user, options) {
       setTimeout(function() { emitter.emit(readyEvent); }, 0);
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
         if (err) {
-          console.warn("Error fetching flag settings: ", err);
+          console.warn('Error fetching flag settings: ', err);
         }
         settings && localStorage.setItem(localStorageKey, JSON.stringify(settings));
       });
@@ -287,7 +287,7 @@ function initialize(env, user, options) {
   else {
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       if (err) {
-        console.warn("Error fetching flag settings: ", err);
+        console.warn('Error fetching flag settings: ', err);
       }
       
       flags = settings;
@@ -297,7 +297,7 @@ function initialize(env, user, options) {
 
   requestor.fetchGoals(function(err, g) {
     if (err) { 
-      console.warn("Error fetching goals: ", err);
+      console.warn('Error fetching goals: ', err);
     }
     if (g && g.length > 0) {
       goals = g;
