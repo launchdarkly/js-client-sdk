@@ -23,6 +23,7 @@
     "test:watch": "karma start --auto-watch --reporters=dots",
     "prepublish": "node ./scripts/build.js"
   },
+  "types": "./src/index.d.ts",
   "devDependencies": {
     "chai": "3.5.0",
     "gzip-size": "3.0.0",
