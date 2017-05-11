@@ -11,7 +11,7 @@ declare module 'ldclient-js' {
   /**
    * The LaunchDarkly static global.
    */
-  export function initialize(key: string, user: LDUser, options?: LDOptions): LDClient;
+  export function initialize(envKey: string, user: LDUser, options?: LDOptions): LDClient;
 
   /**
    * The names of events to which users of the client can subscribe.
@@ -58,20 +58,49 @@ declare module 'ldclient-js' {
    */
   export interface LDOptions {
     /**
-     * The signed user key for Secure Mode.
-     *
-     * @see http://docs.launchdarkly.com/docs/js-sdk-reference#secure-mode
-     */
-    hash: string;
-
-    /**
      * The initial set of flags to use until the remote set is retrieved.
      *
-     * If "localStorage" is specified, the flags will be saved locally and
-     * retrieved from storage. Alternatively an LDFlagSet can be specified
-     * which will be used as the initial source of flag values.
+     * If "localStorage" is specified, the flags will be saved and
+     * retrieved from browser local storage. Alternatively, an LDFlagSet can
+     * be specified which will be used as the initial source of flag values.
      */
     bootstrap?: 'localStorage' | LDFlagSet;
+
+
+    /**
+     * The signed user key for Secure Mode.
+     */
+    hash?: string;
+
+
+    /**
+     * The base url for the LaunchDarkly server.
+     *
+     * This is used for enterprise customers with their own LaunchDarkly instances.
+     * Most users should use the default value.
+     *
+     */
+    baseUrl?: string;
+
+
+    /**
+     * The url for the LaunchDarkly events server.
+     *
+     * This is used for enterprise customers with their own LaunchDarkly instances.
+     * Most users should use the default value.
+     *
+     */
+    eventsUrl?: string;
+
+
+    /**
+     * The url for the LaunchDarkly stream server.
+     *
+     * This is used for enterprise customers with their own LaunchDarkly instances.
+     * Most users should use the default value.
+     *
+     */
+    streamUrl?: string;
   }
 
   /**
