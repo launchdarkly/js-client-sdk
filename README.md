@@ -55,10 +55,10 @@ There are two ways to install the client-side SDK:
 
 ## Basics
 
-To create a client instance, pass your environment ID (available on your [account settings page](https://app.launchdarkly.com/settings#/projects)) and user context to the `LDClient.initialize` function:
+To create a client instance, pass your environment's client-side ID (available on your [account settings page](https://app.launchdarkly.com/settings#/projects)) and user context to the `LDClient.initialize` function:
 
         var user = {key: 'user.example.com'};
-        var client = LDClient.initialize('YOUR_ENVIRONMENT_ID', user);
+        var client = LDClient.initialize('YOUR_CLIENT_ID', user);
 
 ## Feature flags
 
@@ -96,7 +96,7 @@ Bootstrapping refers to providing the LaunchDarkly client object with an initial
 The preferred approach to bootstrapping is to populate the bootstrap values (a map of feature flag keys to flag values) from your backend. LaunchDarkly's server-side SDKs have a function called `allFlags`-- this function provides the initial set of bootstrap values. You can then provide these values to your front-end as a template. Depending on your templating language, this might look something like this:
 
         var user = {key: 'user.example.com'};
-        var client = LDClient.initialize('YOUR_ENVIRONMENT_ID', user, options = {
+        var client = LDClient.initialize('YOUR_CLIENT_ID', user, options = {
           bootstrap: {
             {{ ldclient.all_flags(user) }}
           }
@@ -108,7 +108,7 @@ If you bootstrap from the server-side, feature flags will be ready immediately, 
 
 Alternatively, you can bootstrap feature flags from local storage.
 
-        var client = LDClient.initialize('YOUR_ENVIRONMENT_ID', user, options = {
+        var client = LDClient.initialize('YOUR_CLIENT_ID', user, options = {
           bootstrap: 'localStorage'
         });
 
@@ -124,13 +124,13 @@ Secure mode ensures that feature flag settings for a user are kept private, and 
 You can enable secure mode for each environment on your [account settings page](https://app.launchdarkly.com/settings#/projects). You should send the computed hash for your user in the `options` array during client initialization:
 
         var user = {key: 'user.example.com'};
-        var client = LDClient.initialize('YOUR_ENVIRONMENT_ID', user, options = {
+        var client = LDClient.initialize('YOUR_CLIENT_ID', user, options = {
           hash: "SERVER_GENERATED_HASH"
         });
 
 Each of our server-side SDKs includes a method to compute the secure mode hash for a user. You can pass this to your front-end code in a template. For example:
 
-        var client = LDClient.initialize('YOUR_ENVIRONMENT_ID', user, options = {
+        var client = LDClient.initialize('YOUR_CLIENT_ID', user, options = {
                 hash: {{ ldclient.secure_mode_hash(user) }} // this is a template directive, and the ldclient instance here is your server-side SDK client
         });
 
