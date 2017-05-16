@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [1.1.11] - 2017-05-16
+### Added
+- Add typescript definitions
+
 ## [1.1.10] - 2017-05-04
 ### Added
 - Add a warning when tracking unknown custom goal events
