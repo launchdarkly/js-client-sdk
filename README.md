@@ -185,7 +185,7 @@ The `hash` parameter is the hash for the new user, assuming that the user's key 
 
 ## Development information
 
-To build the module, run `npm run build`. You can also run `npm run watch` to rebuild the module automatically on file change.
+To build the module, first run `npm install`. Then run `npm run build`. You can also run `npm run watch` to rebuild the module automatically on file change.
 
 To run the tests, run `npm run test`.
 
