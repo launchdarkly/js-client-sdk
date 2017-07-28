@@ -160,7 +160,7 @@ The `settings` object will contain a map of updated feature flag keys and values
 
 ### Click and pageview events
 
-If you've defined [click or pageview goals](http://docs.launchdarkly.com/docs/running-an-ab-test) in LaunchDarkly, they'll be sent automatically once the client has been initialized. You do not have to do anything else with the client to send click or pageview goals.
+If you've defined [click or pageview goals](https://docs.launchdarkly.com/docs/running-ab-tests) in LaunchDarkly, they'll be sent automatically once the client has been initialized. You do not have to do anything else with the client to send click or pageview goals.
 
 ### Custom events
 
