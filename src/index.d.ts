@@ -101,6 +101,18 @@ declare module 'ldclient-js' {
      *
      */
     streamUrl?: string;
+
+    /**
+     * Whether or not to use the GET verb when fetching flag settings.
+     * 
+     * If useGet is enabled, flag settings will be fetched with a GET request
+     * including a base64 URL-encoded user as a path parameter.
+     * 
+     * Otherwise (by default) a REPORT request will be issued with the user encoded as a JSON
+     * payload. Using REPORT is preferable, but in some environments compatibility
+     * requirements may require GET requests to be used instead.
+     */
+    useGet?: boolean;
   }
 
   /**
