@@ -12,6 +12,7 @@ var environment;
 var events;
 var requestor;
 var stream;
+var sendEvents;
 var emitter;
 var hash;
 var ident;
@@ -30,7 +31,7 @@ var flushInterval = 2000;
 var seenRequests = {};
 
 function sendIdentifyEvent(user) {
-  events.enqueue({
+  enqueueEvent({
     kind: 'identify',
     key: user.key,
     user: user,
@@ -50,7 +51,7 @@ function sendFlagEvent(key, value, defaultValue) {
 
   seenRequests[cacheKey] = now;
 
-  events.enqueue({
+  enqueueEvent({
     kind: 'feature',
     key: key,
     user: user,
@@ -73,7 +74,7 @@ function sendGoalEvent(kind, goal) {
     event.selector = goal.selector;
   }
 
-  return events.enqueue(event);
+  return enqueueEvent(event);
 }
 
 function identify(user, hash, onDone) {
@@ -101,6 +102,12 @@ function variation(key, defaultValue) {
   sendFlagEvent(key, value, defaultValue);
 
   return value;
+}
+
+function enqueueEvent(event) {
+  if (sendEvents) {
+    events.enqueue(event);
+  }
 }
 
 function allFlags() {
@@ -139,7 +146,7 @@ function track(key, data) {
     console.warn(messages.unknownCustomEventKey(key));
   }
 
-  events.enqueue({
+  enqueueEvent({
     kind: 'custom',
     key: key,
     data: data,
@@ -243,6 +250,7 @@ function initialize(env, user, options) {
   streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
   stream = Stream(streamUrl, environment);
   events = EventProcessor(eventsUrl + '/a/' + environment + '.gif');
+  sendEvents = (typeof options.sendEvents === 'undefined') ? true : config.sendEvents;
   emitter = EventEmitter();
   ident = Identity(user, sendIdentifyEvent);
   requestor = Requestor(baseUrl, environment);
