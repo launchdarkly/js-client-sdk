@@ -152,9 +152,11 @@ function connectStream() {
   stream.connect(function() {
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       if (err) {
-        console.warn('Error fetching flag settings: ', err);
-      }      
-      updateSettings(settings);
+        console.error('Error fetching flag settings: ', err);
+      }
+      else {
+        updateSettings(settings);
+      }
     });
   });
 }
@@ -265,11 +267,13 @@ function initialize(env, user, options) {
     if (flags === null) {
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
         if (err) {
-          console.warn('Error fetching flag settings: ', err);
-        }        
-        flags = settings;
-        settings && localStorage.setItem(localStorageKey, JSON.stringify(flags));
-        emitter.emit(readyEvent);
+          console.error('Error fetching flag settings: ', err);
+        }
+        else {
+          flags = settings;
+          settings && localStorage.setItem(localStorageKey, JSON.stringify(flags));
+          emitter.emit(readyEvent);
+        }
       });
     } else {
       // We're reading the flags from local storage. Signal that we're ready,
@@ -278,25 +282,27 @@ function initialize(env, user, options) {
       setTimeout(function() { emitter.emit(readyEvent); }, 0);
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
         if (err) {
-          console.warn('Error fetching flag settings: ', err);
+          console.error('Error fetching flag settings: ', err);
+        } else {
+          settings && localStorage.setItem(localStorageKey, JSON.stringify(settings));
         }
-        settings && localStorage.setItem(localStorageKey, JSON.stringify(settings));
       });
     }
   }
   else {
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       if (err) {
-        console.warn('Error fetching flag settings: ', err);
+        console.error('Error fetching flag settings: ', err);
       }
-      
-      flags = settings;
-      emitter.emit(readyEvent);
+      else {
+        flags = settings;
+        emitter.emit(readyEvent);
+      }
     });
   }
 
   requestor.fetchGoals(function(err, g) {
-    if (err) { 
+    if (err) {
       console.warn('Error fetching goals: ', err);
     }
     if (g && g.length > 0) {
