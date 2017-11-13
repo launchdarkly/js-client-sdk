@@ -24,6 +24,7 @@ var goals;
 
 var readyEvent = 'ready';
 var changeEvent = 'change';
+var errorEvent = 'error';
 
 var flushInterval = 2000;
 
@@ -80,7 +81,8 @@ function identify(user, hash, onDone) {
   ident.setUser(user);
   requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
     if (err) {
-      console.warn('Error fetching flag settings: ', err);
+      console.error('Error fetching flag settings: ', err);
+      emitter.emit(errorEvent)
     }
     if (settings) {
       updateSettings(settings);
@@ -153,10 +155,9 @@ function connectStream() {
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       if (err) {
         console.error('Error fetching flag settings: ', err);
+        emitter.emit(errorEvent)
       }
-      else {
-        updateSettings(settings);
-      }
+      updateSettings(settings);
     });
   });
 }
@@ -268,12 +269,11 @@ function initialize(env, user, options) {
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
         if (err) {
           console.error('Error fetching flag settings: ', err);
+          emitter.emit(errorEvent)
         }
-        else {
-          flags = settings;
-          settings && localStorage.setItem(localStorageKey, JSON.stringify(flags));
-          emitter.emit(readyEvent);
-        }
+        flags = settings;
+        settings && localStorage.setItem(localStorageKey, JSON.stringify(flags));
+        emitter.emit(readyEvent);
       });
     } else {
       // We're reading the flags from local storage. Signal that we're ready,
@@ -283,9 +283,9 @@ function initialize(env, user, options) {
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
         if (err) {
           console.error('Error fetching flag settings: ', err);
-        } else {
-          settings && localStorage.setItem(localStorageKey, JSON.stringify(settings));
+          emitter.emit(errorEvent)
         }
+        settings && localStorage.setItem(localStorageKey, JSON.stringify(settings));
       });
     }
   }
@@ -293,17 +293,17 @@ function initialize(env, user, options) {
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       if (err) {
         console.error('Error fetching flag settings: ', err);
+        emitter.emit(errorEvent)
       }
-      else {
-        flags = settings;
-        emitter.emit(readyEvent);
-      }
+      flags = settings;
+      emitter.emit(readyEvent);
     });
   }
 
   requestor.fetchGoals(function(err, g) {
     if (err) {
-      console.warn('Error fetching goals: ', err);
+      console.error('Error fetching goals: ', err);
+      emitter.emit(errorEvent)
     }
     if (g && g.length > 0) {
       goals = g;

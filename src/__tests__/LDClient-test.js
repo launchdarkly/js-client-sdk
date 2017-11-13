@@ -10,15 +10,15 @@ describe('LDClient', function() {
   var store = {};
 
   var lsKey = 'ld:UNKNOWN_ENVIRONMENT_ID:user';
-  
-  
+
+
   beforeEach(function() {
     xhr = sinon.useFakeXMLHttpRequest();
     xhr.onCreate = function(req) {
       requests.push(req);
     };
 
-    sandbox = sinon.sandbox.create();    
+    sandbox = sinon.sandbox.create();
     sandbox.stub(window.localStorage.__proto__, 'setItem', function(k, v) {
       store[k] = v;
     });
@@ -27,18 +27,18 @@ describe('LDClient', function() {
       return store[k];
     });
   });
-  
+
   afterEach(function() {
     requests = [];
     xhr.restore();
 
     sandbox.restore();
   });
-  
+
   it('should exist', function() {
     expect(LDClient).to.exist;
   });
-  
+
   describe('initialization', function() {
     it('should trigger the ready event', function(done) {
       var user = {key: 'user'};
@@ -46,21 +46,21 @@ describe('LDClient', function() {
       var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
         bootstrap: {}
       });
-      
+
       client.on('ready', handleReady);
-      
+
       setTimeout(function() {
         expect(handleReady.called).to.be.true;
         done();
       }, 0);
     });
-    
+
     it('should not fetch flag settings since bootstrap is provided', function() {
       var user = {key: 'user'};
       var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
         bootstrap: {}
       });
-      
+
       var settingsRequest = requests[0];
       expect(/sdk\/eval/.test(settingsRequest.url)).to.be.false;
     });
@@ -92,7 +92,7 @@ describe('LDClient', function() {
         done();
       });
     });
-    
+
     it('should not clear cached settings if they are valid JSON', function(done) {
       var json = '{"enable-thing": true}';
       var user = {key: 'user'};
@@ -134,7 +134,7 @@ describe('LDClient', function() {
       });
     });
 
-    it('should not warn when tracking an known custom goal event', function(done) {
+    it('should not warn when tracking a known custom goal event', function(done) {
       var user = {key: 'user'};
       var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
         bootstrap: {} // so the client doesn't request settings
@@ -199,6 +199,25 @@ describe('LDClient', function() {
         done();
       });
     });
+
+    it('should emit an error event if there was an error fetching flags', function(done) {
+      var user = {key: "user"};
+
+      var server = sinon.fakeServer.create();
+      server.respondWith(function(req) {
+        req.respond(503);
+      });
+
+      client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user);
+
+      var handleError = sinon.spy();
+      client.on('error', handleError)
+      server.respond();
+
+      setTimeout(function() {
+        expect(handleError.called).to.be.true;
+        done();
+      }, 0);
+    });
   });
-  
 });
