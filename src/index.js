@@ -24,6 +24,7 @@ var goals;
 
 var readyEvent = 'ready';
 var changeEvent = 'change';
+var errorEvent = 'error';
 
 var flushInterval = 2000;
 
@@ -80,7 +81,8 @@ function identify(user, hash, onDone) {
   ident.setUser(user);
   requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
     if (err) {
-      console.warn('Error fetching flag settings: ', err);
+      console.error('Error fetching flag settings: ', err);
+      emitter.emit(errorEvent)
     }
     if (settings) {
       updateSettings(settings);
@@ -152,8 +154,9 @@ function connectStream() {
   stream.connect(function() {
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       if (err) {
-        console.warn('Error fetching flag settings: ', err);
-      }      
+        console.error('Error fetching flag settings: ', err);
+        emitter.emit(errorEvent)
+      }
       updateSettings(settings);
     });
   });
@@ -265,8 +268,9 @@ function initialize(env, user, options) {
     if (flags === null) {
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
         if (err) {
-          console.warn('Error fetching flag settings: ', err);
-        }        
+          console.error('Error fetching flag settings: ', err);
+          emitter.emit(errorEvent)
+        }
         flags = settings;
         settings && localStorage.setItem(localStorageKey, JSON.stringify(flags));
         emitter.emit(readyEvent);
@@ -278,7 +282,8 @@ function initialize(env, user, options) {
       setTimeout(function() { emitter.emit(readyEvent); }, 0);
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
         if (err) {
-          console.warn('Error fetching flag settings: ', err);
+          console.error('Error fetching flag settings: ', err);
+          emitter.emit(errorEvent)
         }
         settings && localStorage.setItem(localStorageKey, JSON.stringify(settings));
       });
@@ -287,17 +292,18 @@ function initialize(env, user, options) {
   else {
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       if (err) {
-        console.warn('Error fetching flag settings: ', err);
+        console.error('Error fetching flag settings: ', err);
+        emitter.emit(errorEvent)
       }
-      
       flags = settings;
       emitter.emit(readyEvent);
     });
   }
 
   requestor.fetchGoals(function(err, g) {
-    if (err) { 
-      console.warn('Error fetching goals: ', err);
+    if (err) {
+      console.error('Error fetching goals: ', err);
+      emitter.emit(errorEvent)
     }
     if (g && g.length > 0) {
       goals = g;
