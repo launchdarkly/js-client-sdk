@@ -13,7 +13,9 @@
     "src",
     "dist"
   ],
-  "main": "src",
+  "main": "dist/ldclient.cjs.js",
+  "module": "dist/@ldclient.es.js",
+  "browser": "dist/@ldclient.umd.js",
   "scripts": {
     "preversion": "npm run build",
     "prebuild": "rimraf dist/**",
