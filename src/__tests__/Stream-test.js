@@ -1,4 +1,4 @@
-var Stream = require('../Stream');
+import Stream = from '../Stream';
 
 var noop = function() {};
 

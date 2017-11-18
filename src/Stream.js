@@ -1,4 +1,4 @@
-function Stream(url, environment) {
+export default function Stream(url, environment) {
   var stream = {};
   var url = url + '/ping/' + environment;
   var es = null;
@@ -20,5 +20,3 @@ function Stream(url, environment) {
 
   return stream;
 }
-
-module.exports = Stream;

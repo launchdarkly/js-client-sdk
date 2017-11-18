@@ -1,4 +1,4 @@
-module.exports ={
+export default {
   invalidKey: function() {
     return 'Event key must be a string';
   },

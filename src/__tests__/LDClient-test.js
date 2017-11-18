@@ -1,7 +1,7 @@
-var semverCompare = require('semver-compare');
+import semverCompare = from 'semver-compare';
 
-var LDClient = require('../index');
-var messages = require('../messages');
+import LDClient = from '../index';
+import messages = from '../messages';
 
 describe('LDClient', function() {
   var xhr;
@@ -10,15 +10,15 @@ describe('LDClient', function() {
   var store = {};
 
   var lsKey = 'ld:UNKNOWN_ENVIRONMENT_ID:user';
-  
-  
+
+
   beforeEach(function() {
     xhr = sinon.useFakeXMLHttpRequest();
     xhr.onCreate = function(req) {
       requests.push(req);
     };
 
-    sandbox = sinon.sandbox.create();    
+    sandbox = sinon.sandbox.create();
     sandbox.stub(window.localStorage.__proto__, 'setItem', function(k, v) {
       store[k] = v;
     });
@@ -27,18 +27,18 @@ describe('LDClient', function() {
       return store[k];
     });
   });
-  
+
   afterEach(function() {
     requests = [];
     xhr.restore();
 
     sandbox.restore();
   });
-  
+
   it('should exist', function() {
     expect(LDClient).to.exist;
   });
-  
+
   describe('initialization', function() {
     it('should trigger the ready event', function(done) {
       var user = {key: 'user'};
@@ -46,21 +46,21 @@ describe('LDClient', function() {
       var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
         bootstrap: {}
       });
-      
+
       client.on('ready', handleReady);
-      
+
       setTimeout(function() {
         expect(handleReady.called).to.be.true;
         done();
       }, 0);
     });
-    
+
     it('should not fetch flag settings since bootstrap is provided', function() {
       var user = {key: 'user'};
       var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
         bootstrap: {}
       });
-      
+
       var settingsRequest = requests[0];
       expect(/sdk\/eval/.test(settingsRequest.url)).to.be.false;
     });
@@ -92,7 +92,7 @@ describe('LDClient', function() {
         done();
       });
     });
-    
+
     it('should not clear cached settings if they are valid JSON', function(done) {
       var json = '{"enable-thing": true}';
       var user = {key: 'user'};
@@ -200,5 +200,5 @@ describe('LDClient', function() {
       });
     });
   });
-  
+
 });

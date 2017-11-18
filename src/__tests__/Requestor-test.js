@@ -1,4 +1,4 @@
-var Requestor = require('../Requestor');
+import Requestor = from '../Requestor';
 
 describe('Requestor', function() {
   var server;
@@ -7,7 +7,7 @@ describe('Requestor', function() {
   beforeEach(function() {
     server = sinon.fakeServer.create();
   });
-  
+
   afterEach(function() {
     server.restore();
   });

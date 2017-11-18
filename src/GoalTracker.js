@@ -1,10 +1,10 @@
-var escapeStringRegexp = require('escape-string-regexp');
+import escapeStringRegexp from 'escape-string-regexp';
 
 function doesUrlMatch(matcher, href, search, hash) {
   var canonicalUrl = href.replace(search, '').replace(hash, '');
   var regex;
   var testUrl;
-  
+
   switch (matcher.kind) {
   case 'exact':
     testUrl = href;
@@ -30,7 +30,7 @@ function doesUrlMatch(matcher, href, search, hash) {
 
 function findGoalsForClick(event, clickGoals) {
   var matches = [];
-  
+
   for (var i = 0; i < clickGoals.length; i++) {
     var target = event.target;
     var goal = clickGoals[i];
@@ -44,21 +44,21 @@ function findGoalsForClick(event, clickGoals) {
       target = target.parentNode;
     }
   }
-  
+
   return matches;
 }
 
-function GoalTracker(goals, onEvent) {
+export default function GoalTracker(goals, onEvent) {
   var tracker = {};
   var goals = goals;
   var listenerFn = null;
-  
+
   var clickGoals = [];
-  
+
   for (var i = 0; i < goals.length; i++) {
     var goal = goals[i];
     var urls = goal.urls || [];
-    
+
     for (var j = 0; j < urls.length; j++) {
       if (doesUrlMatch(urls[j], location.href, location.search, location.hash)) {
         if (goal.kind === 'pageview') {
@@ -71,7 +71,7 @@ function GoalTracker(goals, onEvent) {
       }
     }
   }
-  
+
   if (clickGoals.length > 0) {
     listenerFn = function(event) {
       var goals = findGoalsForClick(event, clickGoals);
@@ -86,8 +86,6 @@ function GoalTracker(goals, onEvent) {
   tracker.dispose = function() {
     document.removeEventListener('click', listenerFn);
   }
-  
+
   return tracker;
 }
-
-module.exports = GoalTracker;
