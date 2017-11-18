@@ -1,4 +1,4 @@
-import semverCompare = from 'semver-compare';
+import semverCompare from 'semver-compare';
 
 import LDClient = from '../index';
 import messages = from '../messages';

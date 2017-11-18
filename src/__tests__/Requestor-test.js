@@ -1,4 +1,4 @@
-import Requestor = from '../Requestor';
+import Requestor from '../Requestor';
 
 describe('Requestor', function() {
   var server;

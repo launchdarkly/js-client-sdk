@@ -1,4 +1,4 @@
-import Stream = from '../Stream';
+import Stream from '../Stream';
 
 var noop = function() {};
 

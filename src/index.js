@@ -1,11 +1,11 @@
-import EventProcessor = from './EventProcessor';
-import EventEmitter = from './EventEmitter';
-import GoalTracker = from './GoalTracker';
-import Stream = from './Stream';
-import Requestor = from './Requestor';
-import Identity = from './Identity';
-import * as utils = from './utils';
-import messages = from './messages';
+import EventProcessor from './EventProcessor';
+import EventEmitter from './EventEmitter';
+import GoalTracker from './GoalTracker';
+import Stream from './Stream';
+import Requestor from './Requestor';
+import Identity from './Identity';
+import * as utils from './utils';
+import messages from './messages';
 
 var flags = {};
 var environment;
