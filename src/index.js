@@ -34,17 +34,18 @@ function sendIdentifyEvent(user) {
     kind: 'identify',
     key: user.key,
     user: user,
-    creationDate: (new Date()).getTime()
+    creationDate: new Date().getTime(),
   });
 }
 
 function sendFlagEvent(key, value, defaultValue) {
   var user = ident.getUser();
-  var cacheKey = JSON.stringify(value) + (user && user.key ? user.key : '') + key;
+  var cacheKey =
+    JSON.stringify(value) + (user && user.key ? user.key : '') + key;
   var now = new Date();
   var cached = seenRequests[cacheKey];
 
-  if (cached && (now - cached) < 300000 /* five minutes, in ms */) {
+  if (cached && now - cached < 300000 /* five minutes, in ms */) {
     return;
   }
 
@@ -55,8 +56,8 @@ function sendFlagEvent(key, value, defaultValue) {
     key: key,
     user: user,
     value: value,
-    'default': defaultValue,
-    creationDate: now.getTime()
+    default: defaultValue,
+    creationDate: now.getTime(),
   });
 }
 
@@ -66,7 +67,7 @@ function sendGoalEvent(kind, goal) {
     key: goal.key,
     data: null,
     url: window.location.href,
-    creationDate: (new Date()).getTime()
+    creationDate: new Date().getTime(),
   };
 
   if (kind === 'click') {
@@ -106,7 +107,9 @@ function variation(key, defaultValue) {
 function allFlags() {
   var results = {};
 
-  if (!flags) { return results; }
+  if (!flags) {
+    return results;
+  }
 
   for (var key in flags) {
     if (flags.hasOwnProperty(key)) {
@@ -118,9 +121,11 @@ function allFlags() {
 }
 
 function customEventExists(key) {
-  if (!goals || goals.length === 0) { return false; }
+  if (!goals || goals.length === 0) {
+    return false;
+  }
 
-  for (var i=0 ; i < goals.length ; i++) {
+  for (var i = 0; i < goals.length; i++) {
     if (goals[i].kind === 'custom' && goals[i].key === key) {
       return true;
     }
@@ -144,7 +149,7 @@ function track(key, data) {
     key: key,
     data: data,
     url: window.location.href,
-    creationDate: (new Date()).getTime()
+    creationDate: new Date().getTime(),
   });
 }
 
@@ -163,7 +168,9 @@ function updateSettings(settings) {
   var changes;
   var keys;
 
-  if (!settings) { return; }
+  if (!settings) {
+    return;
+  }
 
   changes = utils.modifications(flags, settings);
   keys = Object.keys(changes);
@@ -171,12 +178,19 @@ function updateSettings(settings) {
   flags = settings;
 
   if (useLocalStorage) {
-    localStorage.setItem(lsKey(environment, ident.getUser()), JSON.stringify(flags));
+    localStorage.setItem(
+      lsKey(environment, ident.getUser()),
+      JSON.stringify(flags)
+    );
   }
 
   if (keys.length > 0) {
     keys.forEach(function(key) {
-      emitter.emit(changeEvent + ':' + key, changes[key].current, changes[key].previous);
+      emitter.emit(
+        changeEvent + ':' + key,
+        changes[key].current,
+        changes[key].previous
+      );
     });
 
     emitter.emit(changeEvent, changes);
@@ -203,7 +217,9 @@ function off() {
 }
 
 function handleMessage(event) {
-  if (event.origin !== baseUrl) { return; }
+  if (event.origin !== baseUrl) {
+    return;
+  }
   if (event.data.type === 'SYN') {
     window.editorClientBaseUrl = baseUrl;
     var editorTag = document.createElement('script');
@@ -221,7 +237,7 @@ var client = {
   track: track,
   on: on,
   off: off,
-  allFlags: allFlags
+  allFlags: allFlags,
 };
 
 function lsKey(env, user) {
@@ -236,7 +252,7 @@ function initialize(env, user, options) {
   var localStorageKey;
   options = options || {};
   environment = env;
-  flags = typeof(options.bootstrap) === 'object' ? options.bootstrap : {};
+  flags = typeof options.bootstrap === 'object' ? options.bootstrap : {};
   hash = options.hash;
   baseUrl = options.baseUrl || 'https://app.launchdarkly.com';
   eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
@@ -251,9 +267,14 @@ function initialize(env, user, options) {
   if (typeof options.bootstrap === 'object') {
     // Emitting the event here will happen before the consumer
     // can register a listener, so defer to next tick.
-    setTimeout(function() { emitter.emit(readyEvent); }, 0);
-  }
-  else if (typeof(options.bootstrap) === 'string' && options.bootstrap.toUpperCase() === 'LOCALSTORAGE' && typeof(Storage) !== 'undefined') {
+    setTimeout(function() {
+      emitter.emit(readyEvent);
+    }, 0);
+  } else if (
+    typeof options.bootstrap === 'string' &&
+    options.bootstrap.toUpperCase() === 'LOCALSTORAGE' &&
+    typeof Storage !== 'undefined'
+  ) {
     useLocalStorage = true;
     // check if localstorage data is corrupted, if so clear it
     try {
@@ -263,28 +284,37 @@ function initialize(env, user, options) {
     }
 
     if (flags === null) {
-      requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
+      requestor.fetchFlagSettings(ident.getUser(), hash, function(
+        err,
+        settings
+      ) {
         if (err) {
           console.warn('Error fetching flag settings: ', err);
         }
         flags = settings;
-        settings && localStorage.setItem(localStorageKey, JSON.stringify(flags));
+        settings &&
+          localStorage.setItem(localStorageKey, JSON.stringify(flags));
         emitter.emit(readyEvent);
       });
     } else {
       // We're reading the flags from local storage. Signal that we're ready,
       // then update localStorage for the next page load. We won't signal changes or update
       // the in-memory flags unless you subscribe for changes
-      setTimeout(function() { emitter.emit(readyEvent); }, 0);
-      requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
+      setTimeout(function() {
+        emitter.emit(readyEvent);
+      }, 0);
+      requestor.fetchFlagSettings(ident.getUser(), hash, function(
+        err,
+        settings
+      ) {
         if (err) {
           console.warn('Error fetching flag settings: ', err);
         }
-        settings && localStorage.setItem(localStorageKey, JSON.stringify(settings));
+        settings &&
+          localStorage.setItem(localStorageKey, JSON.stringify(settings));
       });
     }
-  }
-  else {
+  } else {
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       if (err) {
         console.warn('Error fetching flag settings: ', err);
@@ -345,6 +375,6 @@ function initialize(env, user, options) {
 }
 
 export default {
-   initialize
-}
+  initialize,
+};
 export const version = VERSION;

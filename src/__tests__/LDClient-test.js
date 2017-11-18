@@ -1,7 +1,7 @@
 import semverCompare from 'semver-compare';
 
-import LDClient = from '../index';
-import messages = from '../messages';
+import LDClient from '../index';
+import messages from '../messages';
 
 describe('LDClient', function() {
   var xhr;
@@ -10,7 +10,6 @@ describe('LDClient', function() {
   var store = {};
 
   var lsKey = 'ld:UNKNOWN_ENVIRONMENT_ID:user';
-
 
   beforeEach(function() {
     xhr = sinon.useFakeXMLHttpRequest();
@@ -41,10 +40,10 @@ describe('LDClient', function() {
 
   describe('initialization', function() {
     it('should trigger the ready event', function(done) {
-      var user = {key: 'user'};
+      var user = { key: 'user' };
       var handleReady = sinon.spy();
       var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
-        bootstrap: {}
+        bootstrap: {},
       });
 
       client.on('ready', handleReady);
@@ -56,16 +55,16 @@ describe('LDClient', function() {
     });
 
     it('should not fetch flag settings since bootstrap is provided', function() {
-      var user = {key: 'user'};
+      var user = { key: 'user' };
       var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
-        bootstrap: {}
+        bootstrap: {},
       });
 
       var settingsRequest = requests[0];
       expect(/sdk\/eval/.test(settingsRequest.url)).to.be.false;
     });
 
-    it('should contain package version', function () {
+    it('should contain package version', function() {
       // Arrange
       var version = LDClient.version;
 
@@ -78,13 +77,13 @@ describe('LDClient', function() {
     });
 
     it('should clear cached settings if they are invalid JSON', function(done) {
-      var user = {key: 'user'};
+      var user = { key: 'user' };
       var client;
 
       window.localStorage.setItem(lsKey, 'foo{bar}');
 
       client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
-        bootstrap: 'localstorage'
+        bootstrap: 'localstorage',
       });
 
       client.on('ready', function() {
@@ -93,15 +92,17 @@ describe('LDClient', function() {
       });
     });
 
-    it('should not clear cached settings if they are valid JSON', function(done) {
+    it('should not clear cached settings if they are valid JSON', function(
+      done
+    ) {
       var json = '{"enable-thing": true}';
-      var user = {key: 'user'};
+      var user = { key: 'user' };
       var client;
 
       window.localStorage.setItem(lsKey, json);
 
       client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
-        bootstrap: 'localstorage'
+        bootstrap: 'localstorage',
       });
 
       client.on('ready', function() {
@@ -110,8 +111,10 @@ describe('LDClient', function() {
       });
     });
 
-    it('should not update cached settings if there was an error fetching flags', function(done) {
-      var user = {key: 'user'};
+    it('should not update cached settings if there was an error fetching flags', function(
+      done
+    ) {
+      var user = { key: 'user' };
       var json = '{"enable-foo": true}';
 
       window.localStorage.setItem(lsKey, json);
@@ -122,7 +125,7 @@ describe('LDClient', function() {
       });
 
       client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
-        bootstrap: 'localstorage'
+        bootstrap: 'localstorage',
       });
 
       client.on('ready', function() {
@@ -134,10 +137,12 @@ describe('LDClient', function() {
       });
     });
 
-    it('should not warn when tracking an known custom goal event', function(done) {
-      var user = {key: 'user'};
+    it('should not warn when tracking an known custom goal event', function(
+      done
+    ) {
+      var user = { key: 'user' };
       var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
-        bootstrap: {} // so the client doesn't request settings
+        bootstrap: {}, // so the client doesn't request settings
       });
 
       var warnSpy = sinon.spy(console, 'warn');
@@ -150,16 +155,20 @@ describe('LDClient', function() {
 
       client.on('ready', function() {
         client.track('known');
-        expect(warnSpy.calledWith('Custom event key does not exist')).to.be.false;
+        expect(
+          warnSpy.calledWith('Custom event key does not exist')
+        ).to.be.false;
         warnSpy.restore();
         done();
       });
     });
 
-    it('should throw when tracking a non-string custom goal event', function(done) {
-      var user = {key: 'user'};
+    it('should throw when tracking a non-string custom goal event', function(
+      done
+    ) {
+      var user = { key: 'user' };
       var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
-        bootstrap: {} // so the client doesn't request settings
+        bootstrap: {}, // so the client doesn't request settings
       });
 
       const track = function(key) {
@@ -178,10 +187,12 @@ describe('LDClient', function() {
       });
     });
 
-    it('should warn when tracking an unknown custom goal event', function(done) {
-      var user = {key: 'user'};
+    it('should warn when tracking an unknown custom goal event', function(
+      done
+    ) {
+      var user = { key: 'user' };
       var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
-        bootstrap: {} // so the client doesn't request settings
+        bootstrap: {}, // so the client doesn't request settings
       });
 
       var warnSpy = sinon.spy(console, 'warn');
@@ -194,11 +205,12 @@ describe('LDClient', function() {
 
       client.on('ready', function() {
         client.track('unknown');
-        expect(warnSpy.calledWith(messages.unknownCustomEventKey('unknown'))).to.be.true;
+        expect(
+          warnSpy.calledWith(messages.unknownCustomEventKey('unknown'))
+        ).to.be.true;
         warnSpy.restore();
         done();
       });
     });
   });
-
 });

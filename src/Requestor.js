@@ -1,4 +1,4 @@
-import * as utils from './utils'
+import * as utils from './utils';
 
 var json = 'application/json';
 
@@ -31,7 +31,14 @@ export default function Requestor(baseUrl, environment) {
 
   requestor.fetchFlagSettings = function(user, hash, callback) {
     var data = utils.base64URLEncode(JSON.stringify(user));
-    var endpoint = [baseUrl, '/sdk/eval/', environment,  '/users/', data, hash ? '?h=' + hash : ''].join('');
+    var endpoint = [
+      baseUrl,
+      '/sdk/eval/',
+      environment,
+      '/users/',
+      data,
+      hash ? '?h=' + hash : '',
+    ].join('');
     var cb;
 
     var wrappedCallback = (function(currentCallback) {
@@ -41,7 +48,6 @@ export default function Requestor(baseUrl, environment) {
         lastFlagSettingsCallback = null;
       };
     })(callback);
-
 
     if (flagSettingsRequest) {
       flagSettingsRequest.abort();

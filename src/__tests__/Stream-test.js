@@ -9,7 +9,7 @@ describe('Stream', function() {
 
     var connect = function() {
       stream.connect(noop);
-    }
+    };
 
     expect(connect).to.not.throw(TypeError);
   });
@@ -18,8 +18,8 @@ describe('Stream', function() {
 
     var disconnect = function() {
       stream.disconnect(noop);
-    }
+    };
 
     expect(disconnect).to.not.throw(TypeError);
-  })
+  });
 });

@@ -1,4 +1,4 @@
-import * as utils from './utils'
+import * as utils from './utils';
 
 function sanitizeUser(u) {
   var sane = utils.clone(u);

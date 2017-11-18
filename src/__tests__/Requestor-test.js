@@ -17,12 +17,16 @@ describe('Requestor', function() {
     const handleTwo = sinon.spy();
 
     requestor = Requestor('http://requestee', 'FAKE_ENV');
-    requestor.fetchFlagSettings({key: 'user1'}, 'hash1', handleOne);
-    requestor.fetchFlagSettings({key: 'user2'}, 'hash2', handleTwo);
+    requestor.fetchFlagSettings({ key: 'user1' }, 'hash1', handleOne);
+    requestor.fetchFlagSettings({ key: 'user2' }, 'hash2', handleTwo);
 
     server.respondWith(function(req) {
       seq++;
-      req.respond(200, {'Content-type': 'application/json'}, JSON.stringify({tag: seq}));
+      req.respond(
+        200,
+        { 'Content-type': 'application/json' },
+        JSON.stringify({ tag: seq })
+      );
     });
 
     server.respond();
@@ -40,19 +44,23 @@ describe('Requestor', function() {
 
     server.respondWith(function(req) {
       seq++;
-      req.respond(200, {'Content-type': 'application/json'}, JSON.stringify({tag: seq}));
+      req.respond(
+        200,
+        { 'Content-type': 'application/json' },
+        JSON.stringify({ tag: seq })
+      );
     });
 
     requestor = Requestor('http://requestee', 'FAKE_ENV');
-    requestor.fetchFlagSettings({key: 'user1'}, 'hash1', handleOne);
+    requestor.fetchFlagSettings({ key: 'user1' }, 'hash1', handleOne);
     server.respond();
-    requestor.fetchFlagSettings({key: 'user2'}, 'hash2', handleTwo);
+    requestor.fetchFlagSettings({ key: 'user2' }, 'hash2', handleTwo);
     server.respond();
-    requestor.fetchFlagSettings({key: 'user3'}, 'hash3', handleThree);
+    requestor.fetchFlagSettings({ key: 'user3' }, 'hash3', handleThree);
     server.respond();
-    requestor.fetchFlagSettings({key: 'user4'}, 'hash4', handleFour);
+    requestor.fetchFlagSettings({ key: 'user4' }, 'hash4', handleFour);
     server.respond();
-    requestor.fetchFlagSettings({key: 'user5'}, 'hash5', handleFive);
+    requestor.fetchFlagSettings({ key: 'user5' }, 'hash5', handleFive);
     server.respond();
 
     expect(server.requests.length).to.equal(5);
