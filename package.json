@@ -42,7 +42,18 @@
     "pretty-bytes": "3.0.1",
     "readline-sync": "1.4.4",
     "semver-compare": "^1.0.0",
-    "sinon": "1.17.4"
+    "sinon": "1.17.4",
+    "rollup": "^0.51.5",
+    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-node-globals": "^1.1.0",
+    "rollup-plugin-commonjs": "8.2.3",
+    "rollup-plugin-filesize": "^1.4.2",
+    "rollup-plugin-includepaths": "^0.2.2",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-uglify": "^2.0.1",
+    "rollup-watch": "^4.3.1"
   },
   "dependencies": {
     "Base64": "1.0.0",
