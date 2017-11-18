@@ -42,11 +42,7 @@ const config = {
 if (env === 'production') {
   config.plugins.push(
     uglify({
-      compress: {
-        dead_code: true,
-        warnings: false,
-        drop_debugger: true,
-      },
+      compress: {},
     })
   );
 }
