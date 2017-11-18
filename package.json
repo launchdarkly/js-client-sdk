@@ -37,14 +37,12 @@
     "karma-phantomjs-shim": "1.1.2",
     "karma-sinon": "1.0.5",
     "karma-sourcemap-loader": "0.3.7",
-    "karma-webpack": "1.7.0",
     "mocha": "2.5.3",
     "phantomjs": "1.9.18",
     "pretty-bytes": "3.0.1",
     "readline-sync": "1.4.4",
     "semver-compare": "^1.0.0",
-    "sinon": "1.17.4",
-    "webpack": "1.13.1"
+    "sinon": "1.17.4"
   },
   "dependencies": {
     "Base64": "1.0.0",
