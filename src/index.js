@@ -81,7 +81,7 @@ function identify(user, hash, onDone) {
   ident.setUser(user);
   requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
     if (err) {
-      console.error('Error fetching flag settings: ', err);
+      console.error('Error fetching flag settings: ' + err);
       emitter.emit(errorEvent)
     }
     if (settings) {
@@ -154,7 +154,7 @@ function connectStream() {
   stream.connect(function() {
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       if (err) {
-        console.error('Error fetching flag settings: ', err);
+        console.error('Error fetching flag settings: ' + err);
         emitter.emit(errorEvent)
       }
       updateSettings(settings);
@@ -272,7 +272,7 @@ function initialize(env, user, options) {
     if (flags === null) {
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
         if (err) {
-          console.error('Error fetching flag settings: ', err);
+          console.error('Error fetching flag settings: ' + err);
           emitter.emit(errorEvent)
         }
         flags = settings;
@@ -286,7 +286,7 @@ function initialize(env, user, options) {
       setTimeout(function() { emitter.emit(readyEvent); }, 0);
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
         if (err) {
-          console.error('Error fetching flag settings: ', err);
+          console.error('Error fetching flag settings: ' + err);
           emitter.emit(errorEvent)
         }
         settings && localStorage.setItem(localStorageKey, JSON.stringify(settings));
@@ -296,7 +296,7 @@ function initialize(env, user, options) {
   else {
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       if (err) {
-        console.error('Error fetching flag settings: ', err);
+        console.error('Error fetching flag settings: ' + err);
         emitter.emit(errorEvent)
       }
       flags = settings;
@@ -306,7 +306,7 @@ function initialize(env, user, options) {
 
   requestor.fetchGoals(function(err, g) {
     if (err) {
-      console.error('Error fetching goals: ', err);
+      console.error('Error fetching goals: ' + err);
       emitter.emit(errorEvent)
     }
     if (g && g.length > 0) {
