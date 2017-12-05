@@ -111,8 +111,7 @@ declare module 'ldclient-js' {
      * Otherwise (by default) a GET request will be issued with the user passed as 
      * a base64 URL-encoded path parameter. 
      * 
-     * Using REPORT is preferable, but in some environments compatibility
-     * requirements may require GET requests to be used instead.
+     * Do not use unless advised by LaunchDarkly.
      */
     useReport?: boolean;
   }
