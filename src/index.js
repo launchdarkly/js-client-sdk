@@ -236,6 +236,10 @@ function lsKey(env, user) {
 }
 
 function initialize(env, user, options) {
+  if (!env) {
+    console.error('No environment specified. Please see https://docs.launchdarkly.com/docs/js-sdk-reference#section-initializing-the-client for instructions on SDK initialization.')
+  }
+
   var localStorageKey;
   options = options || {};
   environment = env;
