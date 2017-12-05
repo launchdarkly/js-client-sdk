@@ -76,5 +76,6 @@ describe('Requestor', function() {
     var errorSpy = sinon.spy(console, 'error');
     server.respond();
     expect(errorSpy.calledWith('Error fetching flag settings: environment not found. Please see https://docs.launchdarkly.com/docs/js-sdk-reference#section-initializing-the-client for instructions on SDK initialization.')).to.be.true;
+    errorSpy.restore();
   })
 });
