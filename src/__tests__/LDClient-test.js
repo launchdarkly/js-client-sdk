@@ -55,11 +55,11 @@ describe('LDClient', function() {
       }, 0);
     });
 
-    it('should log an error when initialize is called without an SDK key', function(done) {
+    it('should log an error when initialize is called without an environment key', function(done) {
       var user = {key: 'user'};
       var errorSpy = sinon.spy(console, 'error');
       var client = LDClient.initialize('', user);
-      expect(errorSpy.calledWith('No environment specified; client will not be initialized. Please see https://docs.launchdarkly.com/docs/js-sdk-reference#section-initializing-the-client for instructions on SDK initialization.')).to.be.true;
+      expect(errorSpy.calledWith('No environment specified. Please see https://docs.launchdarkly.com/docs/js-sdk-reference#section-initializing-the-client for instructions on SDK initialization.')).to.be.true;
       errorSpy.restore()
       done();
     });
