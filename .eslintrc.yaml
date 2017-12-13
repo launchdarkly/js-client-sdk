@@ -1,0 +1,22 @@
+---
+parser: babel-eslint
+extends:
+  - xo
+  - prettier
+env:
+  es6: true
+  node: true
+  browser: true
+plugins:
+  - prettier
+  - mocha
+rules:
+  prettier/prettier:
+  - error
+  - trailingComma: es5
+    singleQuote: true
+  max-nested-callbacks:
+  - error
+  - 20
+globals:
+  VERSION: true
