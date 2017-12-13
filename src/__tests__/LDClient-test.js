@@ -212,5 +212,25 @@ describe('LDClient', function() {
         done();
       });
     });
+
+    it('should emit an error event if there was an error fetching flags', function(done) {
+      var user = {key: "user"};
+
+      var server = sinon.fakeServer.create();
+      server.respondWith(function(req) {
+        req.respond(503);
+      });
+
+      client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user);
+
+      var handleError = sinon.spy();
+      client.on('error', handleError)
+      server.respond();
+
+      setTimeout(function() {
+        expect(handleError.called).to.be.true;
+        done();
+      }, 0);
+    });
   });
 });
