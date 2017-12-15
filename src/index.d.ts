@@ -101,6 +101,19 @@ declare module 'ldclient-js' {
      *
      */
     streamUrl?: string;
+
+    /**
+     * Whether or not to use the REPORT verb to fetch flag settings.
+     * 
+     * If useReport is true, flag settings will be fetched with a REPORT request
+     * including a JSON entity body with the user object.
+     * 
+     * Otherwise (by default) a GET request will be issued with the user passed as 
+     * a base64 URL-encoded path parameter. 
+     * 
+     * Do not use unless advised by LaunchDarkly.
+     */
+    useReport?: boolean;
   }
 
   /**
