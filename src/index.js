@@ -6,6 +6,7 @@ var Requestor = require('./Requestor');
 var Identity = require('./Identity');
 var utils = require('./utils');
 var messages = require('./messages');
+var store = require('./store');
 
 var flags = {};
 var environment;
@@ -174,7 +175,7 @@ function updateSettings(settings) {
   flags = settings;
 
   if (useLocalStorage) {
-    localStorage.setItem(lsKey(environment, ident.getUser()), JSON.stringify(flags));
+    store.set(lsKey(environment, ident.getUser()), JSON.stringify(flags));
   }
 
   if (keys.length > 0) {
@@ -262,11 +263,12 @@ function initialize(env, user, options) {
   }
   else if (typeof(options.bootstrap) === 'string' && options.bootstrap.toUpperCase() === 'LOCALSTORAGE' && typeof(Storage) !== 'undefined') {
     useLocalStorage = true;
-    // check if localstorage data is corrupted, if so clear it
+
+    // check if localStorage data is corrupted, if so clear it
     try {
-      flags = JSON.parse(localStorage.getItem(localStorageKey));
+      flags = JSON.parse(store.get(localStorageKey));
     } catch (error) {
-      localStorage.setItem(localStorageKey, null);
+      store.clear(localStorageKey);
     }
 
     if (flags === null) {
@@ -276,7 +278,7 @@ function initialize(env, user, options) {
           emitter.emit(errorEvent)
         }
         flags = settings;
-        settings && localStorage.setItem(localStorageKey, JSON.stringify(flags));
+        settings && store.set(localStorageKey, JSON.stringify(flags));
         emitter.emit(readyEvent);
       });
     } else {
@@ -289,7 +291,7 @@ function initialize(env, user, options) {
           console.error('Error fetching flag settings: ' + err);
           emitter.emit(errorEvent)
         }
-        settings && localStorage.setItem(localStorageKey, JSON.stringify(settings));
+        settings && store.set(localStorageKey, JSON.stringify(settings));
       });
     }
   }
