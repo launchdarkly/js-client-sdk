@@ -248,7 +248,7 @@ function initialize(env, user, options) {
   events = EventProcessor(eventsUrl + '/a/' + environment + '.gif');
   emitter = EventEmitter();
   ident = Identity(user, sendIdentifyEvent);
-  requestor = Requestor(baseUrl, environment);
+  requestor = Requestor(baseUrl, environment, options.useReport);
   localStorageKey = lsKey(environment, ident.getUser());
 
   if (typeof options.bootstrap === 'object') {

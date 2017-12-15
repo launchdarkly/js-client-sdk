@@ -31,6 +31,26 @@ describe('Requestor', function() {
     expect(handleOne.args[0]).to.eql(handleTwo.args[0]);
   });
 
+  it('should make requests with the GET verb if useReport is disabled', function() {
+      requestor = Requestor('http://requestee', 'FAKE_ENV', false);
+
+      requestor.fetchFlagSettings({key: 'user1'}, 'hash1', sinon.spy());
+
+      expect(server.requests.length).to.equal(1);
+      expect(server.requests[0].method).to.equal('GET');
+  });
+
+  it('should make requests with the REPORT verb with a payload if useReport is enabled', function() {
+      var user = {key: 'user1'};
+      requestor = Requestor('http://requestee', 'FAKE_ENV', true);
+
+      requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
+
+      expect(server.requests.length).to.equal(1);
+      expect(server.requests[0].method).to.equal('REPORT');
+      expect(server.requests[0].requestBody).to.equal(JSON.stringify(user));
+  });
+
   it('should call the each callback at most once', function() {
     const handleOne = sinon.spy();
     const handleTwo = sinon.spy();

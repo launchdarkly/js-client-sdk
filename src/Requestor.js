@@ -2,7 +2,7 @@ var utils = require('./utils');
 
 var json = 'application/json';
 
-function fetchJSON(endpoint, callback) {
+function fetchJSON(endpoint, body, callback) {
   var xhr = new XMLHttpRequest();
   
   xhr.addEventListener('load', function() {
@@ -17,8 +17,14 @@ function fetchJSON(endpoint, callback) {
     callback(xhr.statusText);
   });
   
-  xhr.open('GET', endpoint);
-  xhr.send();
+  if (body) {
+    xhr.open('REPORT', endpoint);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify(body));
+  } else {
+    xhr.open('GET', endpoint);
+    xhr.send();
+  }
   
   return xhr;
 }
@@ -26,13 +32,22 @@ function fetchJSON(endpoint, callback) {
 var flagSettingsRequest;
 var lastFlagSettingsCallback;
 
-function Requestor(baseUrl, environment) {
+function Requestor(baseUrl, environment, useReport) {
   var requestor = {};
   
   requestor.fetchFlagSettings = function(user, hash, callback) {
-    var data = utils.base64URLEncode(JSON.stringify(user));
-    var endpoint = [baseUrl, '/sdk/eval/', environment,  '/users/', data, hash ? '?h=' + hash : ''].join('');
+    var data;
+    var endpoint;
+    var body;
     var cb;
+
+    if (useReport) {
+      endpoint = [baseUrl, '/sdk/eval/', environment,  '/user', hash ? '?h=' + hash : ''].join('');
+      body = user;
+    } else {
+      data = utils.base64URLEncode(JSON.stringify(user));
+      endpoint  = [baseUrl, '/sdk/eval/', environment,  '/users/', data, hash ? '?h=' + hash : ''].join('');
+    }
 
     var wrappedCallback = (function(currentCallback) {
       return function() {
@@ -56,12 +71,12 @@ function Requestor(baseUrl, environment) {
     }
 
     lastFlagSettingsCallback = cb;
-    flagSettingsRequest = fetchJSON(endpoint, cb);
+    flagSettingsRequest = fetchJSON(endpoint, body, cb);
   };
   
   requestor.fetchGoals = function(callback) {
     var endpoint = [baseUrl, '/sdk/goals/', environment].join('');
-    fetchJSON(endpoint, callback);
+    fetchJSON(endpoint, null, callback);
   };
   
   return requestor;
