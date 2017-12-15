@@ -55,6 +55,15 @@ describe('LDClient', function() {
       }, 0);
     });
 
+    it('should log an error when initialize is called without an environment key', function(done) {
+      var user = {key: 'user'};
+      var errorSpy = sinon.spy(console, 'error');
+      var client = LDClient.initialize('', user);
+      expect(errorSpy.calledWith('No environment specified. Please see https://docs.launchdarkly.com/docs/js-sdk-reference#section-initializing-the-client for instructions on SDK initialization.')).to.be.true;
+      errorSpy.restore()
+      done();
+    });
+
     it('should not fetch flag settings since bootstrap is provided', function() {
       var user = {key: 'user'};
       var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {

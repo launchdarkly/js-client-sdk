@@ -7,7 +7,7 @@ describe('Requestor', function() {
   beforeEach(function() {
     server = sinon.fakeServer.create();
   });
-  
+
   afterEach(function() {
     server.restore();
   });
@@ -82,4 +82,20 @@ describe('Requestor', function() {
     expect(handleFour.calledOnce).to.be.true;
     expect(handleFive.calledOnce).to.be.true;
   });
+
+  it('should log an error when an invalid environment key is specified', function() {
+    const handleOne = sinon.spy();
+
+    requestor = Requestor('http://requestee', 'FAKE_ENV');
+    requestor.fetchFlagSettings({key: 'user1'}, 'hash1', handleOne);
+
+    server.respondWith(function(req) {
+      seq++;
+      req.respond(404);
+    });
+    var errorSpy = sinon.spy(console, 'error');
+    server.respond();
+    expect(errorSpy.calledWith('Error fetching flag settings: environment not found. Please see https://docs.launchdarkly.com/docs/js-sdk-reference#section-initializing-the-client for instructions on SDK initialization.')).to.be.true;
+    errorSpy.restore();
+  })
 });
