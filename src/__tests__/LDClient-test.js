@@ -141,17 +141,11 @@ describe('LDClient', function() {
 
          var warnSpy = sinon.spy(console, 'warn');
 
-         requests[0].respond(
-            200,
-            { 'Content-Type': 'application/json' },
-            '[{"key": "known", "kind": "custom"}]'
-         );
+         requests[0].respond(200, { 'Content-Type': 'application/json' }, '[{"key": "known", "kind": "custom"}]');
 
          client.on('ready', function() {
             client.track('known');
-            expect(
-               warnSpy.calledWith('Custom event key does not exist')
-            ).to.be.false;
+            expect(warnSpy.calledWith('Custom event key does not exist')).to.be.false;
             warnSpy.restore();
             done();
          });
@@ -187,17 +181,11 @@ describe('LDClient', function() {
 
          var warnSpy = sinon.spy(console, 'warn');
 
-         requests[0].respond(
-            200,
-            { 'Content-Type': 'application/json' },
-            '[{"key": "known", "kind": "custom"}]'
-         );
+         requests[0].respond(200, { 'Content-Type': 'application/json' }, '[{"key": "known", "kind": "custom"}]');
 
          client.on('ready', function() {
             client.track('unknown');
-            expect(
-               warnSpy.calledWith(messages.unknownCustomEventKey('unknown'))
-            ).to.be.true;
+            expect(warnSpy.calledWith(messages.unknownCustomEventKey('unknown'))).to.be.true;
             warnSpy.restore();
             done();
          });

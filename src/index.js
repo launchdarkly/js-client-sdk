@@ -41,8 +41,7 @@ function sendIdentifyEvent(user) {
 
 function sendFlagEvent(key, value, defaultValue) {
    var user = ident.getUser();
-   var cacheKey =
-      JSON.stringify(value) + (user && user.key ? user.key : '') + key;
+   var cacheKey = JSON.stringify(value) + (user && user.key ? user.key : '') + key;
    var now = new Date();
    var cached = seenRequests[cacheKey];
 
@@ -157,10 +156,7 @@ function track(key, data) {
 
 function connectStream() {
    stream.connect(function() {
-      requestor.fetchFlagSettings(ident.getUser(), hash, function(
-         err,
-         settings
-      ) {
+      requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
          if (err) {
             console.error('Error fetching flag settings: ', err);
             emitter.emit(errorEvent);
@@ -184,19 +180,12 @@ function updateSettings(settings) {
    flags = settings;
 
    if (useLocalStorage) {
-      localStorage.setItem(
-         lsKey(environment, ident.getUser()),
-         JSON.stringify(flags)
-      );
+      localStorage.setItem(lsKey(environment, ident.getUser()), JSON.stringify(flags));
    }
 
    if (keys.length > 0) {
       keys.forEach(function(key) {
-         emitter.emit(
-            changeEvent + ':' + key,
-            changes[key].current,
-            changes[key].previous
-         );
+         emitter.emit(changeEvent + ':' + key, changes[key].current, changes[key].previous);
       });
 
       emitter.emit(changeEvent, changes);
@@ -290,10 +279,7 @@ function initialize(env, user, options) {
       }
 
       if (flags === null) {
-         requestor.fetchFlagSettings(ident.getUser(), hash, function(
-            err,
-            settings
-         ) {
+         requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
             if (err) {
                console.error('Error fetching flag settings: ', err);
                emitter.emit(errorEvent);
@@ -311,10 +297,7 @@ function initialize(env, user, options) {
          setTimeout(function() {
             emitter.emit(readyEvent);
          }, 0);
-         requestor.fetchFlagSettings(ident.getUser(), hash, function(
-            err,
-            settings
-         ) {
+         requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
             if (err) {
                console.error('Error fetching flag settings: ', err);
                emitter.emit(errorEvent);
@@ -325,10 +308,7 @@ function initialize(env, user, options) {
          });
       }
    } else {
-      requestor.fetchFlagSettings(ident.getUser(), hash, function(
-         err,
-         settings
-      ) {
+      requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
          if (err) {
             console.error('Error fetching flag settings: ', err);
             emitter.emit(errorEvent);

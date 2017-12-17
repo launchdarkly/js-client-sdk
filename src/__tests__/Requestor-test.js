@@ -22,11 +22,7 @@ describe('Requestor', function() {
 
       server.respondWith(function(req) {
          seq++;
-         req.respond(
-            200,
-            { 'Content-type': 'application/json' },
-            JSON.stringify({ tag: seq })
-         );
+         req.respond(200, { 'Content-type': 'application/json' }, JSON.stringify({ tag: seq }));
       });
 
       server.respond();
@@ -44,11 +40,7 @@ describe('Requestor', function() {
 
       server.respondWith(function(req) {
          seq++;
-         req.respond(
-            200,
-            { 'Content-type': 'application/json' },
-            JSON.stringify({ tag: seq })
-         );
+         req.respond(200, { 'Content-type': 'application/json' }, JSON.stringify({ tag: seq }));
       });
 
       requestor = new Requestor('http://requestee', 'FAKE_ENV');

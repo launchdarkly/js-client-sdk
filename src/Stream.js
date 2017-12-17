@@ -15,11 +15,7 @@ export default function Stream(url, environment) {
    };
 
    stream.isConnected = function() {
-      return (
-         es &&
-         (es.readyState === EventSource.OPEN ||
-            es.readyState === EventSource.CONNECTING)
-      );
+      return es && (es.readyState === EventSource.OPEN || es.readyState === EventSource.CONNECTING);
    };
 
    return stream;

@@ -42,8 +42,7 @@ export default function EventProcessor(eventsUrl) {
       }
 
       if (data.length > 0) {
-         var src =
-            eventsUrl + '?d=' + utils.base64URLEncode(JSON.stringify(data));
+         var src = eventsUrl + '?d=' + utils.base64URLEncode(JSON.stringify(data));
          // Detect browser support for CORS
          if ('withCredentials' in new XMLHttpRequest()) {
             /* Supports cross-domain requests */

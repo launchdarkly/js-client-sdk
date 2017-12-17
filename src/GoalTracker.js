@@ -16,9 +16,7 @@ function doesUrlMatch(matcher, href, search, hash) {
          break;
       case 'substring':
          testUrl = canonicalUrl;
-         regex = new RegExp(
-            '.*' + escapeStringRegexp(matcher.substring) + '.*$'
-         );
+         regex = new RegExp('.*' + escapeStringRegexp(matcher.substring) + '.*$');
          break;
       case 'regex':
          testUrl = canonicalUrl;
@@ -60,9 +58,7 @@ export default function GoalTracker(goals, onEvent) {
       var urls = goal.urls || [];
 
       for (var j = 0; j < urls.length; j++) {
-         if (
-            doesUrlMatch(urls[j], location.href, location.search, location.hash)
-         ) {
+         if (doesUrlMatch(urls[j], location.href, location.search, location.hash)) {
             if (goal.kind === 'pageview') {
                onEvent('pageview', goal);
             } else {

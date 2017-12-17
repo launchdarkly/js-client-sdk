@@ -6,10 +6,7 @@ function fetchJSON(endpoint, callback) {
    var xhr = new XMLHttpRequest();
 
    xhr.addEventListener('load', function() {
-      if (
-         xhr.status === 200 &&
-         xhr.getResponseHeader('Content-type') === json
-      ) {
+      if (xhr.status === 200 && xhr.getResponseHeader('Content-type') === json) {
          callback(null, JSON.parse(xhr.responseText));
       } else {
          callback(xhr.statusText);
@@ -34,14 +31,7 @@ export default function Requestor(baseUrl, environment) {
 
    requestor.fetchFlagSettings = function(user, hash, callback) {
       var data = utils.base64URLEncode(JSON.stringify(user));
-      var endpoint = [
-         baseUrl,
-         '/sdk/eval/',
-         environment,
-         '/users/',
-         data,
-         hash ? '?h=' + hash : '',
-      ].join('');
+      var endpoint = [baseUrl, '/sdk/eval/', environment, '/users/', data, hash ? '?h=' + hash : ''].join('');
       var cb;
 
       var wrappedCallback = (function(currentCallback) {
