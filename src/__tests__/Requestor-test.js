@@ -16,7 +16,7 @@ describe('Requestor', function() {
       const handleOne = sinon.spy();
       const handleTwo = sinon.spy();
 
-      requestor = Requestor('http://requestee', 'FAKE_ENV');
+      requestor = new Requestor('http://requestee', 'FAKE_ENV');
       requestor.fetchFlagSettings({ key: 'user1' }, 'hash1', handleOne);
       requestor.fetchFlagSettings({ key: 'user2' }, 'hash2', handleTwo);
 
@@ -51,7 +51,7 @@ describe('Requestor', function() {
          );
       });
 
-      requestor = Requestor('http://requestee', 'FAKE_ENV');
+      requestor = new Requestor('http://requestee', 'FAKE_ENV');
       requestor.fetchFlagSettings({ key: 'user1' }, 'hash1', handleOne);
       server.respond();
       requestor.fetchFlagSettings({ key: 'user2' }, 'hash2', handleTwo);

@@ -7,7 +7,6 @@ env:
   es6: true
   node: true
   browser: true
-  mocha: true
 plugins:
   - prettier
   - mocha
@@ -17,5 +16,3 @@ rules:
   - 20
 globals:
   VERSION: true
-  sinon: true
-  expect: true

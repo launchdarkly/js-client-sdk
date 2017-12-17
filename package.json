@@ -42,6 +42,7 @@
     "babel-preset-react": "6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "chai": "4.1.2",
+    "eslint-plugin-chai-friendly": "0.4.1",
     "cross-env": "^5.1.1",
     "karma": "1.7.1",
     "karma-chai": "0.1.0",

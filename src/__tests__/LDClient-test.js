@@ -18,11 +18,11 @@ describe('LDClient', function() {
       };
 
       sandbox = sinon.sandbox.create();
-      sandbox.stub(window.localStorage.__proto__, 'setItem', function(k, v) {
+      sandbox.stub(window.localStorage.prototype, 'setItem', function(k, v) {
          store[k] = v;
       });
 
-      sandbox.stub(window.localStorage.__proto__, 'getItem', function(k) {
+      sandbox.stub(window.localStorage.prototype, 'getItem', function(k) {
          return store[k];
       });
    });
@@ -56,7 +56,7 @@ describe('LDClient', function() {
 
       it('should not fetch flag settings since bootstrap is provided', function() {
          var user = { key: 'user' };
-         var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+         LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
             bootstrap: {},
          });
 
@@ -120,7 +120,7 @@ describe('LDClient', function() {
             req.respond(503);
          });
 
-         client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+         var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
             bootstrap: 'localstorage',
          });
 
@@ -136,7 +136,7 @@ describe('LDClient', function() {
       it('should not warn when tracking an known custom goal event', function(done) {
          var user = { key: 'user' };
          var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
-            bootstrap: {}, // so the client doesn't request settings
+            bootstrap: {}, // So the client doesn't request settings
          });
 
          var warnSpy = sinon.spy(console, 'warn');
@@ -160,7 +160,7 @@ describe('LDClient', function() {
       it('should throw when tracking a non-string custom goal event', function(done) {
          var user = { key: 'user' };
          var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
-            bootstrap: {}, // so the client doesn't request settings
+            bootstrap: {}, // So the client doesn't request settings
          });
 
          const track = function(key) {
@@ -182,7 +182,7 @@ describe('LDClient', function() {
       it('should warn when tracking an unknown custom goal event', function(done) {
          var user = { key: 'user' };
          var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
-            bootstrap: {}, // so the client doesn't request settings
+            bootstrap: {}, // So the client doesn't request settings
          });
 
          var warnSpy = sinon.spy(console, 'warn');
@@ -211,7 +211,7 @@ describe('LDClient', function() {
             req.respond(503);
          });
 
-         client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user);
+         var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user);
 
          var handleError = sinon.spy();
          client.on('error', handleError);
