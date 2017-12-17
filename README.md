@@ -48,8 +48,7 @@ You can load the polyfll via a script tag in the `<head>`:
 
     <script src="/public/querySelector.js"></script>
 
-You can also install it with `npm install polyfill-queryselector` or `bower
-install polyfill-queryselector`.
+You can also install it with `npm install polyfill-queryselector` or `bower install polyfill-queryselector`.
 
 ## Installation
 
@@ -150,11 +149,11 @@ Alternatively, you can bootstrap feature flags from local storage.
 
 ```js
 var client = LDClient.initialize(
-  'YOUR_CLIENT_SIDE_ID',
-  user,
-  (options = {
-    bootstrap: 'localStorage',
-  })
+   'YOUR_CLIENT_SIDE_ID',
+   user,
+   (options = {
+      bootstrap: 'localStorage',
+   })
 );
 ```
 
@@ -180,11 +179,11 @@ initialization:
 ```js
 var user = { key: 'user.example.com' };
 var client = LDClient.initialize(
-  'YOUR_CLIENT_SIDE_ID',
-  user,
-  (options = {
-    hash: 'SERVER_GENERATED_HASH',
-  })
+   'YOUR_CLIENT_SIDE_ID',
+   user,
+   (options = {
+      hash: 'SERVER_GENERATED_HASH',
+   })
 );
 ```
 
@@ -216,7 +215,7 @@ the `change` event:
 
 ```js
 client.on('change', function(settings) {
-  console.log('flags changed:', settings);
+   console.log('flags changed:', settings);
 });
 ```
 
@@ -226,7 +225,7 @@ also subscribe to specific flags:
 
 ```js
 client.on('change:YOUR_FLAG_KEY', function(value, previous) {
-  console.log('YOUR_FLAG_KEY changed:', value, '(' + previous + ')');
+   console.log('YOUR_FLAG_KEY changed:', value, '(' + previous + ')');
 });
 ```
 
@@ -264,7 +263,7 @@ the authenticated user. To do this, you can call the `identify` function:
 
 ```js
 client.identify(newUser, hash, function() {
-  console.log("New user's flags available");
+   console.log("New user's flags available");
 });
 ```
 

@@ -31,357 +31,363 @@ var flushInterval = 2000;
 var seenRequests = {};
 
 function sendIdentifyEvent(user) {
-  events.enqueue({
-    kind: 'identify',
-    key: user.key,
-    user: user,
-    creationDate: new Date().getTime(),
-  });
+   events.enqueue({
+      kind: 'identify',
+      key: user.key,
+      user: user,
+      creationDate: new Date().getTime(),
+   });
 }
 
 function sendFlagEvent(key, value, defaultValue) {
-  var user = ident.getUser();
-  var cacheKey =
-    JSON.stringify(value) + (user && user.key ? user.key : '') + key;
-  var now = new Date();
-  var cached = seenRequests[cacheKey];
+   var user = ident.getUser();
+   var cacheKey =
+      JSON.stringify(value) + (user && user.key ? user.key : '') + key;
+   var now = new Date();
+   var cached = seenRequests[cacheKey];
 
-  if (cached && now - cached < 300000 /* five minutes, in ms */) {
-    return;
-  }
+   if (cached && now - cached < 300000 /* five minutes, in ms */) {
+      return;
+   }
 
-  seenRequests[cacheKey] = now;
+   seenRequests[cacheKey] = now;
 
-  events.enqueue({
-    kind: 'feature',
-    key: key,
-    user: user,
-    value: value,
-    default: defaultValue,
-    creationDate: now.getTime(),
-  });
+   events.enqueue({
+      kind: 'feature',
+      key: key,
+      user: user,
+      value: value,
+      default: defaultValue,
+      creationDate: now.getTime(),
+   });
 }
 
 function sendGoalEvent(kind, goal) {
-  var event = {
-    kind: kind,
-    key: goal.key,
-    data: null,
-    url: window.location.href,
-    creationDate: new Date().getTime(),
-  };
+   var event = {
+      kind: kind,
+      key: goal.key,
+      data: null,
+      url: window.location.href,
+      creationDate: new Date().getTime(),
+   };
 
-  if (kind === 'click') {
-    event.selector = goal.selector;
-  }
+   if (kind === 'click') {
+      event.selector = goal.selector;
+   }
 
-  return events.enqueue(event);
+   return events.enqueue(event);
 }
 
 function identify(user, hash, onDone) {
-  ident.setUser(user);
-  requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
-    if (err) {
-      console.error('Error fetching flag settings: ', err);
-      emitter.emit(errorEvent)
-    }
-    if (settings) {
-      updateSettings(settings);
-    }
-    onDone && onDone();
-  });
+   ident.setUser(user);
+   requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
+      if (err) {
+         console.error('Error fetching flag settings: ', err);
+         emitter.emit(errorEvent);
+      }
+      if (settings) {
+         updateSettings(settings);
+      }
+      onDone && onDone();
+   });
 }
 
 function variation(key, defaultValue) {
-  var value;
+   var value;
 
-  if (flags && flags.hasOwnProperty(key)) {
-    value = flags[key] === null ? defaultValue : flags[key];
-  } else {
-    value = defaultValue;
-  }
+   if (flags && flags.hasOwnProperty(key)) {
+      value = flags[key] === null ? defaultValue : flags[key];
+   } else {
+      value = defaultValue;
+   }
 
-  sendFlagEvent(key, value, defaultValue);
+   sendFlagEvent(key, value, defaultValue);
 
-  return value;
+   return value;
 }
 
 function allFlags() {
-  var results = {};
+   var results = {};
 
-  if (!flags) {
-    return results;
-  }
+   if (!flags) {
+      return results;
+   }
 
-  for (var key in flags) {
-    if (flags.hasOwnProperty(key)) {
-      results[key] = variation(key, null);
-    }
-  }
+   for (var key in flags) {
+      if (flags.hasOwnProperty(key)) {
+         results[key] = variation(key, null);
+      }
+   }
 
-  return results;
+   return results;
 }
 
 function customEventExists(key) {
-  if (!goals || goals.length === 0) {
-    return false;
-  }
+   if (!goals || goals.length === 0) {
+      return false;
+   }
 
-  for (var i = 0; i < goals.length; i++) {
-    if (goals[i].kind === 'custom' && goals[i].key === key) {
-      return true;
-    }
-  }
+   for (var i = 0; i < goals.length; i++) {
+      if (goals[i].kind === 'custom' && goals[i].key === key) {
+         return true;
+      }
+   }
 
-  return false;
+   return false;
 }
 
 function track(key, data) {
-  if (typeof key !== 'string') {
-    throw messages.invalidKey();
-  }
+   if (typeof key !== 'string') {
+      throw messages.invalidKey();
+   }
 
-  // Validate key if we have goals
-  if (!!goals && !customEventExists(key)) {
-    console.warn(messages.unknownCustomEventKey(key));
-  }
+   // Validate key if we have goals
+   if (!!goals && !customEventExists(key)) {
+      console.warn(messages.unknownCustomEventKey(key));
+   }
 
-  events.enqueue({
-    kind: 'custom',
-    key: key,
-    data: data,
-    url: window.location.href,
-    creationDate: new Date().getTime(),
-  });
+   events.enqueue({
+      kind: 'custom',
+      key: key,
+      data: data,
+      url: window.location.href,
+      creationDate: new Date().getTime(),
+   });
 }
 
 function connectStream() {
-  stream.connect(function() {
-    requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
-      if (err) {
-        console.error('Error fetching flag settings: ', err);
-        emitter.emit(errorEvent)
-      }
-      updateSettings(settings);
-    });
-  });
+   stream.connect(function() {
+      requestor.fetchFlagSettings(ident.getUser(), hash, function(
+         err,
+         settings
+      ) {
+         if (err) {
+            console.error('Error fetching flag settings: ', err);
+            emitter.emit(errorEvent);
+         }
+         updateSettings(settings);
+      });
+   });
 }
 
 function updateSettings(settings) {
-  var changes;
-  var keys;
+   var changes;
+   var keys;
 
-  if (!settings) {
-    return;
-  }
+   if (!settings) {
+      return;
+   }
 
-  changes = utils.modifications(flags, settings);
-  keys = Object.keys(changes);
+   changes = utils.modifications(flags, settings);
+   keys = Object.keys(changes);
 
-  flags = settings;
+   flags = settings;
 
-  if (useLocalStorage) {
-    localStorage.setItem(
-      lsKey(environment, ident.getUser()),
-      JSON.stringify(flags)
-    );
-  }
-
-  if (keys.length > 0) {
-    keys.forEach(function(key) {
-      emitter.emit(
-        changeEvent + ':' + key,
-        changes[key].current,
-        changes[key].previous
+   if (useLocalStorage) {
+      localStorage.setItem(
+         lsKey(environment, ident.getUser()),
+         JSON.stringify(flags)
       );
-    });
+   }
 
-    emitter.emit(changeEvent, changes);
+   if (keys.length > 0) {
+      keys.forEach(function(key) {
+         emitter.emit(
+            changeEvent + ':' + key,
+            changes[key].current,
+            changes[key].previous
+         );
+      });
 
-    keys.forEach(function(key) {
-      sendFlagEvent(key, changes[key].current);
-    });
-  }
+      emitter.emit(changeEvent, changes);
+
+      keys.forEach(function(key) {
+         sendFlagEvent(key, changes[key].current);
+      });
+   }
 }
 
 function on(event, handler, context) {
-  if (event.substr(0, changeEvent.length) === changeEvent) {
-    if (!stream.isConnected()) {
-      connectStream();
-    }
-    emitter.on.apply(emitter, [event, handler, context]);
-  } else {
-    emitter.on.apply(emitter, Array.prototype.slice.call(arguments));
-  }
+   if (event.substr(0, changeEvent.length) === changeEvent) {
+      if (!stream.isConnected()) {
+         connectStream();
+      }
+      emitter.on.apply(emitter, [event, handler, context]);
+   } else {
+      emitter.on.apply(emitter, Array.prototype.slice.call(arguments));
+   }
 }
 
 function off() {
-  emitter.off.apply(emitter, Array.prototype.slice.call(arguments));
+   emitter.off.apply(emitter, Array.prototype.slice.call(arguments));
 }
 
 function handleMessage(event) {
-  if (event.origin !== baseUrl) {
-    return;
-  }
-  if (event.data.type === 'SYN') {
-    window.editorClientBaseUrl = baseUrl;
-    var editorTag = document.createElement('script');
-    editorTag.type = 'text/javascript';
-    editorTag.async = true;
-    editorTag.src = baseUrl + event.data.editorClientUrl;
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(editorTag, s);
-  }
+   if (event.origin !== baseUrl) {
+      return;
+   }
+   if (event.data.type === 'SYN') {
+      window.editorClientBaseUrl = baseUrl;
+      var editorTag = document.createElement('script');
+      editorTag.type = 'text/javascript';
+      editorTag.async = true;
+      editorTag.src = baseUrl + event.data.editorClientUrl;
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(editorTag, s);
+   }
 }
 
 var client = {
-  identify: identify,
-  variation: variation,
-  track: track,
-  on: on,
-  off: off,
-  allFlags: allFlags,
+   identify: identify,
+   variation: variation,
+   track: track,
+   on: on,
+   off: off,
+   allFlags: allFlags,
 };
 
 function lsKey(env, user) {
-  var uKey = '';
-  if (user && user.key) {
-    uKey = user.key;
-  }
-  return 'ld:' + env + ':' + uKey;
+   var uKey = '';
+   if (user && user.key) {
+      uKey = user.key;
+   }
+   return 'ld:' + env + ':' + uKey;
 }
 
 function initialize(env, user, options) {
-  var localStorageKey;
-  options = options || {};
-  environment = env;
-  flags = typeof options.bootstrap === 'object' ? options.bootstrap : {};
-  hash = options.hash;
-  baseUrl = options.baseUrl || 'https://app.launchdarkly.com';
-  eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
-  streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
-  stream = Stream(streamUrl, environment);
-  events = EventProcessor(eventsUrl + '/a/' + environment + '.gif');
-  emitter = EventEmitter();
-  ident = Identity(user, sendIdentifyEvent);
-  requestor = Requestor(baseUrl, environment);
-  localStorageKey = lsKey(environment, ident.getUser());
+   var localStorageKey;
+   options = options || {};
+   environment = env;
+   flags = typeof options.bootstrap === 'object' ? options.bootstrap : {};
+   hash = options.hash;
+   baseUrl = options.baseUrl || 'https://app.launchdarkly.com';
+   eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
+   streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
+   stream = Stream(streamUrl, environment);
+   events = EventProcessor(eventsUrl + '/a/' + environment + '.gif');
+   emitter = EventEmitter();
+   ident = Identity(user, sendIdentifyEvent);
+   requestor = Requestor(baseUrl, environment);
+   localStorageKey = lsKey(environment, ident.getUser());
 
-  if (typeof options.bootstrap === 'object') {
-    // Emitting the event here will happen before the consumer
-    // can register a listener, so defer to next tick.
-    setTimeout(function() {
-      emitter.emit(readyEvent);
-    }, 0);
-  } else if (
-    typeof options.bootstrap === 'string' &&
-    options.bootstrap.toUpperCase() === 'LOCALSTORAGE' &&
-    typeof Storage !== 'undefined'
-  ) {
-    useLocalStorage = true;
-    // check if localstorage data is corrupted, if so clear it
-    try {
-      flags = JSON.parse(localStorage.getItem(localStorageKey));
-    } catch (error) {
-      localStorage.setItem(localStorageKey, null);
-    }
-
-    if (flags === null) {
-      requestor.fetchFlagSettings(ident.getUser(), hash, function(
-        err,
-        settings
-      ) {
-        if (err) {
-          console.error('Error fetching flag settings: ', err);
-          emitter.emit(errorEvent)
-        }
-        flags = settings;
-        settings &&
-          localStorage.setItem(localStorageKey, JSON.stringify(flags));
-        emitter.emit(readyEvent);
-      });
-    } else {
-      // We're reading the flags from local storage. Signal that we're ready,
-      // then update localStorage for the next page load. We won't signal changes or update
-      // the in-memory flags unless you subscribe for changes
+   if (typeof options.bootstrap === 'object') {
+      // Emitting the event here will happen before the consumer
+      // can register a listener, so defer to next tick.
       setTimeout(function() {
-        emitter.emit(readyEvent);
+         emitter.emit(readyEvent);
       }, 0);
-      requestor.fetchFlagSettings(ident.getUser(), hash, function(
-        err,
-        settings
-      ) {
-        if (err) {
-          console.error('Error fetching flag settings: ', err);
-          emitter.emit(errorEvent)
-        }
-        settings &&
-          localStorage.setItem(localStorageKey, JSON.stringify(settings));
-      });
-    }
-  } else {
-    requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
-      if (err) {
-        console.error('Error fetching flag settings: ', err);
-        emitter.emit(errorEvent)
+   } else if (
+      typeof options.bootstrap === 'string' &&
+      options.bootstrap.toUpperCase() === 'LOCALSTORAGE' &&
+      typeof Storage !== 'undefined'
+   ) {
+      useLocalStorage = true;
+      // check if localstorage data is corrupted, if so clear it
+      try {
+         flags = JSON.parse(localStorage.getItem(localStorageKey));
+      } catch (error) {
+         localStorage.setItem(localStorageKey, null);
       }
 
-      flags = settings;
-      emitter.emit(readyEvent);
-    });
-  }
+      if (flags === null) {
+         requestor.fetchFlagSettings(ident.getUser(), hash, function(
+            err,
+            settings
+         ) {
+            if (err) {
+               console.error('Error fetching flag settings: ', err);
+               emitter.emit(errorEvent);
+            }
+            flags = settings;
+            settings &&
+               localStorage.setItem(localStorageKey, JSON.stringify(flags));
+            emitter.emit(readyEvent);
+         });
+      } else {
+         // We're reading the flags from local storage. Signal that we're ready,
+         // then update localStorage for the next page load. We won't signal changes or update
+         // the in-memory flags unless you subscribe for changes
+         setTimeout(function() {
+            emitter.emit(readyEvent);
+         }, 0);
+         requestor.fetchFlagSettings(ident.getUser(), hash, function(
+            err,
+            settings
+         ) {
+            if (err) {
+               console.error('Error fetching flag settings: ', err);
+               emitter.emit(errorEvent);
+            }
+            settings &&
+               localStorage.setItem(localStorageKey, JSON.stringify(settings));
+         });
+      }
+   } else {
+      requestor.fetchFlagSettings(ident.getUser(), hash, function(
+         err,
+         settings
+      ) {
+         if (err) {
+            console.error('Error fetching flag settings: ', err);
+            emitter.emit(errorEvent);
+         }
 
-  requestor.fetchGoals(function(err, g) {
-    if (err) {
-      console.error('Error fetching goals: ', err);
-      emitter.emit(errorEvent)
-    }
-    if (g && g.length > 0) {
-      goals = g;
-      goalTracker = GoalTracker(goals, sendGoalEvent);
-    }
-  });
+         flags = settings;
+         emitter.emit(readyEvent);
+      });
+   }
 
-  function start() {
-    setTimeout(function tick() {
-      events.flush(ident.getUser());
-      setTimeout(tick, flushInterval);
-    }, flushInterval);
-  }
+   requestor.fetchGoals(function(err, g) {
+      if (err) {
+         console.error('Error fetching goals: ', err);
+         emitter.emit(errorEvent);
+      }
+      if (g && g.length > 0) {
+         goals = g;
+         goalTracker = GoalTracker(goals, sendGoalEvent);
+      }
+   });
 
-  if (document.readyState !== 'complete') {
-    window.addEventListener('load', start);
-  } else {
-    start();
-  }
+   function start() {
+      setTimeout(function tick() {
+         events.flush(ident.getUser());
+         setTimeout(tick, flushInterval);
+      }, flushInterval);
+   }
 
-  window.addEventListener('beforeunload', function() {
-    events.flush(ident.getUser(), true);
-  });
+   if (document.readyState !== 'complete') {
+      window.addEventListener('load', start);
+   } else {
+      start();
+   }
 
-  function refreshGoalTracker() {
-    if (goalTracker) {
-      goalTracker.dispose();
-    }
-    if (goals && goals.length) {
-      goalTracker = GoalTracker(goals, sendGoalEvent);
-    }
-  }
+   window.addEventListener('beforeunload', function() {
+      events.flush(ident.getUser(), true);
+   });
 
-  if (goals && goals.length > 0) {
-    if (!!(window.history && history.pushState)) {
-      window.addEventListener('popstate', refreshGoalTracker);
-    } else {
-      window.addEventListener('hashchange', refreshGoalTracker);
-    }
-  }
+   function refreshGoalTracker() {
+      if (goalTracker) {
+         goalTracker.dispose();
+      }
+      if (goals && goals.length) {
+         goalTracker = GoalTracker(goals, sendGoalEvent);
+      }
+   }
 
-  window.addEventListener('message', handleMessage);
+   if (goals && goals.length > 0) {
+      if (!!(window.history && history.pushState)) {
+         window.addEventListener('popstate', refreshGoalTracker);
+      } else {
+         window.addEventListener('hashchange', refreshGoalTracker);
+      }
+   }
 
-  return client;
+   window.addEventListener('message', handleMessage);
+
+   return client;
 }
 
 export default {
-  initialize,
+   initialize,
 };
 export const version = VERSION;
