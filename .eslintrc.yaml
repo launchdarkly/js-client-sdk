@@ -7,16 +7,15 @@ env:
   es6: true
   node: true
   browser: true
+  mocha: true
 plugins:
   - prettier
   - mocha
 rules:
-  prettier/prettier:
-  - error
-  - trailingComma: es5
-    singleQuote: true
   max-nested-callbacks:
   - error
   - 20
 globals:
   VERSION: true
+  sinon: true
+  expect: true
