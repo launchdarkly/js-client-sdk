@@ -88,14 +88,14 @@ function identify(user, hash, onDone) {
       if (settings) {
          updateSettings(settings);
       }
-      onDone && onDone();
+      if (onDone) onDone();
    });
 }
 
 function variation(key, defaultValue) {
    var value;
 
-   if (flags && flags.hasOwnProperty(key)) {
+   if (flags && {}.hasOwnProperty.call(flags, key)) {
       value = flags[key] === null ? defaultValue : flags[key];
    } else {
       value = defaultValue;
@@ -114,7 +114,7 @@ function allFlags() {
    }
 
    for (var key in flags) {
-      if (flags.hasOwnProperty(key)) {
+      if ({}.hasOwnProperty.call(flags, key)) {
          results[key] = variation(key, null);
       }
    }
@@ -142,7 +142,7 @@ function track(key, data) {
    }
 
    // Validate key if we have goals
-   if (!!goals && !customEventExists(key)) {
+   if (Boolean(goals) && !customEventExists(key)) {
       console.warn(messages.unknownCustomEventKey(key));
    }
 
@@ -212,7 +212,7 @@ function on(event, handler, context) {
       if (!stream.isConnected()) {
          connectStream();
       }
-      emitter.on.apply(emitter, [event, handler, context]);
+      emitter.on(event, handler, context);
    } else {
       emitter.on.apply(emitter, Array.prototype.slice.call(arguments));
    }
@@ -263,11 +263,11 @@ function initialize(env, user, options) {
    baseUrl = options.baseUrl || 'https://app.launchdarkly.com';
    eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
    streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
-   stream = Stream(streamUrl, environment);
-   events = EventProcessor(eventsUrl + '/a/' + environment + '.gif');
-   emitter = EventEmitter();
-   ident = Identity(user, sendIdentifyEvent);
-   requestor = Requestor(baseUrl, environment);
+   stream = new Stream(streamUrl, environment);
+   events = new EventProcessor(eventsUrl + '/a/' + environment + '.gif');
+   emitter = new EventEmitter();
+   ident = new Identity(user, sendIdentifyEvent);
+   requestor = new Requestor(baseUrl, environment);
    localStorageKey = lsKey(environment, ident.getUser());
 
    if (typeof options.bootstrap === 'object') {
@@ -282,7 +282,7 @@ function initialize(env, user, options) {
       typeof Storage !== 'undefined'
    ) {
       useLocalStorage = true;
-      // check if localstorage data is corrupted, if so clear it
+      // Check if localstorage data is corrupted, if so clear it
       try {
          flags = JSON.parse(localStorage.getItem(localStorageKey));
       } catch (error) {
@@ -299,8 +299,9 @@ function initialize(env, user, options) {
                emitter.emit(errorEvent);
             }
             flags = settings;
-            settings &&
+            if (settings) {
                localStorage.setItem(localStorageKey, JSON.stringify(flags));
+            }
             emitter.emit(readyEvent);
          });
       } else {
@@ -318,8 +319,9 @@ function initialize(env, user, options) {
                console.error('Error fetching flag settings: ', err);
                emitter.emit(errorEvent);
             }
-            settings &&
+            if (settings) {
                localStorage.setItem(localStorageKey, JSON.stringify(settings));
+            }
          });
       }
    } else {
@@ -344,7 +346,7 @@ function initialize(env, user, options) {
       }
       if (g && g.length > 0) {
          goals = g;
-         goalTracker = GoalTracker(goals, sendGoalEvent);
+         goalTracker = new GoalTracker(goals, sendGoalEvent);
       }
    });
 
@@ -355,6 +357,7 @@ function initialize(env, user, options) {
       }, flushInterval);
    }
 
+   // eslint-disable-next-line
    if (document.readyState !== 'complete') {
       window.addEventListener('load', start);
    } else {
@@ -370,12 +373,12 @@ function initialize(env, user, options) {
          goalTracker.dispose();
       }
       if (goals && goals.length) {
-         goalTracker = GoalTracker(goals, sendGoalEvent);
+         goalTracker = new GoalTracker(goals, sendGoalEvent);
       }
    }
 
    if (goals && goals.length > 0) {
-      if (!!(window.history && history.pushState)) {
+      if (window.history && history.pushState) {
          window.addEventListener('popstate', refreshGoalTracker);
       } else {
          window.addEventListener('hashchange', refreshGoalTracker);

@@ -51,7 +51,6 @@ function findGoalsForClick(event, clickGoals) {
 
 export default function GoalTracker(goals, onEvent) {
    var tracker = {};
-   var goals = goals;
    var listenerFn = null;
 
    var clickGoals = [];

@@ -6,10 +6,13 @@ export function btoa(s) {
 }
 
 export function base64URLEncode(s) {
-   return btoa(s)
-      .replace(/=/g, '')
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_');
+   return (
+      btoa(s)
+         // eslint-disable-next-line
+         .replace(/=/g, '')
+         .replace(/\+/g, '-')
+         .replace(/\//g, '_')
+   );
 }
 
 export function clone(obj) {
@@ -22,7 +25,7 @@ export function modifications(oldObj, newObj) {
       return {};
    }
    for (var prop in oldObj) {
-      if (oldObj.hasOwnProperty(prop)) {
+      if ({}.hasOwnProperty.call(oldObj, prop)) {
          if (newObj[prop] !== oldObj[prop]) {
             mods[prop] = { previous: oldObj[prop], current: newObj[prop] };
          }

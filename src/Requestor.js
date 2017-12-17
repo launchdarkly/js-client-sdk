@@ -56,7 +56,7 @@ export default function Requestor(baseUrl, environment) {
          flagSettingsRequest.abort();
          cb = (function(prevCallback) {
             return function() {
-               prevCallback && prevCallback.apply(null, arguments);
+               if (prevCallback) prevCallback.apply(null, arguments);
                wrappedCallback.apply(null, arguments);
             };
          })(lastFlagSettingsCallback);
