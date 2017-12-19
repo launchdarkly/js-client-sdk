@@ -5,8 +5,22 @@ function EventProcessor(eventsUrl) {
   var queue = [];
   var initialFlush = true;
   
+  function doNotTrack() {
+    var flag;
+    if (navigator && navigator.doNotTrack !== undefined) {
+      flag = navigator.doNotTrack;
+    } else if (navigator && navigator.msDoNotTrack !== undefined) {
+      flag = navigator.msDoNotTrack;
+    } else {
+      flag = window.doNotTrack;
+    }
+    return flag === '1' || flag === 'yes';
+  }
+
   processor.enqueue = function(event) {
-    queue.push(event);
+    if (!doNotTrack()) {
+      queue.push(event);
+    }
   };
   
   processor.flush = function(user, sync) {
