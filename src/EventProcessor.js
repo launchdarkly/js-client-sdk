@@ -8,11 +8,11 @@ function EventProcessor(eventsUrl) {
   function doNotTrack() {
     var flag;
     if (navigator && navigator.doNotTrack !== undefined) {
-      flag = navigator.doNotTrack;
+      flag = navigator.doNotTrack;    // FF, Chrome
     } else if (navigator && navigator.msDoNotTrack !== undefined) {
-      flag = navigator.msDoNotTrack;
+      flag = navigator.msDoNotTrack;  // IE 9/10
     } else {
-      flag = window.doNotTrack;
+      flag = window.doNotTrack;       // IE 11+, Safari
     }
     return flag === '1' || flag === 'yes';
   }
