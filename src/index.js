@@ -370,7 +370,5 @@ function initialize(env, user, options) {
    return client;
 }
 
-export default {
-   initialize,
-};
 export const version = VERSION;
+export { initialize };
