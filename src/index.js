@@ -79,6 +79,12 @@ function sendGoalEvent(kind, goal) {
   return enqueueEvent(event);
 }
 
+function waitUntilReady() {
+  return new Promise(function(resolve) {
+    client.on('ready', resolve);
+  });
+}
+
 function identify(user, hash, onDone) {
   ident.setUser(user);
   requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
@@ -227,6 +233,7 @@ function handleMessage(event) {
 }
 
 var client = {
+  waitUntilReady: waitUntilReady,
   identify: identify,
   variation: variation,
   track: track,
