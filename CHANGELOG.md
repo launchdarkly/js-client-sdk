@@ -1,6 +1,18 @@
 # Change log
 
-All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
+All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. This 
+project adheres to [Semantic Versioning](http://semver.org).
+
+## [1.2.0] - 2017-12-15
+### Added
+- Added `useReport` initialization option to use `REPORT` instead of `GET` when communicating with LaunchDarkly.
+### Fixed
+- Authentication errors will now be logged — the root cause for these errors is usually an invalid
+  client-side ID.
+
+## [1.1.13] - 2017-12-12
+### Changed
+- Emit an `error` event — separately from the `ready` event — in case fetching initial data fails. This allows consumers to respond accordingly.
 
 ## [1.1.12] - 2017-06-09
 ### Changed

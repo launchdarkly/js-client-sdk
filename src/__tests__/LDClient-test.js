@@ -55,6 +55,15 @@ describe('LDClient', function() {
       }, 0);
     });
 
+    it('should log an error when initialize is called without an environment key', function(done) {
+      var user = {key: 'user'};
+      var errorSpy = sinon.spy(console, 'error');
+      var client = LDClient.initialize('', user);
+      expect(errorSpy.calledWith('No environment specified. Please see https://docs.launchdarkly.com/docs/js-sdk-reference#section-initializing-the-client for instructions on SDK initialization.')).to.be.true;
+      errorSpy.restore()
+      done();
+    });
+
     it('should not fetch flag settings since bootstrap is provided', function() {
       var user = {key: 'user'};
       var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
@@ -110,6 +119,53 @@ describe('LDClient', function() {
       });
     });
 
+    it('should handle localStorage getItem throwing an exception', function(done) {
+      sandbox.restore(window.localStorage.__proto__, 'getItem')
+      sandbox.stub(window.localStorage.__proto__, 'getItem').throws()
+
+      var warnSpy = sandbox.spy(console, 'warn');
+
+      var user = {key: 'user'};
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: 'localstorage'
+      });
+
+      client.on('ready', function() {
+        expect(warnSpy.calledWith(messages.localStorageUnavailable())).to.be.true;
+        done();
+      });
+
+      requests[0].respond(
+        200,
+        { 'Content-Type': 'application/json' },
+        '[{"key": "known", "kind": "custom"}]'
+      );
+
+    });
+
+    it('should handle localStorage setItem throwing an exception', function(done) {
+      sandbox.restore(window.localStorage.__proto__, 'setItem')
+      sandbox.stub(window.localStorage.__proto__, 'setItem').throws()
+
+      var user = {key: 'user'};
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: 'localstorage'
+      });
+
+      var warnSpy = sandbox.spy(console, 'warn');
+
+      requests[0].respond(
+        200,
+        { 'Content-Type': 'application/json' },
+        '[{"key": "known", "kind": "custom"}]'
+      );
+
+      client.on('ready', function() {
+        expect(warnSpy.calledWith(messages.localStorageUnavailable())).to.be.true;
+        done();
+      });
+    });
+
     it('should not update cached settings if there was an error fetching flags', function(done) {
       var user = {key: 'user'};
       var json = '{"enable-foo": true}';
@@ -140,7 +196,7 @@ describe('LDClient', function() {
         bootstrap: {} // so the client doesn't request settings
       });
 
-      var warnSpy = sinon.spy(console, 'warn');
+      var warnSpy = sandbox.spy(console, 'warn');
 
       requests[0].respond(
         200,
@@ -151,7 +207,6 @@ describe('LDClient', function() {
       client.on('ready', function() {
         client.track('known');
         expect(warnSpy.calledWith('Custom event key does not exist')).to.be.false;
-        warnSpy.restore();
         done();
       });
     });
@@ -184,7 +239,7 @@ describe('LDClient', function() {
         bootstrap: {} // so the client doesn't request settings
       });
 
-      var warnSpy = sinon.spy(console, 'warn');
+      var warnSpy = sandbox.spy(console, 'warn');
 
       requests[0].respond(
         200,
@@ -195,7 +250,6 @@ describe('LDClient', function() {
       client.on('ready', function() {
         client.track('unknown');
         expect(warnSpy.calledWith(messages.unknownCustomEventKey('unknown'))).to.be.true;
-        warnSpy.restore();
         done();
       });
     });
