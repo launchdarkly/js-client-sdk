@@ -85,6 +85,14 @@ function waitUntilReady() {
   });
 }
 
+function waitUntilChange() {
+  return new Promise(function(resolve) {
+    client.on('change', function(settings) {
+      resolve(settings)
+    });
+  })
+}
+
 function identify(user, hash, onDone) {
   ident.setUser(user);
   requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
@@ -234,6 +242,7 @@ function handleMessage(event) {
 
 var client = {
   waitUntilReady: waitUntilReady,
+  waitUntilChange: waitUntilChange,
   identify: identify,
   variation: variation,
   track: track,
