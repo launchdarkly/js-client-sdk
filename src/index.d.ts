@@ -104,13 +104,13 @@ declare module 'ldclient-js' {
 
     /**
      * Whether or not to use the REPORT verb to fetch flag settings.
-     * 
+     *
      * If useReport is true, flag settings will be fetched with a REPORT request
      * including a JSON entity body with the user object.
-     * 
-     * Otherwise (by default) a GET request will be issued with the user passed as 
-     * a base64 URL-encoded path parameter. 
-     * 
+     *
+     * Otherwise (by default) a GET request will be issued with the user passed as
+     * a base64 URL-encoded path parameter.
+     *
      * Do not use unless advised by LaunchDarkly.
      */
     useReport?: boolean;
@@ -157,10 +157,6 @@ declare module 'ldclient-js' {
 
     /**
      * The user's IP address.
-     *
-     * If you provide an IP, LaunchDarkly will use a geolocation service to
-     * automatically infer a `country` for the user, unless you've already
-     * specified one.
      */
     ip?: string;
 
