@@ -208,7 +208,7 @@ declare module 'ldclient-js' {
      * @param onDone
      *   A callback to invoke after the user is identified.
      */
-    identify: (user: LDUser, hash?: string, onDone?: () => void) => void;
+    identify: (user: LDUser, hash?: string, onDone?: () => void) => Promise<void>;
 
     /**
      * Retrieves a flag's value.
