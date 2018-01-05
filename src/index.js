@@ -22,6 +22,7 @@ var eventsUrl;
 var streamUrl;
 var goalTracker;
 var useLocalStorage;
+var localStorageKey;
 var goals;
 
 var readyEvent = 'ready';
@@ -231,7 +232,9 @@ function updateSettings(settings) {
   flags = settings;
 
   if (useLocalStorage) {
-    store.set(lsKey(environment, ident.getUser()), JSON.stringify(flags));
+    store.clear(localStorageKey);
+    localStorageKey = lsKey(environment, ident.getUser());
+    store.set(localStorageKey, JSON.stringify(flags));
   }
 
   if (keys.length > 0) {
@@ -286,11 +289,11 @@ var client = {
 };
 
 function lsKey(env, user) {
-  var uKey = '';
-  if (user && user.key) {
-    uKey = user.key;
+  var key = '';
+  if (user) {
+    key = hash || utils.btoa(JSON.stringify(user));
   }
-  return 'ld:' + env + ':' + uKey;
+  return 'ld:' + env + ':' + key;
 }
 
 function initialize(env, user, options) {
@@ -298,7 +301,6 @@ function initialize(env, user, options) {
     console.error('No environment specified. Please see https://docs.launchdarkly.com/docs/js-sdk-reference#section-initializing-the-client for instructions on SDK initialization.')
   }
 
-  var localStorageKey;
   options = options || {};
   environment = env;
   flags = typeof(options.bootstrap) === 'object' ? options.bootstrap : {};

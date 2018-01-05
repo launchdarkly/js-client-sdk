@@ -2,6 +2,7 @@ var semverCompare = require('semver-compare');
 
 var LDClient = require('../index');
 var messages = require('../messages');
+var base64Encode = require('../utils').btoa;
 
 describe('LDClient', function() {
   var xhr;
@@ -9,8 +10,7 @@ describe('LDClient', function() {
   var sandbox;
   var store = {};
 
-  var lsKey = 'ld:UNKNOWN_ENVIRONMENT_ID:user';
-
+  var lsKey = 'ld:UNKNOWN_ENVIRONMENT_ID:' + base64Encode('{"key":"user"}');
 
   beforeEach(function() {
     xhr = sinon.useFakeXMLHttpRequest();
@@ -203,6 +203,51 @@ describe('LDClient', function() {
           expect(window.localStorage.getItem(lsKey)).to.equal(json);
           done();
         }, 1);
+      });
+    });
+
+    it('should use hash as localStorage key when secure mode is enabled', function(done) {
+      var user = {key: 'user'};
+      var lsKeyHash = 'ld:UNKNOWN_ENVIRONMENT_ID:totallyLegitHash';
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: 'localstorage',
+        hash: 'totallyLegitHash'
+      });
+
+      requests[0].respond(
+        200,
+        { 'Content-Type': 'application/json' },
+        '{"enable-foo": true}'
+      );
+
+      client.on('ready', function() {
+        expect(window.localStorage.getItem(lsKeyHash)).to.be.equal('{"enable-foo":true}');
+        done();
+      });
+    });
+
+    it('should clear localStorage when user context is changed', function(done) {
+      var json = '{"enable-foo":true}';
+      var lsKey2 = 'ld:UNKNOWN_ENVIRONMENT_ID:' + base64Encode('{"key":"user2"}');
+
+      var user = {key: 'user'};
+      var user2 = {key: 'user2'};
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: 'localstorage'
+      });
+
+      var server = sinon.fakeServer.create();
+      server.respondWith(
+        [200, {"Content-Type": "application/json"}, json]
+      );
+      server.respondImmediately = true;
+
+      client.on('ready', function() {
+        client.identify(user2, null, function() {
+          expect(window.localStorage.getItem(lsKey)).to.be.null;
+          expect(window.localStorage.getItem(lsKey2)).to.equal(json);
+          done();
+        });
       });
     });
 
