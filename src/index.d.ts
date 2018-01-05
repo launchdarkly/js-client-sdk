@@ -183,6 +183,12 @@ declare module 'ldclient-js' {
    * @see http://docs.launchdarkly.com/docs/js-sdk-reference
    */
   export interface LDClient {
+
+    /**
+     * @returns a Promise containing the initialization state of the client
+     */
+    waitUntilReady: () => Promise<void>;
+
     /**
      * Identifies a user to LaunchDarkly.
      *
@@ -198,7 +204,7 @@ declare module 'ldclient-js' {
      * @param onDone
      *   A callback to invoke after the user is identified.
      */
-    identify: (user: LDUser, hash?: string, onDone?: () => void) => void;
+    identify: (user: LDUser, hash?: string, onDone?: () => void) => Promise<void>;
 
     /**
      * Retrieves a flag's value.
