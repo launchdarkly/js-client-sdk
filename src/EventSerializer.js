@@ -8,8 +8,9 @@ function EventSerializer(config) {
   var serializer = {};
   var allAttributesPrivate = config.all_attributes_private;
   var privateAttributeNames = config.private_attribute_names || [];
-  var ignoreAttrs = { key: true, custom: true, privateAttributeNames: true };
-  var stripAttrs = { privateAttributeNames: true };
+  var ignoreAttrs = { key: true, custom: true, anonymous: true };
+  var allowedTopLevelAttrs = { key: true, secondary: true, ip: true, country: true, email: true,
+        firstName: true, lastName: true, avatar: true, name: true, anonymous: true, custom: true };
 
   serializer.serialize_events = function(events) {
     return events.map(serialize_event);
@@ -33,9 +34,9 @@ function EventSerializer(config) {
         allAttributesPrivate || userPrivateAttrs.indexOf(name) !== -1 ||
         privateAttributeNames.indexOf(name) !== -1);
     }
-    var filterAttrs = function(props) {
+    var filterAttrs = function(props, isAttributeAllowed) {
       return Object.keys(props).reduce(function(acc, name) {
-        if (!stripAttrs[name]) {
+        if (isAttributeAllowed(name)) {
           if (isPrivateAttr(name)) {
             // add to hidden list
             acc[1][name] = true;
@@ -46,11 +47,11 @@ function EventSerializer(config) {
         return acc;
       }, [{}, {}]);
     }
-    var result = filterAttrs(user);
+    var result = filterAttrs(user, function(key) { return allowedTopLevelAttrs[key]; });
     var filteredProps = result[0];
     var removedAttrs = result[1];
     if (user.custom) {
-      var customResult = filterAttrs(user.custom);
+      var customResult = filterAttrs(user.custom, function(key) { return true; });
       filteredProps.custom = customResult[0];
       Object.assign(removedAttrs, customResult[1]);
     }

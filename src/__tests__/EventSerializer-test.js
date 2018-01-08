@@ -17,6 +17,20 @@ describe('event_serializer', function() {
     'privateAttributeNames': [ 'dizzle', 'unused' ]
   };
 
+  var user_with_unknown_top_level_attrs = {
+    'key': 'abc',
+    'firstName': 'Sue',
+    'species': 'human',
+    'hatSize': 6,
+    'custom': { 'bizzle': 'def', 'dizzle': 'ghi' }
+  };
+
+  var anon_user = {
+    'key': 'abc',
+    'anonymous': true,
+    'custom': { 'bizzle': 'def', 'dizzle': 'ghi' }
+  };
+
   // expected results from serializing user
   var user_with_all_attrs_hidden = {
     'key': 'abc',
@@ -39,6 +53,13 @@ describe('event_serializer', function() {
       'bizzle': 'def'
     },
     'privateAttrs': [ 'dizzle' ]
+  };
+
+  var anon_user_with_all_attrs_hidden = {
+    'key': 'abc',
+    'anonymous': true,
+    'custom': { },
+    'privateAttrs': [ 'bizzle', 'dizzle' ]
   };
 
   function make_event(user) {
@@ -78,5 +99,17 @@ describe('event_serializer', function() {
     var es = EventSerializer({ private_attribute_names: [ 'firstName', 'bizzle' ]});
     var event = make_event(user_specifying_own_private_attr);
     assert.deepEqual(es.serialize_events([event]), [make_event(user_with_all_attrs_hidden)]);
+  });
+
+  it('strips unknown top-level attributes', function() {
+    var es = EventSerializer({});
+    var event = make_event(user_with_unknown_top_level_attrs);
+    assert.deepEqual(es.serialize_events([event]), [make_event(user)]);
+  });
+
+  it('leaves the "anonymous" attribute as is', function() {
+    var es = EventSerializer({ all_attributes_private: true});
+    var event = make_event(anon_user);
+    assert.deepEqual(es.serialize_events([event]), [make_event(anon_user_with_all_attrs_hidden)]);
   });
 });
