@@ -116,7 +116,7 @@ function waitUntilReady() {
 }
 
 function identify(user, hash, onDone) {
-  return wrapPromiseCallback(new Promise(function(resolve, reject) {
+  return wrapPromiseCallback(new Promise((function(resolve, reject) {
     ident.setUser(user);
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       if (err) {
@@ -129,7 +129,7 @@ function identify(user, hash, onDone) {
       }
       resolve(settings);
     });
-  }).bind(this), onDone);
+  }).bind(this)), onDone);
 }
 
 function variation(key, defaultValue) {
