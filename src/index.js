@@ -310,9 +310,7 @@ function initialize(env, user, options) {
   eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
   streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
   stream = Stream(streamUrl, environment);
-  options.private_attr_names = config.private_attr_names || [];
-  eventSerializer = EventSerializer(options);
-  events = EventProcessor(eventsUrl + '/a/' + environment + '.gif', eventSerializer);
+  events = EventProcessor(eventsUrl + '/a/' + environment + '.gif', EventSerializer(options));
   sendEvents = (typeof options.sendEvents === 'undefined') ? true : config.sendEvents;
   emitter = EventEmitter();
   ident = Identity(user, sendIdentifyEvent);
