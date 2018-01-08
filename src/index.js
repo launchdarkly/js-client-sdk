@@ -344,10 +344,12 @@ function initialize(env, user, options) {
     }, flushInterval);
   }
 
-  if (document.readyState !== 'complete') {
-    window.addEventListener('load', start);
-  } else {
-    start();
+  if(sendEvents) {
+    if (document.readyState !== 'complete') {
+      window.addEventListener('load', start);
+    } else {
+      start();
+    }
   }
 
   window.addEventListener('beforeunload', function() {
