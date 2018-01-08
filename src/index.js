@@ -1,5 +1,6 @@
 var EventProcessor = require('./EventProcessor');
 var EventEmitter = require('./EventEmitter');
+var EventSerializer = require('./EventSerializer');
 var GoalTracker = require('./GoalTracker');
 var Stream = require('./Stream');
 var Requestor = require('./Requestor');
@@ -309,7 +310,9 @@ function initialize(env, user, options) {
   eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
   streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
   stream = Stream(streamUrl, environment);
-  events = EventProcessor(eventsUrl + '/a/' + environment + '.gif');
+  options.private_attr_names = config.private_attr_names || [];
+  eventSerializer = EventSerializer(options);
+  events = EventProcessor(eventsUrl + '/a/' + environment + '.gif', eventSerializer);
   sendEvents = (typeof options.sendEvents === 'undefined') ? true : config.sendEvents;
   emitter = EventEmitter();
   ident = Identity(user, sendIdentifyEvent);
