@@ -1,5 +1,6 @@
 var EventProcessor = require('./EventProcessor');
 var EventEmitter = require('./EventEmitter');
+var EventSerializer = require('./EventSerializer');
 var GoalTracker = require('./GoalTracker');
 var Stream = require('./Stream');
 var Requestor = require('./Requestor');
@@ -115,7 +116,7 @@ function waitUntilReady() {
 }
 
 function identify(user, hash, onDone) {
-  return wrapPromiseCallback(new Promise(function(resolve, reject) {
+  return wrapPromiseCallback(new Promise((function(resolve, reject) {
     ident.setUser(user);
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       if (err) {
@@ -128,7 +129,7 @@ function identify(user, hash, onDone) {
       }
       resolve(settings);
     });
-  }).bind(this), onDone);
+  }).bind(this)), onDone);
 }
 
 function variation(key, defaultValue) {
@@ -309,7 +310,7 @@ function initialize(env, user, options) {
   eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
   streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
   stream = Stream(streamUrl, environment);
-  events = EventProcessor(eventsUrl + '/a/' + environment + '.gif');
+  events = EventProcessor(eventsUrl + '/a/' + environment + '.gif', EventSerializer(options));
   sendEvents = (typeof options.sendEvents === 'undefined') ? true : config.sendEvents;
   emitter = EventEmitter();
   ident = Identity(user, sendIdentifyEvent);
