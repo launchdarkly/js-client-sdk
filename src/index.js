@@ -379,10 +379,12 @@ function initialize(env, user, options) {
   });
 
   function start() {
-    setTimeout(function tick() {
-      events.flush(ident.getUser());
-      setTimeout(tick, flushInterval);
-    }, flushInterval);
+    if(sendEvents) {
+      setTimeout(function tick() {
+        events.flush(ident.getUser());
+        setTimeout(tick, flushInterval);
+      }, flushInterval);
+    }
   }
 
   if (document.readyState !== 'complete') {
