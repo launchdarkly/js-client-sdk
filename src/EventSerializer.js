@@ -1,3 +1,5 @@
+var utils = require('./utils');
+
 /**
  * The EventSerializer object transforms the internal representation of events into objects suitable to be sent
  * as JSON to the server. This includes hiding any private user attributes.
@@ -53,7 +55,7 @@ function EventSerializer(config) {
     if (user.custom) {
       var customResult = filterAttrs(user.custom, function(key) { return true; });
       filteredProps.custom = customResult[0];
-      Object.assign(removedAttrs, customResult[1]);
+      utils.merge(removedAttrs, customResult[1]);
     }
     var removedAttrNames = Object.keys(removedAttrs);
     if (removedAttrNames.length) {
