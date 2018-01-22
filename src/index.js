@@ -338,18 +338,18 @@ function initialize(env, user, options) {
   });
 
   function start() {
-    setTimeout(function tick() {
-      events.flush(ident.getUser());
-      setTimeout(tick, flushInterval);
-    }, flushInterval);
+    if(sendEvents) {
+      setTimeout(function tick() {
+        events.flush(ident.getUser());
+        setTimeout(tick, flushInterval);
+      }, flushInterval);
+    }
   }
 
-  if(sendEvents) {
-    if (document.readyState !== 'complete') {
-      window.addEventListener('load', start);
-    } else {
-      start();
-    }
+  if (document.readyState !== 'complete') {
+    window.addEventListener('load', start);
+  } else {
+    start();
   }
 
   window.addEventListener('beforeunload', function() {
