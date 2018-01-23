@@ -34,34 +34,6 @@ var flushInterval = 2000;
 
 var seenRequests = {};
 
-/**
- * Wrap a promise to invoke an optional callback upon resolution or rejection.
- *
- * This function assumes the callback follows the Node.js callback type: (err, value) => void
- *
- * If a callback is provided:
- *   - if the promise is resolved, invoke the callback with (null, value)
- *   - if the promise is rejected, invoke the callback with (error, null)
- *
- * @param {Promise<any>} promise
- * @param {Function} callback
- * @returns Promise<any>
- */
-function wrapPromiseCallback(promise, callback) {
-  if (callback) {
-    return promise.then(
-      function(value) {
-        setTimeout(function() { callback(null, value); }, 0);
-      },
-      function(error) {
-        setTimeout(function() { callback(error, null); }, 0);
-      }
-    );
-  }
-
-  return promise;
-}
-
 function sendIdentifyEvent(user) {
   enqueueEvent({
     kind: 'identify',
@@ -116,7 +88,7 @@ function waitUntilReady() {
 }
 
 function identify(user, hash, onDone) {
-  return wrapPromiseCallback(new Promise((function(resolve, reject) {
+  return utils.wrapPromiseCallback(new Promise((function(resolve, reject) {
     ident.setUser(user);
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       if (err) {
