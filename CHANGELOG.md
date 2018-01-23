@@ -3,6 +3,10 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. This 
 project adheres to [Semantic Versioning](http://semver.org).
 
+## [1.3.1] - 2018-01-23
+### Fixed
+- Methods that expose a `Promise` interface now properly return the resolution or rejection value to the caller.
+
 ## [1.3.0] - 2018-01-22
 ### Added
 - Support for [private user attributes](https://docs.launchdarkly.com/docs/private-user-attributes).
