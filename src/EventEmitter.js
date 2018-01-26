@@ -2,6 +2,10 @@ function EventEmitter() {
   var emitter = {};
   var events = {};
 
+  const listeningTo = function(event) {
+    return !!events[event];
+  }
+
   emitter.on = function(event, handler, context) {
     events[event] = events[event] || [];
     events[event] = events[event].concat({handler: handler, context: context});
@@ -23,6 +27,16 @@ function EventEmitter() {
     }
   };
 
+  emitter.maybeReportError = function(error) {
+    if (!error) {
+      return;
+    }
+    if (listeningTo('error')) {
+      this.emit('error', error);
+    } else {
+      console.error(error.message);
+    }
+  }
   return emitter;
 }
 

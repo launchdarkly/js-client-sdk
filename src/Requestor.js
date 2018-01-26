@@ -1,4 +1,6 @@
 var utils = require('./utils');
+var errors = require('./errors');
+var messages = require('./messages');
 
 var json = 'application/json';
 
@@ -15,21 +17,11 @@ function fetchJSON(endpoint, body, callback) {
 
   xhr.addEventListener('error', function() {
     if(xhr.status === 404) {
-      var error
-      if(endpoint.includes('/sdk/eval/')) {
-        error = 'Error fetching flag settings'
-      }
-      else if(endpoint.includes('/sdk/goals/')) {
-        error = 'Error fetching goals'
-      }
-      else {
-        error = 'Error'
-      }
-      console.error(error + ': environment not found. Please see https://docs.launchdarkly.com/docs/js-sdk-reference#section-initializing-the-client for instructions on SDK initialization.')
+      callback(new errors.LDInvalidEnvironmentIdError(messages.environmentNotFound()));
     }
     callback(xhr.statusText);
   });
-  
+
   if (body) {
     xhr.open('REPORT', endpoint);
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -38,7 +30,7 @@ function fetchJSON(endpoint, body, callback) {
     xhr.open('GET', endpoint);
     xhr.send();
   }
-  
+
   return xhr;
 }
 

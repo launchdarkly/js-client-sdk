@@ -2,6 +2,7 @@ var semverCompare = require('semver-compare');
 
 var LDClient = require('../index');
 var messages = require('../messages');
+var errors = require('../errors');
 var base64Encode = require('../utils').btoa;
 
 describe('LDClient', function() {
@@ -71,14 +72,31 @@ describe('LDClient', function() {
       });
     });
 
-    it('should log an error when initialize is called without an environment key', function(done) {
+    it('should emit an error when initialize is called without an environment key', function(done) {
       var user = {key: 'user'};
-      var errorSpy = sinon.spy(console, 'error');
-      var client = LDClient.initialize('', user);
-      expect(errorSpy.calledWith('No environment specified. Please see https://docs.launchdarkly.com/docs/js-sdk-reference#section-initializing-the-client for instructions on SDK initialization.')).to.be.true;
-      errorSpy.restore()
-      done();
+      var client = LDClient.initialize('', user,  {
+        bootstrap: {}
+      });
+      client.on('error', function(err) {
+        expect(err.message).to.be.equal(messages.environmentNotSpecified());
+        done();
+      });
     });
+
+    it('should emit an error when an invalid environment key is specified', function() {
+      var user = {key: 'user'};
+
+      var server = sinon.fakeServer.create();
+      server.respondWith(function(req) {
+        req.respond(404);
+      });
+      var client = LDClient.initialize('abc', user);
+      server.respond();
+      client.on('error', function(err) {
+        expect(err.message).to.be.equal(messages.environmentNotFound());
+        done();
+      });
+    })
 
     it('should not fetch flag settings since bootstrap is provided', function() {
       var user = {key: 'user'};
@@ -240,7 +258,6 @@ describe('LDClient', function() {
       server.respondWith(
         [200, {"Content-Type": "application/json"}, json]
       );
-      server.respondImmediately = true;
 
       client.on('ready', function() {
         client.identify(user2, null, function() {
@@ -248,7 +265,9 @@ describe('LDClient', function() {
           expect(window.localStorage.getItem(lsKey2)).to.equal(json);
           done();
         });
+        server.respond();
       });
+      server.respond();
     });
 
     it('should not warn when tracking a known custom goal event', function(done) {
@@ -272,24 +291,20 @@ describe('LDClient', function() {
       });
     });
 
-    it('should throw when tracking a non-string custom goal event', function(done) {
+    it('should emit an error when tracking a non-string custom goal event', function(done) {
       var user = {key: 'user'};
       var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
         bootstrap: {} // so the client doesn't request settings
       });
-
-      const track = function(key) {
-        return function() {
-          client.track(key);
-        };
-      };
-
+      var errorCount = 0;
       client.on('ready', function() {
-        expect(track(123)).to.throw(messages.invalidKey());
-        expect(track([])).to.throw(messages.invalidKey());
-        expect(track({})).to.throw(messages.invalidKey());
-        expect(track(null)).to.throw(messages.invalidKey());
-        expect(track(undefined)).to.throw(messages.invalidKey());
+        var errorSpy = sinon.spy(console, 'error');
+        var badCustomEventKeys = [123, [], {}, null, undefined]
+        badCustomEventKeys.forEach(function(key) {
+          client.track(key);
+          expect(errorSpy.calledWith(messages.unknownCustomEventKey(key))).to.be.true;
+        })
+        errorSpy.restore();
         done();
       });
     });
@@ -326,7 +341,7 @@ describe('LDClient', function() {
       client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user);
 
       var handleError = sinon.spy();
-      client.on('error', handleError)
+      client.on('error', handleError);
       server.respond();
 
       setTimeout(function() {

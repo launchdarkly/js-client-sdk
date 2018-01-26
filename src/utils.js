@@ -26,8 +26,14 @@ function modifications(oldObj, newObj) {
       }
     }
   }
-  
+
   return mods;
+}
+
+// Events emmited in LDClient's initialize method will happen before the consumer
+// can register a listener, so defer them to next tick.
+function onNextTick(cb) {
+  setTimeout(cb, 0);
 }
 
 // Based off of https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill
@@ -91,5 +97,6 @@ module.exports = {
   clone: clone,
   modifications: modifications,
   merge: merge,
+  onNextTick: onNextTick,
   wrapPromiseCallback: wrapPromiseCallback
 };

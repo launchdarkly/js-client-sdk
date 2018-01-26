@@ -8,6 +8,7 @@ var Identity = require('./Identity');
 var utils = require('./utils');
 var messages = require('./messages');
 var store = require('./store');
+var errors = require('./errors');
 
 var flags = {};
 var environment;
@@ -28,7 +29,6 @@ var goals;
 
 var readyEvent = 'ready';
 var changeEvent = 'change';
-var errorEvent = 'error';
 
 var flushInterval = 2000;
 
@@ -81,20 +81,13 @@ function sendGoalEvent(kind, goal) {
   return enqueueEvent(event);
 }
 
-function waitUntilReady() {
-  return new Promise(function(resolve) {
-    client.on('ready', resolve);
-  });
-}
-
 function identify(user, hash, onDone) {
   return utils.wrapPromiseCallback(new Promise((function(resolve, reject) {
     ident.setUser(user);
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       if (err) {
-        console.error('Error fetching flag settings: ' + err);
-        emitter.emit(errorEvent);
-        return reject(err);
+        emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+        return reject(err)
       }
       if (settings) {
         updateSettings(settings);
@@ -102,6 +95,12 @@ function identify(user, hash, onDone) {
       resolve(settings);
     });
   }).bind(this)), onDone);
+}
+
+function waitUntilReady() {
+  return new Promise(function(resolve) {
+    client.on('ready', resolve);
+  });
 }
 
 function variation(key, defaultValue) {
@@ -164,7 +163,8 @@ function customEventExists(key) {
 
 function track(key, data) {
   if (typeof key !== 'string') {
-    throw messages.invalidKey();
+    emitter.maybeReportError(new errors.LDInvalidEventKeyError(messages.unknownCustomEventKey(key)));
+    return;
   }
 
   // Validate key if we have goals
@@ -185,8 +185,7 @@ function connectStream() {
   stream.connect(function() {
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       if (err) {
-        console.error('Error fetching flag settings: ' + err);
-        emitter.emit(errorEvent)
+        emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
       }
       updateSettings(settings);
     });
@@ -270,10 +269,6 @@ function lsKey(env, user) {
 }
 
 function initialize(env, user, options) {
-  if (!env) {
-    console.error('No environment specified. Please see https://docs.launchdarkly.com/docs/js-sdk-reference#section-initializing-the-client for instructions on SDK initialization.')
-  }
-
   options = options || {};
   environment = env;
   flags = typeof(options.bootstrap) === 'object' ? options.bootstrap : {};
@@ -289,10 +284,25 @@ function initialize(env, user, options) {
   requestor = Requestor(baseUrl, environment, options.useReport);
   localStorageKey = lsKey(environment, ident.getUser());
 
+  if (!env) {
+    utils.onNextTick(function() {
+      emitter.maybeReportError(new errors.LDInvalidEnvironmentIdError(messages.environmentNotSpecified()));
+    })
+  }
+
+  if (!user) {
+    utils.onNextTick(function() {
+      emitter.maybeReportError(new errors.LDInvalidUserError(messages.userNotSpecified()));
+    });
+  }
+  else if (!user.key) {
+    utils.onNextTick(function() {
+      emitter.maybeReportError(new errors.LDInvalidUserError(messages.invalidUser()));
+    });
+  }
+
   if (typeof options.bootstrap === 'object') {
-    // Emitting the event here will happen before the consumer
-    // can register a listener, so defer to next tick.
-    setTimeout(function() { emitter.emit(readyEvent); }, 0);
+    utils.onNextTick(function() { emitter.emit(readyEvent); });
   }
   else if (typeof(options.bootstrap) === 'string' && options.bootstrap.toUpperCase() === 'LOCALSTORAGE' && typeof(Storage) !== 'undefined') {
     useLocalStorage = true;
@@ -307,8 +317,7 @@ function initialize(env, user, options) {
     if (flags === null) {
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
         if (err) {
-          console.error('Error fetching flag settings: ' + err);
-          emitter.emit(errorEvent)
+          emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
         }
         flags = settings;
         settings && store.set(localStorageKey, JSON.stringify(flags));
@@ -318,11 +327,10 @@ function initialize(env, user, options) {
       // We're reading the flags from local storage. Signal that we're ready,
       // then update localStorage for the next page load. We won't signal changes or update
       // the in-memory flags unless you subscribe for changes
-      setTimeout(function() { emitter.emit(readyEvent); }, 0);
+      utils.onNextTick(function() { emitter.emit(readyEvent); });
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
         if (err) {
-          console.error('Error fetching flag settings: ' + err);
-          emitter.emit(errorEvent)
+          emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
         }
         settings && store.set(localStorageKey, JSON.stringify(settings));
       });
@@ -331,8 +339,7 @@ function initialize(env, user, options) {
   else {
     requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
       if (err) {
-        console.error('Error fetching flag settings: ' + err);
-        emitter.emit(errorEvent)
+        emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
       }
       flags = settings;
       emitter.emit(readyEvent);
@@ -341,8 +348,7 @@ function initialize(env, user, options) {
 
   requestor.fetchGoals(function(err, g) {
     if (err) {
-      console.error('Error fetching goals: ' + err);
-      emitter.emit(errorEvent)
+      emitter.maybeReportError(new errors.LDUnexpectedResponseError('Error fetching goals: ' + err.message ? err.message : err));
     }
     if (g && g.length > 0) {
       goals = g;
