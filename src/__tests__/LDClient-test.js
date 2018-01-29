@@ -2,6 +2,8 @@ var semverCompare = require('semver-compare');
 
 var LDClient = require('../index');
 var messages = require('../messages');
+var errors = require('../errors');
+var base64Encode = require('../utils').btoa;
 
 describe('LDClient', function() {
   var xhr;
@@ -9,8 +11,7 @@ describe('LDClient', function() {
   var sandbox;
   var store = {};
 
-  var lsKey = 'ld:UNKNOWN_ENVIRONMENT_ID:user';
-
+  var lsKey = 'ld:UNKNOWN_ENVIRONMENT_ID:' + base64Encode('{"key":"user"}');
 
   beforeEach(function() {
     xhr = sinon.useFakeXMLHttpRequest();
@@ -54,6 +55,48 @@ describe('LDClient', function() {
         done();
       }, 0);
     });
+
+    it('should resolve waitUntilReady promise when ready', function(done) {
+      var user = {key: 'user'};
+      var handleReady = sinon.spy();
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: {}
+      });
+      client.waitUntilReady().then(handleReady);
+
+      client.on('ready', function() {
+        setTimeout(function() {
+          expect(handleReady.called).to.be.true;
+          done();
+        }, 0);
+      });
+    });
+
+    it('should emit an error when initialize is called without an environment key', function(done) {
+      var user = {key: 'user'};
+      var client = LDClient.initialize('', user,  {
+        bootstrap: {}
+      });
+      client.on('error', function(err) {
+        expect(err.message).to.be.equal(messages.environmentNotSpecified());
+        done();
+      });
+    });
+
+    it('should emit an error when an invalid environment key is specified', function() {
+      var user = {key: 'user'};
+
+      var server = sinon.fakeServer.create();
+      server.respondWith(function(req) {
+        req.respond(404);
+      });
+      var client = LDClient.initialize('abc', user);
+      server.respond();
+      client.on('error', function(err) {
+        expect(err.message).to.be.equal(messages.environmentNotFound());
+        done();
+      });
+    })
 
     it('should not fetch flag settings since bootstrap is provided', function() {
       var user = {key: 'user'};
@@ -110,6 +153,53 @@ describe('LDClient', function() {
       });
     });
 
+    it('should handle localStorage getItem throwing an exception', function(done) {
+      sandbox.restore(window.localStorage.__proto__, 'getItem')
+      sandbox.stub(window.localStorage.__proto__, 'getItem').throws()
+
+      var warnSpy = sandbox.spy(console, 'warn');
+
+      var user = {key: 'user'};
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: 'localstorage'
+      });
+
+      client.on('ready', function() {
+        expect(warnSpy.calledWith(messages.localStorageUnavailable())).to.be.true;
+        done();
+      });
+
+      requests[0].respond(
+        200,
+        { 'Content-Type': 'application/json' },
+        '[{"key": "known", "kind": "custom"}]'
+      );
+
+    });
+
+    it('should handle localStorage setItem throwing an exception', function(done) {
+      sandbox.restore(window.localStorage.__proto__, 'setItem')
+      sandbox.stub(window.localStorage.__proto__, 'setItem').throws()
+
+      var user = {key: 'user'};
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: 'localstorage'
+      });
+
+      var warnSpy = sandbox.spy(console, 'warn');
+
+      requests[0].respond(
+        200,
+        { 'Content-Type': 'application/json' },
+        '[{"key": "known", "kind": "custom"}]'
+      );
+
+      client.on('ready', function() {
+        expect(warnSpy.calledWith(messages.localStorageUnavailable())).to.be.true;
+        done();
+      });
+    });
+
     it('should not update cached settings if there was an error fetching flags', function(done) {
       var user = {key: 'user'};
       var json = '{"enable-foo": true}';
@@ -134,13 +224,59 @@ describe('LDClient', function() {
       });
     });
 
+    it('should use hash as localStorage key when secure mode is enabled', function(done) {
+      var user = {key: 'user'};
+      var lsKeyHash = 'ld:UNKNOWN_ENVIRONMENT_ID:totallyLegitHash';
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: 'localstorage',
+        hash: 'totallyLegitHash'
+      });
+
+      requests[0].respond(
+        200,
+        { 'Content-Type': 'application/json' },
+        '{"enable-foo": true}'
+      );
+
+      client.on('ready', function() {
+        expect(window.localStorage.getItem(lsKeyHash)).to.be.equal('{"enable-foo":true}');
+        done();
+      });
+    });
+
+    it('should clear localStorage when user context is changed', function(done) {
+      var json = '{"enable-foo":true}';
+      var lsKey2 = 'ld:UNKNOWN_ENVIRONMENT_ID:' + base64Encode('{"key":"user2"}');
+
+      var user = {key: 'user'};
+      var user2 = {key: 'user2'};
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: 'localstorage'
+      });
+
+      var server = sinon.fakeServer.create();
+      server.respondWith(
+        [200, {"Content-Type": "application/json"}, json]
+      );
+
+      client.on('ready', function() {
+        client.identify(user2, null, function() {
+          expect(window.localStorage.getItem(lsKey)).to.be.null;
+          expect(window.localStorage.getItem(lsKey2)).to.equal(json);
+          done();
+        });
+        server.respond();
+      });
+      server.respond();
+    });
+
     it('should not warn when tracking a known custom goal event', function(done) {
       var user = {key: 'user'};
       var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
         bootstrap: {} // so the client doesn't request settings
       });
 
-      var warnSpy = sinon.spy(console, 'warn');
+      var warnSpy = sandbox.spy(console, 'warn');
 
       requests[0].respond(
         200,
@@ -151,29 +287,24 @@ describe('LDClient', function() {
       client.on('ready', function() {
         client.track('known');
         expect(warnSpy.calledWith('Custom event key does not exist')).to.be.false;
-        warnSpy.restore();
         done();
       });
     });
 
-    it('should throw when tracking a non-string custom goal event', function(done) {
+    it('should emit an error when tracking a non-string custom goal event', function(done) {
       var user = {key: 'user'};
       var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
         bootstrap: {} // so the client doesn't request settings
       });
-
-      const track = function(key) {
-        return function() {
-          client.track(key);
-        };
-      };
-
+      var errorCount = 0;
       client.on('ready', function() {
-        expect(track(123)).to.throw(messages.invalidKey());
-        expect(track([])).to.throw(messages.invalidKey());
-        expect(track({})).to.throw(messages.invalidKey());
-        expect(track(null)).to.throw(messages.invalidKey());
-        expect(track(undefined)).to.throw(messages.invalidKey());
+        var errorSpy = sinon.spy(console, 'error');
+        var badCustomEventKeys = [123, [], {}, null, undefined]
+        badCustomEventKeys.forEach(function(key) {
+          client.track(key);
+          expect(errorSpy.calledWith(messages.unknownCustomEventKey(key))).to.be.true;
+        })
+        errorSpy.restore();
         done();
       });
     });
@@ -184,7 +315,7 @@ describe('LDClient', function() {
         bootstrap: {} // so the client doesn't request settings
       });
 
-      var warnSpy = sinon.spy(console, 'warn');
+      var warnSpy = sandbox.spy(console, 'warn');
 
       requests[0].respond(
         200,
@@ -195,7 +326,6 @@ describe('LDClient', function() {
       client.on('ready', function() {
         client.track('unknown');
         expect(warnSpy.calledWith(messages.unknownCustomEventKey('unknown'))).to.be.true;
-        warnSpy.restore();
         done();
       });
     });
@@ -211,7 +341,7 @@ describe('LDClient', function() {
       client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user);
 
       var handleError = sinon.spy();
-      client.on('error', handleError)
+      client.on('error', handleError);
       server.respond();
 
       setTimeout(function() {

@@ -1,6 +1,6 @@
 var utils = require('./utils');
 
-function EventProcessor(eventsUrl) {
+function EventProcessor(eventsUrl, eventSerializer) {
   var processor = {};
   var queue = [];
   var initialFlush = true;
@@ -36,6 +36,7 @@ function EventProcessor(eventsUrl) {
     }
     
     if (data.length > 0) {
+      data = eventSerializer.serialize_events(data);
       var src = eventsUrl + '?d=' + utils.base64URLEncode(JSON.stringify(data));
       //Detect browser support for CORS
       if ('withCredentials' in new XMLHttpRequest()) {

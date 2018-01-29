@@ -101,6 +101,19 @@ declare module 'ldclient-js' {
      *
      */
     streamUrl?: string;
+
+    /**
+     * Whether or not to use the REPORT verb to fetch flag settings.
+     *
+     * If useReport is true, flag settings will be fetched with a REPORT request
+     * including a JSON entity body with the user object.
+     *
+     * Otherwise (by default) a GET request will be issued with the user passed as
+     * a base64 URL-encoded path parameter.
+     *
+     * Do not use unless advised by LaunchDarkly.
+     */
+    useReport?: boolean;
   }
 
   /**
@@ -144,10 +157,6 @@ declare module 'ldclient-js' {
 
     /**
      * The user's IP address.
-     *
-     * If you provide an IP, LaunchDarkly will use a geolocation service to
-     * automatically infer a `country` for the user, unless you've already
-     * specified one.
      */
     ip?: string;
 
@@ -174,6 +183,12 @@ declare module 'ldclient-js' {
    * @see http://docs.launchdarkly.com/docs/js-sdk-reference
    */
   export interface LDClient {
+
+    /**
+     * @returns a Promise containing the initialization state of the client
+     */
+    waitUntilReady: () => Promise<void>;
+
     /**
      * Identifies a user to LaunchDarkly.
      *
@@ -189,7 +204,7 @@ declare module 'ldclient-js' {
      * @param onDone
      *   A callback to invoke after the user is identified.
      */
-    identify: (user: LDUser, hash?: string, onDone?: () => void) => void;
+    identify: (user: LDUser, hash?: string, onDone?: () => void) => Promise<void>;
 
     /**
      * Retrieves a flag's value.
