@@ -34,10 +34,10 @@ function fetchJSON(endpoint, body, callback) {
   return xhr;
 }
 
-var flagSettingsRequest;
-var lastFlagSettingsCallback;
-
 function Requestor(baseUrl, environment, useReport) {
+  var flagSettingsRequest;
+  var lastFlagSettingsCallback;
+
   var requestor = {};
 
   requestor.fetchFlagSettings = function(user, hash, callback) {

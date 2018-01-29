@@ -5,20 +5,31 @@
     <script src="./dist/ldclient.js"></script>
   </head>
   <body>
-    <h1>Settings</h1>
+    <h1>Production Settings</h1>
     <ul>
-      <li><code>client-side-flag</code>: <span class="client-side-flag">initializing…</span></li>
-      <li><code>another-client-side-flag</code>: <span class="another-client-side-flag">initializing…</span></li>
+      <li><code>client-side-flag</code>: <span class="prod-client-side-flag">initializing…</span></li>
+      <li><code>another-client-side-flag</code>: <span class="prod-another-client-side-flag">initializing…</span></li>
     </ul>
     
-    <button class="switchUser">Change user</button>
-    <button class="changeHash">Change hash fragment</button>
-    <button class="changeUrl">Change url</button>
+    <button class="prod-switch-user">Change user</button>
+    <button class="prod-change-hash">Change hash fragment</button>
+    <button class="prod-change-url">Change url</button>
+
+    <h1>Test Settings</h1>
+    <ul>
+      <li><code>client-side-flag</code>: <span class="test-client-side-flag">initializing…</span></li>
+      <li><code>another-client-side-flag</code>: <span class="test-another-client-side-flag">initializing…</span></li>
+    </ul>
+    
+    <button class="test-switch-user">Change user</button>
+    <button class="test-change-hash">Change hash fragment</button>
+    <button class="test-change-url">Change url</button>
     
     <script>
       var switched = false;
       var user = {key: 'foobar.com'};
-      var client = LDClient.initialize('569f514183f2164430000004', user, {
+      var clientProd = LDClient.initialize('569f514183f2164430000004', user);
+      var clientTest = LDClient.initialize('569f514183f2164430000005', user, {
         bootstrap: {
           'client-side-flag': false,
           'another-client-side-flag': false
@@ -29,46 +40,79 @@
         streamUrl: 'http://localhost:5050',
         useReport: true
       });
-      
-      function render(key, defaultValue) {
-        var value = client.variation(key, defaultValue);
-        var el = document.querySelector('.' + key);
-        el.innerHTML = value.toString();
-      }
-      
-      client.on('ready', function() {
-        console.log('client is ready');
-        main();
-      });
-      
-      client.on('change', function(settings) {
-        console.log('flags changed:', settings);
-        main();
-      });
-      
-      client.on('change:another-client-side-flag', function(value, previous) {
-        console.log('another-client-side-flag changed:', value, '(' + previous + ')');
-        main();
-      });
-      
-      function main() {
-        render('client-side-flag', false);
-        render('another-client-side-flag', false);
+
+      function main(env) {
+        render(env, 'client-side-flag', false);
+        render(env, 'another-client-side-flag', false);
         // setTimeout(main, 2000);
       }
       
-      document.querySelector('.switchUser').addEventListener('click', function(event) {
+      function render(env, key, defaultValue) {
+        var value = clientProd.variation(key, defaultValue);
+        var el = document.querySelector('.' + env + '-' + key);
+        el.innerHTML = value.toString();
+      }
+
+      //production
+      clientProd.on('ready', function() {
+        console.log('client is ready');
+        main('prod');
+      });
+      
+      clientProd.on('change', function(settings) {
+        console.log('flags changed:', settings);
+        main('prod');
+      });
+      
+      clientProd.on('change:another-client-side-flag', function(value, previous) {
+        console.log('another-client-side-flag changed:', value, '(' + previous + ')');
+        main('prod');
+      });
+    
+      
+      document.querySelector('.prod-switch-user').addEventListener('click', function(event) {
         var key = switched ? 'foobar.com' : 'barfoo.com';
-        client.identify({key: key}, null, function() {
+        clientProd.identify({key: key}, null, function() {
           switched = !switched;
           console.log('switched to', key);
           render('another-client-side-flag', false);
         });
       });
-      document.querySelector('.changeHash').addEventListener('click', function(event) {
+      document.querySelector('.prod-change-hash').addEventListener('click', function(event) {
         location.hash = new Date().getTime().toString();
       });
-      document.querySelector('.changeUrl').addEventListener('click', function(event) {
+      document.querySelector('.prod-change-url').addEventListener('click', function(event) {
+        history.pushState(null, null, new Date().getTime().toString());
+      });
+
+      //test
+      clientTest.on('ready', function() {
+        console.log('client is ready');
+        main('test');
+      });
+      
+      clientTest.on('change', function(settings) {
+        console.log('flags changed:', settings);
+        main('test');
+      });
+      
+      clientTest.on('change:another-client-side-flag', function(value, previous) {
+        console.log('another-client-side-flag changed:', value, '(' + previous + ')');
+        main('test');
+      });
+      
+      document.querySelector('.test-switch-user').addEventListener('click', function(event) {
+        var key = switched ? 'foobar.com' : 'barfoo.com';
+        clientTest.identify({key: key}, null, function() {
+          switched = !switched;
+          console.log('switched to', key);
+          render('another-client-side-flag', false);
+        });
+      });
+      document.querySelector('.test-change-hash').addEventListener('click', function(event) {
+        location.hash = new Date().getTime().toString();
+      });
+      document.querySelector('.test-change-url').addEventListener('click', function(event) {
         history.pushState(null, null, new Date().getTime().toString());
       });
     </script>
