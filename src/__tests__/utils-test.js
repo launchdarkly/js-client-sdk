@@ -1,5 +1,5 @@
-var assert = require('assert');
-var wrapPromiseCallback = require('../utils.js').wrapPromiseCallback;
+import assert from 'assert';
+import wrapPromiseCallback from '../utils.js'
 
 describe('utils', function() {
   describe('wrapPromiseCallback', function() {

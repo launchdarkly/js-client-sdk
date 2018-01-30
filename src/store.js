@@ -1,4 +1,4 @@
-var messages = require('./messages');
+import * as messages from './messages';
 
 function get(key) {
   try {

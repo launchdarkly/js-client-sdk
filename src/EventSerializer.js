@@ -1,4 +1,4 @@
-var utils = require('./utils');
+import * as utils from '../utils';
 
 /**
  * The EventSerializer object transforms the internal representation of events into objects suitable to be sent

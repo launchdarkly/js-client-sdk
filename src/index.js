@@ -1,13 +1,11 @@
-var EventProcessor = require('./EventProcessor');
-var EventEmitter = require('./EventEmitter');
-var EventSerializer = require('./EventSerializer');
-var GoalTracker = require('./GoalTracker');
-var Stream = require('./Stream');
-var Requestor = require('./Requestor');
-var Identity = require('./Identity');
-var utils = require('./utils');
-var messages = require('./messages');
-var store = require('./store');
+import EventProcessor from './EventProcessor';
+import EventEmitter from './EventEmitter';
+import GoalTracker from './GoalTracker';
+import Stream from './Stream';
+import Requestor from './Requestor';
+import Identity from './Identity';
+import * as utils from './utils';
+import messages from './messages';
 
 var flags = {};
 var environment;

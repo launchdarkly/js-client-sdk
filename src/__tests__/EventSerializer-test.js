@@ -1,5 +1,5 @@
-var assert = require('assert');
-var EventSerializer = require('../EventSerializer.js');
+import assert from 'assert';
+import EventSerializer from '../EventSerializer.js';
 
 describe('event_serializer', function() {
   // users to serialize
