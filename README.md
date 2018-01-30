@@ -1,5 +1,7 @@
 # LaunchDarkly SDK for Client-Side JavaScript
 
+[![Circle CI](https://circleci.com/gh/launchdarkly/js-client/tree/master.svg?style=svg)](https://circleci.com/gh/launchdarkly/js-client/tree/master)
+
 ## Introduction
 
 This is the official LaunchDarkly client-side JavaScript SDK. This SDK does two
@@ -149,11 +151,11 @@ Alternatively, you can bootstrap feature flags from local storage.
 
 ```js
 var client = LDClient.initialize(
-   'YOUR_CLIENT_SIDE_ID',
-   user,
-   (options = {
-      bootstrap: 'localStorage',
-   })
+  'YOUR_CLIENT_SIDE_ID',
+  user,
+  (options = {
+    bootstrap: 'localStorage',
+  })
 );
 ```
 
@@ -179,11 +181,11 @@ initialization:
 ```js
 var user = { key: 'user.example.com' };
 var client = LDClient.initialize(
-   'YOUR_CLIENT_SIDE_ID',
-   user,
-   (options = {
-      hash: 'SERVER_GENERATED_HASH',
-   })
+  'YOUR_CLIENT_SIDE_ID',
+  user,
+  (options = {
+    hash: 'SERVER_GENERATED_HASH',
+  })
 );
 ```
 
@@ -215,7 +217,7 @@ the `change` event:
 
 ```js
 client.on('change', function(settings) {
-   console.log('flags changed:', settings);
+  console.log('flags changed:', settings);
 });
 ```
 
@@ -225,7 +227,7 @@ also subscribe to specific flags:
 
 ```js
 client.on('change:YOUR_FLAG_KEY', function(value, previous) {
-   console.log('YOUR_FLAG_KEY changed:', value, '(' + previous + ')');
+  console.log('YOUR_FLAG_KEY changed:', value, '(' + previous + ')');
 });
 ```
 
@@ -263,7 +265,7 @@ the authenticated user. To do this, you can call the `identify` function:
 
 ```js
 client.identify(newUser, hash, function() {
-   console.log("New user's flags available");
+  console.log("New user's flags available");
 });
 ```
 
@@ -278,25 +280,21 @@ also run `npm run watch` to rebuild the module automatically on file change.
 
 To run the tests, run `npm run test`.
 
+## Community
+
+Here are resources from our awesome community:
+
+* [TrueCar/react-launch-darkly](https://github.com/TrueCar/react-launch-darkly/): A set of component helpers to add support for LaunchDarkly to your React.js app
+* [yusinto/ld-redux](https://github.com/yusinto/ld-redux/): A library to integrate LaunchDarkly with React and Redux
+* [tdeekens/flopflip](https://github.com/tdeekens/flopflip): A flexible feature-toggling library that integrates with LaunchDarkly
+
 ## About LaunchDarkly
 
-* LaunchDarkly is a continuous delivery platform that provides feature flags as
-  a service and allows developers to iterate quickly and safely. We allow you to
-  easily flag your features and manage them from the LaunchDarkly dashboard.
-  With LaunchDarkly, you can:
-  * Roll out a new feature to a subset of your users (like a group of users who
-    opt-in to a beta tester group), gathering feedback and bug reports from
-    real-world use cases.
-  * Gradually roll out a feature to an increasing percentage of users, and track
-    the effect that the feature has on key metrics (for instance, how likely is
-    a user to complete a purchase if they have feature A versus feature B?).
-  * Turn off a feature that you realize is causing performance problems in
-    production, without needing to re-deploy, or even restart the application
-    with a changed configuration file.
-  * Grant access to certain features based on user attributes, like payment plan
-    (eg: users on the ‘gold’ plan get access to more features than users in the
-    ‘silver’ plan). Disable parts of your application to facilitate maintenance,
-    without taking everything offline.
+* LaunchDarkly is a continuous delivery platform that provides feature flags as a service and allows developers to iterate quickly and safely. We allow you to easily flag your features and manage them from the LaunchDarkly dashboard. With LaunchDarkly, you can:
+  * Roll out a new feature to a subset of your users (like a group of users who opt-in to a beta tester group), gathering feedback and bug reports from real-world use cases.
+  * Gradually roll out a feature to an increasing percentage of users, and track the effect that the feature has on key metrics (for instance, how likely is a user to complete a purchase if they have feature A versus feature B?).
+  * Turn off a feature that you realize is causing performance problems in production, without needing to re-deploy, or even restart the application with a changed configuration file.
+  * Grant access to certain features based on user attributes, like payment plan (eg: users on the ‘gold’ plan get access to more features than users in the ‘silver’ plan). Disable parts of your application to facilitate maintenance, without taking everything offline.
 * LaunchDarkly provides feature flag SDKs for
   * [Java](http://docs.launchdarkly.com/docs/java-sdk-reference "Java SDK")
   * [JavaScript](http://docs.launchdarkly.com/docs/js-sdk-reference "LaunchDarkly JavaScript SDK")

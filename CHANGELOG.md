@@ -1,8 +1,33 @@
 # Change log
 
-All notable changes to the LaunchDarkly client-side JavaScript SDK will be
-documented in this file. This project adheres to
-[Semantic Versioning](http://semver.org).
+All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. This
+project adheres to [Semantic Versioning](http://semver.org).
+
+## [1.3.1] - 2018-01-23
+
+### Fixed
+
+* Methods that expose a `Promise` interface now properly return the resolution or rejection value to the caller.
+
+## [1.3.0] - 2018-01-22
+
+### Added
+
+* Support for [private user attributes](https://docs.launchdarkly.com/docs/private-user-attributes).
+* New `sendEvents` option to control whether the SDK should send events back to LaunchDarkly or not. Defaults to `true`.
+* It is now possible to wait for SDK readiness using `waitUntilReady` which returns a `Promise`. `identify` also returns a `Promise` (while still supporting the callback argument), which should make
+  it easier to integrate into code that relies heavily on `Promise`'s for asynchronous code.
+  ### Changed
+* The SDK now respects the user's [do-not-track setting](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/doNotTrack)
+
+## [1.2.0] - 2017-12-15
+
+### Added
+
+* Added `useReport` initialization option to use `REPORT` instead of `GET` when communicating with LaunchDarkly.
+  ### Fixed
+* Authentication errors will now be logged — the root cause for these errors is usually an invalid
+  client-side ID.
 
 ## [1.1.13] - 2017-12-12
 
