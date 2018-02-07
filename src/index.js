@@ -388,12 +388,12 @@ function initialize(env, user, options) {
 
   window.addEventListener('message', handleMessage);
 
+  client.on('ready', function () {
+    ldPromise = Promise.resolve(client);
+  });
+
   return client;
 }
-
-client.on('ready', function () {
-  ldPromise = Promise.resolve(client);
-});
 
 module.exports = {
   initialize: initialize

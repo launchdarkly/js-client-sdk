@@ -71,6 +71,22 @@ describe('LDClient', function() {
       });
     });
 
+    it('should resolve waitUntilReady promise when ready after ready event was already emitted', function(done) {
+      var user = {key: 'user'};
+      var handleReady = sinon.spy();
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: {}
+      });
+      setTimeout(function () {
+        client.waitUntilReady().then(handleReady);
+        setTimeout(function () {
+          expect(handleReady.called).to.be.true;
+          done();
+        }, 0);
+      }, 1000);
+    });
+
+
     it('should log an error when initialize is called without an environment key', function(done) {
       var user = {key: 'user'};
       var errorSpy = sinon.spy(console, 'error');
