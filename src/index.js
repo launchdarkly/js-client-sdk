@@ -34,6 +34,8 @@ var flushInterval = 2000;
 
 var seenRequests = {};
 
+var ldPromise = Promise.reject(messages.clientNotReady());
+
 function sendIdentifyEvent(user) {
   enqueueEvent({
     kind: 'identify',
@@ -82,9 +84,7 @@ function sendGoalEvent(kind, goal) {
 }
 
 function waitUntilReady() {
-  return new Promise(function(resolve) {
-    client.on('ready', resolve);
-  });
+  return ldPromise;
 }
 
 function identify(user, hash, onDone) {
@@ -387,6 +387,11 @@ function initialize(env, user, options) {
   }
 
   window.addEventListener('message', handleMessage);
+
+  var onReady = client.on('ready', function () {
+    ldPromise = Promise.resolve(client);
+    client.off(onReady);
+  });
 
   return client;
 }

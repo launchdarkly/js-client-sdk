@@ -1,4 +1,7 @@
 module.exports ={
+  clientNotReady: function() {
+    return 'LaunchDarkly client is not ready';
+  },
   invalidKey: function() {
     return 'Event key must be a string';
   },
