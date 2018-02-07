@@ -5,7 +5,7 @@ project adheres to [Semantic Versioning](http://semver.org).
 
 ## [1.4.0] - 2018-02-07
 ### Added
-- The SDK now supports multiple environments. Calling `initialize` returns a new client each time it is called.
+- The SDK now supports multiple environments. Calling `initialize` returns a new client each time.
 ### Fixed
 - The `waitUntilReady` `Promise` will now resolve even after the `ready` event was emitted — thanks @rmanalan!
 
