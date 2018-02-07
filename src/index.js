@@ -98,12 +98,6 @@ function initialize(env, user, options) {
     }).bind(this)), onDone);
   }
 
-  function waitUntilReady() {
-    return new Promise(function(resolve) {
-      client.on('ready', resolve);
-    });
-  }
-
   function variation(key, defaultValue) {
     var value;
 
@@ -251,16 +245,6 @@ function initialize(env, user, options) {
     }
   }
 
-  var client = {
-    waitUntilReady: waitUntilReady,
-    identify: identify,
-    variation: variation,
-    track: track,
-    on: on,
-    off: off,
-    allFlags: allFlags
-  };
-
   function lsKey(env, user) {
     var key = '';
     if (user) {
@@ -393,6 +377,25 @@ function initialize(env, user, options) {
   }
 
   window.addEventListener('message', handleMessage);
+
+  var readyPromise = new Promise(function(resolve) {
+    var onReady = emitter.on(readyEvent, function() {
+      emitter.off(readyEvent, onReady);
+      resolve();
+    });
+  });
+
+  var client = {
+    waitUntilReady: function() {
+      return readyPromise;
+    },
+    identify: identify,
+    variation: variation,
+    track: track,
+    on: on,
+    off: off,
+    allFlags: allFlags
+  };
 
   return client;
 }

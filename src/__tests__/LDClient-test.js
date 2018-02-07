@@ -56,18 +56,42 @@ describe('LDClient', function() {
       }, 0);
     });
 
-    it('should resolve waitUntilReady promise when ready', function(done) {
-      var user = {key: 'user'};
-      var handleReady = sinon.spy();
-      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
-        bootstrap: {}
-      });
-      client.waitUntilReady().then(handleReady);
+    describe.only('waitUntilReady', function() {
+      it('should resolve waitUntilReady promise when ready', function(done) {
+        var user = {key: 'user'};
+        var handleReady = sinon.spy();
+        var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+          bootstrap: {}
+        });
 
-      client.on('ready', function() {
-        setTimeout(function() {
-          expect(handleReady.called).to.be.true;
-          done();
+        client.waitUntilReady().then(handleReady);
+  
+        client.on('ready', function() {
+          setTimeout(function() {
+            expect(handleReady.called).to.be.true;
+            done();
+          }, 0);
+        });
+      });
+  
+      it('should resolve waitUntilReady promise after ready event was already emitted', function(done) {
+        var user = { key: 'user' };
+        var handleInitialReady = sinon.spy();
+        var handleReady = sinon.spy();
+        var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+          bootstrap: {}
+        });
+  
+        client.on('ready', handleInitialReady);
+  
+        setTimeout(function () {
+          client.waitUntilReady().then(handleReady);
+  
+          setTimeout(function () {
+            expect(handleInitialReady.called).to.be.true;
+            expect(handleReady.called).to.be.true;
+            done();
+          }, 0);
         }, 0);
       });
     });
