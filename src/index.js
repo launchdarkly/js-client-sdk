@@ -388,8 +388,9 @@ function initialize(env, user, options) {
 
   window.addEventListener('message', handleMessage);
 
-  client.on('ready', function () {
+  var onReady = client.on('ready', function () {
     ldPromise = Promise.resolve(client);
+    client.off(onReady);
   });
 
   return client;
