@@ -3,6 +3,12 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. This 
 project adheres to [Semantic Versioning](http://semver.org).
 
+## [1.4.0] - 2018-02-07
+### Added
+- The SDK now supports multiple environments. Calling `initialize` returns a new client each time it is called.
+### Fixed
+- The `waitUntilReady` `Promise` will now resolve even after the `ready` event was emitted — thanks @rmanalan!
+
 ## [1.3.1] - 2018-01-23
 ### Fixed
 - Methods that expose a `Promise` interface now properly return the resolution or rejection value to the caller.
