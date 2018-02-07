@@ -34,6 +34,8 @@ var flushInterval = 2000;
 
 var seenRequests = {};
 
+var ldPromise = Promise.reject('LaunchDarkly is not ready');
+
 function sendIdentifyEvent(user) {
   enqueueEvent({
     kind: 'identify',
@@ -82,9 +84,7 @@ function sendGoalEvent(kind, goal) {
 }
 
 function waitUntilReady() {
-  return new Promise(function(resolve) {
-    client.on('ready', resolve);
-  });
+  return ldPromise;
 }
 
 function identify(user, hash, onDone) {
@@ -390,6 +390,10 @@ function initialize(env, user, options) {
 
   return client;
 }
+
+client.on('ready', function () {
+  ldPromise = Promise.resolve(client);
+});
 
 module.exports = {
   initialize: initialize
