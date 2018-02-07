@@ -56,7 +56,7 @@ describe('LDClient', function() {
       }, 0);
     });
 
-    describe.only('waitUntilReady', function() {
+    describe('waitUntilReady', function() {
       it('should resolve waitUntilReady promise when ready', function(done) {
         var user = {key: 'user'};
         var handleReady = sinon.spy();
