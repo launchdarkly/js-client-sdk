@@ -34,7 +34,7 @@ var flushInterval = 2000;
 
 var seenRequests = {};
 
-var ldPromise = Promise.reject('LaunchDarkly is not ready');
+var ldPromise = Promise.reject(messages.clientNotReady());
 
 function sendIdentifyEvent(user) {
   enqueueEvent({
