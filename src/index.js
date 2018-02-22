@@ -10,13 +10,14 @@ var messages = require('./messages');
 var store = require('./store');
 var errors = require('./errors');
 
-function initialize(env, user, options) {  
+function initialize(env, user, options) {
   var flags = {};
   var environment;
   var events;
   var requestor;
   var stream;
   var sendEvents;
+  var samplingInterval;
   var emitter;
   var hash;
   var ident;
@@ -113,9 +114,13 @@ function initialize(env, user, options) {
   }
 
   function enqueueEvent(event) {
-    if (sendEvents && !doNotTrack()) {
+    if (shouldEnqueueEvent()) {
       events.enqueue(event);
     }
+  }
+
+  function shouldEnqueueEvent() {
+    return sendEvents && !doNotTrack() && (samplingInterval === 0 || Math.floor(Math.random() * samplingInterval) === 0)
   }
 
   function doNotTrack() {
@@ -263,10 +268,18 @@ function initialize(env, user, options) {
   stream = Stream(streamUrl, environment);
   events = EventProcessor(eventsUrl + '/a/' + environment + '.gif', EventSerializer(options));
   sendEvents = (typeof options.sendEvents === 'undefined') ? true : config.sendEvents;
+  samplingInterval = parseInt(options.samplingInterval) || 0;
   emitter = EventEmitter();
   ident = Identity(user, sendIdentifyEvent);
   requestor = Requestor(baseUrl, environment, options.useReport);
   localStorageKey = lsKey(environment, ident.getUser());
+
+  if (options.samplingInterval !== undefined && (isNaN(options.samplingInterval) || options.samplingInterval < 0)) {
+    samplingInterval = 0;
+    utils.onNextTick(function() {
+      emitter.maybeReportError(new errors.LDInvalidArgumentError('Invalid sampling interval configured. Sampling interval must be an integer >= 0.'));
+    })
+  }
 
   if (!env) {
     utils.onNextTick(function() {

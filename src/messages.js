@@ -14,7 +14,7 @@ module.exports = {
     return 'Custom event "' + key + '" does not exist';
   },
   environmentNotFound: function() {
-    return 'environment not found.' + docLink;
+    return 'Environment not found.' + docLink;
   },
   environmentNotSpecified: function() {
     return 'No environment specified.' + docLink;
