@@ -16,20 +16,6 @@ function clone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
-function modifications(oldObj, newObj) {
-  var mods = {};
-  if (!oldObj || !newObj) { return {}; }
-  for (var prop in oldObj) {
-    if (oldObj.hasOwnProperty(prop)) {
-      if (newObj[prop] !== oldObj[prop]) {
-        mods[prop] = {previous: oldObj[prop], current: newObj[prop]};
-      }
-    }
-  }
-
-  return mods;
-}
-
 // Events emmited in LDClient's initialize method will happen before the consumer
 // can register a listener, so defer them to next tick.
 function onNextTick(cb) {

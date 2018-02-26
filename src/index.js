@@ -28,6 +28,7 @@ function initialize(env, user, options) {
   var useLocalStorage;
   var localStorageKey;
   var goals;
+  var subscribedToChangeEvents;
 
   var readyEvent = 'ready';
   var changeEvent = 'change';
@@ -89,12 +90,15 @@ function initialize(env, user, options) {
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
         if (err) {
           emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
-          return reject(err)
+          return reject(err);
         }
         if (settings) {
           updateSettings(settings);
         }
         resolve(settings);
+        if (subscribedToChangeEvents) {
+          connectStream();
+        }
       });
     }).bind(this)), onDone);
   }
@@ -102,8 +106,8 @@ function initialize(env, user, options) {
   function variation(key, defaultValue) {
     var value;
 
-    if (flags && flags.hasOwnProperty(key)) {
-      value = flags[key] === null ? defaultValue : flags[key];
+    if (flags && flags.hasOwnProperty(key) && !flags[key].deleted) {
+      value = flags[key].value === null ? defaultValue : flags[key].value;
     } else {
       value = defaultValue;
     }
@@ -182,26 +186,76 @@ function initialize(env, user, options) {
   }
 
   function connectStream() {
-    stream.connect(function() {
-      requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
-        if (err) {
-          emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+    if (!ident.getUser()) {
+      return;
+    }
+    stream.disconnect();
+    stream.connect(ident.getUser(), {
+      'ping': function() {
+        requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
+          if (err) {
+            emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+          }
+          updateSettings(translatePingResponse(settings));
+        });
+      },
+      'put': function(e) {
+        var data = JSON.parse(e.data);
+        updateSettings(data);
+      },
+      'patch': function(e) {
+        var data = JSON.parse(e.data);
+        if (!flags[data.key] || flags[data.key].version < data.version) {
+          var oldFlag, mods;
+          oldFlag = flags[data.key];
+          flags[data.key] = { version: data.version, value: data.value };
+          mods = {};
+          if (oldFlag) {
+            mods[data.key] = { previous: oldFlag.value, current: data.value };
+          }
+          postProcessSettingsUpdate(mods);
         }
-        updateSettings(settings);
-      });
+      },
+      'delete': function(e) {
+        var data = JSON.parse(e.data);
+        if (!flags[data.key] || flags[data.key].version < data.version) {
+          flags[data.key] = { version: data.version, deleted: true };
+          postProcessSettingsUpdate({});
+        }
+      }
     });
   }
 
-  function updateSettings(settings) {
-    var changes;
-    var keys;
+  function updateSettings(newFlags) {
+    var changes = {};
 
-    if (!settings) { return; }
+    if (!newFlags) { return; }
 
-    changes = utils.modifications(flags, settings);
-    keys = Object.keys(changes);
+    for (var key in flags) {
+      if (flags.hasOwnProperty(key)) {
+        if (settings[key] && newFlags[key].value !== flags[key].value) {
+          changes[key] = { previous: flags[key].value, current: newFlags[key].value };
+        }
+      }
+    }
 
-    flags = settings;
+    flags = newFlags;
+    postProcessSettingsUpdate(changes);
+  }
+
+  function translatePingResponse(resp) {
+    // The ping response uses a legacy format that has no version numbers
+    var ret = {};
+    for (var key in resp) {
+      if (resp.hasOwnProperty(key)) {
+        ret[key] = { version: 0, value: resp[key] };
+      }
+    }
+    return ret;
+  }
+
+  function postProcessSettingsUpdate(changes) {
+    var keys = Object.keys(changes);
 
     if (useLocalStorage) {
       store.clear(localStorageKey);
@@ -224,6 +278,7 @@ function initialize(env, user, options) {
 
   function on(event, handler, context) {
     if (event.substr(0, changeEvent.length) === changeEvent) {
+      subscribedToChangeEvents = true;
       if (!stream.isConnected()) {
         connectStream();
       }
@@ -233,7 +288,13 @@ function initialize(env, user, options) {
     }
   }
 
-  function off() {
+  function off(event) {
+    if (event === changeEvent) {
+      if (subscribedToChangeEvents = true) {
+        subscribedToChangeEvents = false;
+        stream.disconnect();
+      }
+    }
     emitter.off.apply(emitter, Array.prototype.slice.call(arguments));
   }
 

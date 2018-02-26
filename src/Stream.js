@@ -1,12 +1,19 @@
-function Stream(url, environment) {
+var utils = require('./utils');
+
+function Stream(baseUrl, environment) {
   var stream = {};
-  var url = url + '/ping/' + environment;
+  var urlPrefix = baseUrl + '/eval/' + environment;
   var es = null;
 
-  stream.connect = function(onPing) {
+  stream.connect = function(user, handlers) {
     if (typeof EventSource !== 'undefined') {
+      var url = urlPrefix + '/' + utils.base64URLEncode(JSON.stringify(user));
       es = new window.EventSource(url);
-      es.addEventListener('ping', onPing);
+      for (var key in handlers) {
+        if (handlers.hasOwnProperty(key)) {
+          es.addEventListener(key, handlers[key]);
+        }
+      }
     }
   }
 
