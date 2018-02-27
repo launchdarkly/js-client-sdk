@@ -278,7 +278,7 @@ describe('LDClient', function() {
       );
 
       client.on('ready', function() {
-        expect(window.localStorage.getItem(lsKeyHash)).to.be.equal('{"enable-foo":true}');
+        expect(JSON.parse(window.localStorage.getItem(lsKeyHash))).to.eql({"enable-foo":{"value":true,"version":0}});
         done();
       });
     });
@@ -301,7 +301,7 @@ describe('LDClient', function() {
       client.on('ready', function() {
         client.identify(user2, null, function() {
           expect(window.localStorage.getItem(lsKey)).to.be.null;
-          expect(window.localStorage.getItem(lsKey2)).to.equal(json);
+          expect(JSON.parse(window.localStorage.getItem(lsKey2))).to.eql({"enable-foo":{"value":true,"version":0}});
           done();
         });
         server.respond();

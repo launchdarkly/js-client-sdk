@@ -55,8 +55,18 @@ function Requestor(baseUrl, environment, useReport) {
     }
 
     var wrappedCallback = (function(currentCallback) {
-      return function() {
-        currentCallback.apply(null, arguments);
+      return function(error, result) {
+        // if we got flags, convert them to the more verbose format used by the eval stream
+        if (result) {
+          var transformed = {};
+          for (var key in result) {
+            if (result.hasOwnProperty(key)) {
+              transformed[key] = { value: result[key], version: 0 };
+            }
+          }
+          result = transformed;
+        }
+        currentCallback(error, result);
         flagSettingsRequest = null;
         lastFlagSettingsCallback = null;
       };

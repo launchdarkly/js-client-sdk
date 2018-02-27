@@ -93,7 +93,7 @@ function initialize(env, user, options) {
           return reject(err);
         }
         if (settings) {
-          updateSettings(translatePingResponse(settings));
+          updateSettings(settings);
         }
         resolve(settings);
         if (subscribedToChangeEvents) {
@@ -196,7 +196,7 @@ function initialize(env, user, options) {
           if (err) {
             emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
           }
-          updateSettings(translatePingResponse(settings));
+          updateSettings(settings);
         });
       },
       'put': function(e) {
@@ -233,7 +233,7 @@ function initialize(env, user, options) {
 
     for (var key in flags) {
       if (flags.hasOwnProperty(key)) {
-        if (settings[key] && newFlags[key].value !== flags[key].value) {
+        if (flags[key] && newFlags[key].value !== flags[key].value) {
           changes[key] = { previous: flags[key].value, current: newFlags[key].value };
         }
       }
@@ -399,7 +399,7 @@ function initialize(env, user, options) {
       if (err) {
         emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
       }
-      flags = translatePingResponse(settings);
+      flags = settings;
       emitter.emit(readyEvent);
     });
   }
