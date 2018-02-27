@@ -81,7 +81,6 @@ module.exports = {
   btoa: btoa,
   base64URLEncode: base64URLEncode,
   clone: clone,
-  modifications: modifications,
   merge: merge,
   onNextTick: onNextTick,
   wrapPromiseCallback: wrapPromiseCallback

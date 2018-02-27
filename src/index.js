@@ -93,7 +93,7 @@ function initialize(env, user, options) {
           return reject(err);
         }
         if (settings) {
-          updateSettings(settings);
+          updateSettings(translatePingResponse(settings));
         }
         resolve(settings);
         if (subscribedToChangeEvents) {
@@ -399,7 +399,7 @@ function initialize(env, user, options) {
       if (err) {
         emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
       }
-      flags = settings;
+      flags = translatePingResponse(settings);
       emitter.emit(readyEvent);
     });
   }
