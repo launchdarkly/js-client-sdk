@@ -77,11 +77,26 @@ function wrapPromiseCallback(promise, callback) {
   );
 }
 
+/**
+ * Takes a map of flag keys to values, and returns the more verbose structure used by the
+ * client stream.
+ */
+function transformValuesToVersionedValues(flags) {
+  var ret = {};
+  for (var key in flags) {
+    if (flags.hasOwnProperty(key)) {
+      ret[key] = { value: flags[key], version: 0 };
+    }
+  }
+  return ret;
+}
+
 module.exports = {
   btoa: btoa,
   base64URLEncode: base64URLEncode,
   clone: clone,
   merge: merge,
   onNextTick: onNextTick,
+  transformValuesToVersionedValues: transformValuesToVersionedValues,
   wrapPromiseCallback: wrapPromiseCallback
 };

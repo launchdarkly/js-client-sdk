@@ -58,13 +58,7 @@ function Requestor(baseUrl, environment, useReport) {
       return function(error, result) {
         // if we got flags, convert them to the more verbose format used by the eval stream
         if (result) {
-          var transformed = {};
-          for (var key in result) {
-            if (result.hasOwnProperty(key)) {
-              transformed[key] = { value: result[key], version: 0 };
-            }
-          }
-          result = transformed;
+          result = utils.transformValuesToVersionedValues(result);
         }
         currentCallback(error, result);
         flagSettingsRequest = null;

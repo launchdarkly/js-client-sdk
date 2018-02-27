@@ -321,7 +321,7 @@ function initialize(env, user, options) {
 
   options = options || {};
   environment = env;
-  flags = typeof(options.bootstrap) === 'object' ? options.bootstrap : {};
+  flags = typeof(options.bootstrap) === 'object' ? utils.transformValuesToVersionedValues(options.bootstrap) : {};
   hash = options.hash;
   baseUrl = options.baseUrl || 'https://app.launchdarkly.com';
   eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
