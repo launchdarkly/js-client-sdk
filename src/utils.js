@@ -16,7 +16,7 @@ function clone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
-// Events emmited in LDClient's initialize method will happen before the consumer
+// Events emitted in LDClient's initialize method will happen before the consumer
 // can register a listener, so defer them to next tick.
 function onNextTick(cb) {
   setTimeout(cb, 0);
