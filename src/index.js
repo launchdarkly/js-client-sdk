@@ -243,17 +243,6 @@ function initialize(env, user, options) {
     postProcessSettingsUpdate(changes);
   }
 
-  function translatePingResponse(resp) {
-    // The ping response uses a legacy format that has no version numbers
-    var ret = {};
-    for (var key in resp) {
-      if (resp.hasOwnProperty(key)) {
-        ret[key] = { version: 0, value: resp[key] };
-      }
-    }
-    return ret;
-  }
-
   function postProcessSettingsUpdate(changes) {
     var keys = Object.keys(changes);
 
