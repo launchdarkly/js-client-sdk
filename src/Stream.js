@@ -1,6 +1,6 @@
 var utils = require('./utils');
 
-function Stream(baseUrl, environment) {
+function Stream(baseUrl, environment, hash) {
   var stream = {};
   var urlPrefix = baseUrl + '/eval/' + environment;
   var es = null;
@@ -8,6 +8,9 @@ function Stream(baseUrl, environment) {
   stream.connect = function(user, handlers) {
     if (typeof EventSource !== 'undefined') {
       var url = urlPrefix + '/' + utils.base64URLEncode(JSON.stringify(user));
+      if (hash !== undefined) {
+        url = url + '?h=' + hash;
+      }
       es = new window.EventSource(url);
       for (var key in handlers) {
         if (handlers.hasOwnProperty(key)) {

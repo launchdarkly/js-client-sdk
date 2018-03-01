@@ -326,7 +326,7 @@ function initialize(env, user, options) {
   baseUrl = options.baseUrl || 'https://app.launchdarkly.com';
   eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
   streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
-  stream = Stream(streamUrl, environment);
+  stream = Stream(streamUrl, environment, hash);
   events = EventProcessor(eventsUrl + '/a/' + environment + '.gif', EventSerializer(options));
   sendEvents = (typeof options.sendEvents === 'undefined') ? true : config.sendEvents;
   samplingInterval = parseInt(options.samplingInterval) || 0;
