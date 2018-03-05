@@ -28,7 +28,6 @@ function EventSerializer(config) {
   }
 
   function filter_user(user) {
-    var allPrivateAttrs = {};
     var userPrivateAttrs = user.privateAttributeNames || [];
     
     var isPrivateAttr = function(name) {
