@@ -65,7 +65,7 @@ describe('LDClient', function() {
         });
 
         client.waitUntilReady().then(handleReady);
-  
+
         client.on('ready', function() {
           setTimeout(function() {
             expect(handleReady.called).to.be.true;
@@ -73,7 +73,7 @@ describe('LDClient', function() {
           }, 0);
         });
       });
-  
+
       it('should resolve waitUntilReady promise after ready event was already emitted', function(done) {
         var user = { key: 'user' };
         var handleInitialReady = sinon.spy();
@@ -81,18 +81,33 @@ describe('LDClient', function() {
         var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
           bootstrap: {}
         });
-  
+
         client.on('ready', handleInitialReady);
-  
+
         setTimeout(function () {
           client.waitUntilReady().then(handleReady);
-  
+
           setTimeout(function () {
             expect(handleInitialReady.called).to.be.true;
             expect(handleReady.called).to.be.true;
             done();
           }, 0);
         }, 0);
+      });
+    });
+
+    it('should emit an error when an invalid samplingInterval is specified', function(done) {
+      var user = { key: 'user' };
+      var handleInitialReady = sinon.spy();
+      var handleReady = sinon.spy();
+      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        bootstrap: {},
+        samplingInterval: "totally not a number"
+      });
+
+      client.on('error', function(err) {
+        expect(err.message).to.be.equal('Invalid sampling interval configured. Sampling interval must be an integer >= 0.');
+        done();
       });
     });
 

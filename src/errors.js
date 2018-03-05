@@ -16,4 +16,5 @@ exports.LDUnexpectedResponseError = createCustomError('LaunchDarklyUnexpectedRes
 exports.LDInvalidEnvironmentIdError = createCustomError('LaunchDarklyInvalidEnvironmentIdError');
 exports.LDInvalidUserError = createCustomError('LaunchDarklyInvalidUserError');
 exports.LDInvalidEventKeyError = createCustomError('LaunchDarklyInvalidEventKeyError');
+exports.LDInvalidArgumentError = createCustomError('LaunchDarklyInvalidArgumentError');
 exports.LDFlagFetchError = createCustomError('LaunchDarklyFlagFetchError');
