@@ -3,6 +3,10 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. This 
 project adheres to [Semantic Versioning](http://semver.org).
 
+## [1.5.1] - 2018-03-07
+### Fixed
+- Removed usage of the `const` keyword, to maintain IE10 compatibility. (Thanks, [turnerniles](https://github.com/launchdarkly/js-client/pull/68)!)
+
 ## [1.5.0] - 2018-03-05
 ### Added
 - The `options` object now supports a `samplingInterval` property. If greater than zero, this causes a fraction of analytics events to be sent to LaunchDarkly: one per that number of events (pseudo-randomly). For instance, setting it to 5 would cause 20% of events to be sent on average.
