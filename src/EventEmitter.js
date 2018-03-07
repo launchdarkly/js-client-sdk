@@ -2,7 +2,7 @@ function EventEmitter() {
   var emitter = {};
   var events = {};
 
-  const listeningTo = function(event) {
+  var listeningTo = function(event) {
     return !!events[event];
   }
 
