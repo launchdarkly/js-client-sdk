@@ -237,6 +237,12 @@ function initialize(env, user, options) {
     emitter.off.apply(emitter, Array.prototype.slice.call(arguments));
   }
 
+  function flush() {
+    if (sendEvents) {
+      events.flush(ident.getUser());
+    }
+  }
+
   function handleMessage(event) {
     if (event.origin !== baseUrl) { return; }
     if (event.data.type === 'SYN') {
@@ -407,6 +413,7 @@ function initialize(env, user, options) {
     track: track,
     on: on,
     off: off,
+    flush: flush,
     allFlags: allFlags
   };
 
