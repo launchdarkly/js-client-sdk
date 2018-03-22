@@ -1,15 +1,22 @@
 var utils = require('./utils');
 
-function Stream(baseUrl, environment, hash) {
+function Stream(baseUrl, environment, hash, useReport) {
   var stream = {};
-  var urlPrefix = baseUrl + '/eval/' + environment;
+  var evalUrlPrefix = baseUrl + '/eval/' + environment;
   var es = null;
 
   stream.connect = function(user, handlers) {
     if (typeof EventSource !== 'undefined') {
-      var url = urlPrefix + '/' + utils.base64URLEncode(JSON.stringify(user));
-      if (hash !== undefined) {
-        url = url + '?h=' + hash;
+      var url;
+      if (useReport) {
+        // we don't yet have an EventSource implementation that supports REPORT, so
+        // fall back to the old ping-based stream
+        url = baseUrl + '/ping/' + environment;
+      } else {
+        url = evalUrlPrefix + '/' + utils.base64URLEncode(JSON.stringify(user));
+        if (hash !== undefined) {
+          url = url + '?h=' + hash;
+        }
       }
       es = new window.EventSource(url);
       for (var key in handlers) {
