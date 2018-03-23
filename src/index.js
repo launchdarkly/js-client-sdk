@@ -212,6 +212,8 @@ function initialize(env, user, options) {
           mods = {};
           if (oldFlag) {
             mods[data.key] = { previous: oldFlag.value, current: data.value };
+          } else {
+            mods[data.key] = { current: data.value };
           }
           postProcessSettingsUpdate(mods);
         }
@@ -219,8 +221,12 @@ function initialize(env, user, options) {
       'delete': function(e) {
         var data = JSON.parse(e.data);
         if (!flags[data.key] || flags[data.key].version < data.version) {
+          mods = {};
+          if (flags[data.key] && !flags[data.key].deleted) {
+            mods[data.key] = { previous: flags[data.key].value };
+          }
           flags[data.key] = { version: data.version, deleted: true };
-          postProcessSettingsUpdate({});
+          postProcessSettingsUpdate(mods);
         }
       }
     });
@@ -233,9 +239,16 @@ function initialize(env, user, options) {
 
     for (var key in flags) {
       if (flags.hasOwnProperty(key)) {
-        if (flags[key] && newFlags[key].value !== flags[key].value) {
+        if (newFlags[key] && newFlags[key].value !== flags[key].value) {
           changes[key] = { previous: flags[key].value, current: newFlags[key].value };
+        } else if (!newFlags[key] || newFlags[key].deleted) {
+          changes[key] = { previous: flags[key].value };
         }
+      }
+    }
+    for (var key in newFlags) {
+      if (newFlags.hasOwnProperty(key) && (!flags[key] || flags[key].deleted)) {
+        changes[key] = { current: newFlags[key].value };
       }
     }
 

@@ -577,6 +577,24 @@ describe('LDClient', function() {
       });
     });
 
+    it('fires change event when flag is newly created from patch event', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: { } });
+
+      client.on('ready', function() {
+        client.on('change', function(changes) {
+          expect(changes).to.deep.equal({
+            'enable-foo': { current: true }
+          });
+
+          done();
+        });
+
+        mockEventSource.listeners['patch']({
+          data: '{"key":"enable-foo","value":true,"version":1}'
+        });
+      });
+    });
+
     it('handles delete message by deleting flag', function(done) {
       var client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
 
@@ -589,6 +607,24 @@ describe('LDClient', function() {
 
         expect(client.variation('enable-foo')).to.equal(undefined);
         done();
+      });
+    });
+
+    it('fires change event when flag is deleted', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': true } });
+
+      client.on('ready', function() {
+        client.on('change', function(changes) {
+          expect(changes).to.deep.equal({
+            'enable-foo': { previous: true }
+          });
+
+          done();
+        });
+
+        mockEventSource.listeners['delete']({
+          data: '{"key":"enable-foo","version":1}'
+        });
       });
     });
 
