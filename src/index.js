@@ -249,7 +249,7 @@ function initialize(env, user, options) {
     if (useLocalStorage) {
       store.clear(localStorageKey);
       localStorageKey = lsKey(environment, ident.getUser());
-      store.set(localStorageKey, JSON.stringify(flags));
+      store.set(localStorageKey, JSON.stringify(utils.transformValuesToUnversionedValues(flags)));
     }
 
     if (keys.length > 0) {
@@ -356,7 +356,7 @@ function initialize(env, user, options) {
 
     // check if localStorage data is corrupted, if so clear it
     try {
-      flags = JSON.parse(store.get(localStorageKey));
+      flags = utils.transformValuesToVersionedValues(JSON.parse(store.get(localStorageKey)));
     } catch (error) {
       store.clear(localStorageKey);
     }
@@ -367,7 +367,7 @@ function initialize(env, user, options) {
           emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
         }
         flags = settings;
-        settings && store.set(localStorageKey, JSON.stringify(flags));
+        settings && store.set(localStorageKey, JSON.stringify(utils.transformValuesToUnversionedValues(flags)));
         emitter.emit(readyEvent);
       });
     } else {
@@ -379,7 +379,7 @@ function initialize(env, user, options) {
         if (err) {
           emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
         }
-        settings && store.set(localStorageKey, JSON.stringify(settings));
+        settings && store.set(localStorageKey, JSON.stringify(utils.transformValuesToUnversionedValues(settings)));
       });
     }
   }

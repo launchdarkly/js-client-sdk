@@ -91,6 +91,20 @@ function transformValuesToVersionedValues(flags) {
   return ret;
 }
 
+/**
+ * Takes a map obtained from the client stream and converts it to the briefer format used in
+ * bootstrap data or local storagel
+ */
+function transformValuesToUnversionedValues(flags) {
+  var ret = {};
+  for (var key in flags) {
+    if (flags.hasOwnProperty(key)) {
+      ret[key] = flags[key].value;
+    }
+  }
+  return ret;
+}
+
 module.exports = {
   btoa: btoa,
   base64URLEncode: base64URLEncode,
@@ -98,5 +112,6 @@ module.exports = {
   merge: merge,
   onNextTick: onNextTick,
   transformValuesToVersionedValues: transformValuesToVersionedValues,
+  transformValuesToUnversionedValues: transformValuesToUnversionedValues,
   wrapPromiseCallback: wrapPromiseCallback
 };

@@ -2,7 +2,7 @@ var utils = require('./utils');
 
 function Stream(baseUrl, environment, hash, useReport) {
   var stream = {};
-  var evalUrlPrefix = baseUrl + '/eval/' + environment;
+  var evalUrlPrefix = baseUrl + '/eval/' + environment + '/';
   var es = null;
 
   stream.connect = function(user, handlers) {
@@ -13,8 +13,8 @@ function Stream(baseUrl, environment, hash, useReport) {
         // fall back to the old ping-based stream
         url = baseUrl + '/ping/' + environment;
       } else {
-        url = evalUrlPrefix + '/' + utils.base64URLEncode(JSON.stringify(user));
-        if (hash !== undefined) {
+        url = evalUrlPrefix + utils.base64URLEncode(JSON.stringify(user));
+        if (hash !== null && hash !== undefined) {
           url = url + '?h=' + hash;
         }
       }
