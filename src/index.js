@@ -99,6 +99,12 @@ function initialize(env, user, options) {
     }).bind(this)), onDone);
   }
 
+  function flush(onDone) {
+    return utils.wrapPromiseCallback(new Promise(function(resolve) {
+      return sendEvents ? resolve(events.flush(ident.getUser())) : resolve();
+    }.bind(this), onDone));
+  }
+
   function variation(key, defaultValue) {
     var value;
 
@@ -235,12 +241,6 @@ function initialize(env, user, options) {
 
   function off() {
     emitter.off.apply(emitter, Array.prototype.slice.call(arguments));
-  }
-
-  function flush() {
-    if (sendEvents) {
-      events.flush(ident.getUser());
-    }
   }
 
   function handleMessage(event) {
