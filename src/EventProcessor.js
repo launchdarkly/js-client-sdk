@@ -64,8 +64,6 @@ function EventProcessor(eventsUrl, eventSerializer) {
       return Promise.resolve();
     }
 
-    console.log('flushing', queue.slice(0));
-
     queue.forEach(function(event) {
       event.user = user;
     });
