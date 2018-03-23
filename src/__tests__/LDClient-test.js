@@ -577,7 +577,7 @@ describe('LDClient', function() {
       });
     });
 
-    it('fires change event when flag is newly created from patch event', function(done) {
+    it('fires global change event when flag is newly created from patch event', function(done) {
       var client = LDClient.initialize(envName, user, { bootstrap: { } });
 
       client.on('ready', function() {
@@ -585,6 +585,23 @@ describe('LDClient', function() {
           expect(changes).to.deep.equal({
             'enable-foo': { current: true }
           });
+
+          done();
+        });
+
+        mockEventSource.listeners['patch']({
+          data: '{"key":"enable-foo","value":true,"version":1}'
+        });
+      });
+    });
+
+    it('fires global change event when flag is newly created from patch event', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: { } });
+
+      client.on('ready', function() {
+        client.on('change:enable-foo', function(current, previous) {
+          expect(current).to.equal(true);
+          expect(previous).to.equal(undefined);
 
           done();
         });
@@ -610,7 +627,7 @@ describe('LDClient', function() {
       });
     });
 
-    it('fires change event when flag is deleted', function(done) {
+    it('fires global change event when flag is deleted', function(done) {
       var client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': true } });
 
       client.on('ready', function() {
@@ -618,6 +635,23 @@ describe('LDClient', function() {
           expect(changes).to.deep.equal({
             'enable-foo': { previous: true }
           });
+
+          done();
+        });
+
+        mockEventSource.listeners['delete']({
+          data: '{"key":"enable-foo","version":1}'
+        });
+      });
+    });
+
+    it('fires individual change event when flag is deleted', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': true } });
+
+      client.on('ready', function() {
+        client.on('change:enable-foo', function(current, previous) {
+          expect(current).to.equal(undefined);
+          expect(previous).to.equal(true);
 
           done();
         });
