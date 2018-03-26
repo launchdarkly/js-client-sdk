@@ -354,8 +354,10 @@ function initialize(env, user, options) {
 
   function attachHistoryListeners() {
     if (!!(window.history && history.pushState)) {
+      window.removeEventListener('popstate',refreshGoalTracker);
       window.addEventListener('popstate', refreshGoalTracker);
     } else {
+      window.removeEventListener('hashchange', refreshGoalTracker);
       window.addEventListener('hashchange', refreshGoalTracker);
     }
   }
