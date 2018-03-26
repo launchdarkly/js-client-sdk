@@ -4,7 +4,7 @@ var MAX_URL_LENGTH = 2000;
 
 function sendEvents(eventsUrl, eventSerializer, user, events, sync) {
   var hasCors = 'withCredentials' in new XMLHttpRequest();
-  var src = eventsUrl + '?d=' + utils.base64URLEncode(JSON.stringify(eventSerializer.serialize_events(events)));
+  var src = eventsUrl + '?d=' + utils.base64URLEncode(JSON.stringify(events));
   
   var send = function(onDone) {
     // Detect browser support for CORS
@@ -49,6 +49,7 @@ function EventProcessor(eventsUrl, eventSerializer) {
 
   processor.flush = function(user, sync) {
     var chunks;
+    var serializedQueue = eventSerializer.serialize_events(queue);
     var results = [];
 
     if (!user) {
@@ -60,15 +61,15 @@ function EventProcessor(eventsUrl, eventSerializer) {
     
     initialFlush = false;
 
-    if (queue.length === 0) {
+    if (serializedQueue.length === 0) {
       return Promise.resolve();
     }
 
-    queue.forEach(function(event) {
+    serializedQueue.forEach(function(event) {
       event.user = user;
     });
 
-    chunks = utils.chunkUserEventsForUrl(MAX_URL_LENGTH - eventsUrl.length, queue);
+    chunks = utils.chunkUserEventsForUrl(MAX_URL_LENGTH - eventsUrl.length, serializedQueue);
     
     for (var i=0 ; i < chunks.length ; i++) {
       results.push(sendEvents(eventsUrl, eventSerializer, user, chunks[i], sync));
