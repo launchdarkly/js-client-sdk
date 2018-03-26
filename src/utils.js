@@ -72,10 +72,10 @@ function merge(target, varArgs) { // .length of function is 2
  * 
  * @param {Promise<any>} promise 
  * @param {Function} callback 
- * @returns Promise<any>
+ * @returns Promise<any> | undefined
  */
 function wrapPromiseCallback(promise, callback) {
-  return promise.then(
+  var ret = promise.then(
     function(value) {
       if (callback) {
         setTimeout(function() { callback(null, value); }, 0);
@@ -85,10 +85,13 @@ function wrapPromiseCallback(promise, callback) {
     function(error) {
       if (callback) {
         setTimeout(function() { callback(error, null); }, 0);
+      } else {
+        return Promise.reject(error);
       }
-      return Promise.reject(error);
     }
   );
+
+  return !callback ? ret : undefined;
 }
 
 module.exports = {
