@@ -73,6 +73,7 @@ function initialize(env, user, options) {
       key: goal.key,
       data: null,
       url: window.location.href,
+      user: ident.getUser(),
       creationDate: (new Date()).getTime()
     };
 

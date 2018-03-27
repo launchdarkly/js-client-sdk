@@ -2,7 +2,24 @@ var EventSerializer = require('../EventSerializer');
 var EventProcessor = require('../EventProcessor');
 
 describe('EventProcessor', function() {
+  var sandbox;
   var serializer = EventSerializer({});
+
+  beforeEach(function() {
+    sandbox = sinon.sandbox.create();
+  })
+
+  afterEach(function() {
+    sandbox.restore();
+  })
+
+  it('should warn about missing user on initial flush', function() {
+    var warnSpy = sandbox.spy(console, 'warn');
+    var processor = EventProcessor('/fake-url', serializer);
+    processor.flush(null);
+    warnSpy.restore();
+    expect(warnSpy.called).to.be.true;
+  })
 
   it('should flush asynchronously', function() {
     var processor = EventProcessor('/fake-url', serializer);
