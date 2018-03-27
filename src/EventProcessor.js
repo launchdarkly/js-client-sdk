@@ -1,9 +1,9 @@
 var utils = require('./utils');
 
 var MAX_URL_LENGTH = 2000;
+var hasCors = 'withCredentials' in new XMLHttpRequest();
 
 function sendEvents(eventsUrl, events, sync) {
-  var hasCors = 'withCredentials' in new XMLHttpRequest();
   var src = eventsUrl + '?d=' + utils.base64URLEncode(JSON.stringify(events));
   
   var send = function(onDone) {
@@ -48,6 +48,7 @@ function EventProcessor(eventsUrl, eventSerializer) {
   };
 
   processor.flush = function(user, sync) {
+    var finalSync = sync === undefined ? false : sync;
     var serializedQueue = eventSerializer.serialize_events(queue);
     var chunks;
     var results = [];
@@ -68,7 +69,7 @@ function EventProcessor(eventsUrl, eventSerializer) {
     chunks = utils.chunkUserEventsForUrl(MAX_URL_LENGTH - eventsUrl.length, serializedQueue);
     
     for (var i=0 ; i < chunks.length ; i++) {
-      results.push(sendEvents(eventsUrl, chunks[i], sync));
+      results.push(sendEvents(eventsUrl, chunks[i], finalSync));
     }
 
     queue = [];
