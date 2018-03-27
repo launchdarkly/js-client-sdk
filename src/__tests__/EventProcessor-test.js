@@ -32,9 +32,12 @@ describe('EventProcessor', function() {
     processor.enqueue(event);
     processor.enqueue(event);
 
-    result = processor.flush(user, true);
+    result = processor.flush(user);
 
-    expect(result).to.be.false;
+    result.then(function() {
+      // test will only pass if the promise resolves
+      done();
+    })
   });
 
   it('should flush synchronously', function(done) {
@@ -48,7 +51,7 @@ describe('EventProcessor', function() {
     processor.enqueue(event);
     processor.enqueue(event);
 
-    result = processor.flush(user);
+    result = processor.flush(user, true);
 
     result.then(function() {
       // test will only pass if the promise resolves
