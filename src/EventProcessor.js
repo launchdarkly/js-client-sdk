@@ -56,7 +56,7 @@ function EventProcessor(eventsUrl, eventSerializer) {
       if (initialFlush) {
         console && console.warn && console.warn('Be sure to call `identify` in the LaunchDarkly client: http://docs.launchdarkly.com/docs/running-an-ab-test#include-the-client-side-snippet');
       }
-      return false;
+      return Promise.resolve();
     }
     
     initialFlush = false;
@@ -73,7 +73,7 @@ function EventProcessor(eventsUrl, eventSerializer) {
 
     queue = [];
 
-    return sync ? false : Promise.all(results);
+    return sync ? Promise.resolve() : Promise.all(results);
   };
   
   return processor;
