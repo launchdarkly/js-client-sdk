@@ -1,5 +1,7 @@
 var assert = require('assert');
-var wrapPromiseCallback = require('../utils.js').wrapPromiseCallback;
+var utils = require('../utils.js');
+var wrapPromiseCallback = utils.wrapPromiseCallback;
+var chunkUserEventsForUrl = utils.chunkUserEventsForUrl;
 
 describe('utils', function() {
   describe('wrapPromiseCallback', function() {
@@ -49,4 +51,15 @@ describe('utils', function() {
       });
     });
   });
+
+  describe('chunkUserEventsForUrl', function() {
+    it('should properly chunk the list of events', function() {
+      var user = {key: 'foo'};
+      var event = {kind: 'identify', key: user.key};
+      var eventLength = utils.base64URLEncode(JSON.stringify(event)).length;
+      var events = [event,event,event,event,event];
+      var chunks = chunkUserEventsForUrl(eventLength * 2, events);
+      expect(chunks).to.eql([[event, event],[event,event],[event]]);
+    })
+  })
 });

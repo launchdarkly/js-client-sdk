@@ -73,6 +73,7 @@ function initialize(env, user, options) {
       key: goal.key,
       data: null,
       url: window.location.href,
+      user: ident.getUser(),
       creationDate: (new Date()).getTime()
     };
 
@@ -97,6 +98,12 @@ function initialize(env, user, options) {
         resolve(settings);
       });
     }).bind(this)), onDone);
+  }
+
+  function flush(onDone) {
+    return utils.wrapPromiseCallback(new Promise(function(resolve) {
+      return sendEvents ? resolve(events.flush(ident.getUser())) : resolve();
+    }.bind(this), onDone));
   }
 
   function variation(key, defaultValue) {
@@ -407,6 +414,7 @@ function initialize(env, user, options) {
     track: track,
     on: on,
     off: off,
+    flush: flush,
     allFlags: allFlags
   };
 
