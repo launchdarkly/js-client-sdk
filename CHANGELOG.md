@@ -5,7 +5,7 @@ project adheres to [Semantic Versioning](http://semver.org).
 
 ## [1.6.0] - 2018-03-28
 ### Changed
-- To reduce network usage, if you have subscribed to change events, the client now connects to a new streaming endpoint that delivers individual feature flag changes as they occur. Previously, it made a new connection and re-requested all flags whenever a change was detected.
+- Added support for a future update to LaunchDarkly that will deliver individual feature flag changes over the streaming connection as they occur, rather than requiring the client to re-request all flags for each change.
 
 ## [1.5.2] - 2018-03-28
 ### Added
