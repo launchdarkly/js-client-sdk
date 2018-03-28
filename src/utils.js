@@ -16,21 +16,7 @@ function clone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
-function modifications(oldObj, newObj) {
-  var mods = {};
-  if (!oldObj || !newObj) { return {}; }
-  for (var prop in oldObj) {
-    if (oldObj.hasOwnProperty(prop)) {
-      if (newObj[prop] !== oldObj[prop]) {
-        mods[prop] = {previous: oldObj[prop], current: newObj[prop]};
-      }
-    }
-  }
-
-  return mods;
-}
-
-// Events emmited in LDClient's initialize method will happen before the consumer
+// Events emitted in LDClient's initialize method will happen before the consumer
 // can register a listener, so defer them to next tick.
 function onNextTick(cb) {
   setTimeout(cb, 0);
@@ -92,6 +78,34 @@ function wrapPromiseCallback(promise, callback) {
 }
 
 /**
+ * Takes a map of flag keys to values, and returns the more verbose structure used by the
+ * client stream.
+ */
+function transformValuesToVersionedValues(flags) {
+  var ret = {};
+  for (var key in flags) {
+    if (flags.hasOwnProperty(key)) {
+      ret[key] = { value: flags[key], version: 0 };
+    }
+  }
+  return ret;
+}
+
+/**
+ * Takes a map obtained from the client stream and converts it to the briefer format used in
+ * bootstrap data or local storagel
+ */
+function transformValuesToUnversionedValues(flags) {
+  var ret = {};
+  for (var key in flags) {
+    if (flags.hasOwnProperty(key)) {
+      ret[key] = flags[key].value;
+    }
+  }
+  return ret;
+}
+
+/**
  * Returns an array of event groups each of which can be safely URL-encoded
  * without hitting the safe maximum URL length of certain browsers.
  * 
@@ -133,9 +147,10 @@ module.exports = {
   btoa: btoa,
   base64URLEncode: base64URLEncode,
   clone: clone,
-  modifications: modifications,
   merge: merge,
   onNextTick: onNextTick,
+  transformValuesToVersionedValues: transformValuesToVersionedValues,
+  transformValuesToUnversionedValues: transformValuesToUnversionedValues,
   wrapPromiseCallback: wrapPromiseCallback,
   chunkUserEventsForUrl: chunkUserEventsForUrl
 };

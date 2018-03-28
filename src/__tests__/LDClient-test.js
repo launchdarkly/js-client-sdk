@@ -4,6 +4,7 @@ var LDClient = require('../index');
 var messages = require('../messages');
 var errors = require('../errors');
 var base64Encode = require('../utils').btoa;
+var mockEventSource = require('./mockEventSource');
 
 describe('LDClient', function() {
   var xhr;
@@ -11,7 +12,11 @@ describe('LDClient', function() {
   var sandbox;
   var store = {};
 
+  var envName = 'UNKNOWN_ENVIRONMENT_ID';
   var lsKey = 'ld:UNKNOWN_ENVIRONMENT_ID:' + base64Encode('{"key":"user"}');
+  var user = { key: 'user' };
+  var encodedUser = 'eyJrZXkiOiJ1c2VyIn0';
+  var hash = '012345789abcde';
 
   beforeEach(function() {
     xhr = sinon.useFakeXMLHttpRequest();
@@ -27,6 +32,8 @@ describe('LDClient', function() {
     sandbox.stub(window.localStorage.__proto__, 'getItem', function(k) {
       return store[k];
     });
+
+    sandbox.stub(window, 'EventSource', mockEventSource.new);
   });
 
   afterEach(function() {
@@ -36,15 +43,18 @@ describe('LDClient', function() {
     sandbox.restore();
   });
 
+  function getLastRequest() {
+    return requests[requests.length - 1];
+  }
+
   it('should exist', function() {
     expect(LDClient).to.exist;
   });
 
   describe('initialization', function() {
     it('should trigger the ready event', function(done) {
-      var user = {key: 'user'};
       var handleReady = sinon.spy();
-      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+      var client = LDClient.initialize(envName, user, {
         bootstrap: {}
       });
 
@@ -58,9 +68,8 @@ describe('LDClient', function() {
 
     describe('waitUntilReady', function() {
       it('should resolve waitUntilReady promise when ready', function(done) {
-        var user = {key: 'user'};
         var handleReady = sinon.spy();
-        var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        var client = LDClient.initialize(envName, user, {
           bootstrap: {}
         });
 
@@ -75,10 +84,9 @@ describe('LDClient', function() {
       });
 
       it('should resolve waitUntilReady promise after ready event was already emitted', function(done) {
-        var user = { key: 'user' };
         var handleInitialReady = sinon.spy();
         var handleReady = sinon.spy();
-        var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+        var client = LDClient.initialize(envName, user, {
           bootstrap: {}
         });
 
@@ -97,10 +105,9 @@ describe('LDClient', function() {
     });
 
     it('should emit an error when an invalid samplingInterval is specified', function(done) {
-      var user = { key: 'user' };
       var handleInitialReady = sinon.spy();
       var handleReady = sinon.spy();
-      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+      var client = LDClient.initialize(envName, user, {
         bootstrap: {},
         samplingInterval: "totally not a number"
       });
@@ -112,7 +119,6 @@ describe('LDClient', function() {
     });
 
     it('should emit an error when initialize is called without an environment key', function(done) {
-      var user = {key: 'user'};
       var client = LDClient.initialize('', user,  {
         bootstrap: {}
       });
@@ -123,8 +129,6 @@ describe('LDClient', function() {
     });
 
     it('should emit an error when an invalid environment key is specified', function() {
-      var user = {key: 'user'};
-
       var server = sinon.fakeServer.create();
       server.respondWith(function(req) {
         req.respond(404);
@@ -138,8 +142,7 @@ describe('LDClient', function() {
     })
 
     it('should not fetch flag settings since bootstrap is provided', function() {
-      var user = {key: 'user'};
-      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+      var client = LDClient.initialize(envName, user, {
         bootstrap: {}
       });
 
@@ -160,12 +163,11 @@ describe('LDClient', function() {
     });
 
     it('should clear cached settings if they are invalid JSON', function(done) {
-      var user = {key: 'user'};
       var client;
 
       window.localStorage.setItem(lsKey, 'foo{bar}');
 
-      client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+      client = LDClient.initialize(envName, user, {
         bootstrap: 'localstorage'
       });
 
@@ -177,12 +179,11 @@ describe('LDClient', function() {
 
     it('should not clear cached settings if they are valid JSON', function(done) {
       var json = '{"enable-thing": true}';
-      var user = {key: 'user'};
       var client;
 
       window.localStorage.setItem(lsKey, json);
 
-      client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+      client = LDClient.initialize(envName, user, {
         bootstrap: 'localstorage'
       });
 
@@ -198,8 +199,7 @@ describe('LDClient', function() {
 
       var warnSpy = sandbox.spy(console, 'warn');
 
-      var user = {key: 'user'};
-      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+      var client = LDClient.initialize(envName, user, {
         bootstrap: 'localstorage'
       });
 
@@ -220,8 +220,7 @@ describe('LDClient', function() {
       sandbox.restore(window.localStorage.__proto__, 'setItem')
       sandbox.stub(window.localStorage.__proto__, 'setItem').throws()
 
-      var user = {key: 'user'};
-      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+      var client = LDClient.initialize(envName, user, {
         bootstrap: 'localstorage'
       });
 
@@ -240,7 +239,6 @@ describe('LDClient', function() {
     });
 
     it('should not update cached settings if there was an error fetching flags', function(done) {
-      var user = {key: 'user'};
       var json = '{"enable-foo": true}';
 
       window.localStorage.setItem(lsKey, json);
@@ -250,7 +248,7 @@ describe('LDClient', function() {
         req.respond(503);
       });
 
-      client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+      client = LDClient.initialize(envName, user, {
         bootstrap: 'localstorage'
       });
 
@@ -264,9 +262,8 @@ describe('LDClient', function() {
     });
 
     it('should use hash as localStorage key when secure mode is enabled', function(done) {
-      var user = {key: 'user'};
       var lsKeyHash = 'ld:UNKNOWN_ENVIRONMENT_ID:totallyLegitHash';
-      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+      var client = LDClient.initialize(envName, user, {
         bootstrap: 'localstorage',
         hash: 'totallyLegitHash'
       });
@@ -278,7 +275,7 @@ describe('LDClient', function() {
       );
 
       client.on('ready', function() {
-        expect(window.localStorage.getItem(lsKeyHash)).to.be.equal('{"enable-foo":true}');
+        expect(JSON.parse(window.localStorage.getItem(lsKeyHash))).to.eql({"enable-foo":true});
         done();
       });
     });
@@ -287,9 +284,8 @@ describe('LDClient', function() {
       var json = '{"enable-foo":true}';
       var lsKey2 = 'ld:UNKNOWN_ENVIRONMENT_ID:' + base64Encode('{"key":"user2"}');
 
-      var user = {key: 'user'};
       var user2 = {key: 'user2'};
-      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+      var client = LDClient.initialize(envName, user, {
         bootstrap: 'localstorage'
       });
 
@@ -301,7 +297,7 @@ describe('LDClient', function() {
       client.on('ready', function() {
         client.identify(user2, null, function() {
           expect(window.localStorage.getItem(lsKey)).to.be.null;
-          expect(window.localStorage.getItem(lsKey2)).to.equal(json);
+          expect(JSON.parse(window.localStorage.getItem(lsKey2))).to.eql({"enable-foo":true});
           done();
         });
         server.respond();
@@ -310,8 +306,7 @@ describe('LDClient', function() {
     });
 
     it('should not warn when tracking a known custom goal event', function(done) {
-      var user = {key: 'user'};
-      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+      var client = LDClient.initialize(envName, user, {
         bootstrap: {} // so the client doesn't request settings
       });
 
@@ -331,8 +326,7 @@ describe('LDClient', function() {
     });
 
     it('should emit an error when tracking a non-string custom goal event', function(done) {
-      var user = {key: 'user'};
-      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+      var client = LDClient.initialize(envName, user, {
         bootstrap: {} // so the client doesn't request settings
       });
       var errorCount = 0;
@@ -349,8 +343,7 @@ describe('LDClient', function() {
     });
 
     it('should warn when tracking an unknown custom goal event', function(done) {
-      var user = {key: 'user'};
-      var client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user, {
+      var client = LDClient.initialize(envName, user, {
         bootstrap: {} // so the client doesn't request settings
       });
 
@@ -370,14 +363,12 @@ describe('LDClient', function() {
     });
 
     it('should emit an error event if there was an error fetching flags', function(done) {
-      var user = {key: "user"};
-
       var server = sinon.fakeServer.create();
       server.respondWith(function(req) {
         req.respond(503);
       });
 
-      client = LDClient.initialize('UNKNOWN_ENVIRONMENT_ID', user);
+      client = LDClient.initialize(envName, user);
 
       var handleError = sinon.spy();
       client.on('error', handleError);
@@ -387,6 +378,326 @@ describe('LDClient', function() {
         expect(handleError.called).to.be.true;
         done();
       }, 0);
+    });
+  });
+
+  describe('event listening', function() {
+    var streamUrl = 'https://clientstream.launchdarkly.com';
+
+    it('does not connect to the stream by default', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on('ready', function() {
+        expect(mockEventSource.connectedUrl).to.equal(null);
+        done();
+      });
+    });
+
+    it('connects to the stream when listening to global change events', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on('ready', function() {
+        client.on('change', function() { });
+
+        expect(mockEventSource.connectedUrl).to.equal(streamUrl + '/eval/' + envName + '/' + encodedUser);
+        done();
+      });
+    });
+
+    it('connects to the stream when listening to change event for one flag', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on('ready', function() {
+        client.on('change:flagkey', function() { });
+
+        expect(mockEventSource.connectedUrl).to.equal(streamUrl + '/eval/' +
+          envName + '/' + encodedUser);
+        done();
+      });
+    });
+
+    it('passes the secure mode hash in the stream URL if provided', function(done) {
+      var client = LDClient.initialize(envName, user, { hash: hash, bootstrap: {} });
+
+      client.on('ready', function() {
+        client.on('change:flagkey', function() { });
+
+        expect(mockEventSource.connectedUrl).to.equal(streamUrl + '/eval/' +
+            envName + '/' + encodedUser + '?h=' + hash);
+        done();
+      });
+    });
+
+    it('handles stream ping message by getting flags', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on('ready', function() {
+        client.on('change', function() { });
+
+        mockEventSource.listeners['ping']();
+
+        getLastRequest().respond( 200, { 'Content-Type': 'application/json' }, '{"enable-foo": true}');
+
+        expect(client.variation('enable-foo')).to.equal(true);
+        done();
+      });
+    });
+
+    it('handles stream put message by updating flags', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on('ready', function() {
+        client.on('change', function() { });
+
+        mockEventSource.listeners['put']({
+          data: '{"enable-foo":{"value":true,"version":1}}'
+        });
+
+        expect(client.variation('enable-foo')).to.equal(true);
+        done();
+      });
+    });
+
+    it('updates local storage for put message if using local storage', function(done) {
+      window.localStorage.setItem(lsKey, '{"enable-foo":false}');
+      var client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' });
+
+      client.on('ready', function() {
+        client.on('change', function() { });
+
+        mockEventSource.listeners['put']({
+          data: '{"enable-foo":{"value":true,"version":1}}'
+        });
+
+        expect(client.variation('enable-foo')).to.equal(true);
+        expect(window.localStorage.getItem(lsKey)).to.equal('{"enable-foo":true}');
+        done();
+      });
+    });
+
+    it('fires global change event when flags are updated from put event', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
+
+      client.on('ready', function() {
+        client.on('change', function(changes) {
+          expect(changes).to.deep.equal({
+            'enable-foo': { current: true, previous: false }
+          });
+
+          done();
+        });
+
+        mockEventSource.listeners['put']({
+          data: '{"enable-foo":{"value":true,"version":1}}'
+        });
+      });
+    });
+
+    it('fires individual change event when flags are updated from put event', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
+
+      client.on('ready', function() {
+        client.on('change:enable-foo', function(current, previous) {
+          expect(current).to.equal(true);
+          expect(previous).to.equal(false);
+
+          done();
+        });
+
+        mockEventSource.listeners['put']({
+          data: '{"enable-foo":{"value":true,"version":1}}'
+        });
+      });
+    });
+
+    it('handles patch message by updating flag', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
+
+      client.on('ready', function() {
+        client.on('change', function() { });
+
+        mockEventSource.listeners['patch']({
+          data: '{"key":"enable-foo","value":true,"version":1}'
+        });
+
+        expect(client.variation('enable-foo')).to.equal(true);
+        done();
+      });
+    });
+
+    it('updates local storage for patch message if using local storage', function(done) {
+      window.localStorage.setItem(lsKey, '{"enable-foo":false}');
+      var client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' });
+
+      client.on('ready', function() {
+        client.on('change', function() { });
+
+        mockEventSource.listeners['put']({
+          data: '{"enable-foo":{"value":true,"version":1}}'
+        });
+
+        expect(client.variation('enable-foo')).to.equal(true);
+        expect(window.localStorage.getItem(lsKey)).to.equal('{"enable-foo":true}');
+        done();
+      });
+    });
+
+    it('fires global change event when flag is updated from patch event', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
+
+      client.on('ready', function() {
+        client.on('change', function(changes) {
+          expect(changes).to.deep.equal({
+            'enable-foo': { current: true, previous: false }
+          });
+
+          done();
+        });
+
+        mockEventSource.listeners['patch']({
+          data: '{"key":"enable-foo","value":true,"version":1}'
+        });
+      });
+    });
+
+    it('fires individual change event when flag is updated from patch event', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
+
+      client.on('ready', function() {
+        client.on('change:enable-foo', function(current, previous) {
+          expect(current).to.equal(true);
+          expect(previous).to.equal(false);
+
+          done();
+        });
+
+        mockEventSource.listeners['patch']({
+          data: '{"key":"enable-foo","value":true,"version":1}'
+        });
+      });
+    });
+
+    it('fires global change event when flag is newly created from patch event', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: { } });
+
+      client.on('ready', function() {
+        client.on('change', function(changes) {
+          expect(changes).to.deep.equal({
+            'enable-foo': { current: true }
+          });
+
+          done();
+        });
+
+        mockEventSource.listeners['patch']({
+          data: '{"key":"enable-foo","value":true,"version":1}'
+        });
+      });
+    });
+
+    it('fires global change event when flag is newly created from patch event', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: { } });
+
+      client.on('ready', function() {
+        client.on('change:enable-foo', function(current, previous) {
+          expect(current).to.equal(true);
+          expect(previous).to.equal(undefined);
+
+          done();
+        });
+
+        mockEventSource.listeners['patch']({
+          data: '{"key":"enable-foo","value":true,"version":1}'
+        });
+      });
+    });
+
+    it('handles delete message by deleting flag', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
+
+      client.on('ready', function() {
+        client.on('change', function() { });
+
+        mockEventSource.listeners['delete']({
+          data: '{"key":"enable-foo","version":1}'
+        });
+
+        expect(client.variation('enable-foo')).to.equal(undefined);
+        done();
+      });
+    });
+
+    it('fires global change event when flag is deleted', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': true } });
+
+      client.on('ready', function() {
+        client.on('change', function(changes) {
+          expect(changes).to.deep.equal({
+            'enable-foo': { previous: true }
+          });
+
+          done();
+        });
+
+        mockEventSource.listeners['delete']({
+          data: '{"key":"enable-foo","version":1}'
+        });
+      });
+    });
+
+    it('fires individual change event when flag is deleted', function(done) {
+      var client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': true } });
+
+      client.on('ready', function() {
+        client.on('change:enable-foo', function(current, previous) {
+          expect(current).to.equal(undefined);
+          expect(previous).to.equal(true);
+
+          done();
+        });
+
+        mockEventSource.listeners['delete']({
+          data: '{"key":"enable-foo","version":1}'
+        });
+      });
+    });
+
+    it('updates local storage for delete message if using local storage', function(done) {
+      window.localStorage.setItem(lsKey, '{"enable-foo":false}');
+      var client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' });
+
+      client.on('ready', function() {
+        client.on('change', function() { });
+
+        mockEventSource.listeners['delete']({
+          data: '{"key":"enable-foo","version":1}'
+        });
+
+        expect(client.variation('enable-foo')).to.equal(undefined);
+        expect(window.localStorage.getItem(lsKey)).to.equal('{}');
+        done();
+      });
+    });
+
+    it('reconnects to stream if the user changes', function(done) {
+      var user2 = { key: 'user2' };
+      var encodedUser2 = 'eyJrZXkiOiJ1c2VyMiJ9';
+      var client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on('ready', function() {
+        client.on('change', function() { });
+
+        expect(mockEventSource.connectedUrl).to.equal(streamUrl + '/eval/' +
+          envName + '/' + encodedUser);
+        
+        client.identify(user2, null, function() {
+          expect(mockEventSource.connectedUrl).to.equal(streamUrl + '/eval/' +
+            envName + '/' + encodedUser2);
+          done();
+        });
+
+        getLastRequest().respond( 200, { 'Content-Type': 'application/json' }, '{"enable-foo": true}');
+      });
     });
   });
 });

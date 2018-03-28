@@ -3,6 +3,10 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. This 
 project adheres to [Semantic Versioning](http://semver.org).
 
+## [1.6.0] - 2018-03-28
+### Changed
+- Added support for a future update to LaunchDarkly that will deliver individual feature flag changes over the streaming connection as they occur, rather than requiring the client to re-request all flags for each change.
+
 ## [1.5.2] - 2018-03-28
 ### Added
 - The new flush method on the client object tells the client to deliver any stored analytics events as soon as possible, rather than waiting for the regularly scheduled event-flushing interval.
