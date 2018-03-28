@@ -3,6 +3,20 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. This 
 project adheres to [Semantic Versioning](http://semver.org).
 
+## [1.5.2] - 2018-03-28
+### Added
+- The new flush method on the client object tells the client to deliver any stored analytics events as soon as possible, rather than waiting for the regularly scheduled event-flushing interval.
+### Fixed
+- Fixed a bug that could prevent events from being generated for page view goals.
+
+## [1.5.1] - 2018-03-07
+### Fixed
+- Removed usage of the `const` keyword, to maintain IE10 compatibility. (Thanks, [turnerniles](https://github.com/launchdarkly/js-client/pull/68)!)
+
+## [1.5.0] - 2018-03-05
+### Added
+- The `options` object now supports a `samplingInterval` property. If greater than zero, this causes a fraction of analytics events to be sent to LaunchDarkly: one per that number of events (pseudo-randomly). For instance, setting it to 5 would cause 20% of events to be sent on average.
+
 ## [1.4.0] - 2018-02-07
 ### Added
 - The SDK now supports multiple environments. Calling `initialize` returns a new client each time.

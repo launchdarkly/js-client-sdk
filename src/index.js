@@ -74,6 +74,7 @@ function initialize(env, user, options) {
       key: goal.key,
       data: null,
       url: window.location.href,
+      user: ident.getUser(),
       creationDate: (new Date()).getTime()
     };
 
@@ -101,6 +102,12 @@ function initialize(env, user, options) {
         }
       });
     }).bind(this)), onDone);
+  }
+
+  function flush(onDone) {
+    return utils.wrapPromiseCallback(new Promise(function(resolve) {
+      return sendEvents ? resolve(events.flush(ident.getUser())) : resolve();
+    }.bind(this), onDone));
   }
 
   function variation(key, defaultValue) {
@@ -406,6 +413,25 @@ function initialize(env, user, options) {
     });
   }
 
+  function refreshGoalTracker() {
+    if (goalTracker) {
+      goalTracker.dispose();
+    }
+    if (goals && goals.length) {
+      goalTracker = GoalTracker(goals, sendGoalEvent);
+    }
+  }
+
+  function attachHistoryListeners() {
+    if (!!(window.history && history.pushState)) {
+      window.removeEventListener('popstate',refreshGoalTracker);
+      window.addEventListener('popstate', refreshGoalTracker);
+    } else {
+      window.removeEventListener('hashchange', refreshGoalTracker);
+      window.addEventListener('hashchange', refreshGoalTracker);
+    }
+  }
+
   requestor.fetchGoals(function(err, g) {
     if (err) {
       emitter.maybeReportError(new errors.LDUnexpectedResponseError('Error fetching goals: ' + err.message ? err.message : err));
@@ -413,6 +439,7 @@ function initialize(env, user, options) {
     if (g && g.length > 0) {
       goals = g;
       goalTracker = GoalTracker(goals, sendGoalEvent);
+      attachHistoryListeners();
     }
   });
 
@@ -435,23 +462,6 @@ function initialize(env, user, options) {
     events.flush(ident.getUser(), true);
   });
 
-  function refreshGoalTracker() {
-    if (goalTracker) {
-      goalTracker.dispose();
-    }
-    if (goals && goals.length) {
-      goalTracker = GoalTracker(goals, sendGoalEvent);
-    }
-  }
-
-  if (goals && goals.length > 0) {
-    if (!!(window.history && history.pushState)) {
-      window.addEventListener('popstate', refreshGoalTracker);
-    } else {
-      window.addEventListener('hashchange', refreshGoalTracker);
-    }
-  }
-
   window.addEventListener('message', handleMessage);
 
   var readyPromise = new Promise(function(resolve) {
@@ -470,6 +480,7 @@ function initialize(env, user, options) {
     track: track,
     on: on,
     off: off,
+    flush: flush,
     allFlags: allFlags
   };
 
