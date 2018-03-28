@@ -28,6 +28,7 @@ function initialize(env, user, options) {
   var useLocalStorage;
   var localStorageKey;
   var goals;
+  var subscribedToChangeEvents;
 
   var readyEvent = 'ready';
   var changeEvent = 'change';
@@ -90,12 +91,15 @@ function initialize(env, user, options) {
       requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
         if (err) {
           emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
-          return reject(err)
+          return reject(err);
         }
         if (settings) {
           updateSettings(settings);
         }
         resolve(settings);
+        if (subscribedToChangeEvents) {
+          connectStream();
+        }
       });
     }).bind(this)), onDone);
   }
@@ -109,8 +113,8 @@ function initialize(env, user, options) {
   function variation(key, defaultValue) {
     var value;
 
-    if (flags && flags.hasOwnProperty(key)) {
-      value = flags[key] === null ? defaultValue : flags[key];
+    if (flags && flags.hasOwnProperty(key) && !flags[key].deleted) {
+      value = flags[key].value === null ? defaultValue : flags[key].value;
     } else {
       value = defaultValue;
     }
@@ -189,31 +193,83 @@ function initialize(env, user, options) {
   }
 
   function connectStream() {
-    stream.connect(function() {
-      requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
-        if (err) {
-          emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+    if (!ident.getUser()) {
+      return;
+    }
+    stream.disconnect();
+    stream.connect(ident.getUser(), {
+      'ping': function() {
+        requestor.fetchFlagSettings(ident.getUser(), hash, function(err, settings) {
+          if (err) {
+            emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+          }
+          updateSettings(settings);
+        });
+      },
+      'put': function(e) {
+        var data = JSON.parse(e.data);
+        updateSettings(data);
+      },
+      'patch': function(e) {
+        var data = JSON.parse(e.data);
+        if (!flags[data.key] || flags[data.key].version < data.version) {
+          var oldFlag, mods;
+          oldFlag = flags[data.key];
+          flags[data.key] = { version: data.version, value: data.value };
+          mods = {};
+          if (oldFlag) {
+            mods[data.key] = { previous: oldFlag.value, current: data.value };
+          } else {
+            mods[data.key] = { current: data.value };
+          }
+          postProcessSettingsUpdate(mods);
         }
-        updateSettings(settings);
-      });
+      },
+      'delete': function(e) {
+        var data = JSON.parse(e.data);
+        if (!flags[data.key] || flags[data.key].version < data.version) {
+          mods = {};
+          if (flags[data.key] && !flags[data.key].deleted) {
+            mods[data.key] = { previous: flags[data.key].value };
+          }
+          flags[data.key] = { version: data.version, deleted: true };
+          postProcessSettingsUpdate(mods);
+        }
+      }
     });
   }
 
-  function updateSettings(settings) {
-    var changes;
-    var keys;
+  function updateSettings(newFlags) {
+    var changes = {};
 
-    if (!settings) { return; }
+    if (!newFlags) { return; }
 
-    changes = utils.modifications(flags, settings);
-    keys = Object.keys(changes);
+    for (var key in flags) {
+      if (flags.hasOwnProperty(key)) {
+        if (newFlags[key] && newFlags[key].value !== flags[key].value) {
+          changes[key] = { previous: flags[key].value, current: newFlags[key].value };
+        } else if (!newFlags[key] || newFlags[key].deleted) {
+          changes[key] = { previous: flags[key].value };
+        }
+      }
+    }
+    for (var key in newFlags) {
+      if (newFlags.hasOwnProperty(key) && (!flags[key] || flags[key].deleted)) {
+        changes[key] = { current: newFlags[key].value };
+      }
+    }
 
-    flags = settings;
+    flags = newFlags;
+    postProcessSettingsUpdate(changes);
+  }
+
+  function postProcessSettingsUpdate(changes) {
+    var keys = Object.keys(changes);
 
     if (useLocalStorage) {
       store.clear(localStorageKey);
       localStorageKey = lsKey(environment, ident.getUser());
-      store.set(localStorageKey, JSON.stringify(flags));
+      store.set(localStorageKey, JSON.stringify(utils.transformValuesToUnversionedValues(flags)));
     }
 
     if (keys.length > 0) {
@@ -231,6 +287,7 @@ function initialize(env, user, options) {
 
   function on(event, handler, context) {
     if (event.substr(0, changeEvent.length) === changeEvent) {
+      subscribedToChangeEvents = true;
       if (!stream.isConnected()) {
         connectStream();
       }
@@ -240,7 +297,13 @@ function initialize(env, user, options) {
     }
   }
 
-  function off() {
+  function off(event) {
+    if (event === changeEvent) {
+      if (subscribedToChangeEvents = true) {
+        subscribedToChangeEvents = false;
+        stream.disconnect();
+      }
+    }
     emitter.off.apply(emitter, Array.prototype.slice.call(arguments));
   }
 
@@ -267,12 +330,12 @@ function initialize(env, user, options) {
 
   options = options || {};
   environment = env;
-  flags = typeof(options.bootstrap) === 'object' ? options.bootstrap : {};
+  flags = typeof(options.bootstrap) === 'object' ? utils.transformValuesToVersionedValues(options.bootstrap) : {};
   hash = options.hash;
   baseUrl = options.baseUrl || 'https://app.launchdarkly.com';
   eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
   streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
-  stream = Stream(streamUrl, environment);
+  stream = Stream(streamUrl, environment, hash, options.useReport);
   events = EventProcessor(eventsUrl + '/a/' + environment + '.gif', EventSerializer(options));
   sendEvents = (typeof options.sendEvents === 'undefined') ? true : config.sendEvents;
   samplingInterval = parseInt(options.samplingInterval) || 0;
@@ -313,7 +376,7 @@ function initialize(env, user, options) {
 
     // check if localStorage data is corrupted, if so clear it
     try {
-      flags = JSON.parse(store.get(localStorageKey));
+      flags = utils.transformValuesToVersionedValues(JSON.parse(store.get(localStorageKey)));
     } catch (error) {
       store.clear(localStorageKey);
     }
@@ -324,7 +387,7 @@ function initialize(env, user, options) {
           emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
         }
         flags = settings;
-        settings && store.set(localStorageKey, JSON.stringify(flags));
+        settings && store.set(localStorageKey, JSON.stringify(utils.transformValuesToUnversionedValues(flags)));
         emitter.emit(readyEvent);
       });
     } else {
@@ -336,7 +399,7 @@ function initialize(env, user, options) {
         if (err) {
           emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
         }
-        settings && store.set(localStorageKey, JSON.stringify(settings));
+        settings && store.set(localStorageKey, JSON.stringify(utils.transformValuesToUnversionedValues(settings)));
       });
     }
   }
