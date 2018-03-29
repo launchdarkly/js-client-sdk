@@ -6,13 +6,13 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: mkdir ./junit
+      - run: mkdir -p reports/junit
       - run:
           command: npm test
           environment:
-            JUNIT_REPORT_PATH: "./junit/"
-            JUNIT_REPORT_NAME: "test-results.xml"
+            JUNIT_REPORT_PATH: "./reports/junit/"
+            JUNIT_REPORT_NAME: "js-test-results.xml"
       - store_test_results:
-          path: ~/junit
+          path: reports/junit/
       - store_artifacts:
-          path: ~/junit
+          path: reports/junit/
