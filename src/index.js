@@ -29,11 +29,13 @@ function initialize(env, user, options) {
   var localStorageKey;
   var goals;
   var subscribedToChangeEvents;
+  var locationWatcher;
 
   var readyEvent = 'ready';
   var changeEvent = 'change';
 
   var flushInterval = 2000;
+  var locationWatcherInterval = 300;
 
   var seenRequests = {};
 
@@ -422,13 +424,32 @@ function initialize(env, user, options) {
     }
   }
 
-  function attachHistoryListeners() {
+  function watchLocation(interval, callback) {
+    var previousUrl = location.href;
+    var currentUrl;
+
+    function checkUrl() {
+      currentUrl = location.href;
+
+      if (currentUrl !== previousUrl) {
+        previousUrl = currentUrl;
+        callback();
+      }
+    }
+
+    function poll(fn, interval) {
+      fn();
+      setTimeout(function() {
+        poll(fn, interval);
+      }, interval);
+    }
+
+    poll(checkUrl, interval);
+
     if (!!(window.history && history.pushState)) {
-      window.removeEventListener('popstate',refreshGoalTracker);
-      window.addEventListener('popstate', refreshGoalTracker);
+      window.addEventListener('popstate', checkUrl);
     } else {
-      window.removeEventListener('hashchange', refreshGoalTracker);
-      window.addEventListener('hashchange', refreshGoalTracker);
+      window.addEventListener('hashchange', checkUrl);
     }
   }
 
@@ -439,7 +460,7 @@ function initialize(env, user, options) {
     if (g && g.length > 0) {
       goals = g;
       goalTracker = GoalTracker(goals, sendGoalEvent);
-      attachHistoryListeners();
+      watchLocation(locationWatcherInterval, refreshGoalTracker);
     }
   });
 

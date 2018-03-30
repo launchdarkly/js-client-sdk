@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:6-browsers
+    steps:
+      - checkout
+      - run: npm install
+      - run: mkdir -p reports/junit
+      - run:
+          command: npm test
+          environment:
+            JUNIT_REPORT_PATH: "./reports/junit/"
+            JUNIT_REPORT_NAME: "js-test-results.xml"
+      - store_test_results:
+          path: reports/junit/
+      - store_artifacts:
+          path: reports/junit/
