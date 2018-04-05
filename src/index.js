@@ -189,6 +189,7 @@ function initialize(env, user, options) {
       kind: 'custom',
       key: key,
       data: data,
+      user: ident.getUser(),
       url: window.location.href,
       creationDate: (new Date()).getTime()
     });
