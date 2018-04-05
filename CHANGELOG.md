@@ -3,6 +3,11 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. This 
 project adheres to [Semantic Versioning](http://semver.org).
 
+## [1.6.2] - 2018-04-05
+### Fixed
+- `LDClient.track` properly sets the user for custom events.
+
+
 ## [1.6.1] - 2018-03-30
 ### Fixed
 - The SDK now polls the URL for changes if (and only if) there are page view goals,to ensure it is accurately reporting page views.
