@@ -1,3 +1,5 @@
+require('es6-promise/auto');
+
 var EventProcessor = require('./EventProcessor');
 var EventEmitter = require('./EventEmitter');
 var EventSerializer = require('./EventSerializer');
