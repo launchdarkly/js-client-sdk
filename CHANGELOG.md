@@ -3,6 +3,25 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. This 
 project adheres to [Semantic Versioning](http://semver.org).
 
+## [1.6.2] - 2018-04-05
+### Fixed
+- `LDClient.track` properly sets the user for custom events.
+
+
+## [1.6.1] - 2018-03-30
+### Fixed
+- The SDK now polls the URL for changes if (and only if) there are page view goals,to ensure it is accurately reporting page views.
+
+## [1.6.0] - 2018-03-28
+### Changed
+- Added support for a future update to LaunchDarkly that will deliver individual feature flag changes over the streaming connection as they occur, rather than requiring the client to re-request all flags for each change.
+
+## [1.5.2] - 2018-03-28
+### Added
+- The new flush method on the client object tells the client to deliver any stored analytics events as soon as possible, rather than waiting for the regularly scheduled event-flushing interval.
+### Fixed
+- Fixed a bug that could prevent events from being generated for page view goals.
+
 ## [1.5.1] - 2018-03-07
 ### Fixed
 - Removed usage of the `const` keyword, to maintain IE10 compatibility. (Thanks, [turnerniles](https://github.com/launchdarkly/js-client/pull/68)!)

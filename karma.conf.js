@@ -10,8 +10,14 @@ module.exports = function(config) {
       'tests.webpack.js': [ 'webpack', 'sourcemap' ]
     },
     
-    reporters: ['mocha'],
+    reporters: ['mocha', 'junit'],
     
+    junitReporter: {
+      outputDir: process.env.JUNIT_REPORT_PATH || '.',
+      outputFile: process.env.JUNIT_REPORT_NAME || 'junit.xml',
+      useBrowserName: false
+    },
+
     frameworks: ['mocha', 'chai', 'sinon'],
     
     browsers: ['Chrome'],
