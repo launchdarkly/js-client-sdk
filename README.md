@@ -21,6 +21,28 @@ The LaunchDarkly client-side JavaScript SDK supports the following browsers:
 
 \* These browsers do not support streaming new flags to connected clients, even when `client.on('change')` is called.
 
+### Promies polyfill
+Our SDK provides promise interfaces and uses promises internally. Many modern web browsers support promises, but to ensure the SDK works on older browsers you must include a polyfil such as [es6-promise](https://github.com/stefanpenner/es6-promise).
+
+You can find a graph showing browser promises support [here](https://caniuse.com/#feat=promises).
+
+You can load the polyfll via a script tag in the `<head>`:
+
+    <script src="/public/promise.js"></script>
+
+or load es6-promise from via CDN:
+
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script> 
+
+You can also install the es6-promise polyfill using a package manager:
+
+    yarn add es6-promise
+
+or
+
+    npm install es6-promise
+
 ### EventSource polyfill
 
 If you need streaming support, and you wish to support browsers that do not support `EventSource` natively, you can install a polyfill, such
