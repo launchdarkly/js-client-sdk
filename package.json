@@ -49,6 +49,7 @@
   },
   "dependencies": {
     "Base64": "1.0.0",
+    "es6-promise": "4.2.4",
     "escape-string-regexp": "1.0.5"
   },
   "repository": {
