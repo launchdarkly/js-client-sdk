@@ -83,7 +83,7 @@ export default function EventProcessor(options, eventsUrl) {
       queue.push({
         kind: 'index',
         creationDate: event.creationDate,
-        user: userFilter.filter_user(event.user),
+        user: userFilter.filterUser(event.user),
       });
     }
     queue.push(makeOutputEvent(event));
