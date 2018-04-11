@@ -1,3 +1,4 @@
+import LRU from 'lru';
 import EventSummarizer from './EventSummarizer';
 import UserFilter from './UserFilter';
 import * as utils from './utils';
@@ -43,23 +44,53 @@ function sendEvents(eventsUrl, events, sync) {
 export default function EventProcessor(options, eventsUrl) {
   const processor = {};
   const summarizer = EventSummarizer();
+  const userKeysCache = LRU(options.user_keys_capacity || 1000);
   const userFilter = UserFilter(options);
+  const inlineUsers = !!options.inline_users_in_events;
   let queue = [];
   let initialFlush = true;
 
-  function serializeEvents(events) {
-    return events.map(e => (e.user ? Object.assign({}, e, { user: userFilter.filterUser(e.user) }) : e));
+  function makeOutputEvent(e) {
+    if (!e.user) {
+      return e;
+    }
+    if (inlineUsers) {
+      return Object.assign({}, e, { user: userFilter.filterUser(e.user) });
+    } else {
+      const ret = Object.assign({}, e, { userKey: e.user.key });
+      delete ret['user'];
+      return ret;
+    }
   }
 
   processor.enqueue = function(event) {
     // Add event to the summary counters if appropriate
     summarizer.summarizeEvent(event);
-    queue.push(event);
+
+    // For each user we haven't seen before, we add an index event - unless this is already
+    // an identify event for that user.
+    let addIndexEvent = false;
+    if (!inlineUsers) {
+      if (event.user && !userKeysCache.get(event.user.key)) {
+        userKeysCache.set(event.user.key, true);
+        if (event.kind !== 'identify') {
+          addIndexEvent = true;
+        }
+      }
+    }
+
+    if (addIndexEvent) {
+      queue.push({
+        kind: 'index',
+        creationDate: event.creationDate,
+        user: userFilter.filter_user(event.user),
+      });
+    }
+    queue.push(makeOutputEvent(event));
   };
 
   processor.flush = function(user, sync) {
     const finalSync = sync === undefined ? false : sync;
-    const serializedQueue = serializeEvents(queue);
     const summary = summarizer.getSummary();
     summarizer.clearSummary();
 
@@ -78,14 +109,14 @@ export default function EventProcessor(options, eventsUrl) {
 
     if (summary) {
       summary.kind = 'summary';
-      serializedQueue.push(summary);
+      queue.push(summary);
     }
 
-    if (serializedQueue.length === 0) {
+    if (queue.length === 0) {
       return Promise.resolve();
     }
 
-    const chunks = utils.chunkUserEventsForUrl(MAX_URL_LENGTH - eventsUrl.length, serializedQueue);
+    const chunks = utils.chunkUserEventsForUrl(MAX_URL_LENGTH - eventsUrl.length, queue);
 
     const results = [];
     for (let i = 0; i < chunks.length; i++) {
