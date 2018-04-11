@@ -1,3 +1,4 @@
+import EventSummarizer from './EventSummarizer';
 import UserFilter from './UserFilter';
 import * as utils from './utils';
 
@@ -41,6 +42,7 @@ function sendEvents(eventsUrl, events, sync) {
 
 export default function EventProcessor(options, eventsUrl) {
   const processor = {};
+  const summarizer = EventSummarizer();
   const userFilter = UserFilter(options);
   let queue = [];
   let initialFlush = true;
@@ -50,12 +52,16 @@ export default function EventProcessor(options, eventsUrl) {
   }
 
   processor.enqueue = function(event) {
+    // Add event to the summary counters if appropriate
+    summarizer.summarizeEvent(event);
     queue.push(event);
   };
 
   processor.flush = function(user, sync) {
     const finalSync = sync === undefined ? false : sync;
     const serializedQueue = serializeEvents(queue);
+    const summary = summarizer.getSummary();
+    summarizer.clearSummary();
 
     if (!user) {
       if (initialFlush) {
@@ -69,6 +75,11 @@ export default function EventProcessor(options, eventsUrl) {
     }
 
     initialFlush = false;
+
+    if (summary) {
+      summary.kind = 'summary';
+      serializedQueue.push(summary);
+    }
 
     if (serializedQueue.length === 0) {
       return Promise.resolve();
