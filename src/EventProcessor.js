@@ -54,7 +54,7 @@ export default function EventProcessor(options, eventsUrl) {
     if (!e.user) {
       return e;
     }
-    if (inlineUsers) {
+    if (inlineUsers || e.kind === 'identify') { // identify events always have an inline user
       return Object.assign({}, e, { user: userFilter.filterUser(e.user) });
     } else {
       const ret = Object.assign({}, e, { userKey: e.user.key });
