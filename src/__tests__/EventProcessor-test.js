@@ -4,37 +4,78 @@ import EventProcessor from '../EventProcessor';
 
 describe('EventProcessor', () => {
   let sandbox;
-  let xhr;
-  let requests = [];
   let warnSpy;
+  const mockEventSender = {};
+  const user = { key: 'userKey', name: 'Red' };
+  const filteredUser = { key: 'userKey', privateAttrs: [ 'name' ] };
+  const eventsUrl = '/fake-url';
+  
+  mockEventSender.sendEvents = function(events, sync) {
+    mockEventSender.calls.push({
+      events: events,
+      sync: !!sync,
+    });
+    return Promise.resolve();
+  };
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    requests = [];
-    xhr = sinon.useFakeXMLHttpRequest();
-    xhr.onCreate = function(xhr) {
-      requests.push(xhr);
-    };
     warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    mockEventSender.calls = [];
   });
 
   afterEach(() => {
     sandbox.restore();
-    xhr.restore();
     warnSpy.mockRestore();
   });
 
+  
+  function checkIndexEvent(e, source, user) {
+    expect(e.kind).toEqual('index');
+    expect(e.creationDate).toEqual(source.creationDate);
+    expect(e.user).toEqual(user);
+  }
+
+  function checkFeatureEvent(e, source, debug, inlineUser) {
+    expect(e.kind).toEqual(debug ? 'debug' : 'feature');
+    expect(e.creationDate).toEqual(source.creationDate);
+    expect(e.key).toEqual(source.key);
+    expect(e.version).toEqual(source.version);
+    expect(e.value).toEqual(source.value);
+    expect(e.default).toEqual(source.default);
+    if (inlineUser) {
+      expect(e.user).toEqual(inlineUser);
+    } else {
+      expect(e.userKey).toEqual(source.user.key);
+    }
+  }
+
+  function checkCustomEvent(e, source, inlineUser) {
+    expect(e.kind).toEqual('custom');
+    expect(e.creationDate).toEqual(source.creationDate);
+    expect(e.key).toEqual(source.key);
+    expect(e.data).toEqual(source.data);
+    if (inlineUser) {
+      expect(e.user).toEqual(inlineUser);
+    } else {
+      expect(e.userKey).toEqual(source.user.key);
+    }
+  }
+
+  function checkSummaryEvent(e) {
+    expect(e.kind).toEqual('summary');
+  }
+
   it('should warn about missing user on initial flush', () => {
     const warnSpy = sandbox.spy(console, 'warn');
-    const processor = EventProcessor({}, '/fake-url');
+    const processor = EventProcessor({}, eventsUrl, mockEventSender);
     processor.flush(null);
     warnSpy.restore();
     expect(warnSpy.called).toEqual(true);
   });
 
   it('should flush asynchronously', () => {
-    const processor = EventProcessor({}, '/fake-url');
-    const user = { key: 'foo' };
+    const processor = EventProcessor({}, eventsUrl, mockEventSender);
     const event = { kind: 'identify', key: user.key };
 
     processor.enqueue(event);
@@ -42,14 +83,13 @@ describe('EventProcessor', () => {
     processor.enqueue(event);
     processor.enqueue(event);
     processor.flush(user);
-    requests[0].respond();
 
-    expect(requests.length).toEqual(1);
-    expect(requests[0].async).toEqual(true);
+    expect(mockEventSender.calls.length).toEqual(1);
+    expect(mockEventSender.calls[0].sync).toEqual(false);
   });
 
   it('should flush synchronously', () => {
-    const processor = EventProcessor({}, '/fake-url');
+    const processor = EventProcessor({}, eventsUrl, mockEventSender);
     const user = { key: 'foo' };
     const event = { kind: 'identify', key: user.key };
 
@@ -58,9 +98,218 @@ describe('EventProcessor', () => {
     processor.enqueue(event);
     processor.enqueue(event);
     processor.flush(user, true);
-    requests[0].respond();
 
-    expect(requests.length).toEqual(1);
-    expect(requests[0].async).toEqual(false);
+    expect(mockEventSender.calls.length).toEqual(1);
+    expect(mockEventSender.calls[0].sync).toEqual(true);
+  });
+
+  it('should enqueue identify event', done => {
+    const ep = EventProcessor({}, eventsUrl, mockEventSender);
+    const event = { kind: 'identify', creationDate: 1000, key: user.key, user: user };
+    ep.enqueue(event);
+    ep.flush(user, false).then(() => {
+      expect(mockEventSender.calls.length).toEqual(1);
+      expect(mockEventSender.calls[0].events).toEqual([event]);
+      done();
+    });
+  });
+
+  it('filters user in identify event', done => {
+    const config = { all_attributes_private: true };
+    const ep = EventProcessor(config, eventsUrl, mockEventSender);
+    const event = { kind: 'identify', creationDate: 1000, key: user.key, user: user };
+    ep.enqueue(event);
+    ep.flush(user, false).then(() => {
+      expect(mockEventSender.calls.length).toEqual(1);
+      expect(mockEventSender.calls[0].events).toEqual([{
+        kind: 'identify',
+        creationDate: event.creationDate,
+        key: user.key,
+        user: filteredUser,
+      }]);
+      done();
+    });
+  });
+
+  it('queues individual feature event with index event', done => {
+    const ep = EventProcessor({}, eventsUrl, mockEventSender);
+    const event = {
+      kind: 'feature',
+      creationDate: 1000,
+      key: 'flagkey',
+      user: user,
+    };
+    ep.enqueue(event);
+    ep.flush(user, false).then(() => {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(3);
+      checkIndexEvent(output[0], event, user);
+      checkFeatureEvent(output[1], event, false);
+      checkSummaryEvent(output[2]);
+      done();
+    });
+  });
+
+  it('filters user in index event', done => {
+    const config = { all_attributes_private: true };
+    const ep = EventProcessor(config, eventsUrl, mockEventSender);
+    const event = {
+      kind: 'feature',
+      creationDate: 1000,
+      key: 'flagkey',
+      user: user,
+    };
+    ep.enqueue(event);
+    ep.flush(user, false).then(() => {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(3);
+      checkIndexEvent(output[0], event, filteredUser);
+      checkFeatureEvent(output[1], event, false);
+      checkSummaryEvent(output[2]);
+      done();
+    });
+  });
+
+  it('can include inline user in feature event', done => {
+    const config = { inline_users_in_events: true };
+    const ep = EventProcessor(config, eventsUrl, mockEventSender);
+    const event = {
+      kind: 'feature',
+      creationDate: 1000,
+      key: 'flagkey',
+      user: user,
+    };
+    ep.enqueue(event);
+    ep.flush(user, false).then(() => {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(2);
+      checkFeatureEvent(output[0], event, false, user);
+      checkSummaryEvent(output[1]);
+      done();
+    });
+  });
+
+  it('filters user in feature event', done => {
+    const config = { all_attributes_private: true, inline_users_in_events: true };
+    const ep = EventProcessor(config, eventsUrl, mockEventSender);
+    const event = {
+      kind: 'feature',
+      creationDate: 1000,
+      key: 'flagkey',
+      user: user,
+    };
+    ep.enqueue(event);
+    ep.flush(user, false).then(() => {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(2);
+      checkFeatureEvent(output[0], event, false, filteredUser);
+      checkSummaryEvent(output[1]);
+      done();
+    });
+  });
+
+  it('generates only one index event from two feature events for same user', done => {
+    const ep = EventProcessor({}, eventsUrl, mockEventSender);
+    const e1 = { kind: 'feature', creationDate: 1000, user: user, key: 'flagkey1',
+      version: 11, value: 'value' };
+    const e2 = { kind: 'feature', creationDate: 1000, user: user, key: 'flagkey2',
+      version: 11, value: 'value' };
+    ep.enqueue(e1);
+    ep.enqueue(e2);
+    ep.flush(user, false).then(() => {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(4);
+      checkIndexEvent(output[0], e1, user);
+      checkFeatureEvent(output[1], e1, false);
+      checkFeatureEvent(output[2], e2, false);
+      checkSummaryEvent(output[3]);
+      done();
+    });
+  });
+
+  it('summarizes events', done => {
+    const ep = EventProcessor({}, eventsUrl, mockEventSender);
+    const e1 = { kind: 'feature', creationDate: 1000, user: user, key: 'flagkey1',
+      version: 11, variation: 1, value: 'value1', default: 'default1', trackEvents: false };
+    const e2 = { kind: 'feature', creationDate: 2000, user: user, key: 'flagkey2',
+      version: 22, variation: 1, value: 'value2', default: 'default2', trackEvents: false };
+    ep.enqueue(e1);
+    ep.enqueue(e2);
+    ep.flush(user, false).then(() => {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(4);
+      const se = output[3];
+      checkSummaryEvent(se);
+      expect(se.startDate).toEqual(1000);
+      expect(se.endDate).toEqual(2000);
+      expect(se.features).toEqual({
+        flagkey1: {
+          default: 'default1',
+          counters: [ { version: 11, value: 'value1', count: 1 } ]
+        },
+        flagkey2: {
+          default: 'default2',
+          counters: [ { version: 22, value: 'value2', count: 1 } ]
+        }
+      });
+      done();
+    });
+  });
+
+  it('queues custom event with user', done => {
+    const ep = EventProcessor({}, eventsUrl, mockEventSender);
+    const e = { kind: 'custom', creationDate: 1000, user: user, key: 'eventkey',
+      data: { thing: 'stuff' } };
+    ep.enqueue(e);
+    ep.flush(user, false).then(() => {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(2);
+      checkIndexEvent(output[0], e, user);
+      checkCustomEvent(output[1], e);
+      done();
+    });
+  });
+
+  it('can include inline user in custom event', done => {
+    const config = { inline_users_in_events: true };
+    const ep = EventProcessor(config, eventsUrl, mockEventSender);
+    const e = { kind: 'custom', creationDate: 1000, user: user, key: 'eventkey',
+      data: { thing: 'stuff' } };
+    ep.enqueue(e);
+    ep.flush(user, false).then(() => {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(1);
+      checkCustomEvent(output[0], e, user);
+      done();
+    });
+  });
+
+  it('filters user in custom event', done => {
+    const config = { all_attributes_private: true, inline_users_in_events: true };
+    const ep = EventProcessor(config, eventsUrl, mockEventSender);
+    const e = { kind: 'custom', creationDate: 1000, user: user, key: 'eventkey',
+      data: { thing: 'stuff' } };
+    ep.enqueue(e);
+    ep.flush(user, false).then(() => {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(1);
+      checkCustomEvent(output[0], e, filteredUser);
+      done();
+    });
+  });
+
+  it('sends nothing if there are no events to flush', () => {
+    const processor = EventProcessor({}, '/fake-url', mockEventSender);
+    processor.flush(user, false);
+    expect(mockEventSender.calls.length).toEqual(0);
   });
 });

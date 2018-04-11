@@ -1,48 +1,11 @@
 import LRU from 'lru';
+import EventSender from './EventSender';
 import EventSummarizer from './EventSummarizer';
 import UserFilter from './UserFilter';
-import * as utils from './utils';
 
-const MAX_URL_LENGTH = 2000;
-const hasCors = 'withCredentials' in new XMLHttpRequest();
-
-function sendEvents(eventsUrl, events, sync) {
-  const src = eventsUrl + '?d=' + utils.base64URLEncode(JSON.stringify(events));
-
-  const send = onDone => {
-    // Detect browser support for CORS
-    if (hasCors) {
-      /* supports cross-domain requests */
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', src, !sync);
-
-      if (!sync) {
-        xhr.addEventListener('load', onDone);
-      }
-
-      xhr.send();
-    } else {
-      const img = new Image();
-
-      if (!sync) {
-        img.addEventListener('load', onDone);
-      }
-
-      img.src = src;
-    }
-  };
-
-  if (sync) {
-    send();
-  } else {
-    return new Promise(resolve => {
-      send(resolve);
-    });
-  }
-}
-
-export default function EventProcessor(options, eventsUrl) {
+export default function EventProcessor(options, eventsUrl, sender) {
   const processor = {};
+  const eventSender = sender || EventSender(eventsUrl);
   const summarizer = EventSummarizer();
   const userKeysCache = LRU(options.user_keys_capacity || 1000);
   const userFilter = UserFilter(options);
@@ -83,14 +46,14 @@ export default function EventProcessor(options, eventsUrl) {
       queue.push({
         kind: 'index',
         creationDate: event.creationDate,
-        user: userFilter.filter_user(event.user),
+        user: userFilter.filterUser(event.user),
       });
     }
     queue.push(makeOutputEvent(event));
   };
 
   processor.flush = function(user, sync) {
-    const finalSync = sync === undefined ? false : sync;
+    const eventsToSend = queue;
     const summary = summarizer.getSummary();
     summarizer.clearSummary();
 
@@ -109,23 +72,14 @@ export default function EventProcessor(options, eventsUrl) {
 
     if (summary) {
       summary.kind = 'summary';
-      queue.push(summary);
+      eventsToSend.push(summary);
     }
 
-    if (queue.length === 0) {
+    if (eventsToSend.length === 0) {
       return Promise.resolve();
     }
-
-    const chunks = utils.chunkUserEventsForUrl(MAX_URL_LENGTH - eventsUrl.length, queue);
-
-    const results = [];
-    for (let i = 0; i < chunks.length; i++) {
-      results.push(sendEvents(eventsUrl, chunks[i], finalSync));
-    }
-
     queue = [];
-
-    return sync ? Promise.resolve() : Promise.all(results);
+    return eventSender.sendEvents(eventsToSend, sync);
   };
 
   return processor;
