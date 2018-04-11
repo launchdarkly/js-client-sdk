@@ -75,7 +75,7 @@
         clientProd.identify({key: key}, null, function() {
           switched = !switched;
           console.log('switched to', key);
-          render('another-client-side-flag', false);
+          render('prod', 'another-client-side-flag', false);
         });
       });
       document.querySelector('.prod-change-hash').addEventListener('click', function(event) {
@@ -106,7 +106,7 @@
         clientTest.identify({key: key}, null, function() {
           switched = !switched;
           console.log('switched to', key);
-          render('another-client-side-flag', false);
+          render('test', 'another-client-side-flag', false);
         });
       });
       document.querySelector('.test-change-hash').addEventListener('click', function(event) {

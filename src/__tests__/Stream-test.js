@@ -1,76 +1,82 @@
-var Stream = require('../Stream');
-var mockEventSource = require('./mockEventSource');
-var noop = function() {};
+import EventSource, { sources } from 'eventsourcemock';
 
-describe('Stream', function() {
-  var baseUrl = 'https://example.com';
-  var envName = 'testenv';
-  var user = { key: 'me' };
-  var encodedUser = 'eyJrZXkiOiJtZSJ9';
-  var hash = '012345789abcde';
+import Stream from '../Stream';
 
-  beforeEach(function() {
-    sandbox = sinon.sandbox.create();
-    sandbox.stub(window, 'EventSource', mockEventSource.new);
+const noop = () => {};
+
+describe('Stream', () => {
+  const baseUrl = 'https://example.com';
+  const envName = 'testenv';
+  const user = { key: 'me' };
+  const encodedUser = 'eyJrZXkiOiJtZSJ9';
+  const hash = '012345789abcde';
+
+  beforeEach(() => {
+    Object.defineProperty(window, 'EventSource', {
+      value: EventSource,
+      writable: true,
+    });
   });
 
-  afterEach(function() {
-    sandbox.restore();
-  });
-
-  it('should not throw on EventSource when it does not exist', function() {
+  it('should not throw on EventSource when it does not exist', () => {
+    const prevEventSource = window.EventSource;
     window.EventSource = undefined;
-    
-    var stream = new Stream(baseUrl, envName);
 
-    var connect = function() {
+    const stream = new Stream(baseUrl, envName);
+
+    const connect = () => {
       stream.connect(noop);
-    }
+    };
 
-    expect(connect).to.not.throw(TypeError);
+    expect(connect).not.toThrow(TypeError);
+
+    window.EventSource = prevEventSource;
   });
 
-  it('should not throw when calling disconnect without first calling connect', function() {
-    var stream = new Stream(baseUrl, envName);
-
-    var disconnect = function() {
+  it('should not throw when calling disconnect without first calling connect', () => {
+    const stream = new Stream(baseUrl, envName);
+    const disconnect = () => {
       stream.disconnect(noop);
-    }
+    };
 
-    expect(disconnect).to.not.throw(TypeError);
+    expect(disconnect).not.toThrow(TypeError);
   });
 
-  it('connects to EventSource with eval stream URL by default', function() {
-    var stream = new Stream(baseUrl, envName, null, false);
+  it('connects to EventSource with eval stream URL by default', () => {
+    const stream = new Stream(baseUrl, envName, null, false);
     stream.connect(user, {});
 
-    expect(mockEventSource.connectedUrl).to.equal(baseUrl + '/eval/' + envName + '/' + encodedUser);
+    expect(sources[baseUrl + '/eval/' + envName + '/' + encodedUser]).toBeDefined();
   });
 
-  it('adds secure mode hash to URL if provided', function() {
-    var stream = new Stream(baseUrl, envName, hash, false);
+  it('adds secure mode hash to URL if provided', () => {
+    const stream = new Stream(baseUrl, envName, hash, false);
     stream.connect(user, {});
 
-    expect(mockEventSource.connectedUrl).to.equal(baseUrl + '/eval/' + envName + '/' + encodedUser + '?h=' + hash);
+    expect(sources[baseUrl + '/eval/' + envName + '/' + encodedUser + '?h=' + hash]).toBeDefined();
   });
 
-  it('falls back to ping stream URL if useReport is true', function() {
-    var stream = new Stream(baseUrl, envName, hash, true);
+  it('falls back to ping stream URL if useReport is true', () => {
+    const stream = new Stream(baseUrl, envName, hash, true);
     stream.connect(user, {});
 
-    expect(mockEventSource.connectedUrl).to.equal(baseUrl + '/ping/' + envName);
+    expect(sources[baseUrl + '/ping/' + envName]).toBeDefined();
   });
 
-  it('sets event listeners', function() {
-    var stream = new Stream(baseUrl, envName, hash, false);
-    var fn1 = function() { return 0; };
-    var fn2 = function() { return 1; };
+  it('sets event listeners', () => {
+    const stream = new Stream(baseUrl, envName, hash, false);
+    const fn1 = () => 0;
+    const fn2 = () => 1;
+
     stream.connect(user, {
       birthday: fn1,
-      anniversary: fn2
+      anniversary: fn2,
     });
 
-    expect(mockEventSource.listeners['birthday']).to.equal(fn1);
-    expect(mockEventSource.listeners['anniversary']).to.equal(fn2);
+    const es = sources[`${baseUrl}/eval/${envName}/${encodedUser}?h=${hash}`];
+
+    expect(es).toBeDefined();
+    expect(es.__emitter._events.birthday).toEqual(fn1);
+    expect(es.__emitter._events.anniversary).toEqual(fn2);
   });
 });

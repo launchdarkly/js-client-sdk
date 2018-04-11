@@ -1,67 +1,68 @@
-var EventSerializer = require('../EventSerializer');
-var EventProcessor = require('../EventProcessor');
+import sinon from 'sinon';
 
-describe('EventProcessor', function() {
-  var sandbox;
-  var xhr;
-  var requests = [];
-  var serializer = EventSerializer({});
+import EventSerializer from '../EventSerializer';
+import EventProcessor from '../EventProcessor';
 
-  beforeEach(function() {
+describe('EventProcessor', () => {
+  let sandbox;
+  let xhr;
+  let requests = [];
+  let warnSpy;
+  const serializer = EventSerializer({});
+
+  beforeEach(() => {
     sandbox = sinon.sandbox.create();
     requests = [];
     xhr = sinon.useFakeXMLHttpRequest();
     xhr.onCreate = function(xhr) {
       requests.push(xhr);
     };
-  })
+    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  });
 
-  afterEach(function() {
+  afterEach(() => {
     sandbox.restore();
     xhr.restore();
-  })
+    warnSpy.mockRestore();
+  });
 
-  it('should warn about missing user on initial flush', function() {
-    var warnSpy = sandbox.spy(console, 'warn');
-    var processor = EventProcessor('/fake-url', serializer);
+  it('should warn about missing user on initial flush', () => {
+    const warnSpy = sandbox.spy(console, 'warn');
+    const processor = EventProcessor('/fake-url', serializer);
     processor.flush(null);
     warnSpy.restore();
-    expect(warnSpy.called).to.be.true;
-  })
-
-  it('should flush asynchronously', function() {
-    var processor = EventProcessor('/fake-url', serializer);
-    var user = {key: 'foo'};
-    var event = {kind: 'identify', key: user.key};
-    var result;
-    
-    processor.enqueue(event);
-    processor.enqueue(event);
-    processor.enqueue(event);
-    processor.enqueue(event);
-
-    result = processor.flush(user);
-    requests[0].respond();
-
-    expect(requests.length).to.equal(1);
-    expect(requests[0].async).to.be.true;
+    expect(warnSpy.called).toEqual(true);
   });
 
-  it('should flush synchronously', function() {
-    var processor = EventProcessor('/fake-url', serializer);
-    var user = {key: 'foo'};
-    var event = {kind: 'identify', key: user.key};
-    var result;
-    
-    processor.enqueue(event);
-    processor.enqueue(event);
-    processor.enqueue(event);
-    processor.enqueue(event);
+  it('should flush asynchronously', () => {
+    const processor = EventProcessor('/fake-url', serializer);
+    const user = { key: 'foo' };
+    const event = { kind: 'identify', key: user.key };
 
-    result = processor.flush(user, true);
+    processor.enqueue(event);
+    processor.enqueue(event);
+    processor.enqueue(event);
+    processor.enqueue(event);
+    processor.flush(user);
     requests[0].respond();
 
-    expect(requests.length).to.equal(1);
-    expect(requests[0].async).to.be.false;
+    expect(requests.length).toEqual(1);
+    expect(requests[0].async).toEqual(true);
   });
-})
+
+  it('should flush synchronously', () => {
+    const processor = EventProcessor('/fake-url', serializer);
+    const user = { key: 'foo' };
+    const event = { kind: 'identify', key: user.key };
+
+    processor.enqueue(event);
+    processor.enqueue(event);
+    processor.enqueue(event);
+    processor.enqueue(event);
+    processor.flush(user, true);
+    requests[0].respond();
+
+    expect(requests.length).toEqual(1);
+    expect(requests[0].async).toEqual(false);
+  });
+});

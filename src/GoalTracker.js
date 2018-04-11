@@ -1,65 +1,65 @@
-var escapeStringRegexp = require('escape-string-regexp');
+import escapeStringRegexp from 'escape-string-regexp';
 
 function doesUrlMatch(matcher, href, search, hash) {
-  var canonicalUrl = href.replace(search, '').replace(hash, '');
-  var regex;
-  var testUrl;
-  
+  const canonicalUrl = href.replace(search, '').replace(hash, '');
+  let regex;
+  let testUrl;
+
   switch (matcher.kind) {
-  case 'exact':
-    testUrl = href;
-    regex = new RegExp('^' + escapeStringRegexp(matcher.url) + '/?$');
-    break;
-  case 'canonical':
-    testUrl = canonicalUrl;
-    regex = new RegExp('^' + escapeStringRegexp(matcher.url) + '/?$');
-    break;
-  case 'substring':
-    testUrl = canonicalUrl;
-    regex = new RegExp('.*' + escapeStringRegexp(matcher.substring) + '.*$');
-    break;
-  case 'regex':
-    testUrl = canonicalUrl;
-    regex = new RegExp(matcher.pattern);
-    break;
-  default:
-    return false;
+    case 'exact':
+      testUrl = href;
+      regex = new RegExp('^' + escapeStringRegexp(matcher.url) + '/?$');
+      break;
+    case 'canonical':
+      testUrl = canonicalUrl;
+      regex = new RegExp('^' + escapeStringRegexp(matcher.url) + '/?$');
+      break;
+    case 'substring':
+      testUrl = canonicalUrl;
+      regex = new RegExp('.*' + escapeStringRegexp(matcher.substring) + '.*$');
+      break;
+    case 'regex':
+      testUrl = canonicalUrl;
+      regex = new RegExp(matcher.pattern);
+      break;
+    default:
+      return false;
   }
   return regex.test(testUrl);
 }
 
 function findGoalsForClick(event, clickGoals) {
-  var matches = [];
-  
-  for (var i = 0; i < clickGoals.length; i++) {
-    var target = event.target;
-    var goal = clickGoals[i];
-    var selector = goal.selector;
-    var elements = document.querySelectorAll(selector);
+  const matches = [];
+
+  for (let i = 0; i < clickGoals.length; i++) {
+    let target = event.target;
+    const goal = clickGoals[i];
+    const selector = goal.selector;
+    const elements = document.querySelectorAll(selector);
     while (target && elements.length > 0) {
-      for (var j = 0; j < elements.length; j++) {
-        if (target === elements[j])
+      for (let j = 0; j < elements.length; j++) {
+        if (target === elements[j]) {
           matches.push(goal);
+        }
       }
       target = target.parentNode;
     }
   }
-  
+
   return matches;
 }
 
-function GoalTracker(goals, onEvent) {
-  var tracker = {};
-  var goals = goals;
-  var listenerFn = null;
-  
-  var clickGoals = [];
-  
-  for (var i = 0; i < goals.length; i++) {
-    var goal = goals[i];
-    var urls = goal.urls || [];
-    
-    for (var j = 0; j < urls.length; j++) {
+export default function GoalTracker(goals, onEvent) {
+  const tracker = {};
+  let listenerFn = null;
+
+  const clickGoals = [];
+
+  for (let i = 0; i < goals.length; i++) {
+    const goal = goals[i];
+    const urls = goal.urls || [];
+
+    for (let j = 0; j < urls.length; j++) {
       if (doesUrlMatch(urls[j], location.href, location.search, location.hash)) {
         if (goal.kind === 'pageview') {
           onEvent('pageview', goal);
@@ -71,11 +71,11 @@ function GoalTracker(goals, onEvent) {
       }
     }
   }
-  
+
   if (clickGoals.length > 0) {
     listenerFn = function(event) {
-      var goals = findGoalsForClick(event, clickGoals);
-      for (var i = 0; i < goals.length; i++) {
+      const goals = findGoalsForClick(event, clickGoals);
+      for (let i = 0; i < goals.length; i++) {
         onEvent('click', goals[i]);
       }
     };
@@ -85,9 +85,7 @@ function GoalTracker(goals, onEvent) {
 
   tracker.dispose = function() {
     document.removeEventListener('click', listenerFn);
-  }
-  
+  };
+
   return tracker;
 }
-
-module.exports = GoalTracker;
