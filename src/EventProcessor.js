@@ -154,6 +154,11 @@ export default function EventProcessor(options, eventsUrl, emitter, sender) {
         }
         if (responseInfo.status === 401) {
           disabled = true;
+          utils.onNextTick(() => {
+            emitter.maybeReportError(
+              new errors.LDUnexpectedResponseError("Received 401 error, no further events will be posted")
+            );
+          });
         }
       }
     });
