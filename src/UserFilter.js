@@ -14,17 +14,19 @@ export default function UserFilter(config) {
     firstName: true, lastName: true, avatar: true, name: true, anonymous: true, custom: true
   };
 
-  filter.filterUser = function (user) {
-    let allPrivateAttrs = {};
-    let userPrivateAttrs = user.privateAttributeNames || [];
+  filter.filterUser = function(user) {
+    if (!user) {
+      return null;
+    }
+    const userPrivateAttrs = user.privateAttributeNames || [];
 
-    const isPrivateAttr = function (name) {
+    const isPrivateAttr = function(name) {
       return !ignoreAttrs[name] && (
         allAttributesPrivate || userPrivateAttrs.indexOf(name) !== -1 ||
         privateAttributeNames.indexOf(name) !== -1);
     }
-    const filterAttrs = function (props, isAttributeAllowed) {
-      return Object.keys(props).reduce(function (acc, name) {
+    const filterAttrs = function(props, isAttributeAllowed) {
+      return Object.keys(props).reduce((acc, name) => {
         if (isAttributeAllowed(name)) {
           if (isPrivateAttr(name)) {
             // add to hidden list
@@ -35,21 +37,22 @@ export default function UserFilter(config) {
         }
         return acc;
       }, [{}, {}]);
-    }
-    let result = filterAttrs(user, function (key) { return allowedTopLevelAttrs[key]; });
-    let filteredProps = result[0];
-    let removedAttrs = result[1];
+    };
+    const result = filterAttrs(user, key => allowedTopLevelAttrs[key]);
+    const filteredProps = result[0];
+    const removedAttrs = result[1];
     if (user.custom) {
-      var customResult = filterAttrs(user.custom, function (key) { return true; });
+      const customResult = filterAttrs(user.custom, key => true);
       filteredProps.custom = customResult[0];
       Object.assign(removedAttrs, customResult[1]);
     }
-    var removedAttrNames = Object.keys(removedAttrs);
+    const removedAttrNames = Object.keys(removedAttrs);
     if (removedAttrNames.length) {
       removedAttrNames.sort();
       filteredProps.privateAttrs = removedAttrNames;
     }
     return filteredProps;
-  }
+  };
+
   return filter;
 }

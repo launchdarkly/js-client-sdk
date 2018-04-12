@@ -6,6 +6,18 @@ const hasCors = 'withCredentials' in new XMLHttpRequest();
 export default function EventSender(eventsUrl) {
   const sender = {};
 
+  function getResponseInfo(xhr) {
+    const ret = { status: xhr.status };
+    const dateStr = xhr.getResponseHeader('Date');
+    if (dateStr) {
+      const date = Date.parse(dateStr);
+      if (date) {
+        ret.serverTime = date.getTime();
+      }
+    }
+    return ret;
+  }
+
   function sendChunk(events, sync) {
     const src = eventsUrl + '?d=' + utils.base64URLEncode(JSON.stringify(events));
 
@@ -17,7 +29,9 @@ export default function EventSender(eventsUrl) {
         xhr.open('GET', src, !sync);
 
         if (!sync) {
-          xhr.addEventListener('load', onDone);
+          xhr.addEventListener('load', () => {
+            onDone(getResponseInfo(xhr));
+          });
         }
 
         xhr.send();

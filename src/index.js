@@ -23,15 +23,15 @@ function initialize(env, user, options = {}) {
   const environment = env;
   const emitter = EventEmitter();
   const stream = Stream(streamUrl, environment, hash, options.useReport);
-  const events = EventProcessor(options, eventsUrl + '/a/' + environment + '.gif');
+  const events = EventProcessor(options, eventsUrl + '/a/' + environment + '.gif', emitter);
   const requestor = Requestor(baseUrl, environment, options.useReport);
   const seenRequests = {};
-  let samplingInterval = parseInt(options.samplingInterval, 10) || 0;
   let flags = typeof options.bootstrap === 'object' ? utils.transformValuesToVersionedValues(options.bootstrap) : {};
   let goalTracker;
   let useLocalStorage;
   let goals;
   let subscribedToChangeEvents;
+  let firstEvent = true;
 
   function lsKey(env, user) {
     let key = '';
@@ -42,24 +42,36 @@ function initialize(env, user, options = {}) {
   }
 
   function shouldEnqueueEvent() {
-    return (
-      sendEvents && !doNotTrack() && (samplingInterval === 0 || Math.floor(Math.random() * samplingInterval) === 0)
-    );
+    return sendEvents && !doNotTrack();
   }
 
   function enqueueEvent(event) {
+    if (!event.user) {
+      if (firstEvent) {
+        if (console && console.warn) {
+          console.warn(
+            'Be sure to call `identify` in the LaunchDarkly client: http://docs.launchdarkly.com/docs/running-an-ab-test#include-the-client-side-snippet'
+          );
+        }
+        firstEvent = false;
+      }
+      return;
+    }
+    firstEvent = false;
     if (shouldEnqueueEvent()) {
       events.enqueue(event);
     }
   }
 
   function sendIdentifyEvent(user) {
-    enqueueEvent({
-      kind: 'identify',
-      key: user.key,
-      user: user,
-      creationDate: new Date().getTime(),
-    });
+    if (user) {
+      enqueueEvent({
+        kind: 'identify',
+        key: user.key,
+        user: user,
+        creationDate: new Date().getTime()
+      });
+    }
   }
 
   const ident = Identity(user, sendIdentifyEvent);
@@ -77,14 +89,23 @@ function initialize(env, user, options = {}) {
 
     seenRequests[cacheKey] = now;
 
-    enqueueEvent({
+    const event = {
       kind: 'feature',
       key: key,
       user: user,
       value: value,
       default: defaultValue,
       creationDate: now.getTime(),
-    });
+    };
+    const flag = flags[key];
+    if (flag) {
+      event.version = flag.version;
+      event.variation = flag.variation;
+      event.trackEvents = flag.trackEvents;
+      event.debugEventsUntilDate = flag.debugEventsUntilDate;
+    }
+    
+    enqueueEvent(event);
   }
 
   function sendGoalEvent(kind, goal) {
@@ -128,7 +149,7 @@ function initialize(env, user, options = {}) {
 
   function flush(onDone) {
     return utils.wrapPromiseCallback(
-      new Promise(resolve => (sendEvents ? resolve(events.flush(ident.getUser())) : resolve()), onDone)
+      new Promise(resolve => (sendEvents ? resolve(events.flush()) : resolve()), onDone)
     );
   }
 
@@ -340,17 +361,6 @@ function initialize(env, user, options = {}) {
     }
   }
 
-  if (options.samplingInterval !== undefined && (isNaN(options.samplingInterval) || options.samplingInterval < 0)) {
-    samplingInterval = 0;
-    utils.onNextTick(() => {
-      emitter.maybeReportError(
-        new errors.LDInvalidArgumentError(
-          'Invalid sampling interval configured. Sampling interval must be an integer >= 0.'
-        )
-      );
-    });
-  }
-
   if (!env) {
     utils.onNextTick(() => {
       emitter.maybeReportError(new errors.LDInvalidEnvironmentIdError(messages.environmentNotSpecified()));
@@ -472,10 +482,7 @@ function initialize(env, user, options = {}) {
 
   function start() {
     if (sendEvents) {
-      setTimeout(function tick() {
-        events.flush(ident.getUser());
-        setTimeout(tick, flushInterval);
-      }, flushInterval);
+      events.start();
     }
   }
 
@@ -486,7 +493,10 @@ function initialize(env, user, options = {}) {
   }
 
   window.addEventListener('beforeunload', () => {
-    events.flush(ident.getUser(), true);
+    if (sendEvents) {
+      events.stop();
+      events.flush(true);
+    }
   });
 
   window.addEventListener('message', handleMessage);

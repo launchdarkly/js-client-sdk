@@ -18,7 +18,7 @@ export default function Identity(initialUser, onChange) {
   };
 
   ident.getUser = function() {
-    return utils.clone(user);
+    return user ? utils.clone(user) : null;
   };
 
   if (initialUser) {
