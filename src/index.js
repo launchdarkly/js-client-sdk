@@ -11,7 +11,6 @@ import * as errors from './errors';
 
 const readyEvent = 'ready';
 const changeEvent = 'change';
-const flushInterval = 2000;
 const locationWatcherInterval = 300;
 
 function initialize(env, user, options = {}) {
