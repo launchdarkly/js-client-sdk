@@ -253,7 +253,9 @@ function initialize(env, user, options = {}) {
         if (!flags[data.key] || flags[data.key].version < data.version) {
           const mods = {};
           const oldFlag = flags[data.key];
-          flags[data.key] = { version: data.version, value: data.value };
+          const newFlag = Object.assign({}, data);
+          delete newFlag['key'];
+          flags[data.key] = newFlag;
           if (oldFlag) {
             mods[data.key] = { previous: oldFlag.value, current: data.value };
           } else {
