@@ -173,7 +173,7 @@ describe('EventProcessor', () => {
   });
 
   it('can include inline user in feature event', done => {
-    const config = { inline_users_in_events: true };
+    const config = { inlineUsersInEvents: true };
     const ep = EventProcessor(config, eventsUrl, mockEventSender);
     const event = {
       kind: 'feature',
@@ -193,7 +193,7 @@ describe('EventProcessor', () => {
   });
 
   it('filters user in feature event', done => {
-    const config = { all_attributes_private: true, inline_users_in_events: true };
+    const config = { all_attributes_private: true, inlineUsersInEvents: true };
     const ep = EventProcessor(config, eventsUrl, mockEventSender);
     const event = {
       kind: 'feature',
@@ -278,7 +278,7 @@ describe('EventProcessor', () => {
   });
 
   it('can include inline user in custom event', done => {
-    const config = { inline_users_in_events: true };
+    const config = { inlineUsersInEvents: true };
     const ep = EventProcessor(config, eventsUrl, mockEventSender);
     const e = { kind: 'custom', creationDate: 1000, user: user, key: 'eventkey',
       data: { thing: 'stuff' } };
@@ -293,7 +293,7 @@ describe('EventProcessor', () => {
   });
 
   it('filters user in custom event', done => {
-    const config = { all_attributes_private: true, inline_users_in_events: true };
+    const config = { all_attributes_private: true, inlineUsersInEvents: true };
     const ep = EventProcessor(config, eventsUrl, mockEventSender);
     const e = { kind: 'custom', creationDate: 1000, user: user, key: 'eventkey',
       data: { thing: 'stuff' } };
