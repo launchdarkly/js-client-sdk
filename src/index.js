@@ -117,7 +117,9 @@ function initialize(env, user, options = {}) {
   }
 
   function identify(user, hash, onDone) {
-    store.clearFlags();
+    if (useLocalStorage) {
+      store.clearFlags();
+    }
     return utils.wrapPromiseCallback(
       new Promise((resolve, reject) => {
         ident.setUser(user);
