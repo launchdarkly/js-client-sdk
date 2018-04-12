@@ -163,10 +163,13 @@ describe('LDClient', () => {
         bootstrap: 'localstorage',
       });
 
+      expect(window.localStorage.getItem(lsKey)).toBeNull();
+
       client.on('ready', () => {
-        expect(window.localStorage.getItem(lsKey)).toBeNull();
         done();
       });
+
+      requests[0].respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": {"value": true, "version": 1}}');
     });
 
     it('should not clear cached settings if they are valid JSON', done => {
@@ -251,16 +254,18 @@ describe('LDClient', () => {
         hash: 'totallyLegitHash',
       });
 
-      requests[0].respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": true}');
-
       client.on('ready', () => {
-        expect(JSON.parse(window.localStorage.getItem(lsKeyHash))).toEqual({ 'enable-foo': true });
+        expect(JSON.parse(window.localStorage.getItem(lsKeyHash))).toEqual(
+          { $schema: 1, 'enable-foo': { value: true, version: 1 } }
+        );
         done();
       });
+
+      requests[0].respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo":{"value":true,"version":1}}');
     });
 
     it('should clear localStorage when user context is changed', done => {
-      const json = '{"enable-foo":true}';
+      const json = '{"enable-foo":{"value":true,"version":1}}';
       const lsKey2 = 'ld:UNKNOWN_ENVIRONMENT_ID:' + btoa('{"key":"user2"}');
 
       const user2 = { key: 'user2' };
@@ -274,7 +279,9 @@ describe('LDClient', () => {
       client.on('ready', () => {
         client.identify(user2, null, () => {
           expect(window.localStorage.getItem(lsKey)).toBeNull();
-          expect(JSON.parse(window.localStorage.getItem(lsKey2))).toEqual({ 'enable-foo': true });
+          expect(JSON.parse(window.localStorage.getItem(lsKey2))).toEqual(
+            { $schema: 1, 'enable-foo': { value: true, version: 1 } }
+          );
           done();
         });
         server.respond();
@@ -402,7 +409,7 @@ describe('LDClient', () => {
       client.on('ready', () => {
         client.on('change', () => {});
         sources[`${streamUrl}/eval/${envName}/${encodedUser}`].__emitter._events.ping();
-        getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": true}');
+        getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo":{"value":true,"version":1}}');
         expect(client.variation('enable-foo')).toEqual(true);
         done();
       });
@@ -435,7 +442,9 @@ describe('LDClient', () => {
         });
 
         expect(client.variation('enable-foo')).toEqual(true);
-        expect(window.localStorage.getItem(lsKey)).toEqual('{"enable-foo":true}');
+        expect(JSON.parse(window.localStorage.getItem(lsKey))).toEqual(
+          { $schema: 1, 'enable-foo': { value: true, version: 1 } }
+        );
         done();
       });
     });
@@ -502,7 +511,9 @@ describe('LDClient', () => {
         });
 
         expect(client.variation('enable-foo')).toEqual(true);
-        expect(window.localStorage.getItem(lsKey)).toEqual('{"enable-foo":true}');
+        expect(JSON.parse(window.localStorage.getItem(lsKey))).toEqual(
+          { $schema: 1, 'enable-foo': { value: true, version: 1 } }
+        );
         done();
       });
     });
@@ -639,7 +650,9 @@ describe('LDClient', () => {
         });
 
         expect(client.variation('enable-foo')).toEqual(undefined);
-        expect(window.localStorage.getItem(lsKey)).toEqual('{}');
+        expect(JSON.parse(window.localStorage.getItem(lsKey))).toEqual(
+          { $schema: 1, 'enable-foo': { version: 1, deleted: true } }
+        );
         done();
       });
     });

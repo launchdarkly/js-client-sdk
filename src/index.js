@@ -1,10 +1,10 @@
 import EventProcessor from './EventProcessor';
 import EventEmitter from './EventEmitter';
 import GoalTracker from './GoalTracker';
+import Store from './Store';
 import Stream from './Stream';
 import Requestor from './Requestor';
 import Identity from './Identity';
-import store from './store';
 import * as utils from './utils';
 import * as messages from './messages';
 import * as errors from './errors';
@@ -31,14 +31,6 @@ function initialize(env, user, options = {}) {
   let goals;
   let subscribedToChangeEvents;
   let firstEvent = true;
-
-  function lsKey(env, user) {
-    let key = '';
-    if (user) {
-      key = hash || utils.btoa(JSON.stringify(user));
-    }
-    return 'ld:' + env + ':' + key;
-  }
 
   function shouldEnqueueEvent() {
     return sendEvents && !doNotTrack();
@@ -74,7 +66,7 @@ function initialize(env, user, options = {}) {
   }
 
   const ident = Identity(user, sendIdentifyEvent);
-  let localStorageKey = lsKey(environment, ident.getUser());
+  const store = Store(environment, hash, ident);
 
   function sendFlagEvent(key, value, defaultValue) {
     const user = ident.getUser();
@@ -125,6 +117,7 @@ function initialize(env, user, options = {}) {
   }
 
   function identify(user, hash, onDone) {
+    store.clearFlags();
     return utils.wrapPromiseCallback(
       new Promise((resolve, reject) => {
         ident.setUser(user);
@@ -307,9 +300,7 @@ function initialize(env, user, options = {}) {
     const keys = Object.keys(changes);
 
     if (useLocalStorage) {
-      store.clear(localStorageKey);
-      localStorageKey = lsKey(environment, ident.getUser());
-      store.set(localStorageKey, JSON.stringify(utils.transformValuesToUnversionedValues(flags)));
+      store.saveFlags(flags);
     }
 
     if (keys.length > 0) {
@@ -389,20 +380,19 @@ function initialize(env, user, options = {}) {
   ) {
     useLocalStorage = true;
 
-    // check if localStorage data is corrupted, if so clear it
-    try {
-      flags = utils.transformValuesToVersionedValues(JSON.parse(store.get(localStorageKey)));
-    } catch (error) {
-      store.clear(localStorageKey);
-    }
+    flags = store.loadFlags();
 
     if (flags === null) {
       requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
         if (err) {
           emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
         }
-        flags = settings;
-        settings && store.set(localStorageKey, JSON.stringify(utils.transformValuesToUnversionedValues(flags)));
+        if (settings) {
+          flags = settings;
+          store.saveFlags(flags);
+        } else {
+          flags = {};
+        }
         emitter.emit(readyEvent);
       });
     } else {
@@ -417,7 +407,9 @@ function initialize(env, user, options = {}) {
         if (err) {
           emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
         }
-        settings && store.set(localStorageKey, JSON.stringify(utils.transformValuesToUnversionedValues(settings)));
+        if (settings) {
+          store.saveFlags(settings);
+        }
       });
     }
   } else {
