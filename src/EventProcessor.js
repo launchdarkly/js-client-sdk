@@ -46,7 +46,7 @@ export default function EventProcessor(options, eventsUrl) {
   const summarizer = EventSummarizer();
   const userKeysCache = LRU(options.user_keys_capacity || 1000);
   const userFilter = UserFilter(options);
-  const inlineUsers = !!options.inline_users_in_events;
+  const inlineUsers = !!options.inlineUsersInEvents;
   let queue = [];
   let initialFlush = true;
 
