@@ -22,7 +22,7 @@ function initialize(env, user, options = {}) {
   const environment = env;
   const emitter = EventEmitter();
   const stream = Stream(streamUrl, environment, hash, options.useReport);
-  const events = EventProcessor(options, eventsUrl + '/a/' + environment + '.gif', emitter);
+  const events = EventProcessor(eventsUrl + '/a/' + environment + '.gif', options, emitter);
   const requestor = Requestor(baseUrl, environment, options.useReport);
   const seenRequests = {};
   let flags = typeof options.bootstrap === 'object' ? utils.transformValuesToVersionedValues(options.bootstrap) : {};
