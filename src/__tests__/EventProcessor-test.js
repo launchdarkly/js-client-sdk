@@ -26,14 +26,14 @@ describe('EventProcessor', () => {
 
   it('should warn about missing user on initial flush', () => {
     const warnSpy = sandbox.spy(console, 'warn');
-    const processor = EventProcessor({}, '/fake-url');
+    const processor = EventProcessor('/fake-url');
     processor.flush(null);
     warnSpy.restore();
     expect(warnSpy.called).toEqual(true);
   });
 
   it('should flush asynchronously', () => {
-    const processor = EventProcessor({}, '/fake-url');
+    const processor = EventProcessor('/fake-url');
     const user = { key: 'foo' };
     const event = { kind: 'identify', key: user.key };
 
@@ -49,7 +49,7 @@ describe('EventProcessor', () => {
   });
 
   it('should flush synchronously', () => {
-    const processor = EventProcessor({}, '/fake-url');
+    const processor = EventProcessor('/fake-url');
     const user = { key: 'foo' };
     const event = { kind: 'identify', key: user.key };
 
