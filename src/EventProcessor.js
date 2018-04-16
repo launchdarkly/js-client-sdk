@@ -4,7 +4,7 @@ import UserFilter from './UserFilter';
 import * as errors from './errors';
 import * as utils from './utils';
 
-export default function EventProcessor(options, eventsUrl, emitter, sender) {
+export default function EventProcessor(eventsUrl, options = {}, emitter = null, sender = null) {
   const processor = {};
   const eventSender = sender || EventSender(eventsUrl);
   const summarizer = EventSummarizer();
@@ -16,11 +16,10 @@ export default function EventProcessor(options, eventsUrl, emitter, sender) {
   let lastKnownPastTime = 0;
   let disabled = false;
   let flushTimer;
-  let usersFlushTimer;
 
   function reportArgumentError(message) {
     utils.onNextTick(() => {
-      emitter.maybeReportError(new errors.LDInvalidArgumentError(message));
+      emitter && emitter.maybeReportError(new errors.LDInvalidArgumentError(message));
     });
   }
 

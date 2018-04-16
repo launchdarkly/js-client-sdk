@@ -1,3 +1,5 @@
+import * as messages from './messages';
+
 /**
  * The UserFilter object transforms user objects into objects suitable to be sent as JSON to
  * the server, hiding any private user attributes.
@@ -6,14 +8,23 @@
  **/
 export default function UserFilter(config) {
   const filter = {};
-  const allAttributesPrivate = config.all_attributes_private;
-  const privateAttributeNames = config.private_attribute_names || [];
+  const allAttributesPrivate =
+    config.allAttributesPrivate !== undefined ? config.allAttributesPrivate : config.all_attributes_private;
+  const privateAttributeNames =
+    (config.privateAttributeNames !== undefined ? config.privateAttributeNames : config.private_attribute_names) || [];
   const ignoreAttrs = { key: true, custom: true, anonymous: true };
   const allowedTopLevelAttrs = {
     key: true, secondary: true, ip: true, country: true, email: true,
     firstName: true, lastName: true, avatar: true, name: true, anonymous: true, custom: true
   };
 
+  if (config.all_attributes_private !== undefined) {
+    console && console.warn && console.warn(messages.deprecated('all_attributes_private', 'allAttributesPrivate'));
+  }
+  if (config.private_attribute_names !== undefined) {
+    console && console.warn && console.warn(messages.deprecated('private_attribute_names', 'privateAttributeNames'));
+  }
+    
   filter.filterUser = function(user) {
     if (!user) {
       return null;
@@ -24,7 +35,7 @@ export default function UserFilter(config) {
       return !ignoreAttrs[name] && (
         allAttributesPrivate || userPrivateAttrs.indexOf(name) !== -1 ||
         privateAttributeNames.indexOf(name) !== -1);
-    }
+    };
     const filterAttrs = function(props, isAttributeAllowed) {
       return Object.keys(props).reduce((acc, name) => {
         if (isAttributeAllowed(name)) {
@@ -42,7 +53,7 @@ export default function UserFilter(config) {
     const filteredProps = result[0];
     const removedAttrs = result[1];
     if (user.custom) {
-      const customResult = filterAttrs(user.custom, key => true);
+      const customResult = filterAttrs(user.custom, () => true);
       filteredProps.custom = customResult[0];
       Object.assign(removedAttrs, customResult[1]);
     }
@@ -53,6 +64,5 @@ export default function UserFilter(config) {
     }
     return filteredProps;
   };
-
   return filter;
 }
