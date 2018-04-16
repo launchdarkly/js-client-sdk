@@ -55,8 +55,8 @@ export default function EventSummarizer() {
       empty = false;
     }
     return empty ? null : {
-      startDate: startDate,
-      endDate: endDate,
+      startDate,
+      endDate,
       features: flagsOut,
     };
   };
