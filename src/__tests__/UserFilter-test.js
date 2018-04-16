@@ -1,6 +1,8 @@
 import UserFilter from '../UserFilter';
 
 describe('UserFilter', () => {
+  let warnSpy;
+
   // users to serialize
   const user = {
     'key': 'abc',
@@ -60,19 +62,39 @@ describe('UserFilter', () => {
     'privateAttrs': [ 'bizzle', 'dizzle' ]
   };
 
+  beforeEach(() => {
+    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    warnSpy.mockRestore();
+  });
+
   it('includes all user attributes by default', () => {
     const uf = UserFilter({});
     expect(uf.filterUser(user)).toEqual(user);
   });
 
-  it('hides all except key if all_attrs_private is true', () => {
-    const uf = UserFilter({ all_attributes_private: true});
+  it('hides all except key if allAttributesPrivate is true', () => {
+    const uf = UserFilter({ allAttributesPrivate: true });
     expect(uf.filterUser(user)).toEqual(userWithAllAttrsHidden);
   });
 
-  it('hides some attributes if private_attr_names is set', () => {
+  it('allows all_attributes_private as deprecated synonym for allAttributesPrivate', () => {
+    const uf = UserFilter({ all_attributes_private: true });
+    expect(uf.filterUser(user)).toEqual(userWithAllAttrsHidden);
+    expect(warnSpy).toHaveBeenCalled();
+  });
+
+  it('hides some attributes if privateAttributeNames is set', () => {
+    const uf = UserFilter({ privateAttributeNames: [ 'firstName', 'bizzle' ]});
+    expect(uf.filterUser(user)).toEqual(userWithSomeAttrsHidden);
+  });
+
+  it('allows private_attribute_names as deprecated synonym for privateAttributeNames', () => {
     const uf = UserFilter({ private_attribute_names: [ 'firstName', 'bizzle' ]});
     expect(uf.filterUser(user)).toEqual(userWithSomeAttrsHidden);
+    expect(warnSpy).toHaveBeenCalled();
   });
 
   it('hides attributes specified in per-user privateAttrs', () => {
@@ -81,7 +103,7 @@ describe('UserFilter', () => {
   });
 
   it('looks at both per-user privateAttrs and global config', () => {
-    const uf = UserFilter({ private_attribute_names: [ 'firstName', 'bizzle' ]});
+    const uf = UserFilter({ privateAttributeNames: [ 'firstName', 'bizzle' ]});
     expect(uf.filterUser(userSpecifyingOwnPrivateAttr)).toEqual(userWithAllAttrsHidden);
   });
 
@@ -91,7 +113,7 @@ describe('UserFilter', () => {
   });
 
   it('leaves the "anonymous" attribute as is', () => {
-    const uf = UserFilter({ all_attributes_private: true});
+    const uf = UserFilter({ allAttributesPrivate: true });
     expect(uf.filterUser(anonUser)).toEqual(anonUserWithAllAttrsHidden);
   });
 });
