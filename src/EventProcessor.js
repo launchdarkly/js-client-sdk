@@ -40,7 +40,7 @@ function sendEvents(eventsUrl, events, sync) {
   }
 }
 
-export default function EventProcessor(options, eventsUrl) {
+export default function EventProcessor(eventsUrl, options = {}) {
   const processor = {};
   const summarizer = EventSummarizer();
   const userFilter = UserFilter(options);
