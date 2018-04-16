@@ -1,3 +1,4 @@
+import UserFilter from './UserFilter';
 import * as utils from './utils';
 
 const MAX_URL_LENGTH = 2000;
@@ -38,10 +39,15 @@ function sendEvents(eventsUrl, events, sync) {
   }
 }
 
-export default function EventProcessor(eventsUrl, eventSerializer) {
+export default function EventProcessor(eventsUrl, options = {}) {
   const processor = {};
+  const userFilter = UserFilter(options);
   let queue = [];
   let initialFlush = true;
+
+  function serializeEvents(events) {
+    return events.map(e => (e.user ? Object.assign({}, e, { user: userFilter.filterUser(e.user) }) : e));
+  }
 
   processor.enqueue = function(event) {
     queue.push(event);
@@ -49,7 +55,7 @@ export default function EventProcessor(eventsUrl, eventSerializer) {
 
   processor.flush = function(user, sync) {
     const finalSync = sync === undefined ? false : sync;
-    const serializedQueue = eventSerializer.serializeEvents(queue);
+    const serializedQueue = serializeEvents(queue);
 
     if (!user) {
       if (initialFlush) {

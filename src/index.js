@@ -1,6 +1,5 @@
 import EventProcessor from './EventProcessor';
 import EventEmitter from './EventEmitter';
-import EventSerializer from './EventSerializer';
 import GoalTracker from './GoalTracker';
 import Stream from './Stream';
 import Requestor from './Requestor';
@@ -24,7 +23,7 @@ function initialize(env, user, options = {}) {
   const environment = env;
   const emitter = EventEmitter();
   const stream = Stream(streamUrl, environment, hash, options.useReport);
-  const events = EventProcessor(eventsUrl + '/a/' + environment + '.gif', EventSerializer(options));
+  const events = EventProcessor(eventsUrl + '/a/' + environment + '.gif', options);
   const requestor = Requestor(baseUrl, environment, options.useReport);
   const seenRequests = {};
   let samplingInterval = parseInt(options.samplingInterval, 10) || 0;
