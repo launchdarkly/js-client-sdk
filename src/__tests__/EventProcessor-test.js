@@ -29,13 +29,6 @@ describe('EventProcessor', () => {
     warnSpy.mockRestore();
   });
 
-  
-  function checkIndexEvent(e, source, user) {
-    expect(e.kind).toEqual('index');
-    expect(e.creationDate).toEqual(source.creationDate);
-    expect(e.user).toEqual(user);
-  }
-
   function checkFeatureEvent(e, source, debug, inlineUser) {
     expect(e.kind).toEqual(debug ? 'debug' : 'feature');
     expect(e.creationDate).toEqual(source.creationDate);
@@ -131,7 +124,7 @@ describe('EventProcessor', () => {
     });
   });
 
-  it('queues individual feature event with index event', done => {
+  it('queues individual feature event', done => {
     const ep = EventProcessor({}, eventsUrl, mockEventSender);
     const event = {
       kind: 'feature',
@@ -143,31 +136,9 @@ describe('EventProcessor', () => {
     ep.flush(user, false).then(() => {
       expect(mockEventSender.calls.length).toEqual(1);
       const output = mockEventSender.calls[0].events;
-      expect(output.length).toEqual(3);
-      checkIndexEvent(output[0], event, user);
-      checkFeatureEvent(output[1], event, false);
-      checkSummaryEvent(output[2]);
-      done();
-    });
-  });
-
-  it('filters user in index event', done => {
-    const config = { all_attributes_private: true };
-    const ep = EventProcessor(config, eventsUrl, mockEventSender);
-    const event = {
-      kind: 'feature',
-      creationDate: 1000,
-      key: 'flagkey',
-      user: user,
-    };
-    ep.enqueue(event);
-    ep.flush(user, false).then(() => {
-      expect(mockEventSender.calls.length).toEqual(1);
-      const output = mockEventSender.calls[0].events;
-      expect(output.length).toEqual(3);
-      checkIndexEvent(output[0], event, filteredUser);
-      checkFeatureEvent(output[1], event, false);
-      checkSummaryEvent(output[2]);
+      expect(output.length).toEqual(2);
+      checkFeatureEvent(output[0], event, false);
+      checkSummaryEvent(output[1]);
       done();
     });
   });
@@ -212,26 +183,6 @@ describe('EventProcessor', () => {
     });
   });
 
-  it('generates only one index event from two feature events for same user', done => {
-    const ep = EventProcessor({}, eventsUrl, mockEventSender);
-    const e1 = { kind: 'feature', creationDate: 1000, user: user, key: 'flagkey1',
-      version: 11, value: 'value' };
-    const e2 = { kind: 'feature', creationDate: 1000, user: user, key: 'flagkey2',
-      version: 11, value: 'value' };
-    ep.enqueue(e1);
-    ep.enqueue(e2);
-    ep.flush(user, false).then(() => {
-      expect(mockEventSender.calls.length).toEqual(1);
-      const output = mockEventSender.calls[0].events;
-      expect(output.length).toEqual(4);
-      checkIndexEvent(output[0], e1, user);
-      checkFeatureEvent(output[1], e1, false);
-      checkFeatureEvent(output[2], e2, false);
-      checkSummaryEvent(output[3]);
-      done();
-    });
-  });
-
   it('summarizes events', done => {
     const ep = EventProcessor({}, eventsUrl, mockEventSender);
     const e1 = { kind: 'feature', creationDate: 1000, user: user, key: 'flagkey1',
@@ -243,8 +194,8 @@ describe('EventProcessor', () => {
     ep.flush(user, false).then(() => {
       expect(mockEventSender.calls.length).toEqual(1);
       const output = mockEventSender.calls[0].events;
-      expect(output.length).toEqual(4);
-      const se = output[3];
+      expect(output.length).toEqual(3);
+      const se = output[2];
       checkSummaryEvent(se);
       expect(se.startDate).toEqual(1000);
       expect(se.endDate).toEqual(2000);
@@ -262,7 +213,7 @@ describe('EventProcessor', () => {
     });
   });
 
-  it('queues custom event with user', done => {
+  it('queues custom event', done => {
     const ep = EventProcessor({}, eventsUrl, mockEventSender);
     const e = { kind: 'custom', creationDate: 1000, user: user, key: 'eventkey',
       data: { thing: 'stuff' } };
@@ -270,9 +221,8 @@ describe('EventProcessor', () => {
     ep.flush(user, false).then(() => {
       expect(mockEventSender.calls.length).toEqual(1);
       const output = mockEventSender.calls[0].events;
-      expect(output.length).toEqual(2);
-      checkIndexEvent(output[0], e, user);
-      checkCustomEvent(output[1], e);
+      expect(output.length).toEqual(1);
+      checkCustomEvent(output[0], e);
       done();
     });
   });
