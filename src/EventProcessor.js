@@ -1,4 +1,3 @@
-import LRU from 'lru';
 import EventSummarizer from './EventSummarizer';
 import UserFilter from './UserFilter';
 import * as utils from './utils';
@@ -44,7 +43,6 @@ function sendEvents(eventsUrl, events, sync) {
 export default function EventProcessor(options, eventsUrl) {
   const processor = {};
   const summarizer = EventSummarizer();
-  const userKeysCache = LRU(options.user_keys_capacity || 1000);
   const userFilter = UserFilter(options);
   const inlineUsers = !!options.inlineUsersInEvents;
   let queue = [];
@@ -67,25 +65,6 @@ export default function EventProcessor(options, eventsUrl) {
     // Add event to the summary counters if appropriate
     summarizer.summarizeEvent(event);
 
-    // For each user we haven't seen before, we add an index event - unless this is already
-    // an identify event for that user.
-    let addIndexEvent = false;
-    if (!inlineUsers) {
-      if (event.user && !userKeysCache.get(event.user.key)) {
-        userKeysCache.set(event.user.key, true);
-        if (event.kind !== 'identify') {
-          addIndexEvent = true;
-        }
-      }
-    }
-
-    if (addIndexEvent) {
-      queue.push({
-        kind: 'index',
-        creationDate: event.creationDate,
-        user: userFilter.filterUser(event.user),
-      });
-    }
     queue.push(makeOutputEvent(event));
   };
 
