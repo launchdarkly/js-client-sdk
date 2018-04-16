@@ -481,7 +481,9 @@ function initialize(env, user, options) {
   }
 
   window.addEventListener('beforeunload', function() {
-    events.flush(ident.getUser(), true);
+    if(sendEvents) {
+      events.flush(ident.getUser(), true);
+    }
   });
 
   window.addEventListener('message', handleMessage);
