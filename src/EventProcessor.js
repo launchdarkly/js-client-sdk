@@ -2,7 +2,7 @@ import EventSender from './EventSender';
 import EventSummarizer from './EventSummarizer';
 import UserFilter from './UserFilter';
 
-export default function EventProcessor(options, eventsUrl, sender) {
+export default function EventProcessor(eventsUrl, options = {}, sender = null) {
   const processor = {};
   const eventSender = sender || EventSender(eventsUrl);
   const summarizer = EventSummarizer();

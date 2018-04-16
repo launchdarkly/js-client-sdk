@@ -36,3 +36,7 @@ export const userNotSpecified = function() {
 export const invalidUser = function() {
   return 'Invalid user specified.' + docLink;
 };
+
+export const deprecated = function(oldName, newName) {
+  return '[LaunchDarkly] "' + oldName + '" is deprecated, please use "' + newName + '"';
+};

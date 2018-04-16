@@ -61,14 +61,14 @@ describe('EventProcessor', () => {
 
   it('should warn about missing user on initial flush', () => {
     const warnSpy = sandbox.spy(console, 'warn');
-    const processor = EventProcessor({}, eventsUrl, mockEventSender);
+    const processor = EventProcessor(eventsUrl, {}, mockEventSender);
     processor.flush(null);
     warnSpy.restore();
     expect(warnSpy.called).toEqual(true);
   });
 
   it('should flush asynchronously', () => {
-    const processor = EventProcessor({}, eventsUrl, mockEventSender);
+    const processor = EventProcessor(eventsUrl, {}, mockEventSender);
     const event = { kind: 'identify', key: user.key };
 
     processor.enqueue(event);
@@ -82,7 +82,7 @@ describe('EventProcessor', () => {
   });
 
   it('should flush synchronously', () => {
-    const processor = EventProcessor({}, eventsUrl, mockEventSender);
+    const processor = EventProcessor(eventsUrl, {}, mockEventSender);
     const user = { key: 'foo' };
     const event = { kind: 'identify', key: user.key };
 
@@ -97,7 +97,7 @@ describe('EventProcessor', () => {
   });
 
   it('should enqueue identify event', done => {
-    const ep = EventProcessor({}, eventsUrl, mockEventSender);
+    const ep = EventProcessor(eventsUrl, {}, mockEventSender);
     const event = { kind: 'identify', creationDate: 1000, key: user.key, user: user };
     ep.enqueue(event);
     ep.flush(user, false).then(() => {
@@ -108,8 +108,8 @@ describe('EventProcessor', () => {
   });
 
   it('filters user in identify event', done => {
-    const config = { all_attributes_private: true };
-    const ep = EventProcessor(config, eventsUrl, mockEventSender);
+    const config = { allAttributesPrivate: true };
+    const ep = EventProcessor(eventsUrl, config, mockEventSender);
     const event = { kind: 'identify', creationDate: 1000, key: user.key, user: user };
     ep.enqueue(event);
     ep.flush(user, false).then(() => {
@@ -125,7 +125,7 @@ describe('EventProcessor', () => {
   });
 
   it('queues individual feature event', done => {
-    const ep = EventProcessor({}, eventsUrl, mockEventSender);
+    const ep = EventProcessor(eventsUrl, {}, mockEventSender);
     const event = {
       kind: 'feature',
       creationDate: 1000,
@@ -145,7 +145,7 @@ describe('EventProcessor', () => {
 
   it('can include inline user in feature event', done => {
     const config = { inlineUsersInEvents: true };
-    const ep = EventProcessor(config, eventsUrl, mockEventSender);
+    const ep = EventProcessor(eventsUrl, config, mockEventSender);
     const event = {
       kind: 'feature',
       creationDate: 1000,
@@ -164,8 +164,8 @@ describe('EventProcessor', () => {
   });
 
   it('filters user in feature event', done => {
-    const config = { all_attributes_private: true, inlineUsersInEvents: true };
-    const ep = EventProcessor(config, eventsUrl, mockEventSender);
+    const config = { allAttributesPrivate: true, inlineUsersInEvents: true };
+    const ep = EventProcessor(eventsUrl, config, mockEventSender);
     const event = {
       kind: 'feature',
       creationDate: 1000,
@@ -184,7 +184,7 @@ describe('EventProcessor', () => {
   });
 
   it('summarizes events', done => {
-    const ep = EventProcessor({}, eventsUrl, mockEventSender);
+    const ep = EventProcessor(eventsUrl, {}, mockEventSender);
     const e1 = { kind: 'feature', creationDate: 1000, user: user, key: 'flagkey1',
       version: 11, variation: 1, value: 'value1', default: 'default1', trackEvents: false };
     const e2 = { kind: 'feature', creationDate: 2000, user: user, key: 'flagkey2',
@@ -214,7 +214,7 @@ describe('EventProcessor', () => {
   });
 
   it('queues custom event', done => {
-    const ep = EventProcessor({}, eventsUrl, mockEventSender);
+    const ep = EventProcessor(eventsUrl, {}, mockEventSender);
     const e = { kind: 'custom', creationDate: 1000, user: user, key: 'eventkey',
       data: { thing: 'stuff' } };
     ep.enqueue(e);
@@ -229,7 +229,7 @@ describe('EventProcessor', () => {
 
   it('can include inline user in custom event', done => {
     const config = { inlineUsersInEvents: true };
-    const ep = EventProcessor(config, eventsUrl, mockEventSender);
+    const ep = EventProcessor(eventsUrl, config, mockEventSender);
     const e = { kind: 'custom', creationDate: 1000, user: user, key: 'eventkey',
       data: { thing: 'stuff' } };
     ep.enqueue(e);
@@ -243,8 +243,8 @@ describe('EventProcessor', () => {
   });
 
   it('filters user in custom event', done => {
-    const config = { all_attributes_private: true, inlineUsersInEvents: true };
-    const ep = EventProcessor(config, eventsUrl, mockEventSender);
+    const config = { allAttributesPrivate: true, inlineUsersInEvents: true };
+    const ep = EventProcessor(eventsUrl, config, mockEventSender);
     const e = { kind: 'custom', creationDate: 1000, user: user, key: 'eventkey',
       data: { thing: 'stuff' } };
     ep.enqueue(e);
@@ -258,7 +258,7 @@ describe('EventProcessor', () => {
   });
 
   it('sends nothing if there are no events to flush', () => {
-    const processor = EventProcessor({}, '/fake-url', mockEventSender);
+    const processor = EventProcessor(eventsUrl, {}, mockEventSender);
     processor.flush(user, false);
     expect(mockEventSender.calls.length).toEqual(0);
   });
