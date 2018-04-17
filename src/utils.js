@@ -36,10 +36,10 @@ export function onNextTick(cb) {
  *
  * @param {Promise<any>} promise
  * @param {Function} callback
- * @returns Promise<any>
+ * @returns Promise<any> | undefined
  */
 export function wrapPromiseCallback(promise, callback) {
-  return promise.then(
+  const ret = promise.then(
     value => {
       if (callback) {
         setTimeout(() => {
@@ -53,10 +53,13 @@ export function wrapPromiseCallback(promise, callback) {
         setTimeout(() => {
           callback(error, null);
         }, 0);
+      } else {
+        return Promise.reject(error);
       }
-      return Promise.reject(error);
     }
   );
+
+  return !callback ? ret : undefined;
 }
 
 /**
