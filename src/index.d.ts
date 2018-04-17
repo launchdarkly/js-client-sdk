@@ -207,6 +207,14 @@ declare module 'ldclient-js' {
     identify: (user: LDUser, hash?: string, onDone?: () => void) => Promise<void>;
 
     /**
+     * Flushes pending events asynchronously.
+     * 
+     * @param onDone
+     *   A callback to invoke after the events were flushed.
+     */
+    flush: (onDone?: Function) => Promise<void>;
+
+    /**
      * Retrieves a flag's value.
      *
      * @param key

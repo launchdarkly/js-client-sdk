@@ -1,73 +1,111 @@
-var utils = require('./utils');
+import EventSummarizer from './EventSummarizer';
+import UserFilter from './UserFilter';
+import * as utils from './utils';
 
-function EventProcessor(eventsUrl, eventSerializer) {
-  var processor = {};
-  var queue = [];
-  var initialFlush = true;
-  
-  processor.enqueue = function(event) {
-    queue.push(event);
-  };
-  
-  processor.flush = function(user, sync) {
-    var maxLength = 2000 - eventsUrl.length;
-    var data = [];
-    
-    if (!user) {
-      if (initialFlush) {
-        console && console.warn && console.warn('Be sure to call `identify` in the LaunchDarkly client: http://docs.launchdarkly.com/docs/running-an-ab-test#include-the-client-side-snippet');
-      }
-      return false;
-    }
-    
-    initialFlush = false;
-    while (maxLength > 0 && queue.length > 0) {
-      var event = queue.pop();
-      event.user = user;
-      maxLength = maxLength - utils.base64URLEncode(JSON.stringify(event)).length;
-      // If we are over the max size, put this one back on the queue
-      // to try in the next round, unless this event alone is larger 
-      // than the limit, in which case, screw it, and try it anyway.
-      if (maxLength < 0 && data.length > 0) {
-        queue.push(event);
-      } else {
-        data.push(event);
-      }
-    }
-    
-    if (data.length > 0) {
-      data = eventSerializer.serialize_events(data);
-      var src = eventsUrl + '?d=' + utils.base64URLEncode(JSON.stringify(data));
-      //Detect browser support for CORS
-      if ('withCredentials' in new XMLHttpRequest()) {
-        /* supports cross-domain requests */
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', src, !sync);
-        xhr.send();
-      } else {
-        var img = new Image();
-        img.src = src;
-      }
-    }
+const MAX_URL_LENGTH = 2000;
+const hasCors = 'withCredentials' in new XMLHttpRequest();
 
-    // if the queue is not empty, call settimeout to flush it again 
-    // with a 0 timeout (stack-less recursion)
-    // Or, just recursively call flush_queue with the remaining elements
-    // if we're doing this on unload
-    if (queue.length > 0) {
-      if (sync) {
-        processor.flush(user, sync);
+function sendEvents(eventsUrl, events, sync) {
+  const src = eventsUrl + '?d=' + utils.base64URLEncode(JSON.stringify(events));
+
+  const send = onDone => {
+    // Detect browser support for CORS
+    if (hasCors) {
+      /* supports cross-domain requests */
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', src, !sync);
+
+      if (!sync) {
+        xhr.addEventListener('load', onDone);
       }
-      else {
-        setTimeout(function() {
-          processor.flush(user);
-        }, 0);
+
+      xhr.send();
+    } else {
+      const img = new Image();
+
+      if (!sync) {
+        img.addEventListener('load', onDone);
       }
+
+      img.src = src;
     }
-    return false;
   };
-  
-  return processor;
+
+  if (sync) {
+    send();
+  } else {
+    return new Promise(resolve => {
+      send(resolve);
+    });
+  }
 }
 
-module.exports = EventProcessor;
+export default function EventProcessor(eventsUrl, options = {}) {
+  const processor = {};
+  const summarizer = EventSummarizer();
+  const userFilter = UserFilter(options);
+  const inlineUsers = !!options.inlineUsersInEvents;
+  let queue = [];
+  let initialFlush = true;
+
+  function makeOutputEvent(e) {
+    if (!e.user) {
+      return e;
+    }
+    if (inlineUsers || e.kind === 'identify') { // identify events always have an inline user
+      return Object.assign({}, e, { user: userFilter.filterUser(e.user) });
+    } else {
+      const ret = Object.assign({}, e, { userKey: e.user.key });
+      delete ret['user'];
+      return ret;
+    }
+  }
+
+  processor.enqueue = function(event) {
+    // Add event to the summary counters if appropriate
+    summarizer.summarizeEvent(event);
+
+    queue.push(makeOutputEvent(event));
+  };
+
+  processor.flush = function(user, sync) {
+    const finalSync = sync === undefined ? false : sync;
+    const summary = summarizer.getSummary();
+    summarizer.clearSummary();
+
+    if (!user) {
+      if (initialFlush) {
+        if (console && console.warn) {
+          console.warn(
+            'Be sure to call `identify` in the LaunchDarkly client: http://docs.launchdarkly.com/docs/running-an-ab-test#include-the-client-side-snippet'
+          );
+        }
+      }
+      return Promise.resolve();
+    }
+
+    initialFlush = false;
+
+    if (summary) {
+      summary.kind = 'summary';
+      queue.push(summary);
+    }
+
+    if (queue.length === 0) {
+      return Promise.resolve();
+    }
+
+    const chunks = utils.chunkUserEventsForUrl(MAX_URL_LENGTH - eventsUrl.length, queue);
+
+    const results = [];
+    for (let i = 0; i < chunks.length; i++) {
+      results.push(sendEvents(eventsUrl, chunks[i], finalSync));
+    }
+
+    queue = [];
+
+    return sync ? Promise.resolve() : Promise.all(results);
+  };
+
+  return processor;
+}

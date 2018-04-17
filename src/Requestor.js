@@ -1,13 +1,13 @@
-var utils = require('./utils');
-var errors = require('./errors');
-var messages = require('./messages');
+import * as utils from './utils';
+import * as errors from './errors';
+import * as messages from './messages';
 
-var json = 'application/json';
+const json = 'application/json';
 
 function fetchJSON(endpoint, body, callback) {
-  var xhr = new XMLHttpRequest();
+  const xhr = new XMLHttpRequest();
 
-  xhr.addEventListener('load', function() {
+  xhr.addEventListener('load', () => {
     if (xhr.status === 200 && xhr.getResponseHeader('Content-type') === json) {
       callback(null, JSON.parse(xhr.responseText));
     } else {
@@ -15,8 +15,8 @@ function fetchJSON(endpoint, body, callback) {
     }
   });
 
-  xhr.addEventListener('error', function() {
-    if(xhr.status === 404) {
+  xhr.addEventListener('error', () => {
+    if (xhr.status === 404) {
       callback(new errors.LDInvalidEnvironmentIdError(messages.environmentNotFound()));
     }
     callback(xhr.statusText);
@@ -24,7 +24,7 @@ function fetchJSON(endpoint, body, callback) {
 
   if (body) {
     xhr.open('REPORT', endpoint);
-    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(body));
   } else {
     xhr.open('GET', endpoint);
@@ -34,34 +34,38 @@ function fetchJSON(endpoint, body, callback) {
   return xhr;
 }
 
-function Requestor(baseUrl, environment, useReport) {
-  var flagSettingsRequest;
-  var lastFlagSettingsCallback;
+export default function Requestor(baseUrl, environment, useReport) {
+  let flagSettingsRequest;
+  let lastFlagSettingsCallback;
 
-  var requestor = {};
+  const requestor = {};
 
   requestor.fetchFlagSettings = function(user, hash, callback) {
-    var data;
-    var endpoint;
-    var body;
-    var cb;
+    let data;
+    let endpoint;
+    let body;
+    let cb;
 
     if (useReport) {
-      endpoint = [baseUrl, '/sdk/eval/', environment,  '/user', hash ? '?h=' + hash : ''].join('');
+      endpoint = [baseUrl, '/sdk/eval/', environment, '/user', hash ? '?h=' + hash : ''].join('');
       body = user;
     } else {
       data = utils.base64URLEncode(JSON.stringify(user));
-      endpoint  = [baseUrl, '/sdk/eval/', environment,  '/users/', data, hash ? '?h=' + hash : ''].join('');
+      endpoint = [baseUrl, '/sdk/eval/', environment, '/users/', data, hash ? '?h=' + hash : ''].join('');
     }
 
-    var wrappedCallback = (function(currentCallback) {
-      return function() {
-        currentCallback.apply(null, arguments);
+    const wrappedCallback = (function(currentCallback) {
+      return function(error, result) {
+        let finalResult = result;
+        // if we got flags, convert them to the more verbose format used by the eval stream
+        if (result) {
+          finalResult = utils.transformValuesToVersionedValues(result);
+        }
+        currentCallback(error, finalResult);
         flagSettingsRequest = null;
         lastFlagSettingsCallback = null;
       };
     })(callback);
-
 
     if (flagSettingsRequest) {
       flagSettingsRequest.abort();
@@ -80,11 +84,9 @@ function Requestor(baseUrl, environment, useReport) {
   };
 
   requestor.fetchGoals = function(callback) {
-    var endpoint = [baseUrl, '/sdk/goals/', environment].join('');
+    const endpoint = [baseUrl, '/sdk/goals/', environment].join('');
     fetchJSON(endpoint, null, callback);
   };
 
   return requestor;
 }
-
-module.exports = Requestor;

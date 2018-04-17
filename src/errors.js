@@ -12,9 +12,9 @@ function createCustomError(name) {
   return CustomError;
 }
 
-exports.LDUnexpectedResponseError = createCustomError('LaunchDarklyUnexpectedResponseError');
-exports.LDInvalidEnvironmentIdError = createCustomError('LaunchDarklyInvalidEnvironmentIdError');
-exports.LDInvalidUserError = createCustomError('LaunchDarklyInvalidUserError');
-exports.LDInvalidEventKeyError = createCustomError('LaunchDarklyInvalidEventKeyError');
-exports.LDInvalidArgumentError = createCustomError('LaunchDarklyInvalidArgumentError');
-exports.LDFlagFetchError = createCustomError('LaunchDarklyFlagFetchError');
+export const LDUnexpectedResponseError = createCustomError('LaunchDarklyUnexpectedResponseError');
+export const LDInvalidEnvironmentIdError = createCustomError('LaunchDarklyInvalidEnvironmentIdError');
+export const LDInvalidUserError = createCustomError('LaunchDarklyInvalidUserError');
+export const LDInvalidEventKeyError = createCustomError('LaunchDarklyInvalidEventKeyError');
+export const LDInvalidArgumentError = createCustomError('LaunchDarklyInvalidArgumentError');
+export const LDFlagFetchError = createCustomError('LaunchDarklyFlagFetchError');
