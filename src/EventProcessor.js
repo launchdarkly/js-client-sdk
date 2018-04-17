@@ -44,22 +44,32 @@ export default function EventProcessor(eventsUrl, options = {}) {
   const processor = {};
   const summarizer = EventSummarizer();
   const userFilter = UserFilter(options);
+  const inlineUsers = !!options.inlineUsersInEvents;
   let queue = [];
   let initialFlush = true;
 
-  function serializeEvents(events) {
-    return events.map(e => (e.user ? Object.assign({}, e, { user: userFilter.filterUser(e.user) }) : e));
+  function makeOutputEvent(e) {
+    if (!e.user) {
+      return e;
+    }
+    if (inlineUsers || e.kind === 'identify') { // identify events always have an inline user
+      return Object.assign({}, e, { user: userFilter.filterUser(e.user) });
+    } else {
+      const ret = Object.assign({}, e, { userKey: e.user.key });
+      delete ret['user'];
+      return ret;
+    }
   }
 
   processor.enqueue = function(event) {
     // Add event to the summary counters if appropriate
     summarizer.summarizeEvent(event);
-    queue.push(event);
+
+    queue.push(makeOutputEvent(event));
   };
 
   processor.flush = function(user, sync) {
     const finalSync = sync === undefined ? false : sync;
-    const serializedQueue = serializeEvents(queue);
     const summary = summarizer.getSummary();
     summarizer.clearSummary();
 
@@ -78,14 +88,14 @@ export default function EventProcessor(eventsUrl, options = {}) {
 
     if (summary) {
       summary.kind = 'summary';
-      serializedQueue.push(summary);
+      queue.push(summary);
     }
 
-    if (serializedQueue.length === 0) {
+    if (queue.length === 0) {
       return Promise.resolve();
     }
 
-    const chunks = utils.chunkUserEventsForUrl(MAX_URL_LENGTH - eventsUrl.length, serializedQueue);
+    const chunks = utils.chunkUserEventsForUrl(MAX_URL_LENGTH - eventsUrl.length, queue);
 
     const results = [];
     for (let i = 0; i < chunks.length; i++) {
