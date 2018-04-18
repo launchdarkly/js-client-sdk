@@ -5,61 +5,57 @@ describe('UserFilter', () => {
 
   // users to serialize
   const user = {
-    'key': 'abc',
-    'firstName': 'Sue',
-    'custom': { 'bizzle': 'def', 'dizzle': 'ghi' }
+    key: 'abc',
+    firstName: 'Sue',
+    custom: { bizzle: 'def', dizzle: 'ghi' },
   };
 
   const userSpecifyingOwnPrivateAttr = {
-    'key': 'abc',
-    'firstName': 'Sue',
-    'custom': { 'bizzle': 'def', 'dizzle': 'ghi' },
-    'privateAttributeNames': [ 'dizzle', 'unused' ]
+    key: 'abc',
+    firstName: 'Sue',
+    custom: { bizzle: 'def', dizzle: 'ghi' },
+    privateAttributeNames: ['dizzle', 'unused'],
   };
 
-  var userWithUnknownTopLevelAttrs = {
-    'key': 'abc',
-    'firstName': 'Sue',
-    'species': 'human',
-    'hatSize': 6,
-    'custom': { 'bizzle': 'def', 'dizzle': 'ghi' }
+  const userWithUnknownTopLevelAttrs = {
+    key: 'abc',
+    firstName: 'Sue',
+    species: 'human',
+    hatSize: 6,
+    custom: { bizzle: 'def', dizzle: 'ghi' },
   };
 
   const anonUser = {
-    'key': 'abc',
-    'anonymous': true,
-    'custom': { 'bizzle': 'def', 'dizzle': 'ghi' }
+    key: 'abc',
+    anonymous: true,
+    custom: { bizzle: 'def', dizzle: 'ghi' },
   };
 
   // expected results from serializing user
   const userWithAllAttrsHidden = {
-    'key': 'abc',
-    'custom': { },
-    'privateAttrs': [ 'bizzle', 'dizzle', 'firstName' ]
+    key: 'abc',
+    custom: {},
+    privateAttrs: ['bizzle', 'dizzle', 'firstName'],
   };
 
   const userWithSomeAttrsHidden = {
-    'key': 'abc',
-    'custom': {
-        'dizzle': 'ghi'
-    },
-    'privateAttrs': [ 'bizzle',  'firstName' ]
+    key: 'abc',
+    custom: { dizzle: 'ghi' },
+    privateAttrs: ['bizzle', 'firstName'],
   };
 
   const userWithOwnSpecifiedAttrHidden = {
-    'key': 'abc',
-    'firstName': 'Sue',
-    'custom': {
-      'bizzle': 'def'
-    },
-    'privateAttrs': [ 'dizzle' ]
+    key: 'abc',
+    firstName: 'Sue',
+    custom: { bizzle: 'def' },
+    privateAttrs: ['dizzle'],
   };
 
   const anonUserWithAllAttrsHidden = {
-    'key': 'abc',
-    'anonymous': true,
-    'custom': { },
-    'privateAttrs': [ 'bizzle', 'dizzle' ]
+    key: 'abc',
+    anonymous: true,
+    custom: {},
+    privateAttrs: ['bizzle', 'dizzle'],
   };
 
   beforeEach(() => {
@@ -87,12 +83,12 @@ describe('UserFilter', () => {
   });
 
   it('hides some attributes if privateAttributeNames is set', () => {
-    const uf = UserFilter({ privateAttributeNames: [ 'firstName', 'bizzle' ]});
+    const uf = UserFilter({ privateAttributeNames: ['firstName', 'bizzle'] });
     expect(uf.filterUser(user)).toEqual(userWithSomeAttrsHidden);
   });
 
   it('allows private_attribute_names as deprecated synonym for privateAttributeNames', () => {
-    const uf = UserFilter({ private_attribute_names: [ 'firstName', 'bizzle' ]});
+    const uf = UserFilter({ private_attribute_names: ['firstName', 'bizzle'] });
     expect(uf.filterUser(user)).toEqual(userWithSomeAttrsHidden);
     expect(warnSpy).toHaveBeenCalled();
   });
@@ -103,7 +99,7 @@ describe('UserFilter', () => {
   });
 
   it('looks at both per-user privateAttrs and global config', () => {
-    const uf = UserFilter({ privateAttributeNames: [ 'firstName', 'bizzle' ]});
+    const uf = UserFilter({ privateAttributeNames: ['firstName', 'bizzle'] });
     expect(uf.filterUser(userSpecifyingOwnPrivateAttr)).toEqual(userWithAllAttrsHidden);
   });
 

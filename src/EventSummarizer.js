@@ -32,7 +32,7 @@ export default function EventSummarizer() {
   es.getSummary = function() {
     const flagsOut = {};
     let empty = true;
-    for (let i in counters) {
+    for (const i in counters) {
       const c = counters[i];
       let flag = flagsOut[c.key];
       if (!flag) {
@@ -54,11 +54,13 @@ export default function EventSummarizer() {
       flag.counters.push(counterOut);
       empty = false;
     }
-    return empty ? null : {
-      startDate,
-      endDate,
-      features: flagsOut,
-    };
+    return empty
+      ? null
+      : {
+          startDate,
+          endDate,
+          features: flagsOut,
+        };
   };
 
   es.clearSummary = function() {

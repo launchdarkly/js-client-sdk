@@ -55,7 +55,8 @@ export default function EventProcessor(eventsUrl, options = {}, emitter = null, 
   // Transform an event from its internal format to the format we use when sending a payload.
   function makeOutputEvent(e) {
     const ret = Object.assign({}, e);
-    if (inlineUsers || e.kind === 'identify') { // identify events always have an inline user
+    if (inlineUsers || e.kind === 'identify') {
+      // identify events always have an inline user
       ret.user = userFilter.filterUser(e.user);
     } else {
       ret.userKey = e.user.key;
@@ -126,7 +127,7 @@ export default function EventProcessor(eventsUrl, options = {}, emitter = null, 
           disabled = true;
           utils.onNextTick(() => {
             emitter.maybeReportError(
-              new errors.LDUnexpectedResponseError("Received 401 error, no further events will be posted")
+              new errors.LDUnexpectedResponseError('Received 401 error, no further events will be posted')
             );
           });
         }
