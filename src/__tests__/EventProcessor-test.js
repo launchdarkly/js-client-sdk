@@ -7,9 +7,9 @@ describe('EventProcessor', () => {
   let warnSpy;
   const mockEventSender = {};
   const user = { key: 'userKey', name: 'Red' };
-  const filteredUser = { key: 'userKey', privateAttrs: [ 'name' ] };
+  const filteredUser = { key: 'userKey', privateAttrs: ['name'] };
   const eventsUrl = '/fake-url';
-  
+
   mockEventSender.sendEvents = function(events, sync) {
     mockEventSender.calls.push({
       events: events,
@@ -107,12 +107,14 @@ describe('EventProcessor', () => {
     ep.enqueue(event);
     ep.flush().then(() => {
       expect(mockEventSender.calls.length).toEqual(1);
-      expect(mockEventSender.calls[0].events).toEqual([{
-        kind: 'identify',
-        creationDate: event.creationDate,
-        key: user.key,
-        user: filteredUser,
-      }]);
+      expect(mockEventSender.calls[0].events).toEqual([
+        {
+          kind: 'identify',
+          creationDate: event.creationDate,
+          key: user.key,
+          user: filteredUser,
+        },
+      ]);
       done();
     });
   });
@@ -182,8 +184,17 @@ describe('EventProcessor', () => {
   it('sets event kind to debug if event is temporarily in debug mode', done => {
     const ep = EventProcessor(eventsUrl, {}, null, mockEventSender);
     const futureTime = new Date().getTime() + 1000000;
-    const e = { kind: 'feature', creationDate: 1000, user: user, key: 'flagkey',
-      version: 11, variation: 1, value: 'value', trackEvents: false, debugEventsUntilDate: futureTime };
+    const e = {
+      kind: 'feature',
+      creationDate: 1000,
+      user: user,
+      key: 'flagkey',
+      version: 11,
+      variation: 1,
+      value: 'value',
+      trackEvents: false,
+      debugEventsUntilDate: futureTime,
+    };
     ep.enqueue(e);
     ep.flush().then(() => {
       expect(mockEventSender.calls.length).toEqual(1);
@@ -198,8 +209,17 @@ describe('EventProcessor', () => {
   it('can both track and debug an event', done => {
     const ep = EventProcessor(eventsUrl, {}, null, mockEventSender);
     const futureTime = new Date().getTime() + 1000000;
-    const e = { kind: 'feature', creationDate: 1000, user: user, key: 'flagkey',
-      version: 11, variation: 1, value: 'value', trackEvents: true, debugEventsUntilDate: futureTime };
+    const e = {
+      kind: 'feature',
+      creationDate: 1000,
+      user: user,
+      key: 'flagkey',
+      version: 11,
+      variation: 1,
+      value: 'value',
+      trackEvents: true,
+      debugEventsUntilDate: futureTime,
+    };
     ep.enqueue(e);
     ep.flush().then(() => {
       expect(mockEventSender.calls.length).toEqual(1);
@@ -225,8 +245,17 @@ describe('EventProcessor', () => {
       // Now send an event with debug mode on, with a "debug until" time that is further in
       // the future than the server time, but in the past compared to the client.
       const debugUntil = serverTime + 1000;
-      const e = { kind: 'feature', creationDate: 1000, user: user, key: 'flagkey',
-        version: 11, variation: 1, value: 'value', trackEvents: false, debugEventsUntilDate: debugUntil };
+      const e = {
+        kind: 'feature',
+        creationDate: 1000,
+        user: user,
+        key: 'flagkey',
+        version: 11,
+        variation: 1,
+        value: 'value',
+        trackEvents: false,
+        debugEventsUntilDate: debugUntil,
+      };
       ep.enqueue(e);
 
       // Should get a summary event only, not a full feature event
@@ -253,8 +282,17 @@ describe('EventProcessor', () => {
       // Now send an event with debug mode on, with a "debug until" time that is further in
       // the future than the client time, but in the past compared to the server.
       const debugUntil = serverTime - 1000;
-      const e = { kind: 'feature', creationDate: 1000, user: user, key: 'flagkey',
-        version: 11, variation: 1, value: 'value', trackEvents: false, debugEventsUntilDate: debugUntil };
+      const e = {
+        kind: 'feature',
+        creationDate: 1000,
+        user: user,
+        key: 'flagkey',
+        version: 11,
+        variation: 1,
+        value: 'value',
+        trackEvents: false,
+        debugEventsUntilDate: debugUntil,
+      };
       ep.enqueue(e);
 
       // Should get a summary event only, not a full feature event
@@ -270,10 +308,21 @@ describe('EventProcessor', () => {
 
   it('summarizes nontracked events', done => {
     const ep = EventProcessor(eventsUrl, {}, null, mockEventSender);
-    const e1 = { kind: 'feature', creationDate: 1000, user: user, key: 'flagkey1',
-      version: 11, variation: 1, value: 'value1', default: 'default1', trackEvents: false };
-    const e2 = { kind: 'feature', creationDate: 2000, user: user, key: 'flagkey2',
-      version: 22, variation: 1, value: 'value2', default: 'default2', trackEvents: false };
+    function makeEvent(key, date, version, variation, value, defaultVal) {
+      return {
+        kind: 'feature',
+        creationDate: date,
+        user: user,
+        key: key,
+        version: version,
+        variation: variation,
+        value: value,
+        default: defaultVal,
+        trackEvents: false,
+      };
+    }
+    const e1 = makeEvent('flagkey1', 1000, 11, 1, 'value1', 'default1');
+    const e2 = makeEvent('flagkey2', 2000, 22, 1, 'value2', 'default2');
     ep.enqueue(e1);
     ep.enqueue(e2);
     ep.flush().then(() => {
@@ -287,21 +336,26 @@ describe('EventProcessor', () => {
       expect(se.features).toEqual({
         flagkey1: {
           default: 'default1',
-          counters: [ { version: 11, value: 'value1', count: 1 } ]
+          counters: [{ version: 11, value: 'value1', count: 1 }],
         },
         flagkey2: {
           default: 'default2',
-          counters: [ { version: 22, value: 'value2', count: 1 } ]
-        }
+          counters: [{ version: 22, value: 'value2', count: 1 }],
+        },
       });
       done();
     });
   });
 
-  it('queues custom event when trackEvents is true', done => {
+  it('queues custom event', done => {
     const ep = EventProcessor(eventsUrl, {}, null, mockEventSender);
-    const e = { kind: 'custom', creationDate: 1000, user: user, key: 'eventkey',
-      data: { thing: 'stuff' } };
+    const e = {
+      kind: 'custom',
+      creationDate: 1000,
+      user: user,
+      key: 'eventkey',
+      data: { thing: 'stuff' },
+    };
     ep.enqueue(e);
     ep.flush().then(() => {
       expect(mockEventSender.calls.length).toEqual(1);
@@ -315,8 +369,13 @@ describe('EventProcessor', () => {
   it('can include inline user in custom event', done => {
     const config = { inlineUsersInEvents: true };
     const ep = EventProcessor(eventsUrl, config, null, mockEventSender);
-    const e = { kind: 'custom', creationDate: 1000, user: user, key: 'eventkey',
-      data: { thing: 'stuff' } };
+    const e = {
+      kind: 'custom',
+      creationDate: 1000,
+      user: user,
+      key: 'eventkey',
+      data: { thing: 'stuff' },
+    };
     ep.enqueue(e);
     ep.flush().then(() => {
       expect(mockEventSender.calls.length).toEqual(1);
@@ -330,8 +389,13 @@ describe('EventProcessor', () => {
   it('filters user in custom event', done => {
     const config = { allAttributesPrivate: true, inlineUsersInEvents: true };
     const ep = EventProcessor(eventsUrl, config, null, mockEventSender);
-    const e = { kind: 'custom', creationDate: 1000, user: user, key: 'eventkey',
-      data: { thing: 'stuff' } };
+    const e = {
+      kind: 'custom',
+      creationDate: 1000,
+      user: user,
+      key: 'eventkey',
+      data: { thing: 'stuff' },
+    };
     ep.enqueue(e);
     ep.flush().then(() => {
       expect(mockEventSender.calls.length).toEqual(1);

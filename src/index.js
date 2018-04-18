@@ -60,7 +60,7 @@ function initialize(env, user, options = {}) {
         kind: 'identify',
         key: user.key,
         user: user,
-        creationDate: new Date().getTime()
+        creationDate: new Date().getTime(),
       });
     }
   }
@@ -95,7 +95,7 @@ function initialize(env, user, options = {}) {
       event.trackEvents = flag.trackEvents;
       event.debugEventsUntilDate = flag.debugEventsUntilDate;
     }
-    
+
     enqueueEvent(event);
   }
 

@@ -358,7 +358,6 @@ describe('LDClient', () => {
       sandbox.restore();
       expect(warnSpy.called).toEqual(true);
     });
-
   });
 
   describe('event listening', () => {
