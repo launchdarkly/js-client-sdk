@@ -33,16 +33,23 @@ describe('EventSummarizer', () => {
 
   it('increments counters for feature events', () => {
     const es = EventSummarizer();
-    const event1 = { kind: 'feature', creationDate: 1000, key: 'key1', version: 11, user: user,
-      variation: 1, value: 100, default: 111 };
-    const event2 = { kind: 'feature', creationDate: 1000, key: 'key1', version: 11, user: user,
-      variation: 2, value: 200, default: 111 };
-    const event3 = { kind: 'feature', creationDate: 1000, key: 'key2', version: 22, user: user,
-      variation: 1, value: 999, default: 222 };
-    const event4 = { kind: 'feature', creationDate: 1000, key: 'key1', version: 11, user: user,
-      variation: 1, value: 100, default: 111 };
-    const event5 = { kind: 'feature', creationDate: 1000, key: 'badkey', user: user,
-      value: 333, default: 333 };
+    function makeEvent(key, version, variation, value, defaultVal) {
+      return {
+        kind: 'feature',
+        creationDate: 1000,
+        key: key,
+        version: version,
+        user: user,
+        variation: variation,
+        value: value,
+        default: defaultVal,
+      };
+    }
+    const event1 = makeEvent('key1', 11, 1, 100, 111);
+    const event2 = makeEvent('key1', 11, 2, 200, 111);
+    const event3 = makeEvent('key2', 22, 1, 999, 222);
+    const event4 = makeEvent('key1', 11, 1, 100, 111);
+    const event5 = makeEvent('badkey', null, null, 333, 333);
     es.summarizeEvent(event1);
     es.summarizeEvent(event2);
     es.summarizeEvent(event3);
@@ -54,19 +61,16 @@ describe('EventSummarizer', () => {
     const expectedFeatures = {
       key1: {
         default: 111,
-        counters: [
-          { value: 100, version: 11, count: 2 },
-          { value: 200, version: 11, count: 1 },
-        ],
+        counters: [{ value: 100, version: 11, count: 2 }, { value: 200, version: 11, count: 1 }],
       },
       key2: {
         default: 222,
-        counters: [ { value: 999, version: 22, count: 1 }]
+        counters: [{ value: 999, version: 22, count: 1 }],
       },
       badkey: {
         default: 333,
-        counters: [ { value: 333, unknown: true, count: 1 }]
-      }
+        counters: [{ value: 333, unknown: true, count: 1 }],
+      },
     };
     expect(data.features).toEqual(expectedFeatures);
   });

@@ -7,9 +7,9 @@ describe('EventProcessor', () => {
   let warnSpy;
   const mockEventSender = {};
   const user = { key: 'userKey', name: 'Red' };
-  const filteredUser = { key: 'userKey', privateAttrs: [ 'name' ] };
+  const filteredUser = { key: 'userKey', privateAttrs: ['name'] };
   const eventsUrl = '/fake-url';
-  
+
   mockEventSender.sendEvents = function(events, sync) {
     mockEventSender.calls.push({
       events: events,
@@ -114,12 +114,14 @@ describe('EventProcessor', () => {
     ep.enqueue(event);
     ep.flush(user, false).then(() => {
       expect(mockEventSender.calls.length).toEqual(1);
-      expect(mockEventSender.calls[0].events).toEqual([{
-        kind: 'identify',
-        creationDate: event.creationDate,
-        key: user.key,
-        user: filteredUser,
-      }]);
+      expect(mockEventSender.calls[0].events).toEqual([
+        {
+          kind: 'identify',
+          creationDate: event.creationDate,
+          key: user.key,
+          user: filteredUser,
+        },
+      ]);
       done();
     });
   });
@@ -185,10 +187,21 @@ describe('EventProcessor', () => {
 
   it('summarizes events', done => {
     const ep = EventProcessor(eventsUrl, {}, mockEventSender);
-    const e1 = { kind: 'feature', creationDate: 1000, user: user, key: 'flagkey1',
-      version: 11, variation: 1, value: 'value1', default: 'default1', trackEvents: false };
-    const e2 = { kind: 'feature', creationDate: 2000, user: user, key: 'flagkey2',
-      version: 22, variation: 1, value: 'value2', default: 'default2', trackEvents: false };
+    function makeEvent(key, date, version, variation, value, defaultVal) {
+      return {
+        kind: 'feature',
+        creationDate: date,
+        user: user,
+        key: key,
+        version: version,
+        variation: variation,
+        value: value,
+        default: defaultVal,
+        trackEvents: false,
+      };
+    }
+    const e1 = makeEvent('flagkey1', 1000, 11, 1, 'value1', 'default1');
+    const e2 = makeEvent('flagkey2', 2000, 22, 1, 'value2', 'default2');
     ep.enqueue(e1);
     ep.enqueue(e2);
     ep.flush(user, false).then(() => {
@@ -202,12 +215,12 @@ describe('EventProcessor', () => {
       expect(se.features).toEqual({
         flagkey1: {
           default: 'default1',
-          counters: [ { version: 11, value: 'value1', count: 1 } ]
+          counters: [{ version: 11, value: 'value1', count: 1 }],
         },
         flagkey2: {
           default: 'default2',
-          counters: [ { version: 22, value: 'value2', count: 1 } ]
-        }
+          counters: [{ version: 22, value: 'value2', count: 1 }],
+        },
       });
       done();
     });
@@ -215,8 +228,13 @@ describe('EventProcessor', () => {
 
   it('queues custom event', done => {
     const ep = EventProcessor(eventsUrl, {}, mockEventSender);
-    const e = { kind: 'custom', creationDate: 1000, user: user, key: 'eventkey',
-      data: { thing: 'stuff' } };
+    const e = {
+      kind: 'custom',
+      creationDate: 1000,
+      user: user,
+      key: 'eventkey',
+      data: { thing: 'stuff' },
+    };
     ep.enqueue(e);
     ep.flush(user, false).then(() => {
       expect(mockEventSender.calls.length).toEqual(1);
@@ -230,8 +248,13 @@ describe('EventProcessor', () => {
   it('can include inline user in custom event', done => {
     const config = { inlineUsersInEvents: true };
     const ep = EventProcessor(eventsUrl, config, mockEventSender);
-    const e = { kind: 'custom', creationDate: 1000, user: user, key: 'eventkey',
-      data: { thing: 'stuff' } };
+    const e = {
+      kind: 'custom',
+      creationDate: 1000,
+      user: user,
+      key: 'eventkey',
+      data: { thing: 'stuff' },
+    };
     ep.enqueue(e);
     ep.flush(user, false).then(() => {
       expect(mockEventSender.calls.length).toEqual(1);
@@ -245,8 +268,13 @@ describe('EventProcessor', () => {
   it('filters user in custom event', done => {
     const config = { allAttributesPrivate: true, inlineUsersInEvents: true };
     const ep = EventProcessor(eventsUrl, config, mockEventSender);
-    const e = { kind: 'custom', creationDate: 1000, user: user, key: 'eventkey',
-      data: { thing: 'stuff' } };
+    const e = {
+      kind: 'custom',
+      creationDate: 1000,
+      user: user,
+      key: 'eventkey',
+      data: { thing: 'stuff' },
+    };
     ep.enqueue(e);
     ep.flush(user, false).then(() => {
       expect(mockEventSender.calls.length).toEqual(1);
