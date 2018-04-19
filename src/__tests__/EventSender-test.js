@@ -26,6 +26,10 @@ describe('EventSender', () => {
     warnSpy.mockRestore();
   });
 
+  function lastRequest() {
+    return requests[requests.length - 1];
+  }
+
   function base64URLDecode(str) {
     let s = str;
     while (s.length % 4 !== 0) {
@@ -47,18 +51,16 @@ describe('EventSender', () => {
     const sender = EventSender(eventsUrl);
     const event = { kind: 'identify', key: 'userKey' };
     sender.sendEvents([event], false);
-    requests[0].respond();
-    expect(requests.length).toEqual(1);
-    expect(requests[0].async).toEqual(true);
+    lastRequest().respond();
+    expect(lastRequest().async).toEqual(true);
   });
 
   it('should send synchronously', () => {
     const sender = EventSender(eventsUrl);
     const event = { kind: 'identify', key: 'userKey' };
     sender.sendEvents([event], true);
-    requests[0].respond();
-    expect(requests.length).toEqual(1);
-    expect(requests[0].async).toEqual(false);
+    lastRequest().respond();
+    expect(lastRequest().async).toEqual(false);
   });
 
   it('should encode events in a single chunk if they fit', done => {
@@ -67,11 +69,10 @@ describe('EventSender', () => {
     const event2 = { kind: 'identify', key: 'userKey2' };
     const events = [event1, event2];
     sender.sendEvents(events, true).then(() => {
-      expect(requests.length).toEqual(1);
-      expect(decodeOutputFromUrl(requests[0].url)).toEqual(events);
+      expect(decodeOutputFromUrl(lastRequest().url)).toEqual(events);
       done();
     });
-    requests[0].respond();
+    lastRequest().respond();
   });
 
   it('should send events in multiple chunks if necessary', done => {
@@ -81,15 +82,22 @@ describe('EventSender', () => {
       events.push({ kind: 'identify', key: 'thisIsALongUserKey' + i });
     }
     sender.sendEvents(events, true).then(() => {
-      expect(requests.length).toEqual(3);
-      const output0 = decodeOutputFromUrl(requests[0].url);
-      const output1 = decodeOutputFromUrl(requests[1].url);
-      const output2 = decodeOutputFromUrl(requests[2].url);
+      const realRequests = [];
+      // The array of requests will also contain empty requests from our CORS-checking logic
+      for (let i = 0; i < requests.length; i++) {
+        if (requests[i].url) {
+          realRequests.push(requests[i]);
+        }
+      }
+      expect(realRequests.length).toEqual(3);
+      const output0 = decodeOutputFromUrl(realRequests[0].url);
+      const output1 = decodeOutputFromUrl(realRequests[1].url);
+      const output2 = decodeOutputFromUrl(realRequests[2].url);
       expect(output0).toEqual(events.slice(0, 31));
       expect(output1).toEqual(events.slice(31, 62));
       expect(output2).toEqual(events.slice(62, 80));
       done();
     });
-    requests[0].respond();
+    lastRequest().respond();
   });
 });
