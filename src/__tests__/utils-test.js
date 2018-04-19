@@ -1,4 +1,3 @@
-import sinon from 'sinon';
 import { base64URLEncode, wrapPromiseCallback, chunkUserEventsForUrl } from '../utils';
 
 describe('utils', () => {

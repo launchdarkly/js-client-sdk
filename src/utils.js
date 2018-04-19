@@ -108,7 +108,7 @@ export function chunkUserEventsForUrl(maxLength, events) {
     chunk = [];
 
     while (remainingSpace > 0) {
-      const event = allEvents.pop();
+      const event = allEvents.shift();
       if (!event) {
         break;
       }
@@ -117,7 +117,7 @@ export function chunkUserEventsForUrl(maxLength, events) {
       // to try in the next round, unless this event alone is larger
       // than the limit, in which case, screw it, and try it anyway.
       if (remainingSpace < 0 && chunk.length > 0) {
-        allEvents.push(event);
+        allEvents.unshift(event);
       } else {
         chunk.push(event);
       }
