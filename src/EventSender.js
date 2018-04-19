@@ -1,7 +1,6 @@
 import * as utils from './utils';
 
 const MAX_URL_LENGTH = 2000;
-const hasCors = 'withCredentials' in new XMLHttpRequest();
 
 export default function EventSender(eventsUrl) {
   const sender = {};
@@ -10,6 +9,7 @@ export default function EventSender(eventsUrl) {
     const src = eventsUrl + '?d=' + utils.base64URLEncode(JSON.stringify(events));
 
     const send = onDone => {
+      const hasCors = 'withCredentials' in new XMLHttpRequest();
       // Detect browser support for CORS
       if (hasCors) {
         /* supports cross-domain requests */
