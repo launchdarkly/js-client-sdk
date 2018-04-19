@@ -82,7 +82,7 @@ describe('EventSender', () => {
       events.push({ kind: 'identify', key: 'thisIsALongUserKey' + i });
     }
     sender.sendEvents(events, true).then(() => {
-      var realRequests = [];
+      const realRequests = [];
       // The array of requests will also contain empty requests from our CORS-checking logic
       for (let i = 0; i < requests.length; i++) {
         if (requests[i].url) {
