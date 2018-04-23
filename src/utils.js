@@ -77,20 +77,6 @@ export function transformValuesToVersionedValues(flags) {
 }
 
 /**
- * Takes a map obtained from the client stream and converts it to the briefer format used in
- * bootstrap data or local storagel
- */
-export function transformValuesToUnversionedValues(flags) {
-  const ret = {};
-  for (const key in flags) {
-    if (flags.hasOwnProperty(key)) {
-      ret[key] = flags[key].value;
-    }
-  }
-  return ret;
-}
-
-/**
  * Returns an array of event groups each of which can be safely URL-encoded
  * without hitting the safe maximum URL length of certain browsers.
  *

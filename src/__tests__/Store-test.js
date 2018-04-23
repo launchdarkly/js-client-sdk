@@ -1,15 +1,19 @@
-import store from '../store';
+import Identity from '../Identity';
+import Store from '../Store';
 import * as messages from '../messages';
 
-describe('store', () => {
+describe('Store', () => {
+  const ident = Identity(null);
+
   it('should handle localStorage getItem throwing an exception', () => {
+    const store = Store('env', 'hash', ident);
     const getItemSpy = jest.spyOn(localStorage, 'getItem').mockImplementation(() => {
       throw new Error('localstorage getitem error');
     });
 
     const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
-    store.get('foo');
+    store.loadFlags();
     expect(consoleWarnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
 
     consoleWarnSpy.mockRestore();
@@ -17,13 +21,14 @@ describe('store', () => {
   });
 
   it('should handle localStorage setItem throwing an exception', () => {
+    const store = Store('env', 'hash', ident);
     const setItemSpy = jest.spyOn(localStorage, 'setItem').mockImplementation(() => {
       throw new Error('localstorage getitem error');
     });
 
     const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
-    store.set('foo', 'bar');
+    store.saveFlags({ foo: {} });
     expect(consoleWarnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
 
     consoleWarnSpy.mockRestore();
