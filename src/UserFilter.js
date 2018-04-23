@@ -35,6 +35,9 @@ export default function UserFilter(config) {
   }
 
   filter.filterUser = function(user) {
+    if (!user) {
+      return null;
+    }
     const userPrivateAttrs = user.privateAttributeNames || [];
 
     const isPrivateAttr = function(name) {

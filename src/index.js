@@ -11,7 +11,6 @@ import * as errors from './errors';
 
 const readyEvent = 'ready';
 const changeEvent = 'change';
-const flushInterval = 2000;
 const locationWatcherInterval = 300;
 
 function initialize(env, user, options = {}) {
@@ -23,15 +22,15 @@ function initialize(env, user, options = {}) {
   const environment = env;
   const emitter = EventEmitter();
   const stream = Stream(streamUrl, environment, hash, options.useReport);
-  const events = EventProcessor(eventsUrl + '/a/' + environment + '.gif', options);
+  const events = EventProcessor(eventsUrl + '/a/' + environment + '.gif', options, emitter);
   const requestor = Requestor(baseUrl, environment, options.useReport);
   const seenRequests = {};
-  let samplingInterval = parseInt(options.samplingInterval, 10) || 0;
   let flags = typeof options.bootstrap === 'object' ? utils.transformValuesToVersionedValues(options.bootstrap) : {};
   let goalTracker;
   let useLocalStorage;
   let goals;
   let subscribedToChangeEvents;
+  let firstEvent = true;
 
   function lsKey(env, user) {
     let key = '';
@@ -42,24 +41,36 @@ function initialize(env, user, options = {}) {
   }
 
   function shouldEnqueueEvent() {
-    return (
-      sendEvents && !doNotTrack() && (samplingInterval === 0 || Math.floor(Math.random() * samplingInterval) === 0)
-    );
+    return sendEvents && !doNotTrack();
   }
 
   function enqueueEvent(event) {
+    if (!event.user) {
+      if (firstEvent) {
+        if (console && console.warn) {
+          console.warn(
+            'Be sure to call `identify` in the LaunchDarkly client: http://docs.launchdarkly.com/docs/running-an-ab-test#include-the-client-side-snippet'
+          );
+        }
+        firstEvent = false;
+      }
+      return;
+    }
+    firstEvent = false;
     if (shouldEnqueueEvent()) {
       events.enqueue(event);
     }
   }
 
   function sendIdentifyEvent(user) {
-    enqueueEvent({
-      kind: 'identify',
-      key: user.key,
-      user: user,
-      creationDate: new Date().getTime(),
-    });
+    if (user) {
+      enqueueEvent({
+        kind: 'identify',
+        key: user.key,
+        user: user,
+        creationDate: new Date().getTime(),
+      });
+    }
   }
 
   const ident = Identity(user, sendIdentifyEvent);
@@ -77,14 +88,23 @@ function initialize(env, user, options = {}) {
 
     seenRequests[cacheKey] = now;
 
-    enqueueEvent({
+    const event = {
       kind: 'feature',
       key: key,
       user: user,
       value: value,
       default: defaultValue,
       creationDate: now.getTime(),
-    });
+    };
+    const flag = flags[key];
+    if (flag) {
+      event.version = flag.version;
+      event.variation = flag.variation;
+      event.trackEvents = flag.trackEvents;
+      event.debugEventsUntilDate = flag.debugEventsUntilDate;
+    }
+
+    enqueueEvent(event);
   }
 
   function sendGoalEvent(kind, goal) {
@@ -128,7 +148,7 @@ function initialize(env, user, options = {}) {
 
   function flush(onDone) {
     return utils.wrapPromiseCallback(
-      new Promise(resolve => (sendEvents ? resolve(events.flush(ident.getUser())) : resolve()), onDone)
+      new Promise(resolve => (sendEvents ? resolve(events.flush()) : resolve()), onDone)
     );
   }
 
@@ -232,7 +252,9 @@ function initialize(env, user, options = {}) {
         if (!flags[data.key] || flags[data.key].version < data.version) {
           const mods = {};
           const oldFlag = flags[data.key];
-          flags[data.key] = { version: data.version, value: data.value };
+          const newFlag = Object.assign({}, data);
+          delete newFlag['key'];
+          flags[data.key] = newFlag;
           if (oldFlag) {
             mods[data.key] = { previous: oldFlag.value, current: data.value };
           } else {
@@ -338,17 +360,6 @@ function initialize(env, user, options = {}) {
       const s = document.getElementsByTagName('script')[0];
       s.parentNode.insertBefore(editorTag, s);
     }
-  }
-
-  if (options.samplingInterval !== undefined && (isNaN(options.samplingInterval) || options.samplingInterval < 0)) {
-    samplingInterval = 0;
-    utils.onNextTick(() => {
-      emitter.maybeReportError(
-        new errors.LDInvalidArgumentError(
-          'Invalid sampling interval configured. Sampling interval must be an integer >= 0.'
-        )
-      );
-    });
   }
 
   if (!env) {
@@ -472,10 +483,7 @@ function initialize(env, user, options = {}) {
 
   function start() {
     if (sendEvents) {
-      setTimeout(function tick() {
-        events.flush(ident.getUser());
-        setTimeout(tick, flushInterval);
-      }, flushInterval);
+      events.start();
     }
   }
 
@@ -487,7 +495,8 @@ function initialize(env, user, options = {}) {
 
   window.addEventListener('beforeunload', () => {
     if (sendEvents) {
-      events.flush(ident.getUser(), true);
+      events.stop();
+      events.flush(true);
     }
   });
 

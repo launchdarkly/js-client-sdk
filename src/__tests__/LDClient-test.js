@@ -341,6 +341,16 @@ describe('LDClient', () => {
         done();
       }, 0);
     });
+
+    it('should warn about missing user on first event', () => {
+      const sandbox = sinon.sandbox.create();
+      const warnSpy = sandbox.spy(console, 'warn');
+      const client = LDClient.initialize(envName, null);
+      client.track('eventkey', null);
+      warnSpy.restore();
+      sandbox.restore();
+      expect(warnSpy.called).toEqual(true);
+    });
   });
 
   describe('event listening', () => {
