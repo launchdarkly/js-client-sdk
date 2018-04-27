@@ -1,8 +1,8 @@
-var messages = require('./messages');
+import * as messages from './messages';
 
 function get(key) {
   try {
-    return window.localStorage.getItem(key);
+    return localStorage.getItem(key);
   } catch (ex) {
     console.warn(messages.localStorageUnavailable());
   }
@@ -10,17 +10,17 @@ function get(key) {
 
 function set(key, item) {
   try {
-    window.localStorage.setItem(key, item);
+    localStorage.setItem(key, item);
   } catch (ex) {
     console.warn(messages.localStorageUnavailable());
   }
 }
 
 function clear(key) {
-  set(key, null);
+  localStorage.removeItem(key);
 }
 
-module.exports = {
+export default {
   get: get,
   set: set,
   clear: clear,

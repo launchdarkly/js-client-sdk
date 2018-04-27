@@ -7,11 +7,11 @@ jobs:
       - checkout
       - run: npm install
       - run: mkdir -p reports/junit
+      - run: npm run lint:all
       - run:
-          command: npm test
+          command: npm run test:junit
           environment:
-            JUNIT_REPORT_PATH: "./reports/junit/"
-            JUNIT_REPORT_NAME: "js-test-results.xml"
+            JEST_JUNIT_OUTPUT: "./reports/junit/js-test-results.xml"
       - store_test_results:
           path: reports/junit/
       - store_artifacts:

@@ -1,7 +1,10 @@
-<!doctype>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1" />
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+    <script src="https://unpkg.com/event-source-polyfill@0.0.12/src/eventsource.min.js"></script>
     <script src="./dist/ldclient.js"></script>
   </head>
   <body>
@@ -75,7 +78,7 @@
         clientProd.identify({key: key}, null, function() {
           switched = !switched;
           console.log('switched to', key);
-          render('another-client-side-flag', false);
+          render('prod', 'another-client-side-flag', false);
         });
       });
       document.querySelector('.prod-change-hash').addEventListener('click', function(event) {
@@ -106,7 +109,7 @@
         clientTest.identify({key: key}, null, function() {
           switched = !switched;
           console.log('switched to', key);
-          render('another-client-side-flag', false);
+          render('test', 'another-client-side-flag', false);
         });
       });
       document.querySelector('.test-change-hash').addEventListener('click', function(event) {
