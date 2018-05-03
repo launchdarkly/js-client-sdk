@@ -1,4 +1,5 @@
 import Base64 from 'Base64';
+import * as pkg from '../package.json';
 
 // See http://ecmanaut.blogspot.com/2006/07/encoding-decoding-utf8-in-javascript.html
 export function btoa(s) {
@@ -125,4 +126,12 @@ export function chunkUserEventsForUrl(maxLength, events) {
   }
 
   return allChunks;
+}
+
+export function getLDUserAgentString() {
+  return 'JSClient/' + pkg.version;
+}
+
+export function addLDHeaders(xhr) {
+  xhr.setRequestHeader('X-LaunchDarkly-User-Agent', getLDUserAgentString());
 }
