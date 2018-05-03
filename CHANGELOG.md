@@ -1,6 +1,16 @@
 # Change log
 
-All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
+All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. 
+This project adheres to [Semantic Versioning](http://semver.org).
+
+## [1.7.0] - 2018-04-27
+### Changed
+- The build now uses Rollup, Babel and Jest.
+### Fixed
+- Fixed a bug that caused a syntax error when running in Internet Explorer 11.
+- Fixed an IE 11 incompatibility in the example page index.html.
+- Fixed a bug that caused the SDK to send events on beforeunload even if it should not send events.
+
 
 ## [1.6.2] - 2018-04-05
 
