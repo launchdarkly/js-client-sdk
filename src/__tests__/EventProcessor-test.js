@@ -2,6 +2,7 @@ import sinon from 'sinon';
 
 import EventSerializer from '../EventSerializer';
 import EventProcessor from '../EventProcessor';
+import * as utils from '../utils';
 
 describe('EventProcessor', () => {
   let sandbox;
@@ -64,5 +65,16 @@ describe('EventProcessor', () => {
 
     expect(requests.length).toEqual(1);
     expect(requests[0].async).toEqual(false);
+  });
+
+  it('should send custom user-agent header', () => {
+    const processor = EventProcessor('/fake-url', serializer);
+    const user = { key: 'foo' };
+    const event = { kind: 'identify', key: user.key };
+    processor.enqueue(event);
+    processor.flush(user, true);
+
+    expect(requests.length).toEqual(1);
+    expect(requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
   });
 });

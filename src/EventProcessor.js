@@ -13,6 +13,7 @@ function sendEvents(eventsUrl, events, sync) {
     if (hasCors) {
       /* supports cross-domain requests */
       xhr.open('GET', src, !sync);
+      utils.addLDHeaders(xhr);
 
       if (!sync) {
         xhr.addEventListener('load', onDone);
