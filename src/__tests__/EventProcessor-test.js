@@ -75,7 +75,6 @@ describe('EventProcessor', () => {
     processor.flush(user, true);
 
     expect(requests.length).toEqual(1);
-    expect(requests[0].requestHeaders['X-LaunchDarkly-User-Agent'])
-      .toEqual(utils.getLDUserAgentString());
+    expect(requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
   });
 });
