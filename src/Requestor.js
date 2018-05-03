@@ -29,6 +29,7 @@ function fetchJSON(endpoint, body, callback) {
     xhr.send(JSON.stringify(body));
   } else {
     xhr.open('GET', endpoint);
+    utils.addLDHeaders(xhr);
     xhr.send();
   }
 
