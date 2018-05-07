@@ -2,7 +2,6 @@ import sinon from 'sinon';
 
 import EventSerializer from '../EventSerializer';
 import EventProcessor from '../EventProcessor';
-import * as utils from '../utils';
 
 describe('EventProcessor', () => {
   let sandbox;
