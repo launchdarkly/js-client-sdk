@@ -27,7 +27,6 @@ export default function EventSender(eventsUrl) {
         /* supports cross-domain requests */
         const xhr = new XMLHttpRequest();
         xhr.open('GET', src, !sync);
-        utils.addLDHeaders(xhr);
 
         if (!sync) {
           xhr.addEventListener('load', () => {
