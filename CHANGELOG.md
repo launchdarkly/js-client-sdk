@@ -8,7 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org).
 - The client no longer creates an empty `XMLHttpRequest` at startup time (which could interfere with unit tests).
 
 ## [1.7.1] - 2018-05-07
-''This release was broken and should not be used.''
+_This release was broken and should not be used._
 
 ## [1.7.0] - 2018-04-27
 ### Changed
