@@ -128,7 +128,7 @@ export function chunkUserEventsForUrl(maxLength, events) {
 }
 
 export function getLDUserAgentString() {
-  return 'JSClient/' + window.VERSION;
+  return 'JSClient/' + VERSION;
 }
 
 export function addLDHeaders(xhr) {
