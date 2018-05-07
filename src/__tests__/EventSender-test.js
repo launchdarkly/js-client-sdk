@@ -101,12 +101,4 @@ describe('EventSender', () => {
     });
     lastRequest().respond();
   });
-
-  it('should send custom user-agent header', () => {
-    const sender = EventSender(eventsUrl);
-    const event = { kind: 'identify', key: 'userKey1' };
-    sender.sendEvents([event], false);
-
-    expect(lastRequest().requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
-  });
 });
