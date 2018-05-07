@@ -126,3 +126,11 @@ export function chunkUserEventsForUrl(maxLength, events) {
 
   return allChunks;
 }
+
+export function getLDUserAgentString() {
+  return 'JSClient/' + window.VERSION;
+}
+
+export function addLDHeaders(xhr) {
+  xhr.setRequestHeader('X-LaunchDarkly-User-Agent', getLDUserAgentString());
+}

@@ -1,6 +1,6 @@
 {
   "name": "ldclient-js",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "LaunchDarkly SDK for JavaScript",
   "author": "LaunchDarkly <team@launchdarkly.com>",
   "license": "Apache-2.0",

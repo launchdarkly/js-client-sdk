@@ -3,6 +3,11 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. 
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [1.7.1] - 2018-05-07
+### Fixed
+- The client no longer creates an empty `XMLHttpRequest` at startup time (which could interfere with unit tests).
+- The client now sends the SDK version to LaunchDarkly; previously it only sent the browser version. This will allow for better usage metrics in a future version of the LaunchDarkly UI.
+
 ## [1.7.0] - 2018-04-27
 ### Changed
 - The build now uses Rollup, Babel and Jest.

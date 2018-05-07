@@ -1,17 +1,19 @@
 import * as utils from './utils';
 
 const MAX_URL_LENGTH = 2000;
-const hasCors = 'withCredentials' in new XMLHttpRequest();
 
 function sendEvents(eventsUrl, events, sync) {
   const src = eventsUrl + '?d=' + utils.base64URLEncode(JSON.stringify(events));
 
   const send = onDone => {
+    const xhr = new XMLHttpRequest();
+    const hasCors = 'withCredentials' in xhr;
+
     // Detect browser support for CORS
     if (hasCors) {
       /* supports cross-domain requests */
-      const xhr = new XMLHttpRequest();
       xhr.open('GET', src, !sync);
+      utils.addLDHeaders(xhr);
 
       if (!sync) {
         xhr.addEventListener('load', onDone);
