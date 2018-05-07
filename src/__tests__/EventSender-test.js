@@ -2,7 +2,6 @@ import Base64 from 'Base64';
 import sinon from 'sinon';
 
 import EventSender from '../EventSender';
-import * as utils from '../utils';
 
 describe('EventSender', () => {
   let sandbox;
