@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org).
 ## [1.8.0] - 2018-05-07
 ### Added
 - The client now sends the SDK version to LaunchDarkly; previously it only sent the browser version. This will allow for better usage metrics in a future version of the LaunchDarkly UI.
+### Fixed
+- The client no longer creates an empty `XMLHttpRequest` at startup time (which could interfere with unit tests).
 
 ## [1.7.0] - 2018-04-27
 ### Changed
