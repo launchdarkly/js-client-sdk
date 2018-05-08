@@ -25,11 +25,9 @@ function fetchJSON(endpoint, body, callback) {
   if (body) {
     xhr.open('REPORT', endpoint);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    utils.addLDHeaders(xhr);
     xhr.send(JSON.stringify(body));
   } else {
     xhr.open('GET', endpoint);
-    utils.addLDHeaders(xhr);
     xhr.send();
   }
 
