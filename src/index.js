@@ -20,7 +20,7 @@ function initialize(env, user, options = {}) {
   const eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
   const streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
   const hash = options.hash;
-  const sendEvents = typeof options.sendEvents === 'undefined' ? true : config.sendEvents;
+  const sendEvents = typeof options.sendEvents === 'undefined' ? true : options.sendEvents;
   const environment = env;
   const emitter = EventEmitter();
   const stream = Stream(streamUrl, environment, hash, options.useReport);
