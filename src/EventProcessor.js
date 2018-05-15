@@ -65,7 +65,6 @@ export default function EventProcessor(eventsUrl, options = {}, emitter = null, 
     if (e.kind === 'feature') {
       delete ret['trackEvents'];
       delete ret['debugEventsUntilDate'];
-      delete ret['variation'];
     }
     return ret;
   }
