@@ -72,13 +72,14 @@ function initialize(env, user, options = {}) {
     const user = ident.getUser();
     const cacheKey = JSON.stringify(value) + (user && user.key ? user.key : '') + key;
     const now = new Date();
-    const cached = seenRequests[cacheKey];
+    // TEMPORARY - turn off caching/throttling logic which interferes with integration
+    // const cached = seenRequests[cacheKey];
 
-    if (cached && now - cached < 300000 /* five minutes, in ms */) {
-      return;
-    }
+    // if (cached && now - cached < 300000 /* five minutes, in ms */) {
+    //   return;
+    // }
 
-    seenRequests[cacheKey] = now;
+    // seenRequests[cacheKey] = now;
 
     const event = {
       kind: 'feature',
@@ -312,9 +313,11 @@ function initialize(env, user, options = {}) {
 
       emitter.emit(changeEvent, changes);
 
-      keys.forEach(key => {
-        sendFlagEvent(key, changes[key].current);
-      });
+      // TEMPORARY - turn off sending of events when flags are acquired (it messes with
+      // integration testing, and I'm not sure why we're doing it anyway)
+      // keys.forEach(key => {
+      //   sendFlagEvent(key, changes[key].current);
+      // });
     }
   }
 
