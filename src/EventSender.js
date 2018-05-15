@@ -57,7 +57,7 @@ export default function EventSender(eventsUrl) {
 
   sender.sendEvents = function(events, sync) {
     // TEMPORARY - debugging
-    for (var i: events) {
+    for (var i = 0; i < events.length; i++) {
       console.log("* sending event: " + JSON.stringify(events[i]));
     }
     // end debugging
