@@ -24,7 +24,7 @@ function initialize(env, user, options = {}) {
   const stream = Stream(streamUrl, environment, hash, options.useReport);
   const events = EventProcessor(eventsUrl + '/a/' + environment + '.gif', options, emitter);
   const requestor = Requestor(baseUrl, environment, options.useReport);
-  const seenRequests = {};
+  // const seenRequests = {}; // temporarily disabled, see below
   let flags = typeof options.bootstrap === 'object' ? utils.transformValuesToVersionedValues(options.bootstrap) : {};
   let goalTracker;
   let useLocalStorage;
@@ -70,7 +70,7 @@ function initialize(env, user, options = {}) {
 
   function sendFlagEvent(key, value, defaultValue) {
     const user = ident.getUser();
-    const cacheKey = JSON.stringify(value) + (user && user.key ? user.key : '') + key;
+    // const cacheKey = JSON.stringify(value) + (user && user.key ? user.key : '') + key; // see below
     const now = new Date();
     // TEMPORARY - turn off caching/throttling logic which interferes with integration
     // const cached = seenRequests[cacheKey];
