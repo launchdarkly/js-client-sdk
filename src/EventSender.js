@@ -9,9 +9,9 @@ export default function EventSender(eventsUrl) {
     const ret = { status: xhr.status };
     const dateStr = xhr.getResponseHeader('Date');
     if (dateStr) {
-      const date = Date.parse(dateStr);
-      if (date) {
-        ret.serverTime = date.getTime();
+      const time = Date.parse(dateStr);
+      if (time) {
+        ret.serverTime = time;
       }
     }
     return ret;
