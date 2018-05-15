@@ -15,6 +15,7 @@ export default function EventSummarizer() {
         counters[counterKey] = {
           count: 1,
           key: event.key,
+          variation: event.variation,
           version: event.version,
           value: event.value,
           default: event.default,
@@ -46,6 +47,9 @@ export default function EventSummarizer() {
         value: c.value,
         count: c.count,
       };
+      if (c.variation !== undefined && c.variation !== null) {
+        counterOut.variation = c.variation;
+      }
       if (c.version) {
         counterOut.version = c.version;
       } else {
