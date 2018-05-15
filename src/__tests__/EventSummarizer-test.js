@@ -63,7 +63,7 @@ describe('EventSummarizer', () => {
         default: 111,
         counters: [
           { value: 100, variation: 1, version: 11, count: 2 },
-          { value: 200, variation: 2, version: 11, count: 1 }
+          { value: 200, variation: 2, version: 11, count: 1 },
         ],
       },
       key2: {
