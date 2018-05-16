@@ -19,6 +19,8 @@ function initialize(env, user, options = {}) {
   const streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
   const hash = options.hash;
   const sendEvents = typeof options.sendEvents === 'undefined' ? true : config.sendEvents;
+  const allowFrequentDuplicateEvents = !!options.allowFrequentDuplicateEvents;
+  const sendEventsOnlyForVariation = !!options.sendEventsOnlyForVariation;
   const environment = env;
   const emitter = EventEmitter();
   const stream = Stream(streamUrl, environment, hash, options.useReport);
@@ -70,15 +72,16 @@ function initialize(env, user, options = {}) {
 
   function sendFlagEvent(key, value, defaultValue) {
     const user = ident.getUser();
-    const cacheKey = JSON.stringify(value) + (user && user.key ? user.key : '') + key;
     const now = new Date();
-    const cached = seenRequests[cacheKey];
-
-    if (cached && now - cached < 300000 /* five minutes, in ms */) {
-      return;
+    if (!allowFrequentDuplicateEvents) {
+      const cacheKey = JSON.stringify(value) + (user && user.key ? user.key : '') + key; // see below
+      const cached = seenRequests[cacheKey];
+      // cache TTL is five minutes
+      if (cached && now - cached < 300000) {
+        return;
+      }
+      seenRequests[cacheKey] = now;
     }
-
-    seenRequests[cacheKey] = now;
 
     const event = {
       kind: 'feature',
@@ -148,6 +151,10 @@ function initialize(env, user, options = {}) {
   }
 
   function variation(key, defaultValue) {
+    return variationInternal(key, defaultValue, true);
+  }
+
+  function variationInternal(key, defaultValue, sendEvent) {
     let value;
 
     if (flags && flags.hasOwnProperty(key) && !flags[key].deleted) {
@@ -156,7 +163,9 @@ function initialize(env, user, options = {}) {
       value = defaultValue;
     }
 
-    sendFlagEvent(key, value, defaultValue);
+    if (sendEvent) {
+      sendFlagEvent(key, value, defaultValue);
+    }
 
     return value;
   }
@@ -182,7 +191,7 @@ function initialize(env, user, options = {}) {
 
     for (const key in flags) {
       if (flags.hasOwnProperty(key)) {
-        results[key] = variation(key, null);
+        results[key] = variationInternal(key, null, !sendEventsOnlyForVariation);
       }
     }
 
@@ -312,9 +321,11 @@ function initialize(env, user, options = {}) {
 
       emitter.emit(changeEvent, changes);
 
-      keys.forEach(key => {
-        sendFlagEvent(key, changes[key].current);
-      });
+      if (!sendEventsOnlyForVariation) {
+        keys.forEach(key => {
+          sendFlagEvent(key, changes[key].current);
+        });
+      }
     }
   }
 
