@@ -19,7 +19,7 @@ function initialize(env, user, options = {}) {
   const streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
   const hash = options.hash;
   const sendEvents = typeof options.sendEvents === 'undefined' ? true : config.sendEvents;
-  const suppressDuplicateEvents = !!options.suppressDuplicateEvents;
+  const allowFrequentDuplicateEvents = !!options.allowFrequentDuplicateEvents;
   const sendEventsOnlyForVariation = !!options.sendEventsOnlyForVariation;
   const environment = env;
   const emitter = EventEmitter();
@@ -73,7 +73,7 @@ function initialize(env, user, options = {}) {
   function sendFlagEvent(key, value, defaultValue) {
     const user = ident.getUser();
     const now = new Date();
-    if (suppressDuplicateEvents) {
+    if (!allowFrequentDuplicateEvents) {
       const cacheKey = JSON.stringify(value) + (user && user.key ? user.key : '') + key; // see below
       const cached = seenRequests[cacheKey];
       if (cached && now - cached < 300000) { // five minutes, in ms
