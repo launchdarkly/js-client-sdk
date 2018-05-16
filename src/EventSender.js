@@ -56,12 +56,6 @@ export default function EventSender(eventsUrl) {
   }
 
   sender.sendEvents = function(events, sync) {
-    // TEMPORARY - debugging
-    for (let i = 0; i < events.length; i++) {
-      console.log('* sending event: ' + JSON.stringify(events[i]));
-    }
-    // end debugging
-
     const finalSync = sync === undefined ? false : sync;
     const chunks = utils.chunkUserEventsForUrl(MAX_URL_LENGTH - eventsUrl.length, events);
     const results = [];
