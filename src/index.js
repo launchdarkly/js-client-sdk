@@ -19,12 +19,14 @@ function initialize(env, user, options = {}) {
   const streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
   const hash = options.hash;
   const sendEvents = typeof options.sendEvents === 'undefined' ? true : config.sendEvents;
+  const suppressDuplicateEvents = !!options.suppressDuplicateEvents;
+  const sendEventsOnlyForVariation = !!options.sendEventsOnlyForVariation;
   const environment = env;
   const emitter = EventEmitter();
   const stream = Stream(streamUrl, environment, hash, options.useReport);
   const events = EventProcessor(eventsUrl + '/a/' + environment + '.gif', options, emitter);
   const requestor = Requestor(baseUrl, environment, options.useReport);
-  // const seenRequests = {}; // temporarily disabled, see below
+  const seenRequests = {};
   let flags = typeof options.bootstrap === 'object' ? utils.transformValuesToVersionedValues(options.bootstrap) : {};
   let goalTracker;
   let useLocalStorage;
@@ -70,16 +72,15 @@ function initialize(env, user, options = {}) {
 
   function sendFlagEvent(key, value, defaultValue) {
     const user = ident.getUser();
-    // const cacheKey = JSON.stringify(value) + (user && user.key ? user.key : '') + key; // see below
     const now = new Date();
-    // TEMPORARY - turn off caching/throttling logic which interferes with integration
-    // const cached = seenRequests[cacheKey];
-
-    // if (cached && now - cached < 300000 /* five minutes, in ms */) {
-    //   return;
-    // }
-
-    // seenRequests[cacheKey] = now;
+    if (suppressDuplicateEvents) {
+      const cacheKey = JSON.stringify(value) + (user && user.key ? user.key : '') + key; // see below
+      const cached = seenRequests[cacheKey];
+      if (cached && now - cached < 300000) { // five minutes, in ms
+        return;
+      }
+      seenRequests[cacheKey] = now;
+    }
 
     const event = {
       kind: 'feature',
@@ -189,8 +190,7 @@ function initialize(env, user, options = {}) {
 
     for (const key in flags) {
       if (flags.hasOwnProperty(key)) {
-        // TEMPORARY: turned off event generation for allFlags
-        results[key] = variationInternal(key, null, false);
+        results[key] = variationInternal(key, null, !sendEventsOnlyForVariation);
       }
     }
 
@@ -320,11 +320,11 @@ function initialize(env, user, options = {}) {
 
       emitter.emit(changeEvent, changes);
 
-      // TEMPORARY - turn off sending of events when flags are acquired (it messes with
-      // integration testing, and I'm not sure why we're doing it anyway)
-      // keys.forEach(key => {
-      //   sendFlagEvent(key, changes[key].current);
-      // });
+      if (!sendEventsOnlyForVariation) {
+        keys.forEach(key => {
+          sendFlagEvent(key, changes[key].current);
+        });
+      }
     }
   }
 
