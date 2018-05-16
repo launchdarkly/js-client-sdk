@@ -76,7 +76,8 @@ function initialize(env, user, options = {}) {
     if (!allowFrequentDuplicateEvents) {
       const cacheKey = JSON.stringify(value) + (user && user.key ? user.key : '') + key; // see below
       const cached = seenRequests[cacheKey];
-      if (cached && now - cached < 300000) { // five minutes, in ms
+      // cache TTL is five minutes
+      if (cached && now - cached < 300000) {
         return;
       }
       seenRequests[cacheKey] = now;
