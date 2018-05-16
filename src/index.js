@@ -149,6 +149,10 @@ function initialize(env, user, options = {}) {
   }
 
   function variation(key, defaultValue) {
+    return variationInternal(key, defaultValue, true);
+  }
+
+  function variationInternal(key, defaultValue, sendEvent) {
     let value;
 
     if (flags && flags.hasOwnProperty(key) && !flags[key].deleted) {
@@ -157,7 +161,9 @@ function initialize(env, user, options = {}) {
       value = defaultValue;
     }
 
-    sendFlagEvent(key, value, defaultValue);
+    if (sendEvent) {
+      sendFlagEvent(key, value, defaultValue);
+    }
 
     return value;
   }
@@ -183,7 +189,8 @@ function initialize(env, user, options = {}) {
 
     for (const key in flags) {
       if (flags.hasOwnProperty(key)) {
-        results[key] = variation(key, null);
+        // TEMPORARY: turned off event generation for allFlags
+        results[key] = variationInternal(key, null, false);
       }
     }
 
