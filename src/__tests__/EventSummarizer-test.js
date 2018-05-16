@@ -61,11 +61,14 @@ describe('EventSummarizer', () => {
     const expectedFeatures = {
       key1: {
         default: 111,
-        counters: [{ value: 100, version: 11, count: 2 }, { value: 200, version: 11, count: 1 }],
+        counters: [
+          { value: 100, variation: 1, version: 11, count: 2 },
+          { value: 200, variation: 2, version: 11, count: 1 },
+        ],
       },
       key2: {
         default: 222,
-        counters: [{ value: 999, version: 22, count: 1 }],
+        counters: [{ value: 999, variation: 1, version: 22, count: 1 }],
       },
       badkey: {
         default: 333,
