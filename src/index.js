@@ -157,7 +157,7 @@ function initialize(env, user, options = {}) {
   function variationInternal(key, defaultValue, sendEvent) {
     let value;
 
-    if (flags && flags[key] && !flags[key].deleted) {
+    if (flags && flags.hasOwnProperty(key) && flags[key] && !flags[key].deleted) {
       value = flags[key].value === null ? defaultValue : flags[key].value;
     } else {
       value = defaultValue;
