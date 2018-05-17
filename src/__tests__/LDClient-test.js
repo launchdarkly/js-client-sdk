@@ -683,5 +683,71 @@ describe('LDClient', () => {
         getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": true}');
       });
     });
+
+    it('returns an error when identify is called with null user', done => {
+      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on('ready', () => {
+        client.identify(null).then(
+          () => {
+            throw Error("should not have succeeded");
+          },
+          () => {
+            done();
+          }
+        );
+      });
+    });
+
+    it('returns an error when identify is called with user with no key', done => {
+      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on('ready', () => {
+        client.identify({ country: "US" }).then(
+          () => {
+            throw Error("should not have succeeded");
+          },
+          () => {
+            done();
+          }
+        );
+      });
+    });
+
+    it('returns default value for flag after identify is called with null user', done => {
+      const data = { foo: 'bar' };
+      const client = LDClient.initialize(envName, user, { bootstrap: data });
+
+      client.on('ready', () => {
+        expect(client.variation('foo', 'x')).toEqual('bar');
+        client.identify(null).then(
+          () => {
+            throw Error("should not have succeeded");
+          },
+          () => {
+            expect(client.variation('foo', 'x')).toEqual('x');
+            done();
+          }
+        );
+      });
+    });
+
+    it('returns default value for flag after identify is called with invalid user', done => {
+      const data = { foo: 'bar' };
+      const client = LDClient.initialize(envName, user, { bootstrap: data });
+
+      client.on('ready', () => {
+        expect(client.variation('foo', 'x')).toEqual('bar');
+        client.identify({ country: "US" }).then(
+          () => {
+            throw Error("should not have succeeded");
+          },
+          () => {
+            expect(client.variation('foo', 'x')).toEqual('x');
+            done();
+          }
+        );
+      });
+    });
   });
 });
