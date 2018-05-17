@@ -289,7 +289,7 @@ function initialize(env, user, options = {}) {
     }
 
     for (const key in flags) {
-      if (flags[key]) {
+      if (flags.hasOwnProperty(key) && flags[key]) {
         if (newFlags[key] && newFlags[key].value !== flags[key].value) {
           changes[key] = { previous: flags[key].value, current: newFlags[key].value };
         } else if (!newFlags[key] || newFlags[key].deleted) {
@@ -298,7 +298,7 @@ function initialize(env, user, options = {}) {
       }
     }
     for (const key in newFlags) {
-      if (newFlags.hasOwnProperty(key) && (!flags[key] || flags[key].deleted)) {
+      if (newFlags.hasOwnProperty(key) && newFlags[key] && (!flags[key] || flags[key].deleted)) {
         changes[key] = { current: newFlags[key].value };
       }
     }
