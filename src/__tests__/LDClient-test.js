@@ -690,7 +690,7 @@ describe('LDClient', () => {
       client.on('ready', () => {
         client.identify(null).then(
           () => {
-            throw Error("should not have succeeded");
+            throw Error('should not have succeeded');
           },
           () => {
             done();
@@ -703,9 +703,9 @@ describe('LDClient', () => {
       const client = LDClient.initialize(envName, user, { bootstrap: {} });
 
       client.on('ready', () => {
-        client.identify({ country: "US" }).then(
+        client.identify({ country: 'US' }).then(
           () => {
-            throw Error("should not have succeeded");
+            throw Error('should not have succeeded');
           },
           () => {
             done();
@@ -722,7 +722,7 @@ describe('LDClient', () => {
         expect(client.variation('foo', 'x')).toEqual('bar');
         client.identify(null).then(
           () => {
-            throw Error("should not have succeeded");
+            throw Error('should not have succeeded');
           },
           () => {
             expect(client.variation('foo', 'x')).toEqual('x');
@@ -738,9 +738,9 @@ describe('LDClient', () => {
 
       client.on('ready', () => {
         expect(client.variation('foo', 'x')).toEqual('bar');
-        client.identify({ country: "US" }).then(
+        client.identify({ country: 'US' }).then(
           () => {
-            throw Error("should not have succeeded");
+            throw Error('should not have succeeded');
           },
           () => {
             expect(client.variation('foo', 'x')).toEqual('x');
