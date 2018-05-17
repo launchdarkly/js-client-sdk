@@ -127,6 +127,8 @@ function initialize(env, user, options = {}) {
       new Promise((resolve, reject) => {
         ident.setUser(user);
         if (!user || user.key === null || user.key === undefined) {
+          // If the user is invalid, we put ourselves in a state where no flags exist
+          // (so all evaluations will return default values).
           updateSettings({});
           const err = new errors.LDInvalidUserError(user ? messages.invalidUser() : messages.userNotSpecified());
           emitter.maybeReportError(err);
