@@ -9,6 +9,7 @@ describe('EventProcessor', () => {
   const user = { key: 'userKey', name: 'Red' };
   const filteredUser = { key: 'userKey', privateAttrs: ['name'] };
   const eventsUrl = '/fake-url';
+  const envId = 'env';
 
   mockEventSender.sendEvents = function(events, sync) {
     mockEventSender.calls.push({
@@ -61,7 +62,7 @@ describe('EventProcessor', () => {
   }
 
   it('should flush asynchronously', () => {
-    const processor = EventProcessor(eventsUrl, {}, null, mockEventSender);
+    const processor = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
     const event = { kind: 'identify', key: user.key };
 
     processor.enqueue(event);
@@ -75,7 +76,7 @@ describe('EventProcessor', () => {
   });
 
   it('should flush synchronously', () => {
-    const processor = EventProcessor(eventsUrl, {}, null, mockEventSender);
+    const processor = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
     const user = { key: 'foo' };
     const event = { kind: 'identify', key: user.key };
 
@@ -90,7 +91,7 @@ describe('EventProcessor', () => {
   });
 
   it('should enqueue identify event', done => {
-    const ep = EventProcessor(eventsUrl, {}, null, mockEventSender);
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
     const event = { kind: 'identify', creationDate: 1000, key: user.key, user: user };
     ep.enqueue(event);
     ep.flush().then(() => {
@@ -102,7 +103,7 @@ describe('EventProcessor', () => {
 
   it('filters user in identify event', done => {
     const config = { allAttributesPrivate: true };
-    const ep = EventProcessor(eventsUrl, config, null, mockEventSender);
+    const ep = EventProcessor(eventsUrl, envId, config, null, mockEventSender);
     const event = { kind: 'identify', creationDate: 1000, key: user.key, user: user };
     ep.enqueue(event);
     ep.flush().then(() => {
@@ -120,7 +121,7 @@ describe('EventProcessor', () => {
   });
 
   it('queues individual feature event', done => {
-    const ep = EventProcessor(eventsUrl, {}, null, mockEventSender);
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
     const event = {
       kind: 'feature',
       creationDate: 1000,
@@ -141,7 +142,7 @@ describe('EventProcessor', () => {
 
   it('can include inline user in feature event', done => {
     const config = { inlineUsersInEvents: true };
-    const ep = EventProcessor(eventsUrl, config, null, mockEventSender);
+    const ep = EventProcessor(eventsUrl, envId, config, null, mockEventSender);
     const event = {
       kind: 'feature',
       creationDate: 1000,
@@ -162,7 +163,7 @@ describe('EventProcessor', () => {
 
   it('filters user in feature event', done => {
     const config = { allAttributesPrivate: true, inlineUsersInEvents: true };
-    const ep = EventProcessor(eventsUrl, config, null, mockEventSender);
+    const ep = EventProcessor(eventsUrl, envId, config, null, mockEventSender);
     const event = {
       kind: 'feature',
       creationDate: 1000,
@@ -182,7 +183,7 @@ describe('EventProcessor', () => {
   });
 
   it('sets event kind to debug if event is temporarily in debug mode', done => {
-    const ep = EventProcessor(eventsUrl, {}, null, mockEventSender);
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
     const futureTime = new Date().getTime() + 1000000;
     const e = {
       kind: 'feature',
@@ -207,7 +208,7 @@ describe('EventProcessor', () => {
   });
 
   it('can both track and debug an event', done => {
-    const ep = EventProcessor(eventsUrl, {}, null, mockEventSender);
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
     const futureTime = new Date().getTime() + 1000000;
     const e = {
       kind: 'feature',
@@ -233,7 +234,7 @@ describe('EventProcessor', () => {
   });
 
   it('expires debug mode based on client time if client time is later than server time', done => {
-    const ep = EventProcessor(eventsUrl, {}, null, mockEventSender);
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
 
     // Pick a server time that is somewhat behind the client time
     const serverTime = new Date().getTime() - 20000;
@@ -270,7 +271,7 @@ describe('EventProcessor', () => {
   });
 
   it('expires debug mode based on server time if server time is later than client time', done => {
-    const ep = EventProcessor(eventsUrl, {}, null, mockEventSender);
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
 
     // Pick a server time that is somewhat ahead of the client time
     const serverTime = new Date().getTime() + 20000;
@@ -307,7 +308,7 @@ describe('EventProcessor', () => {
   });
 
   it('summarizes nontracked events', done => {
-    const ep = EventProcessor(eventsUrl, {}, null, mockEventSender);
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
     function makeEvent(key, date, version, variation, value, defaultVal) {
       return {
         kind: 'feature',
@@ -348,7 +349,7 @@ describe('EventProcessor', () => {
   });
 
   it('queues custom event', done => {
-    const ep = EventProcessor(eventsUrl, {}, null, mockEventSender);
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
     const e = {
       kind: 'custom',
       creationDate: 1000,
@@ -368,7 +369,7 @@ describe('EventProcessor', () => {
 
   it('can include inline user in custom event', done => {
     const config = { inlineUsersInEvents: true };
-    const ep = EventProcessor(eventsUrl, config, null, mockEventSender);
+    const ep = EventProcessor(eventsUrl, envId, config, null, mockEventSender);
     const e = {
       kind: 'custom',
       creationDate: 1000,
@@ -388,7 +389,7 @@ describe('EventProcessor', () => {
 
   it('filters user in custom event', done => {
     const config = { allAttributesPrivate: true, inlineUsersInEvents: true };
-    const ep = EventProcessor(eventsUrl, config, null, mockEventSender);
+    const ep = EventProcessor(eventsUrl, envId, config, null, mockEventSender);
     const e = {
       kind: 'custom',
       creationDate: 1000,
@@ -407,7 +408,7 @@ describe('EventProcessor', () => {
   });
 
   it('sends nothing if there are no events to flush', done => {
-    const ep = EventProcessor(eventsUrl, {}, null, mockEventSender);
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
     ep.flush().then(() => {
       expect(mockEventSender.calls.length).toEqual(0);
       done();
@@ -415,7 +416,7 @@ describe('EventProcessor', () => {
   });
 
   it('stops sending events after a 401 error', done => {
-    const ep = EventProcessor(eventsUrl, {}, null, mockEventSender);
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
     const e = { kind: 'identify', creationDate: 1000, user: user };
     ep.enqueue(e);
     mockEventSender.status = 401;

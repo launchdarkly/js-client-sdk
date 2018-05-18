@@ -4,9 +4,9 @@ import UserFilter from './UserFilter';
 import * as errors from './errors';
 import * as utils from './utils';
 
-export default function EventProcessor(eventsUrl, options = {}, emitter = null, sender = null) {
+export default function EventProcessor(eventsUrl, environmentId, options = {}, emitter = null, sender = null) {
   const processor = {};
-  const eventSender = sender || EventSender(eventsUrl);
+  const eventSender = sender || EventSender(eventsUrl, environmentId);
   const summarizer = EventSummarizer();
   const userFilter = UserFilter(options);
   const inlineUsers = !!options.inlineUsersInEvents;

@@ -7,8 +7,8 @@ describe('EventSender', () => {
   let sandbox;
   let xhr;
   let requests = [];
-  let warnSpy;
   const eventsUrl = '/fake-url';
+  const envId = 'env';
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
@@ -17,17 +17,24 @@ describe('EventSender', () => {
     xhr.onCreate = function(xhr) {
       requests.push(xhr);
     };
-    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
   });
 
   afterEach(() => {
     sandbox.restore();
     xhr.restore();
-    warnSpy.mockRestore();
   });
 
   function lastRequest() {
     return requests[requests.length - 1];
+  }
+
+  function fakeImageCreator() {
+    const ret = function(url, onDone) {
+      ret.urls.push(url);
+      ret.onDone = onDone;
+    };
+    ret.urls = [];
+    return ret;
   }
 
   function base64URLDecode(str) {
@@ -40,64 +47,85 @@ describe('EventSender', () => {
   }
 
   function decodeOutputFromUrl(url) {
-    const prefix = eventsUrl + '?d=';
+    const prefix = eventsUrl + '/a/' + envId + '.gif?d=';
     if (!url.startsWith(prefix)) {
       throw 'URL "' + url + '" did not have expected prefix "' + prefix + '"';
     }
     return JSON.parse(base64URLDecode(url.substring(prefix.length)));
   }
 
-  it('should send asynchronously', () => {
-    const sender = EventSender(eventsUrl);
-    const event = { kind: 'identify', key: 'userKey' };
-    sender.sendEvents([event], false);
-    lastRequest().respond();
-    expect(lastRequest().async).toEqual(true);
-  });
+  describe('using image endpoint when CORS is not available', () => {
+    it('should encode events in a single chunk if they fit', () => {
+      const imageCreator = fakeImageCreator();
+      const sender = EventSender(eventsUrl, envId, false, imageCreator);
+      const event1 = { kind: 'identify', key: 'userKey1' };
+      const event2 = { kind: 'identify', key: 'userKey2' };
+      const events = [event1, event2];
 
-  it('should send synchronously', () => {
-    const sender = EventSender(eventsUrl);
-    const event = { kind: 'identify', key: 'userKey' };
-    sender.sendEvents([event], true);
-    lastRequest().respond();
-    expect(lastRequest().async).toEqual(false);
-  });
+      sender.sendEvents(events, false);
 
-  it('should encode events in a single chunk if they fit', done => {
-    const sender = EventSender(eventsUrl);
-    const event1 = { kind: 'identify', key: 'userKey1' };
-    const event2 = { kind: 'identify', key: 'userKey2' };
-    const events = [event1, event2];
-    sender.sendEvents(events, true).then(() => {
-      expect(decodeOutputFromUrl(lastRequest().url)).toEqual(events);
-      done();
+      const urls = imageCreator.urls;
+      expect(urls.length).toEqual(1);
+      expect(decodeOutputFromUrl(urls[0])).toEqual(events);
     });
-    lastRequest().respond();
-  });
 
-  it('should send events in multiple chunks if necessary', done => {
-    const sender = EventSender(eventsUrl);
-    const events = [];
-    for (let i = 0; i < 80; i++) {
-      events.push({ kind: 'identify', key: 'thisIsALongUserKey' + i });
-    }
-    sender.sendEvents(events, true).then(() => {
-      const realRequests = [];
-      // The array of requests will also contain empty requests from our CORS-checking logic
-      for (let i = 0; i < requests.length; i++) {
-        if (requests[i].url) {
-          realRequests.push(requests[i]);
-        }
+    it('should send events in multiple chunks if necessary', () => {
+      const imageCreator = fakeImageCreator();
+      const sender = EventSender(eventsUrl, envId, false, imageCreator);
+      const events = [];
+      for (let i = 0; i < 80; i++) {
+        events.push({ kind: 'identify', key: 'thisIsALongUserKey' + i });
       }
-      expect(realRequests.length).toEqual(3);
-      const output0 = decodeOutputFromUrl(realRequests[0].url);
-      const output1 = decodeOutputFromUrl(realRequests[1].url);
-      const output2 = decodeOutputFromUrl(realRequests[2].url);
-      expect(output0).toEqual(events.slice(0, 31));
-      expect(output1).toEqual(events.slice(31, 62));
-      expect(output2).toEqual(events.slice(62, 80));
-      done();
+
+      sender.sendEvents(events, false);
+
+      const urls = imageCreator.urls;
+      expect(urls.length).toEqual(3);
+      expect(decodeOutputFromUrl(urls[0])).toEqual(events.slice(0, 31));
+      expect(decodeOutputFromUrl(urls[1])).toEqual(events.slice(31, 62));
+      expect(decodeOutputFromUrl(urls[2])).toEqual(events.slice(62, 80));
     });
-    lastRequest().respond();
+
+    it('should set a completion handler', () => {
+      const imageCreator = fakeImageCreator();
+      const sender = EventSender(eventsUrl, envId, false, imageCreator);
+      const event1 = { kind: 'identify', key: 'userKey1' };
+
+      sender.sendEvents([event1], false);
+
+      expect(imageCreator.onDone).toBeDefined();
+    });
+  });
+
+  describe('using POST when CORS is available', () => {
+    it('should send asynchronously', () => {
+      const sender = EventSender(eventsUrl, envId, true);
+      const event = { kind: 'identify', key: 'userKey' };
+      sender.sendEvents([event], false);
+      lastRequest().respond();
+      expect(lastRequest().async).toEqual(true);
+    });
+
+    it('should send synchronously', () => {
+      const sender = EventSender(eventsUrl, envId, true);
+      const event = { kind: 'identify', key: 'userKey' };
+      sender.sendEvents([event], true);
+      lastRequest().respond();
+      expect(lastRequest().async).toEqual(false);
+    });
+
+    it('should send all events in request body', () => {
+      const sender = EventSender(eventsUrl, envId, true);
+      const events = [];
+      for (let i = 0; i < 80; i++) {
+        events.push({ kind: 'identify', key: 'thisIsALongUserKey' + i });
+      }
+      sender.sendEvents(events, false);
+      lastRequest().respond();
+      const r = lastRequest();
+      expect(r.url).toEqual(eventsUrl + '/events/bulk/' + envId);
+      expect(r.method).toEqual('POST');
+      expect(JSON.parse(r.requestBody)).toEqual(events);
+    });
   });
 });
