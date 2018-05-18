@@ -368,7 +368,9 @@ describe('LDClient', () => {
       ep.start = function() {};
       ep.flush = function() {};
       ep.stop = function() {};
-      ep.enqueue = function(e) { ep.events.push(e); };
+      ep.enqueue = function(e) {
+        ep.events.push(e);
+      };
       return ep;
     }
 
@@ -389,8 +391,11 @@ describe('LDClient', () => {
     it('sends an identify event at startup', done => {
       const ep = stubEventProcessor();
       const server = sinon.fakeServer.create();
-      server.respondWith([200, { 'Content-Type': 'application/json' },
-        '{"foo":{"value":"a","variation":1,"version":2,"flagVersion":2000}}']);
+      server.respondWith([
+        200,
+        { 'Content-Type': 'application/json' },
+        '{"foo":{"value":"a","variation":1,"version":2,"flagVersion":2000}}',
+      ]);
       const client = LDClient.initialize(envName, user, { eventProcessor: ep });
 
       client.on('ready', () => {
@@ -406,8 +411,11 @@ describe('LDClient', () => {
     it('sends a feature event for variation()', done => {
       const ep = stubEventProcessor();
       const server = sinon.fakeServer.create();
-      server.respondWith([200, { 'Content-Type': 'application/json' },
-        '{"foo":{"value":"a","variation":1,"version":2,"flagVersion":2000}}']);
+      server.respondWith([
+        200,
+        { 'Content-Type': 'application/json' },
+        '{"foo":{"value":"a","variation":1,"version":2,"flagVersion":2000}}',
+      ]);
       const client = LDClient.initialize(envName, user, { eventProcessor: ep });
 
       client.on('ready', () => {
@@ -426,8 +434,11 @@ describe('LDClient', () => {
     it('uses "version" instead of "flagVersion" in event if "flagVersion" is absent', done => {
       const ep = stubEventProcessor();
       const server = sinon.fakeServer.create();
-      server.respondWith([200, { 'Content-Type': 'application/json' },
-        '{"foo":{"value":"a","variation":1,"version":2}}']);
+      server.respondWith([
+        200,
+        { 'Content-Type': 'application/json' },
+        '{"foo":{"value":"a","variation":1,"version":2}}',
+      ]);
       const client = LDClient.initialize(envName, user, { eventProcessor: ep });
 
       client.on('ready', () => {
@@ -446,8 +457,7 @@ describe('LDClient', () => {
     it('omits event version if flag does not exist', done => {
       const ep = stubEventProcessor();
       const server = sinon.fakeServer.create();
-      server.respondWith([200, { 'Content-Type': 'application/json' },
-        '{}']);
+      server.respondWith([200, { 'Content-Type': 'application/json' }, '{}']);
       const client = LDClient.initialize(envName, user, { eventProcessor: ep });
 
       client.on('ready', () => {
@@ -466,7 +476,7 @@ describe('LDClient', () => {
 
   describe('event listening', () => {
     const streamUrl = 'https://clientstream.launchdarkly.com';
-  
+
     function streamEvents() {
       return sources[`${streamUrl}/eval/${envName}/${encodedUser}`].__emitter._events;
     }
@@ -602,9 +612,7 @@ describe('LDClient', () => {
       client.on('ready', () => {
         client.on('change', () => {});
 
-        streamEvents().patch({
-          data: '{"key":"enable-foo","value":true,"version":1}',
-        });
+        streamEvents().patch({ data: '{"key":"enable-foo","value":true,"version":1}' });
 
         expect(client.variation('enable-foo')).toEqual(true);
         done();
@@ -613,20 +621,17 @@ describe('LDClient', () => {
 
     it('does not update flag if patch version < flag version', done => {
       const server = sinon.fakeServer.create();
-      server.respondWith([200, { 'Content-Type': 'application/json' },
-        '{"enable-foo":{"value":"a","version":2}}']);
+      server.respondWith([200, { 'Content-Type': 'application/json' }, '{"enable-foo":{"value":"a","version":2}}']);
 
       const client = LDClient.initialize(envName, user);
       client.on('ready', () => {
-        expect(client.variation('enable-foo')).toEqual("a");
+        expect(client.variation('enable-foo')).toEqual('a');
 
         client.on('change', () => {});
 
-        streamEvents().patch({
-          data: '{"key":"enable-foo","value":"b","version":1}'
-        });
+        streamEvents().patch({ data: '{"key":"enable-foo","value":"b","version":1}' });
 
-        expect(client.variation('enable-foo')).toEqual("a");
+        expect(client.variation('enable-foo')).toEqual('a');
 
         done();
       });
@@ -635,20 +640,17 @@ describe('LDClient', () => {
 
     it('does not update flag if patch version == flag version', done => {
       const server = sinon.fakeServer.create();
-      server.respondWith([200, { 'Content-Type': 'application/json' },
-        '{"enable-foo":{"value":"a","version":2}}']);
+      server.respondWith([200, { 'Content-Type': 'application/json' }, '{"enable-foo":{"value":"a","version":2}}']);
 
       const client = LDClient.initialize(envName, user);
       client.on('ready', () => {
-        expect(client.variation('enable-foo')).toEqual("a");
+        expect(client.variation('enable-foo')).toEqual('a');
 
         client.on('change', () => {});
 
-        streamEvents().patch({
-          data: '{"key":"enable-foo","value":"b","version":1}'
-        });
+        streamEvents().patch({ data: '{"key":"enable-foo","value":"b","version":1}' });
 
-        expect(client.variation('enable-foo')).toEqual("a");
+        expect(client.variation('enable-foo')).toEqual('a');
 
         done();
       });
@@ -657,20 +659,17 @@ describe('LDClient', () => {
 
     it('updates flag if patch has a version and flag has no version', done => {
       const server = sinon.fakeServer.create();
-      server.respondWith([200, { 'Content-Type': 'application/json' },
-        '{"enable-foo":{"value":"a"}}']);
+      server.respondWith([200, { 'Content-Type': 'application/json' }, '{"enable-foo":{"value":"a"}}']);
 
       const client = LDClient.initialize(envName, user);
       client.on('ready', () => {
-        expect(client.variation('enable-foo')).toEqual("a");
+        expect(client.variation('enable-foo')).toEqual('a');
 
         client.on('change', () => {});
 
-        streamEvents().patch({
-          data: '{"key":"enable-foo","value":"b","version":1}'
-        });
+        streamEvents().patch({ data: '{"key":"enable-foo","value":"b","version":1}' });
 
-        expect(client.variation('enable-foo')).toEqual("b");
+        expect(client.variation('enable-foo')).toEqual('b');
 
         done();
       });
@@ -679,20 +678,17 @@ describe('LDClient', () => {
 
     it('updates flag if flag has a version and patch has no version', done => {
       const server = sinon.fakeServer.create();
-      server.respondWith([200, { 'Content-Type': 'application/json' },
-        '{"enable-foo":{"value":"a","version":1}}']);
+      server.respondWith([200, { 'Content-Type': 'application/json' }, '{"enable-foo":{"value":"a","version":2}}']);
 
       const client = LDClient.initialize(envName, user);
       client.on('ready', () => {
-        expect(client.variation('enable-foo')).toEqual("a");
+        expect(client.variation('enable-foo')).toEqual('a');
 
         client.on('change', () => {});
 
-        streamEvents().patch({
-          data: '{"key":"enable-foo","value":"b"}'
-        });
+        streamEvents().patch({ data: '{"key":"enable-foo","value":"b"}' });
 
-        expect(client.variation('enable-foo')).toEqual("b");
+        expect(client.variation('enable-foo')).toEqual('b');
 
         done();
       });
