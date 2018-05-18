@@ -24,7 +24,7 @@ function initialize(env, user, options = {}) {
   const environment = env;
   const emitter = EventEmitter();
   const stream = Stream(streamUrl, environment, hash, options.useReport);
-  const events = EventProcessor(eventsUrl + '/a/' + environment + '.gif', options, emitter);
+  const events = options.eventProcessor || EventProcessor(eventsUrl + '/a/' + environment + '.gif', options, emitter);
   const requestor = Requestor(baseUrl, environment, options.useReport);
   const seenRequests = {};
   let flags = typeof options.bootstrap === 'object' ? utils.transformValuesToVersionedValues(options.bootstrap) : {};
@@ -93,7 +93,7 @@ function initialize(env, user, options = {}) {
     };
     const flag = flags[key];
     if (flag) {
-      event.version = flag.version;
+      event.version = flag.flagVersion ? flag.flagVersion : flag.version;
       event.variation = flag.variation;
       event.trackEvents = flag.trackEvents;
       event.debugEventsUntilDate = flag.debugEventsUntilDate;
@@ -253,9 +253,12 @@ function initialize(env, user, options = {}) {
       },
       patch: function(e) {
         const data = JSON.parse(e.data);
-        if (!flags[data.key] || flags[data.key].version < data.version) {
+        // If both the flag and the patch have a version property, then the patch version must be
+        // greater than the flag version for us to accept the patch.  If either one has no version
+        // then the patch always succeeds.
+        const oldFlag = flags[data.key];
+        if (!oldFlag || !oldFlag.version || !data.version || oldFlag.version < data.version) {
           const mods = {};
-          const oldFlag = flags[data.key];
           const newFlag = Object.assign({}, data);
           delete newFlag['key'];
           flags[data.key] = newFlag;
