@@ -125,15 +125,12 @@ function initialize(env, user, options = {}) {
     }
     return utils.wrapPromiseCallback(
       new Promise((resolve, reject) => {
-        ident.setUser(user);
         if (!user || user.key === null || user.key === undefined) {
-          // If the user is invalid, we put ourselves in a state where no flags exist
-          // (so all evaluations will return default values).
-          updateSettings({});
           const err = new errors.LDInvalidUserError(user ? messages.invalidUser() : messages.userNotSpecified());
           emitter.maybeReportError(err);
           utils.onNextTick(() => reject(err));
         } else {
+          ident.setUser(user);
           requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
             if (err) {
               emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));

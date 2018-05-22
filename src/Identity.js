@@ -1,9 +1,6 @@
 import * as utils from './utils';
 
 function sanitizeUser(u) {
-  if (!u) {
-    return null;
-  }
   const sane = utils.clone(u);
   if (sane.key) {
     sane.key = sane.key.toString();

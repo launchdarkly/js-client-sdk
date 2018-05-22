@@ -714,7 +714,7 @@ describe('LDClient', () => {
       });
     });
 
-    it('returns default value for flag after identify is called with null user', done => {
+    it('does not change flag values after identify is called with null user', done => {
       const data = { foo: 'bar' };
       const client = LDClient.initialize(envName, user, { bootstrap: data });
 
@@ -725,14 +725,14 @@ describe('LDClient', () => {
             throw Error('should not have succeeded');
           },
           () => {
-            expect(client.variation('foo', 'x')).toEqual('x');
+            expect(client.variation('foo', 'x')).toEqual('bar');
             done();
           }
         );
       });
     });
 
-    it('returns default value for flag after identify is called with invalid user', done => {
+    it('does not change flag values after identify is called with invalid user', done => {
       const data = { foo: 'bar' };
       const client = LDClient.initialize(envName, user, { bootstrap: data });
 
@@ -743,7 +743,7 @@ describe('LDClient', () => {
             throw Error('should not have succeeded');
           },
           () => {
-            expect(client.variation('foo', 'x')).toEqual('x');
+            expect(client.variation('foo', 'x')).toEqual('bar');
             done();
           }
         );
