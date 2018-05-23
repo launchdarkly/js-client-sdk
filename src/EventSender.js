@@ -2,8 +2,19 @@ import * as utils from './utils';
 
 const MAX_URL_LENGTH = 2000;
 
-export default function EventSender(eventsUrl) {
+export default function EventSender(eventsUrl, environmentId, forceHasCors, imageCreator) {
+  let hasCors;
+  const postUrl = eventsUrl + '/events/bulk/' + environmentId;
+  const imageUrl = eventsUrl + '/a/' + environmentId + '.gif';
   const sender = {};
+
+  function loadUrlUsingImage(src, onDone) {
+    const img = new Image();
+    if (onDone) {
+      img.addEventListener('load', onDone);
+    }
+    img.src = src;
+  }
 
   function getResponseInfo(xhr) {
     const ret = { status: xhr.status };
@@ -17,16 +28,13 @@ export default function EventSender(eventsUrl) {
     return ret;
   }
 
-  function sendChunk(events, sync) {
-    const src = eventsUrl + '?d=' + utils.base64URLEncode(JSON.stringify(events));
-
+  function sendChunk(events, usePost, sync) {
+    const createImage = imageCreator || loadUrlUsingImage;
     const send = onDone => {
-      const hasCors = 'withCredentials' in new XMLHttpRequest();
-      // Detect browser support for CORS
-      if (hasCors) {
-        /* supports cross-domain requests */
+      if (usePost) {
         const xhr = new XMLHttpRequest();
-        xhr.open('GET', src, !sync);
+        xhr.open('POST', postUrl, !sync);
+        xhr.setRequestHeader('Content-Type', 'application/json');
 
         if (!sync) {
           xhr.addEventListener('load', () => {
@@ -34,15 +42,10 @@ export default function EventSender(eventsUrl) {
           });
         }
 
-        xhr.send();
+        xhr.send(JSON.stringify(events));
       } else {
-        const img = new Image();
-
-        if (!sync) {
-          img.addEventListener('load', onDone);
-        }
-
-        img.src = src;
+        const src = imageUrl + '?d=' + utils.base64URLEncode(JSON.stringify(events));
+        createImage(src, sync ? null : onDone);
       }
     };
 
@@ -56,11 +59,26 @@ export default function EventSender(eventsUrl) {
   }
 
   sender.sendEvents = function(events, sync) {
+    // Detect browser support for CORS (can be overridden by tests)
+    if (hasCors === undefined) {
+      if (forceHasCors === undefined) {
+        hasCors = 'withCredentials' in new XMLHttpRequest();
+      } else {
+        hasCors = forceHasCors;
+      }
+    }
+
     const finalSync = sync === undefined ? false : sync;
-    const chunks = utils.chunkUserEventsForUrl(MAX_URL_LENGTH - eventsUrl.length, events);
+    let chunks;
+    if (hasCors) {
+      // no need to break up events into chunks if we can send a POST
+      chunks = [events];
+    } else {
+      chunks = utils.chunkUserEventsForUrl(MAX_URL_LENGTH - eventsUrl.length, events);
+    }
     const results = [];
     for (let i = 0; i < chunks.length; i++) {
-      results.push(sendChunk(chunks[i], finalSync));
+      results.push(sendChunk(chunks[i], hasCors, finalSync));
     }
     return sync ? Promise.resolve() : Promise.all(results);
   };
