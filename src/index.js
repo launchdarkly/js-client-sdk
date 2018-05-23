@@ -125,20 +125,26 @@ function initialize(env, user, options = {}) {
     }
     return utils.wrapPromiseCallback(
       new Promise((resolve, reject) => {
-        ident.setUser(user);
-        requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
-          if (err) {
-            emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
-            return reject(err);
-          }
-          if (settings) {
-            updateSettings(settings);
-          }
-          resolve(settings);
-          if (subscribedToChangeEvents) {
-            connectStream();
-          }
-        });
+        if (!user || user.key === null || user.key === undefined) {
+          const err = new errors.LDInvalidUserError(user ? messages.invalidUser() : messages.userNotSpecified());
+          emitter.maybeReportError(err);
+          reject(err);
+        } else {
+          ident.setUser(user);
+          requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
+            if (err) {
+              emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+              return reject(err);
+            }
+            if (settings) {
+              updateSettings(settings);
+            }
+            resolve(settings);
+            if (subscribedToChangeEvents) {
+              connectStream();
+            }
+          });
+        }
       }),
       onDone
     );
