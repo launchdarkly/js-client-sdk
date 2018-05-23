@@ -18,7 +18,7 @@ function initialize(env, user, options = {}) {
   const eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
   const streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
   const hash = options.hash;
-  const sendEvents = typeof options.sendEvents === 'undefined' ? true : config.sendEvents;
+  const sendEvents = typeof options.sendEvents === 'undefined' ? true : options.sendEvents;
   const allowFrequentDuplicateEvents = !!options.allowFrequentDuplicateEvents;
   const sendEventsOnlyForVariation = !!options.sendEventsOnlyForVariation;
   const environment = env;

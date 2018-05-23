@@ -3,6 +3,11 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. 
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [1.7.4] - 2018-05-23
+### Fixed
+- Fixed a bug that caused events _not_ to be sent if `options.sendEvents` was explicitly set to `true`.
+- HTTP requests will no longer fail if there is a `charset` specified in the response's `Content-Type` header. ([#87](https://github.com/launchdarkly/js-client/issues/87))
+
 ## [1.7.3] - 2018-05-08
 ### Fixed
 - The client no longer creates an empty `XMLHttpRequest` at startup time (which could interfere with unit tests).

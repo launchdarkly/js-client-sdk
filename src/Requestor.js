@@ -8,7 +8,11 @@ function fetchJSON(endpoint, body, callback) {
   const xhr = new XMLHttpRequest();
 
   xhr.addEventListener('load', () => {
-    if (xhr.status === 200 && xhr.getResponseHeader('Content-type') === json) {
+    if (
+      xhr.status === 200 &&
+      xhr.getResponseHeader('Content-type') &&
+      xhr.getResponseHeader('Content-Type').startsWith(json)
+    ) {
       callback(null, JSON.parse(xhr.responseText));
     } else {
       callback(xhr.statusText);
