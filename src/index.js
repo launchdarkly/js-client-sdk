@@ -128,7 +128,7 @@ function initialize(env, user, options = {}) {
         if (!user || user.key === null || user.key === undefined) {
           const err = new errors.LDInvalidUserError(user ? messages.invalidUser() : messages.userNotSpecified());
           emitter.maybeReportError(err);
-          utils.onNextTick(() => reject(err));
+          reject(err);
         } else {
           ident.setUser(user);
           requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
