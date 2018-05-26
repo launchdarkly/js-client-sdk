@@ -1,4 +1,3 @@
-import sinon from 'sinon';
 import { base64URLEncode, wrapPromiseCallback, chunkUserEventsForUrl } from '../utils';
 
 describe('utils', () => {
@@ -21,31 +20,21 @@ describe('utils', () => {
     });
 
     it('should call the callback with a value if the promise resolves', done => {
-      const callback = sinon.spy();
-      const promise = wrapPromiseCallback(Promise.resolve('woohoo'), callback);
-
-      promise.then(result => {
-        expect(result).toEqual('woohoo');
-        // callback run on next tick to maintain asynchronous expections
-        setTimeout(() => {
-          expect(callback.calledWith(null, 'woohoo')).toEqual(true);
-          done();
-        }, 0);
+      const promise = wrapPromiseCallback(Promise.resolve('woohoo'), (error, value) => {
+        expect(promise).toBeUndefined();
+        expect(error).toBeNull();
+        expect(value).toEqual('woohoo');
+        done();
       });
     });
 
     it('should call the callback with an error if the promise rejects', done => {
-      const error = new Error('something went wrong');
-      const callback = sinon.spy();
-      const promise = wrapPromiseCallback(Promise.reject(error), callback);
-
-      promise.catch(v => {
-        expect(v).toEqual(error);
-        // callback run on next tick to maintain asynchronous expections
-        setTimeout(() => {
-          expect(callback.calledWith(error, null)).toEqual(true);
-          done();
-        }, 0);
+      const actualError = new Error('something went wrong');
+      const promise = wrapPromiseCallback(Promise.reject(actualError), (error, value) => {
+        expect(promise).toBeUndefined();
+        expect(error).toEqual(actualError);
+        expect(value).toBeNull();
+        done();
       });
     });
   });

@@ -3,6 +3,23 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. 
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.0.0] - 2018-05-25
+### Changed
+- To reduce the network bandwidth used for analytics events, feature request events are now sent as counters rather than individual events, and user details are now sent only at intervals rather than in each event. These behaviors can be modified through the LaunchDarkly UI and with the new configuration option `inlineUsersInEvents`. For more details, see [Analytics Data Stream Reference](https://docs.launchdarkly.com/v2.0/docs/analytics-data-stream-reference).
+- In every function that takes an optional callback parameter, if you provide a callback, the function will not return a promise; a promise will be returned only if you omit the callback. Previously, it would always return a promise which would be resolved/rejected at the same time that the callback (if any) was called; this caused problems if you had not registered an error handler for the promise.
+- When sending analytics events, if there is a connection error or an HTTP 5xx response, the client will try to send the events again one more time after a one-second delay.
+- Analytics are now sent with an HTTP `POST` request if the browser supports CORS, or via image loading if it does not. Previously, they were always sent via image loading.
+
+### Added
+- The new configuration option `sendEventsOnlyForVariation`, if set to `true`, causes analytics events for feature flags to be sent only when you call `variation`. Otherwise, the default behavior is to also send events when you call `allFlags`, and whenever a changed flag value is detected in streaming mode.
+- The new configuration option `allowFrequentDuplicateEvents`, if set to `true`, turns off throttling for feature flag events. Otherwise, the default behavior is to block the sending of an analytics event if another event with the same flag key, flag value, and user key was generated within the last five minutes.
+
+### Fixed
+- If `identify` is called with a null user, or a user with no key, the function no longer tries to do an HTTP request to the server (which would always fail); instead, it just returns an error.
+
+### Deprecated
+- The configuration options `all_attributes_private` and `private_attribute_names` are deprecated. Use `allAttributesPrivate` and `privateAttributeNames` instead.
+
 ## [1.7.4] - 2018-05-23
 ### Fixed
 - Fixed a bug that caused events _not_ to be sent if `options.sendEvents` was explicitly set to `true`.
