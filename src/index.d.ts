@@ -114,6 +114,22 @@ declare module 'ldclient-js' {
      * Do not use unless advised by LaunchDarkly.
      */
     useReport?: boolean;
+
+    /**
+     * Whether all user attributes (except the user key) should be marked as
+     * private, and not sent to LaunchDarkly.
+     *
+     * Defaults to false.
+     */
+    allAttributesPrivate?: boolean;
+
+    /**
+     * The names of user attributes that should be marked as private, and not sent
+     * to LaunchDarkly.
+     *
+     * Must be a list of strings. Defaults to empty list.
+     */
+    privateAttributeNames?: Array<string>;
   }
 
   /**
