@@ -2,6 +2,7 @@ import Base64 from 'Base64';
 import sinon from 'sinon';
 
 import EventSender from '../EventSender';
+import * as utils from '../utils';
 
 describe('EventSender', () => {
   let sandbox;
@@ -126,6 +127,14 @@ describe('EventSender', () => {
       expect(r.url).toEqual(eventsUrl + '/events/bulk/' + envId);
       expect(r.method).toEqual('POST');
       expect(JSON.parse(r.requestBody)).toEqual(events);
+    });
+
+    it('should send custom user-agent header', () => {
+      const sender = EventSender(eventsUrl, envId, true);
+      const event = { kind: 'identify', key: 'userKey' };
+      sender.sendEvents([event], true);
+      lastRequest().respond();
+      expect(lastRequest().requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
     });
   });
 });

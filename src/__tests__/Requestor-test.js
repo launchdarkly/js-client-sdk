@@ -1,5 +1,6 @@
 import sinon from 'sinon';
 import Requestor from '../Requestor';
+import * as utils from '../utils';
 
 describe('Requestor', () => {
   let server;
@@ -82,5 +83,23 @@ describe('Requestor', () => {
     expect(handleThree.calledOnce).toEqual(true);
     expect(handleFour.calledOnce).toEqual(true);
     expect(handleFive.calledOnce).toEqual(true);
+  });
+
+  it('should send custom user-agent header in GET mode', () => {
+    const requestor = Requestor('http://requestee', 'FAKE_ENV', false);
+    const user = { key: 'foo' };
+    requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
+
+    expect(server.requests.length).toEqual(1);
+    expect(server.requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
+  });
+
+  it('should send custom user-agent header in REPORT mode', () => {
+    const requestor = Requestor('http://requestee', 'FAKE_ENV', true);
+    const user = { key: 'foo' };
+    requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
+
+    expect(server.requests.length).toEqual(1);
+    expect(server.requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
   });
 });
