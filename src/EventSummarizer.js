@@ -7,7 +7,12 @@ export default function EventSummarizer() {
 
   es.summarizeEvent = function(event) {
     if (event.kind === 'feature') {
-      const counterKey = event.key + ':' + (event.variation || '') + (event.version || '');
+      const counterKey =
+        event.key +
+        ':' +
+        (event.variation !== null && event.variation !== undefined ? event.variation : '') +
+        ':' +
+        (event.version !== null && event.version !== undefined ? event.version : '');
       const counterVal = counters[counterKey];
       if (counterVal) {
         counterVal.count = counterVal.count + 1;
