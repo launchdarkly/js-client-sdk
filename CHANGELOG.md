@@ -3,6 +3,13 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. 
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.1.0] - 2018-05-31
+### Added:
+- The client now sends the current SDK version to LaunchDarkly in an HTTP header. This information will be visible in a future version of the LaunchDarkly UI.
+
+### Fixed:
+- Fixed a bug that caused summary events to combine the counts for flag evaluations that produced the flag's first variation (variation index 0) with the counts for flag evaluations that fell through to the default value.
+
 ## [2.0.0] - 2018-05-25
 ### Changed
 - To reduce the network bandwidth used for analytics events, feature request events are now sent as counters rather than individual events, and user details are now sent only at intervals rather than in each event. These behaviors can be modified through the LaunchDarkly UI and with the new configuration option `inlineUsersInEvents`. For more details, see [Analytics Data Stream Reference](https://docs.launchdarkly.com/v2.0/docs/analytics-data-stream-reference).
