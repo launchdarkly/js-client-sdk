@@ -65,11 +65,11 @@ export default function UserFilter(config) {
     };
     const result = filterAttrs(user, key => allowedTopLevelAttrs[key]);
     const filteredProps = result[0];
-    const removedAttrs = result[1];
+    let removedAttrs = result[1];
     if (user.custom) {
       const customResult = filterAttrs(user.custom, () => true);
       filteredProps.custom = customResult[0];
-      Object.assign(removedAttrs, customResult[1]);
+      removedAttrs = { ...removedAttrs, ...customResult[1] };
     }
     const removedAttrNames = Object.keys(removedAttrs);
     if (removedAttrNames.length) {

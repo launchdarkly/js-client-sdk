@@ -265,7 +265,7 @@ function initialize(env, user, options = {}) {
         const oldFlag = flags[data.key];
         if (!oldFlag || !oldFlag.version || !data.version || oldFlag.version < data.version) {
           const mods = {};
-          const newFlag = Object.assign({}, data);
+          const newFlag = { ...data };
           delete newFlag['key'];
           flags[data.key] = newFlag;
           if (oldFlag) {

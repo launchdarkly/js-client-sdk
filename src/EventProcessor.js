@@ -54,7 +54,7 @@ export default function EventProcessor(eventsUrl, environmentId, options = {}, e
 
   // Transform an event from its internal format to the format we use when sending a payload.
   function makeOutputEvent(e) {
-    const ret = Object.assign({}, e);
+    const ret = { ...e };
     if (inlineUsers || e.kind === 'identify') {
       // identify events always have an inline user
       ret.user = userFilter.filterUser(e.user);
@@ -94,7 +94,7 @@ export default function EventProcessor(eventsUrl, environmentId, options = {}, e
       queue.push(makeOutputEvent(event));
     }
     if (addDebugEvent) {
-      const debugEvent = Object.assign({}, event, { kind: 'debug' });
+      const debugEvent = { ...event, kind: 'debug' };
       delete debugEvent['trackEvents'];
       delete debugEvent['debugEventsUntilDate'];
       delete debugEvent['variation'];

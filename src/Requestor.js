@@ -11,7 +11,7 @@ function fetchJSON(endpoint, body, callback) {
     if (
       xhr.status === 200 &&
       xhr.getResponseHeader('Content-type') &&
-      xhr.getResponseHeader('Content-Type').startsWith(json)
+      xhr.getResponseHeader('Content-Type').lastIndexOf(json) === 0
     ) {
       callback(null, JSON.parse(xhr.responseText));
     } else {
