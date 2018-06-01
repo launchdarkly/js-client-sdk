@@ -34,7 +34,9 @@ export default function EventSender(eventsUrl, environmentId, forceHasCors, imag
       if (usePost) {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', postUrl, !sync);
+        utils.addLDHeaders(xhr);
         xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('X-LaunchDarkly-Event-Schema', '3');
 
         if (!sync) {
           xhr.addEventListener('load', () => {
