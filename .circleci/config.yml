@@ -8,6 +8,7 @@ jobs:
       - run: npm install
       - run: mkdir -p reports/junit
       - run: npm run lint:all
+      - run: npm run build
       - run:
           command: npm run test:junit
           environment:
