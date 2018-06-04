@@ -1,8 +1,10 @@
 import { base64URLEncode } from './utils';
 
-export default function Stream(baseUrl, environment, hash, useReport) {
+export default function Stream(baseUrl, environment, hash, config) {
   const stream = {};
   const evalUrlPrefix = baseUrl + '/eval/' + environment + '/';
+  const useReport = config.useReport || false;
+  const reconnectDelay = config.streamReconnectDelay || 5000;
   let reconnectTimeoutReference;
   let es = null;
 
@@ -25,7 +27,7 @@ export default function Stream(baseUrl, environment, hash, useReport) {
         reconnectTimeoutReference = setTimeout(() => {
           this.disconnect();
           this.connect(user, handlers);
-        }, 5000);
+        }, reconnectDelay);
       };
       for (const key in handlers) {
         if (handlers.hasOwnProperty(key)) {
