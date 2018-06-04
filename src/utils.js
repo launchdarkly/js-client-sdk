@@ -36,10 +36,10 @@ export function onNextTick(cb) {
  *
  * @param {Promise<any>} promise
  * @param {Function} callback
- * @returns Promise<any>
+ * @returns Promise<any> | undefined
  */
 export function wrapPromiseCallback(promise, callback) {
-  return promise.then(
+  const ret = promise.then(
     value => {
       if (callback) {
         setTimeout(() => {
@@ -53,10 +53,13 @@ export function wrapPromiseCallback(promise, callback) {
         setTimeout(() => {
           callback(error, null);
         }, 0);
+      } else {
+        return Promise.reject(error);
       }
-      return Promise.reject(error);
     }
   );
+
+  return !callback ? ret : undefined;
 }
 
 /**
@@ -68,20 +71,6 @@ export function transformValuesToVersionedValues(flags) {
   for (const key in flags) {
     if (flags.hasOwnProperty(key)) {
       ret[key] = { value: flags[key], version: 0 };
-    }
-  }
-  return ret;
-}
-
-/**
- * Takes a map obtained from the client stream and converts it to the briefer format used in
- * bootstrap data or local storagel
- */
-export function transformValuesToUnversionedValues(flags) {
-  const ret = {};
-  for (const key in flags) {
-    if (flags.hasOwnProperty(key)) {
-      ret[key] = flags[key].value;
     }
   }
   return ret;
@@ -105,7 +94,7 @@ export function chunkUserEventsForUrl(maxLength, events) {
     chunk = [];
 
     while (remainingSpace > 0) {
-      const event = allEvents.pop();
+      const event = allEvents.shift();
       if (!event) {
         break;
       }
@@ -114,7 +103,7 @@ export function chunkUserEventsForUrl(maxLength, events) {
       // to try in the next round, unless this event alone is larger
       // than the limit, in which case, screw it, and try it anyway.
       if (remainingSpace < 0 && chunk.length > 0) {
-        allEvents.push(event);
+        allEvents.unshift(event);
       } else {
         chunk.push(event);
       }
@@ -125,4 +114,12 @@ export function chunkUserEventsForUrl(maxLength, events) {
   }
 
   return allChunks;
+}
+
+export function getLDUserAgentString() {
+  return 'JSClient/' + VERSION;
+}
+
+export function addLDHeaders(xhr) {
+  xhr.setRequestHeader('X-LaunchDarkly-User-Agent', getLDUserAgentString());
 }

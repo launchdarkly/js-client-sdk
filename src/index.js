@@ -1,18 +1,16 @@
 import EventProcessor from './EventProcessor';
 import EventEmitter from './EventEmitter';
-import EventSerializer from './EventSerializer';
 import GoalTracker from './GoalTracker';
+import Store from './Store';
 import Stream from './Stream';
 import Requestor from './Requestor';
 import Identity from './Identity';
-import store from './store';
 import * as utils from './utils';
 import * as messages from './messages';
 import * as errors from './errors';
 
 const readyEvent = 'ready';
 const changeEvent = 'change';
-const flushInterval = 2000;
 const locationWatcherInterval = 300;
 
 function initialize(env, user, options = {}) {
@@ -21,71 +19,87 @@ function initialize(env, user, options = {}) {
   const streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
   const hash = options.hash;
   const sendEvents = typeof options.sendEvents === 'undefined' ? true : options.sendEvents;
+  const allowFrequentDuplicateEvents = !!options.allowFrequentDuplicateEvents;
+  const sendEventsOnlyForVariation = !!options.sendEventsOnlyForVariation;
   const environment = env;
   const emitter = EventEmitter();
   const stream = Stream(streamUrl, environment, hash, options.useReport);
-  const events = EventProcessor(eventsUrl + '/a/' + environment + '.gif', EventSerializer(options));
+  const events = options.eventProcessor || EventProcessor(eventsUrl, environment, options, emitter);
   const requestor = Requestor(baseUrl, environment, options.useReport);
   const seenRequests = {};
-  let samplingInterval = parseInt(options.samplingInterval, 10) || 0;
   let flags = typeof options.bootstrap === 'object' ? utils.transformValuesToVersionedValues(options.bootstrap) : {};
   let goalTracker;
   let useLocalStorage;
   let goals;
   let subscribedToChangeEvents;
-
-  function lsKey(env, user) {
-    let key = '';
-    if (user) {
-      key = hash || utils.btoa(JSON.stringify(user));
-    }
-    return 'ld:' + env + ':' + key;
-  }
+  let firstEvent = true;
 
   function shouldEnqueueEvent() {
-    return (
-      sendEvents && !doNotTrack() && (samplingInterval === 0 || Math.floor(Math.random() * samplingInterval) === 0)
-    );
+    return sendEvents && !doNotTrack();
   }
 
   function enqueueEvent(event) {
+    if (!event.user) {
+      if (firstEvent) {
+        if (console && console.warn) {
+          console.warn(
+            'Be sure to call `identify` in the LaunchDarkly client: http://docs.launchdarkly.com/docs/running-an-ab-test#include-the-client-side-snippet'
+          );
+        }
+        firstEvent = false;
+      }
+      return;
+    }
+    firstEvent = false;
     if (shouldEnqueueEvent()) {
       events.enqueue(event);
     }
   }
 
   function sendIdentifyEvent(user) {
-    enqueueEvent({
-      kind: 'identify',
-      key: user.key,
-      user: user,
-      creationDate: new Date().getTime(),
-    });
+    if (user) {
+      enqueueEvent({
+        kind: 'identify',
+        key: user.key,
+        user: user,
+        creationDate: new Date().getTime(),
+      });
+    }
   }
 
   const ident = Identity(user, sendIdentifyEvent);
-  let localStorageKey = lsKey(environment, ident.getUser());
+  const store = Store(environment, hash, ident);
 
   function sendFlagEvent(key, value, defaultValue) {
     const user = ident.getUser();
-    const cacheKey = JSON.stringify(value) + (user && user.key ? user.key : '') + key;
     const now = new Date();
-    const cached = seenRequests[cacheKey];
-
-    if (cached && now - cached < 300000 /* five minutes, in ms */) {
-      return;
+    if (!allowFrequentDuplicateEvents) {
+      const cacheKey = JSON.stringify(value) + (user && user.key ? user.key : '') + key; // see below
+      const cached = seenRequests[cacheKey];
+      // cache TTL is five minutes
+      if (cached && now - cached < 300000) {
+        return;
+      }
+      seenRequests[cacheKey] = now;
     }
 
-    seenRequests[cacheKey] = now;
-
-    enqueueEvent({
+    const event = {
       kind: 'feature',
       key: key,
       user: user,
       value: value,
       default: defaultValue,
       creationDate: now.getTime(),
-    });
+    };
+    const flag = flags[key];
+    if (flag) {
+      event.version = flag.flagVersion ? flag.flagVersion : flag.version;
+      event.variation = flag.variation;
+      event.trackEvents = flag.trackEvents;
+      event.debugEventsUntilDate = flag.debugEventsUntilDate;
+    }
+
+    enqueueEvent(event);
   }
 
   function sendGoalEvent(kind, goal) {
@@ -106,22 +120,31 @@ function initialize(env, user, options = {}) {
   }
 
   function identify(user, hash, onDone) {
+    if (useLocalStorage) {
+      store.clearFlags();
+    }
     return utils.wrapPromiseCallback(
       new Promise((resolve, reject) => {
-        ident.setUser(user);
-        requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
-          if (err) {
-            emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
-            return reject(err);
-          }
-          if (settings) {
-            updateSettings(settings);
-          }
-          resolve(settings);
-          if (subscribedToChangeEvents) {
-            connectStream();
-          }
-        });
+        if (!user || user.key === null || user.key === undefined) {
+          const err = new errors.LDInvalidUserError(user ? messages.invalidUser() : messages.userNotSpecified());
+          emitter.maybeReportError(err);
+          reject(err);
+        } else {
+          ident.setUser(user);
+          requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
+            if (err) {
+              emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+              return reject(err);
+            }
+            if (settings) {
+              updateSettings(settings);
+            }
+            resolve(settings);
+            if (subscribedToChangeEvents) {
+              connectStream();
+            }
+          });
+        }
       }),
       onDone
     );
@@ -129,20 +152,26 @@ function initialize(env, user, options = {}) {
 
   function flush(onDone) {
     return utils.wrapPromiseCallback(
-      new Promise(resolve => (sendEvents ? resolve(events.flush(ident.getUser())) : resolve()), onDone)
+      new Promise(resolve => (sendEvents ? resolve(events.flush()) : resolve()), onDone)
     );
   }
 
   function variation(key, defaultValue) {
+    return variationInternal(key, defaultValue, true);
+  }
+
+  function variationInternal(key, defaultValue, sendEvent) {
     let value;
 
-    if (flags && flags.hasOwnProperty(key) && !flags[key].deleted) {
+    if (flags && flags.hasOwnProperty(key) && flags[key] && !flags[key].deleted) {
       value = flags[key].value === null ? defaultValue : flags[key].value;
     } else {
       value = defaultValue;
     }
 
-    sendFlagEvent(key, value, defaultValue);
+    if (sendEvent) {
+      sendFlagEvent(key, value, defaultValue);
+    }
 
     return value;
   }
@@ -168,7 +197,7 @@ function initialize(env, user, options = {}) {
 
     for (const key in flags) {
       if (flags.hasOwnProperty(key)) {
-        results[key] = variation(key, null);
+        results[key] = variationInternal(key, null, !sendEventsOnlyForVariation);
       }
     }
 
@@ -230,10 +259,15 @@ function initialize(env, user, options = {}) {
       },
       patch: function(e) {
         const data = JSON.parse(e.data);
-        if (!flags[data.key] || flags[data.key].version < data.version) {
+        // If both the flag and the patch have a version property, then the patch version must be
+        // greater than the flag version for us to accept the patch.  If either one has no version
+        // then the patch always succeeds.
+        const oldFlag = flags[data.key];
+        if (!oldFlag || !oldFlag.version || !data.version || oldFlag.version < data.version) {
           const mods = {};
-          const oldFlag = flags[data.key];
-          flags[data.key] = { version: data.version, value: data.value };
+          const newFlag = { ...data };
+          delete newFlag['key'];
+          flags[data.key] = newFlag;
           if (oldFlag) {
             mods[data.key] = { previous: oldFlag.value, current: data.value };
           } else {
@@ -264,7 +298,7 @@ function initialize(env, user, options = {}) {
     }
 
     for (const key in flags) {
-      if (flags.hasOwnProperty(key)) {
+      if (flags.hasOwnProperty(key) && flags[key]) {
         if (newFlags[key] && newFlags[key].value !== flags[key].value) {
           changes[key] = { previous: flags[key].value, current: newFlags[key].value };
         } else if (!newFlags[key] || newFlags[key].deleted) {
@@ -273,7 +307,7 @@ function initialize(env, user, options = {}) {
       }
     }
     for (const key in newFlags) {
-      if (newFlags.hasOwnProperty(key) && (!flags[key] || flags[key].deleted)) {
+      if (newFlags.hasOwnProperty(key) && newFlags[key] && (!flags[key] || flags[key].deleted)) {
         changes[key] = { current: newFlags[key].value };
       }
     }
@@ -286,9 +320,7 @@ function initialize(env, user, options = {}) {
     const keys = Object.keys(changes);
 
     if (useLocalStorage) {
-      store.clear(localStorageKey);
-      localStorageKey = lsKey(environment, ident.getUser());
-      store.set(localStorageKey, JSON.stringify(utils.transformValuesToUnversionedValues(flags)));
+      store.saveFlags(flags);
     }
 
     if (keys.length > 0) {
@@ -298,9 +330,11 @@ function initialize(env, user, options = {}) {
 
       emitter.emit(changeEvent, changes);
 
-      keys.forEach(key => {
-        sendFlagEvent(key, changes[key].current);
-      });
+      if (!sendEventsOnlyForVariation) {
+        keys.forEach(key => {
+          sendFlagEvent(key, changes[key].current);
+        });
+      }
     }
   }
 
@@ -341,17 +375,6 @@ function initialize(env, user, options = {}) {
     }
   }
 
-  if (options.samplingInterval !== undefined && (isNaN(options.samplingInterval) || options.samplingInterval < 0)) {
-    samplingInterval = 0;
-    utils.onNextTick(() => {
-      emitter.maybeReportError(
-        new errors.LDInvalidArgumentError(
-          'Invalid sampling interval configured. Sampling interval must be an integer >= 0.'
-        )
-      );
-    });
-  }
-
   if (!env) {
     utils.onNextTick(() => {
       emitter.maybeReportError(new errors.LDInvalidEnvironmentIdError(messages.environmentNotSpecified()));
@@ -379,20 +402,19 @@ function initialize(env, user, options = {}) {
   ) {
     useLocalStorage = true;
 
-    // check if localStorage data is corrupted, if so clear it
-    try {
-      flags = utils.transformValuesToVersionedValues(JSON.parse(store.get(localStorageKey)));
-    } catch (error) {
-      store.clear(localStorageKey);
-    }
+    flags = store.loadFlags();
 
     if (flags === null) {
       requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
         if (err) {
           emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
         }
-        flags = settings;
-        settings && store.set(localStorageKey, JSON.stringify(utils.transformValuesToUnversionedValues(flags)));
+        if (settings) {
+          flags = settings;
+          store.saveFlags(flags);
+        } else {
+          flags = {};
+        }
         emitter.emit(readyEvent);
       });
     } else {
@@ -407,7 +429,9 @@ function initialize(env, user, options = {}) {
         if (err) {
           emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
         }
-        settings && store.set(localStorageKey, JSON.stringify(utils.transformValuesToUnversionedValues(settings)));
+        if (settings) {
+          store.saveFlags(settings);
+        }
       });
     }
   } else {
@@ -473,10 +497,7 @@ function initialize(env, user, options = {}) {
 
   function start() {
     if (sendEvents) {
-      setTimeout(function tick() {
-        events.flush(ident.getUser());
-        setTimeout(tick, flushInterval);
-      }, flushInterval);
+      events.start();
     }
   }
 
@@ -488,7 +509,8 @@ function initialize(env, user, options = {}) {
 
   window.addEventListener('beforeunload', () => {
     if (sendEvents) {
-      events.flush(ident.getUser(), true);
+      events.stop();
+      events.flush(true);
     }
   });
 

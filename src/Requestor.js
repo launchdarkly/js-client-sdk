@@ -8,7 +8,11 @@ function fetchJSON(endpoint, body, callback) {
   const xhr = new XMLHttpRequest();
 
   xhr.addEventListener('load', () => {
-    if (xhr.status === 200 && xhr.getResponseHeader('Content-type') === json) {
+    if (
+      xhr.status === 200 &&
+      xhr.getResponseHeader('Content-type') &&
+      xhr.getResponseHeader('Content-Type').lastIndexOf(json) === 0
+    ) {
       callback(null, JSON.parse(xhr.responseText));
     } else {
       callback(xhr.statusText);
@@ -25,9 +29,11 @@ function fetchJSON(endpoint, body, callback) {
   if (body) {
     xhr.open('REPORT', endpoint);
     xhr.setRequestHeader('Content-Type', 'application/json');
+    utils.addLDHeaders(xhr);
     xhr.send(JSON.stringify(body));
   } else {
     xhr.open('GET', endpoint);
+    utils.addLDHeaders(xhr);
     xhr.send();
   }
 
@@ -47,21 +53,16 @@ export default function Requestor(baseUrl, environment, useReport) {
     let cb;
 
     if (useReport) {
-      endpoint = [baseUrl, '/sdk/eval/', environment, '/user', hash ? '?h=' + hash : ''].join('');
+      endpoint = [baseUrl, '/sdk/evalx/', environment, '/user', hash ? '?h=' + hash : ''].join('');
       body = user;
     } else {
       data = utils.base64URLEncode(JSON.stringify(user));
-      endpoint = [baseUrl, '/sdk/eval/', environment, '/users/', data, hash ? '?h=' + hash : ''].join('');
+      endpoint = [baseUrl, '/sdk/evalx/', environment, '/users/', data, hash ? '?h=' + hash : ''].join('');
     }
 
     const wrappedCallback = (function(currentCallback) {
       return function(error, result) {
-        let finalResult = result;
-        // if we got flags, convert them to the more verbose format used by the eval stream
-        if (result) {
-          finalResult = utils.transformValuesToVersionedValues(result);
-        }
-        currentCallback(error, finalResult);
+        currentCallback(error, result);
         flagSettingsRequest = null;
         lastFlagSettingsCallback = null;
       };
