@@ -154,7 +154,7 @@ var client = LDClient.initialize(
   'YOUR_CLIENT_SIDE_ID',
   user,
   (options = {
-    bootstrap: 'localStorage',
+    bootstrap: 'localstorage',
   })
 );
 ```
