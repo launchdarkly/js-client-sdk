@@ -3,6 +3,10 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. 
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.1.1] - 2018-06-05
+### Fixed:
+- Removed two function calls that are not supported in Internet Explorer: `string.startsWith()` and `Object.assign()`.
+
 ## [2.1.0] - 2018-05-31
 ### Added:
 - The client now sends the current SDK version to LaunchDarkly in an HTTP header. This information will be visible in a future version of the LaunchDarkly UI.
