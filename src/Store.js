@@ -39,7 +39,7 @@ export default function Store(environment, hash, ident) {
 
   store.saveFlags = function(flags) {
     const key = getFlagsKey();
-    const data = Object.assign({}, flags, { $schema: 1 });
+    const data = utils.extend({}, flags, { $schema: 1 });
     try {
       localStorage.setItem(key, JSON.stringify(data));
     } catch (ex) {
