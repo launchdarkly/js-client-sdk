@@ -3,6 +3,10 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. 
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.1.2] - 2018-06-08
+### Fixed:
+- Fix the TypeScript definitions to properly support the ES default export.
+
 ## [2.1.1] - 2018-06-05
 ### Fixed:
 - Removed two function calls that are not supported in Internet Explorer: `string.startsWith()` and `Object.assign()`.
