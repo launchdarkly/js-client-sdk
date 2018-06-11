@@ -123,3 +123,7 @@ export function getLDUserAgentString() {
 export function addLDHeaders(xhr) {
   xhr.setRequestHeader('X-LaunchDarkly-User-Agent', getLDUserAgentString());
 }
+
+export function extend(...objects) {
+  return objects.reduce((acc, obj) => ({ ...acc, ...obj }), {});
+}

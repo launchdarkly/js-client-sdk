@@ -1,4 +1,5 @@
 import * as messages from './messages';
+import * as utils from './utils';
 
 /**
  * The UserFilter object transforms user objects into objects suitable to be sent as JSON to
@@ -69,7 +70,7 @@ export default function UserFilter(config) {
     if (user.custom) {
       const customResult = filterAttrs(user.custom, () => true);
       filteredProps.custom = customResult[0];
-      removedAttrs = { ...removedAttrs, ...customResult[1] };
+      removedAttrs = utils.extend({}, removedAttrs, customResult[1]);
     }
     const removedAttrNames = Object.keys(removedAttrs);
     if (removedAttrNames.length) {

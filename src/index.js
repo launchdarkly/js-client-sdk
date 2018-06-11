@@ -11,6 +11,7 @@ import * as errors from './errors';
 
 const readyEvent = 'ready';
 const changeEvent = 'change';
+const goalsEvent = 'goalsReady';
 const locationWatcherInterval = 300;
 
 function initialize(env, user, options = {}) {
@@ -265,7 +266,7 @@ function initialize(env, user, options = {}) {
         const oldFlag = flags[data.key];
         if (!oldFlag || !oldFlag.version || !data.version || oldFlag.version < data.version) {
           const mods = {};
-          const newFlag = { ...data };
+          const newFlag = utils.extend({}, data);
           delete newFlag['key'];
           flags[data.key] = newFlag;
           if (oldFlag) {
@@ -493,6 +494,7 @@ function initialize(env, user, options = {}) {
       goalTracker = GoalTracker(goals, sendGoalEvent);
       watchLocation(locationWatcherInterval, refreshGoalTracker);
     }
+    emitter.emit(goalsEvent);
   });
 
   function start() {
@@ -523,8 +525,16 @@ function initialize(env, user, options = {}) {
     });
   });
 
+  const goalsPromise = new Promise(resolve => {
+    const onGoals = emitter.on(goalsEvent, () => {
+      emitter.off(goalsEvent, onGoals);
+      resolve();
+    });
+  });
+
   const client = {
     waitUntilReady: () => readyPromise,
+    waitUntilGoalsReady: () => goalsPromise,
     identify: identify,
     variation: variation,
     track: track,

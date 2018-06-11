@@ -1,4 +1,4 @@
-// Type definitions for ldclient-js v1.1.2
+// Type definitions for ldclient-js v2.1.2
 // Project: https://github.com/launchdarkly/js-client
 // Definitions by: Isaac Sukin <https://isaacsukin.com>
 
@@ -8,10 +8,12 @@
  * Documentation: http://docs.launchdarkly.com/docs/js-sdk-reference
  */
 declare module 'ldclient-js' {
-  /**
-   * The LaunchDarkly static global.
-   */
-  export function initialize(envKey: string, user: LDUser, options?: LDOptions): LDClient;
+  const LaunchDarkly : {
+    initialize: (envKey: string, user: LDUser, options?: LDOptions) => LDClient
+    version: string
+  };
+
+  export default LaunchDarkly;
 
   /**
    * The names of events to which users of the client can subscribe.
