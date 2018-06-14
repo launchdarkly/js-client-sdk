@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/index.js | ldclient-js</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="LaunchDarkly SDK for JavaScript"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="ldclient-js"><meta property="twitter:description" content="LaunchDarkly SDK for JavaScript"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventEmitter">EventEmitter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventProcessor">EventProcessor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventSender">EventSender</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventSummarizer">EventSummarizer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-GoalTracker">GoalTracker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Identity">Identity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Requestor">Requestor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Store">Store</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Stream">Stream</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-UserFilter">UserFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-clientNotReady">clientNotReady</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deprecated">deprecated</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-environmentNotFound">environmentNotFound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-environmentNotSpecified">environmentNotSpecified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-errorFetchingFlags">errorFetchingFlags</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-invalidKey">invalidKey</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-invalidUser">invalidUser</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-localStorageUnavailable">localStorageUnavailable</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-unknownCustomEventKey">unknownCustomEventKey</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-userNotSpecified">userNotSpecified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDFlagFetchError">LDFlagFetchError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidArgumentError">LDInvalidArgumentError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidEnvironmentIdError">LDInvalidEnvironmentIdError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidEventKeyError">LDInvalidEventKeyError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidUserError">LDInvalidUserError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDUnexpectedResponseError">LDUnexpectedResponseError</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#--mocks--">__mocks__</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Requestor">Requestor</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/index.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import EventProcessor from &apos;./EventProcessor&apos;;
+import EventEmitter from &apos;./EventEmitter&apos;;
+import GoalTracker from &apos;./GoalTracker&apos;;
+import Store from &apos;./Store&apos;;
+import Stream from &apos;./Stream&apos;;
+import Requestor from &apos;./Requestor&apos;;
+import Identity from &apos;./Identity&apos;;
+import * as utils from &apos;./utils&apos;;
+import * as messages from &apos;./messages&apos;;
+import * as errors from &apos;./errors&apos;;
+
+const readyEvent = &apos;ready&apos;;
+const changeEvent = &apos;change&apos;;
+const locationWatcherInterval = 300;
+
+function initialize(env, user, options = {}) {
+  const baseUrl = options.baseUrl || &apos;https://app.launchdarkly.com&apos;;
+  const eventsUrl = options.eventsUrl || &apos;https://events.launchdarkly.com&apos;;
+  const streamUrl = options.streamUrl || &apos;https://clientstream.launchdarkly.com&apos;;
+  const hash = options.hash;
+  const sendEvents = typeof options.sendEvents === &apos;undefined&apos; ? true : options.sendEvents;
+  const allowFrequentDuplicateEvents = !!options.allowFrequentDuplicateEvents;
+  const sendEventsOnlyForVariation = !!options.sendEventsOnlyForVariation;
+  const environment = env;
+  const emitter = EventEmitter();
+  const stream = Stream(streamUrl, environment, hash, options.useReport);
+  const events = options.eventProcessor || EventProcessor(eventsUrl, environment, options, emitter);
+  const requestor = Requestor(baseUrl, environment, options.useReport);
+  const seenRequests = {};
+  let flags = typeof options.bootstrap === &apos;object&apos; ? utils.transformValuesToVersionedValues(options.bootstrap) : {};
+  let goalTracker;
+  let useLocalStorage;
+  let goals;
+  let subscribedToChangeEvents;
+  let firstEvent = true;
+
+  function shouldEnqueueEvent() {
+    return sendEvents &amp;&amp; !doNotTrack();
+  }
+
+  function enqueueEvent(event) {
+    if (!event.user) {
+      if (firstEvent) {
+        if (console &amp;&amp; console.warn) {
+          console.warn(
+            &apos;Be sure to call `identify` in the LaunchDarkly client: http://docs.launchdarkly.com/docs/running-an-ab-test#include-the-client-side-snippet&apos;
+          );
+        }
+        firstEvent = false;
+      }
+      return;
+    }
+    firstEvent = false;
+    if (shouldEnqueueEvent()) {
+      events.enqueue(event);
+    }
+  }
+
+  function sendIdentifyEvent(user) {
+    if (user) {
+      enqueueEvent({
+        kind: &apos;identify&apos;,
+        key: user.key,
+        user: user,
+        creationDate: new Date().getTime(),
+      });
+    }
+  }
+
+  const ident = Identity(user, sendIdentifyEvent);
+  const store = Store(environment, hash, ident);
+
+  function sendFlagEvent(key, value, defaultValue) {
+    const user = ident.getUser();
+    const now = new Date();
+    if (!allowFrequentDuplicateEvents) {
+      const cacheKey = JSON.stringify(value) + (user &amp;&amp; user.key ? user.key : &apos;&apos;) + key; // see below
+      const cached = seenRequests[cacheKey];
+      // cache TTL is five minutes
+      if (cached &amp;&amp; now - cached &lt; 300000) {
+        return;
+      }
+      seenRequests[cacheKey] = now;
+    }
+
+    const event = {
+      kind: &apos;feature&apos;,
+      key: key,
+      user: user,
+      value: value,
+      default: defaultValue,
+      creationDate: now.getTime(),
+    };
+    const flag = flags[key];
+    if (flag) {
+      event.version = flag.flagVersion ? flag.flagVersion : flag.version;
+      event.variation = flag.variation;
+      event.trackEvents = flag.trackEvents;
+      event.debugEventsUntilDate = flag.debugEventsUntilDate;
+    }
+
+    enqueueEvent(event);
+  }
+
+  function sendGoalEvent(kind, goal) {
+    const event = {
+      kind: kind,
+      key: goal.key,
+      data: null,
+      url: window.location.href,
+      user: ident.getUser(),
+      creationDate: new Date().getTime(),
+    };
+
+    if (kind === &apos;click&apos;) {
+      event.selector = goal.selector;
+    }
+
+    return enqueueEvent(event);
+  }
+
+  function identify(user, hash, onDone) {
+    if (useLocalStorage) {
+      store.clearFlags();
+    }
+    return utils.wrapPromiseCallback(
+      new Promise((resolve, reject) =&gt; {
+        if (!user || user.key === null || user.key === undefined) {
+          const err = new errors.LDInvalidUserError(user ? messages.invalidUser() : messages.userNotSpecified());
+          emitter.maybeReportError(err);
+          reject(err);
+        } else {
+          ident.setUser(user);
+          requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) =&gt; {
+            if (err) {
+              emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+              return reject(err);
+            }
+            if (settings) {
+              updateSettings(settings);
+            }
+            resolve(settings);
+            if (subscribedToChangeEvents) {
+              connectStream();
+            }
+          });
+        }
+      }),
+      onDone
+    );
+  }
+
+  function flush(onDone) {
+    return utils.wrapPromiseCallback(
+      new Promise(resolve =&gt; (sendEvents ? resolve(events.flush()) : resolve()), onDone)
+    );
+  }
+
+  function variation(key, defaultValue) {
+    return variationInternal(key, defaultValue, true);
+  }
+
+  function variationInternal(key, defaultValue, sendEvent) {
+    let value;
+
+    if (flags &amp;&amp; flags.hasOwnProperty(key) &amp;&amp; flags[key] &amp;&amp; !flags[key].deleted) {
+      value = flags[key].value === null ? defaultValue : flags[key].value;
+    } else {
+      value = defaultValue;
+    }
+
+    if (sendEvent) {
+      sendFlagEvent(key, value, defaultValue);
+    }
+
+    return value;
+  }
+
+  function doNotTrack() {
+    let flag;
+    if (navigator &amp;&amp; navigator.doNotTrack !== undefined) {
+      flag = navigator.doNotTrack; // FF, Chrome
+    } else if (navigator &amp;&amp; navigator.msDoNotTrack !== undefined) {
+      flag = navigator.msDoNotTrack; // IE 9/10
+    } else {
+      flag = window.doNotTrack; // IE 11+, Safari
+    }
+    return flag === &apos;1&apos; || flag === &apos;yes&apos;;
+  }
+
+  function allFlags() {
+    const results = {};
+
+    if (!flags) {
+      return results;
+    }
+
+    for (const key in flags) {
+      if (flags.hasOwnProperty(key)) {
+        results[key] = variationInternal(key, null, !sendEventsOnlyForVariation);
+      }
+    }
+
+    return results;
+  }
+
+  function customEventExists(key) {
+    if (!goals || goals.length === 0) {
+      return false;
+    }
+
+    for (let i = 0; i &lt; goals.length; i++) {
+      if (goals[i].kind === &apos;custom&apos; &amp;&amp; goals[i].key === key) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function track(key, data) {
+    if (typeof key !== &apos;string&apos;) {
+      emitter.maybeReportError(new errors.LDInvalidEventKeyError(messages.unknownCustomEventKey(key)));
+      return;
+    }
+
+    // Validate key if we have goals
+    if (!!goals &amp;&amp; !customEventExists(key)) {
+      console.warn(messages.unknownCustomEventKey(key));
+    }
+
+    enqueueEvent({
+      kind: &apos;custom&apos;,
+      key: key,
+      data: data,
+      user: ident.getUser(),
+      url: window.location.href,
+      creationDate: new Date().getTime(),
+    });
+  }
+
+  function connectStream() {
+    if (!ident.getUser()) {
+      return;
+    }
+    stream.disconnect();
+    stream.connect(ident.getUser(), {
+      ping: function() {
+        requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) =&gt; {
+          if (err) {
+            emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+          }
+          updateSettings(settings);
+        });
+      },
+      put: function(e) {
+        const data = JSON.parse(e.data);
+        updateSettings(data);
+      },
+      patch: function(e) {
+        const data = JSON.parse(e.data);
+        // If both the flag and the patch have a version property, then the patch version must be
+        // greater than the flag version for us to accept the patch.  If either one has no version
+        // then the patch always succeeds.
+        const oldFlag = flags[data.key];
+        if (!oldFlag || !oldFlag.version || !data.version || oldFlag.version &lt; data.version) {
+          const mods = {};
+          const newFlag = utils.extend({}, data);
+          delete newFlag[&apos;key&apos;];
+          flags[data.key] = newFlag;
+          if (oldFlag) {
+            mods[data.key] = { previous: oldFlag.value, current: data.value };
+          } else {
+            mods[data.key] = { current: data.value };
+          }
+          postProcessSettingsUpdate(mods);
+        }
+      },
+      delete: function(e) {
+        const data = JSON.parse(e.data);
+        if (!flags[data.key] || flags[data.key].version &lt; data.version) {
+          const mods = {};
+          if (flags[data.key] &amp;&amp; !flags[data.key].deleted) {
+            mods[data.key] = { previous: flags[data.key].value };
+          }
+          flags[data.key] = { version: data.version, deleted: true };
+          postProcessSettingsUpdate(mods);
+        }
+      },
+    });
+  }
+
+  function updateSettings(newFlags) {
+    const changes = {};
+
+    if (!newFlags) {
+      return;
+    }
+
+    for (const key in flags) {
+      if (flags.hasOwnProperty(key) &amp;&amp; flags[key]) {
+        if (newFlags[key] &amp;&amp; newFlags[key].value !== flags[key].value) {
+          changes[key] = { previous: flags[key].value, current: newFlags[key].value };
+        } else if (!newFlags[key] || newFlags[key].deleted) {
+          changes[key] = { previous: flags[key].value };
+        }
+      }
+    }
+    for (const key in newFlags) {
+      if (newFlags.hasOwnProperty(key) &amp;&amp; newFlags[key] &amp;&amp; (!flags[key] || flags[key].deleted)) {
+        changes[key] = { current: newFlags[key].value };
+      }
+    }
+
+    flags = newFlags;
+    postProcessSettingsUpdate(changes);
+  }
+
+  function postProcessSettingsUpdate(changes) {
+    const keys = Object.keys(changes);
+
+    if (useLocalStorage) {
+      store.saveFlags(flags);
+    }
+
+    if (keys.length &gt; 0) {
+      keys.forEach(key =&gt; {
+        emitter.emit(changeEvent + &apos;:&apos; + key, changes[key].current, changes[key].previous);
+      });
+
+      emitter.emit(changeEvent, changes);
+
+      if (!sendEventsOnlyForVariation) {
+        keys.forEach(key =&gt; {
+          sendFlagEvent(key, changes[key].current);
+        });
+      }
+    }
+  }
+
+  function on(event, handler, context) {
+    if (event.substr(0, changeEvent.length) === changeEvent) {
+      subscribedToChangeEvents = true;
+      if (!stream.isConnected()) {
+        connectStream();
+      }
+      emitter.on.apply(emitter, [event, handler, context]);
+    } else {
+      emitter.on.apply(emitter, Array.prototype.slice.call(arguments));
+    }
+  }
+
+  function off(event) {
+    if (event === changeEvent) {
+      if ((subscribedToChangeEvents = true)) {
+        subscribedToChangeEvents = false;
+        stream.disconnect();
+      }
+    }
+    emitter.off.apply(emitter, Array.prototype.slice.call(arguments));
+  }
+
+  function handleMessage(event) {
+    if (event.origin !== baseUrl) {
+      return;
+    }
+    if (event.data.type === &apos;SYN&apos;) {
+      window.editorClientBaseUrl = baseUrl;
+      const editorTag = document.createElement(&apos;script&apos;);
+      editorTag.type = &apos;text/javascript&apos;;
+      editorTag.async = true;
+      editorTag.src = baseUrl + event.data.editorClientUrl;
+      const s = document.getElementsByTagName(&apos;script&apos;)[0];
+      s.parentNode.insertBefore(editorTag, s);
+    }
+  }
+
+  if (!env) {
+    utils.onNextTick(() =&gt; {
+      emitter.maybeReportError(new errors.LDInvalidEnvironmentIdError(messages.environmentNotSpecified()));
+    });
+  }
+
+  if (!user) {
+    utils.onNextTick(() =&gt; {
+      emitter.maybeReportError(new errors.LDInvalidUserError(messages.userNotSpecified()));
+    });
+  } else if (!user.key) {
+    utils.onNextTick(() =&gt; {
+      emitter.maybeReportError(new errors.LDInvalidUserError(messages.invalidUser()));
+    });
+  }
+
+  if (typeof options.bootstrap === &apos;object&apos;) {
+    utils.onNextTick(() =&gt; {
+      emitter.emit(readyEvent);
+    });
+  } else if (
+    typeof options.bootstrap === &apos;string&apos; &amp;&amp;
+    options.bootstrap.toUpperCase() === &apos;LOCALSTORAGE&apos; &amp;&amp;
+    !!localStorage
+  ) {
+    useLocalStorage = true;
+
+    flags = store.loadFlags();
+
+    if (flags === null) {
+      requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) =&gt; {
+        if (err) {
+          emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+        }
+        if (settings) {
+          flags = settings;
+          store.saveFlags(flags);
+        } else {
+          flags = {};
+        }
+        emitter.emit(readyEvent);
+      });
+    } else {
+      // We&apos;re reading the flags from local storage. Signal that we&apos;re ready,
+      // then update localStorage for the next page load. We won&apos;t signal changes or update
+      // the in-memory flags unless you subscribe for changes
+      utils.onNextTick(() =&gt; {
+        emitter.emit(readyEvent);
+      });
+
+      requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) =&gt; {
+        if (err) {
+          emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+        }
+        if (settings) {
+          store.saveFlags(settings);
+        }
+      });
+    }
+  } else {
+    requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) =&gt; {
+      if (err) {
+        emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+      }
+      flags = settings;
+      emitter.emit(readyEvent);
+    });
+  }
+
+  function refreshGoalTracker() {
+    if (goalTracker) {
+      goalTracker.dispose();
+    }
+    if (goals &amp;&amp; goals.length) {
+      goalTracker = GoalTracker(goals, sendGoalEvent);
+    }
+  }
+
+  function watchLocation(interval, callback) {
+    let previousUrl = location.href;
+    let currentUrl;
+
+    function checkUrl() {
+      currentUrl = location.href;
+
+      if (currentUrl !== previousUrl) {
+        previousUrl = currentUrl;
+        callback();
+      }
+    }
+
+    function poll(fn, interval) {
+      fn();
+      setTimeout(() =&gt; {
+        poll(fn, interval);
+      }, interval);
+    }
+
+    poll(checkUrl, interval);
+
+    if (!!(window.history &amp;&amp; history.pushState)) {
+      window.addEventListener(&apos;popstate&apos;, checkUrl);
+    } else {
+      window.addEventListener(&apos;hashchange&apos;, checkUrl);
+    }
+  }
+
+  requestor.fetchGoals((err, g) =&gt; {
+    if (err) {
+      emitter.maybeReportError(
+        new errors.LDUnexpectedResponseError(&apos;Error fetching goals: &apos; + err.message ? err.message : err)
+      );
+    }
+    if (g &amp;&amp; g.length &gt; 0) {
+      goals = g;
+      goalTracker = GoalTracker(goals, sendGoalEvent);
+      watchLocation(locationWatcherInterval, refreshGoalTracker);
+    }
+  });
+
+  function start() {
+    if (sendEvents) {
+      events.start();
+    }
+  }
+
+  if (document.readyState !== &apos;complete&apos;) {
+    window.addEventListener(&apos;load&apos;, start);
+  } else {
+    start();
+  }
+
+  window.addEventListener(&apos;beforeunload&apos;, () =&gt; {
+    if (sendEvents) {
+      events.stop();
+      events.flush(true);
+    }
+  });
+
+  window.addEventListener(&apos;message&apos;, handleMessage);
+
+  const readyPromise = new Promise(resolve =&gt; {
+    const onReady = emitter.on(readyEvent, () =&gt; {
+      emitter.off(readyEvent, onReady);
+      resolve();
+    });
+  });
+
+  const client = {
+    waitUntilReady: () =&gt; readyPromise,
+    identify: identify,
+    variation: variation,
+    track: track,
+    on: on,
+    off: off,
+    flush: flush,
+    allFlags: allFlags,
+  };
+
+  return client;
+}
+
+const version = VERSION;
+
+export default { initialize, version };
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

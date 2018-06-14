@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/__tests__/EventSender-test.js | ldclient-js</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="LaunchDarkly SDK for JavaScript"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="ldclient-js"><meta property="twitter:description" content="LaunchDarkly SDK for JavaScript"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventEmitter">EventEmitter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventProcessor">EventProcessor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventSender">EventSender</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventSummarizer">EventSummarizer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-GoalTracker">GoalTracker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Identity">Identity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Requestor">Requestor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Store">Store</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Stream">Stream</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-UserFilter">UserFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-clientNotReady">clientNotReady</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deprecated">deprecated</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-environmentNotFound">environmentNotFound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-environmentNotSpecified">environmentNotSpecified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-errorFetchingFlags">errorFetchingFlags</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-invalidKey">invalidKey</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-invalidUser">invalidUser</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-localStorageUnavailable">localStorageUnavailable</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-unknownCustomEventKey">unknownCustomEventKey</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-userNotSpecified">userNotSpecified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDFlagFetchError">LDFlagFetchError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidArgumentError">LDInvalidArgumentError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidEnvironmentIdError">LDInvalidEnvironmentIdError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidEventKeyError">LDInvalidEventKeyError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidUserError">LDInvalidUserError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDUnexpectedResponseError">LDUnexpectedResponseError</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#--mocks--">__mocks__</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Requestor">Requestor</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/__tests__/EventSender-test.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Base64 from &apos;Base64&apos;;
+import sinon from &apos;sinon&apos;;
+
+import EventSender from &apos;../EventSender&apos;;
+import * as utils from &apos;../utils&apos;;
+
+describe(&apos;EventSender&apos;, () =&gt; {
+  let sandbox;
+  let xhr;
+  let requests = [];
+  const eventsUrl = &apos;/fake-url&apos;;
+  const envId = &apos;env&apos;;
+
+  beforeEach(() =&gt; {
+    sandbox = sinon.sandbox.create();
+    requests = [];
+    xhr = sinon.useFakeXMLHttpRequest();
+    xhr.onCreate = function(xhr) {
+      requests.push(xhr);
+    };
+  });
+
+  afterEach(() =&gt; {
+    sandbox.restore();
+    xhr.restore();
+  });
+
+  function lastRequest() {
+    return requests[requests.length - 1];
+  }
+
+  function fakeImageCreator() {
+    const ret = function(url, onDone) {
+      ret.urls.push(url);
+      ret.onDone = onDone;
+    };
+    ret.urls = [];
+    return ret;
+  }
+
+  function base64URLDecode(str) {
+    let s = str;
+    while (s.length % 4 !== 0) {
+      s = s + &apos;=&apos;;
+    }
+    s = s.replace(/_/g, &apos;/&apos;).replace(/-/g, &apos;+&apos;);
+    return decodeURIComponent(escape(Base64.atob(s)));
+  }
+
+  function decodeOutputFromUrl(url) {
+    const prefix = eventsUrl + &apos;/a/&apos; + envId + &apos;.gif?d=&apos;;
+    if (!url.startsWith(prefix)) {
+      throw &apos;URL &quot;&apos; + url + &apos;&quot; did not have expected prefix &quot;&apos; + prefix + &apos;&quot;&apos;;
+    }
+    return JSON.parse(base64URLDecode(url.substring(prefix.length)));
+  }
+
+  describe(&apos;using image endpoint when CORS is not available&apos;, () =&gt; {
+    it(&apos;should encode events in a single chunk if they fit&apos;, () =&gt; {
+      const imageCreator = fakeImageCreator();
+      const sender = EventSender(eventsUrl, envId, false, imageCreator);
+      const event1 = { kind: &apos;identify&apos;, key: &apos;userKey1&apos; };
+      const event2 = { kind: &apos;identify&apos;, key: &apos;userKey2&apos; };
+      const events = [event1, event2];
+
+      sender.sendEvents(events, false);
+
+      const urls = imageCreator.urls;
+      expect(urls.length).toEqual(1);
+      expect(decodeOutputFromUrl(urls[0])).toEqual(events);
+    });
+
+    it(&apos;should send events in multiple chunks if necessary&apos;, () =&gt; {
+      const imageCreator = fakeImageCreator();
+      const sender = EventSender(eventsUrl, envId, false, imageCreator);
+      const events = [];
+      for (let i = 0; i &lt; 80; i++) {
+        events.push({ kind: &apos;identify&apos;, key: &apos;thisIsALongUserKey&apos; + i });
+      }
+
+      sender.sendEvents(events, false);
+
+      const urls = imageCreator.urls;
+      expect(urls.length).toEqual(3);
+      expect(decodeOutputFromUrl(urls[0])).toEqual(events.slice(0, 31));
+      expect(decodeOutputFromUrl(urls[1])).toEqual(events.slice(31, 62));
+      expect(decodeOutputFromUrl(urls[2])).toEqual(events.slice(62, 80));
+    });
+
+    it(&apos;should set a completion handler&apos;, () =&gt; {
+      const imageCreator = fakeImageCreator();
+      const sender = EventSender(eventsUrl, envId, false, imageCreator);
+      const event1 = { kind: &apos;identify&apos;, key: &apos;userKey1&apos; };
+
+      sender.sendEvents([event1], false);
+
+      expect(imageCreator.onDone).toBeDefined();
+    });
+  });
+
+  describe(&apos;using POST when CORS is available&apos;, () =&gt; {
+    it(&apos;should send asynchronously&apos;, () =&gt; {
+      const sender = EventSender(eventsUrl, envId, true);
+      const event = { kind: &apos;identify&apos;, key: &apos;userKey&apos; };
+      sender.sendEvents([event], false);
+      lastRequest().respond();
+      expect(lastRequest().async).toEqual(true);
+    });
+
+    it(&apos;should send synchronously&apos;, () =&gt; {
+      const sender = EventSender(eventsUrl, envId, true);
+      const event = { kind: &apos;identify&apos;, key: &apos;userKey&apos; };
+      sender.sendEvents([event], true);
+      lastRequest().respond();
+      expect(lastRequest().async).toEqual(false);
+    });
+
+    it(&apos;should send all events in request body&apos;, () =&gt; {
+      const sender = EventSender(eventsUrl, envId, true);
+      const events = [];
+      for (let i = 0; i &lt; 80; i++) {
+        events.push({ kind: &apos;identify&apos;, key: &apos;thisIsALongUserKey&apos; + i });
+      }
+      sender.sendEvents(events, false);
+      lastRequest().respond();
+      const r = lastRequest();
+      expect(r.url).toEqual(eventsUrl + &apos;/events/bulk/&apos; + envId);
+      expect(r.method).toEqual(&apos;POST&apos;);
+      expect(JSON.parse(r.requestBody)).toEqual(events);
+    });
+
+    it(&apos;should send custom user-agent header&apos;, () =&gt; {
+      const sender = EventSender(eventsUrl, envId, true);
+      const event = { kind: &apos;identify&apos;, key: &apos;userKey&apos; };
+      sender.sendEvents([event], true);
+      lastRequest().respond();
+      expect(lastRequest().requestHeaders[&apos;X-LaunchDarkly-User-Agent&apos;]).toEqual(utils.getLDUserAgentString());
+    });
+  });
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

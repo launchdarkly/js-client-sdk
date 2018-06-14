@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/__tests__/EventProcessor-test.js | ldclient-js</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="LaunchDarkly SDK for JavaScript"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="ldclient-js"><meta property="twitter:description" content="LaunchDarkly SDK for JavaScript"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventEmitter">EventEmitter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventProcessor">EventProcessor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventSender">EventSender</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventSummarizer">EventSummarizer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-GoalTracker">GoalTracker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Identity">Identity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Requestor">Requestor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Store">Store</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Stream">Stream</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-UserFilter">UserFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-clientNotReady">clientNotReady</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deprecated">deprecated</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-environmentNotFound">environmentNotFound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-environmentNotSpecified">environmentNotSpecified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-errorFetchingFlags">errorFetchingFlags</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-invalidKey">invalidKey</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-invalidUser">invalidUser</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-localStorageUnavailable">localStorageUnavailable</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-unknownCustomEventKey">unknownCustomEventKey</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-userNotSpecified">userNotSpecified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDFlagFetchError">LDFlagFetchError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidArgumentError">LDInvalidArgumentError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidEnvironmentIdError">LDInvalidEnvironmentIdError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidEventKeyError">LDInvalidEventKeyError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidUserError">LDInvalidUserError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDUnexpectedResponseError">LDUnexpectedResponseError</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#--mocks--">__mocks__</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Requestor">Requestor</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/__tests__/EventProcessor-test.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import sinon from &apos;sinon&apos;;
+
+import EventProcessor from &apos;../EventProcessor&apos;;
+
+describe(&apos;EventProcessor&apos;, () =&gt; {
+  let sandbox;
+  let warnSpy;
+  const mockEventSender = {};
+  const user = { key: &apos;userKey&apos;, name: &apos;Red&apos; };
+  const filteredUser = { key: &apos;userKey&apos;, privateAttrs: [&apos;name&apos;] };
+  const eventsUrl = &apos;/fake-url&apos;;
+  const envId = &apos;env&apos;;
+
+  mockEventSender.sendEvents = function(events, sync) {
+    mockEventSender.calls.push({
+      events: events,
+      sync: !!sync,
+    });
+    return Promise.resolve({ serverTime: mockEventSender.serverTime, status: mockEventSender.status || 200 });
+  };
+
+  beforeEach(() =&gt; {
+    sandbox = sinon.sandbox.create();
+    warnSpy = jest.spyOn(console, &apos;warn&apos;).mockImplementation(() =&gt; {});
+    mockEventSender.calls = [];
+    mockEventSender.serverTime = null;
+  });
+
+  afterEach(() =&gt; {
+    sandbox.restore();
+    warnSpy.mockRestore();
+  });
+
+  function checkFeatureEvent(e, source, debug, inlineUser) {
+    expect(e.kind).toEqual(debug ? &apos;debug&apos; : &apos;feature&apos;);
+    expect(e.creationDate).toEqual(source.creationDate);
+    expect(e.key).toEqual(source.key);
+    expect(e.version).toEqual(source.version);
+    expect(e.value).toEqual(source.value);
+    expect(e.default).toEqual(source.default);
+    if (inlineUser) {
+      expect(e.user).toEqual(inlineUser);
+    } else {
+      expect(e.userKey).toEqual(source.user.key);
+    }
+  }
+
+  function checkCustomEvent(e, source, inlineUser) {
+    expect(e.kind).toEqual(&apos;custom&apos;);
+    expect(e.creationDate).toEqual(source.creationDate);
+    expect(e.key).toEqual(source.key);
+    expect(e.data).toEqual(source.data);
+    if (inlineUser) {
+      expect(e.user).toEqual(inlineUser);
+    } else {
+      expect(e.userKey).toEqual(source.user.key);
+    }
+  }
+
+  function checkSummaryEvent(e) {
+    expect(e.kind).toEqual(&apos;summary&apos;);
+  }
+
+  it(&apos;should flush asynchronously&apos;, () =&gt; {
+    const processor = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
+    const event = { kind: &apos;identify&apos;, key: user.key };
+
+    processor.enqueue(event);
+    processor.enqueue(event);
+    processor.enqueue(event);
+    processor.enqueue(event);
+    processor.flush();
+
+    expect(mockEventSender.calls.length).toEqual(1);
+    expect(mockEventSender.calls[0].sync).toEqual(false);
+  });
+
+  it(&apos;should flush synchronously&apos;, () =&gt; {
+    const processor = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
+    const user = { key: &apos;foo&apos; };
+    const event = { kind: &apos;identify&apos;, key: user.key };
+
+    processor.enqueue(event);
+    processor.enqueue(event);
+    processor.enqueue(event);
+    processor.enqueue(event);
+    processor.flush(true);
+
+    expect(mockEventSender.calls.length).toEqual(1);
+    expect(mockEventSender.calls[0].sync).toEqual(true);
+  });
+
+  it(&apos;should enqueue identify event&apos;, done =&gt; {
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
+    const event = { kind: &apos;identify&apos;, creationDate: 1000, key: user.key, user: user };
+    ep.enqueue(event);
+    ep.flush().then(() =&gt; {
+      expect(mockEventSender.calls.length).toEqual(1);
+      expect(mockEventSender.calls[0].events).toEqual([event]);
+      done();
+    });
+  });
+
+  it(&apos;filters user in identify event&apos;, done =&gt; {
+    const config = { allAttributesPrivate: true };
+    const ep = EventProcessor(eventsUrl, envId, config, null, mockEventSender);
+    const event = { kind: &apos;identify&apos;, creationDate: 1000, key: user.key, user: user };
+    ep.enqueue(event);
+    ep.flush().then(() =&gt; {
+      expect(mockEventSender.calls.length).toEqual(1);
+      expect(mockEventSender.calls[0].events).toEqual([
+        {
+          kind: &apos;identify&apos;,
+          creationDate: event.creationDate,
+          key: user.key,
+          user: filteredUser,
+        },
+      ]);
+      done();
+    });
+  });
+
+  it(&apos;queues individual feature event&apos;, done =&gt; {
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
+    const event = {
+      kind: &apos;feature&apos;,
+      creationDate: 1000,
+      key: &apos;flagkey&apos;,
+      user: user,
+      trackEvents: true,
+    };
+    ep.enqueue(event);
+    ep.flush().then(() =&gt; {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(2);
+      checkFeatureEvent(output[0], event, false);
+      checkSummaryEvent(output[1]);
+      done();
+    });
+  });
+
+  it(&apos;can include inline user in feature event&apos;, done =&gt; {
+    const config = { inlineUsersInEvents: true };
+    const ep = EventProcessor(eventsUrl, envId, config, null, mockEventSender);
+    const event = {
+      kind: &apos;feature&apos;,
+      creationDate: 1000,
+      key: &apos;flagkey&apos;,
+      user: user,
+      trackEvents: true,
+    };
+    ep.enqueue(event);
+    ep.flush().then(() =&gt; {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(2);
+      checkFeatureEvent(output[0], event, false, user);
+      checkSummaryEvent(output[1]);
+      done();
+    });
+  });
+
+  it(&apos;filters user in feature event&apos;, done =&gt; {
+    const config = { allAttributesPrivate: true, inlineUsersInEvents: true };
+    const ep = EventProcessor(eventsUrl, envId, config, null, mockEventSender);
+    const event = {
+      kind: &apos;feature&apos;,
+      creationDate: 1000,
+      key: &apos;flagkey&apos;,
+      user: user,
+      trackEvents: true,
+    };
+    ep.enqueue(event);
+    ep.flush().then(() =&gt; {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(2);
+      checkFeatureEvent(output[0], event, false, filteredUser);
+      checkSummaryEvent(output[1]);
+      done();
+    });
+  });
+
+  it(&apos;sets event kind to debug if event is temporarily in debug mode&apos;, done =&gt; {
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
+    const futureTime = new Date().getTime() + 1000000;
+    const e = {
+      kind: &apos;feature&apos;,
+      creationDate: 1000,
+      user: user,
+      key: &apos;flagkey&apos;,
+      version: 11,
+      variation: 1,
+      value: &apos;value&apos;,
+      trackEvents: false,
+      debugEventsUntilDate: futureTime,
+    };
+    ep.enqueue(e);
+    ep.flush().then(() =&gt; {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(2);
+      checkFeatureEvent(output[0], e, true, user);
+      checkSummaryEvent(output[1]);
+      done();
+    });
+  });
+
+  it(&apos;can both track and debug an event&apos;, done =&gt; {
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
+    const futureTime = new Date().getTime() + 1000000;
+    const e = {
+      kind: &apos;feature&apos;,
+      creationDate: 1000,
+      user: user,
+      key: &apos;flagkey&apos;,
+      version: 11,
+      variation: 1,
+      value: &apos;value&apos;,
+      trackEvents: true,
+      debugEventsUntilDate: futureTime,
+    };
+    ep.enqueue(e);
+    ep.flush().then(() =&gt; {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(3);
+      checkFeatureEvent(output[0], e, false);
+      checkFeatureEvent(output[1], e, true, user);
+      checkSummaryEvent(output[2]);
+      done();
+    });
+  });
+
+  it(&apos;expires debug mode based on client time if client time is later than server time&apos;, done =&gt; {
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
+
+    // Pick a server time that is somewhat behind the client time
+    const serverTime = new Date().getTime() - 20000;
+    mockEventSender.serverTime = serverTime;
+
+    // Send and flush an event we don&apos;t care about, just to set the last server time
+    ep.enqueue({ kind: &apos;identify&apos;, user: { key: &apos;otherUser&apos; } });
+    ep.flush().then(() =&gt; {
+      // Now send an event with debug mode on, with a &quot;debug until&quot; time that is further in
+      // the future than the server time, but in the past compared to the client.
+      const debugUntil = serverTime + 1000;
+      const e = {
+        kind: &apos;feature&apos;,
+        creationDate: 1000,
+        user: user,
+        key: &apos;flagkey&apos;,
+        version: 11,
+        variation: 1,
+        value: &apos;value&apos;,
+        trackEvents: false,
+        debugEventsUntilDate: debugUntil,
+      };
+      ep.enqueue(e);
+
+      // Should get a summary event only, not a full feature event
+      ep.flush().then(() =&gt; {
+        expect(mockEventSender.calls.length).toEqual(2);
+        const output = mockEventSender.calls[1].events;
+        expect(output.length).toEqual(1);
+        checkSummaryEvent(output[0]);
+        done();
+      });
+    });
+  });
+
+  it(&apos;expires debug mode based on server time if server time is later than client time&apos;, done =&gt; {
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
+
+    // Pick a server time that is somewhat ahead of the client time
+    const serverTime = new Date().getTime() + 20000;
+    mockEventSender.serverTime = serverTime;
+
+    // Send and flush an event we don&apos;t care about, just to set the last server time
+    ep.enqueue({ kind: &apos;identify&apos;, user: { key: &apos;otherUser&apos; } });
+    ep.flush().then(() =&gt; {
+      // Now send an event with debug mode on, with a &quot;debug until&quot; time that is further in
+      // the future than the client time, but in the past compared to the server.
+      const debugUntil = serverTime - 1000;
+      const e = {
+        kind: &apos;feature&apos;,
+        creationDate: 1000,
+        user: user,
+        key: &apos;flagkey&apos;,
+        version: 11,
+        variation: 1,
+        value: &apos;value&apos;,
+        trackEvents: false,
+        debugEventsUntilDate: debugUntil,
+      };
+      ep.enqueue(e);
+
+      // Should get a summary event only, not a full feature event
+      ep.flush().then(() =&gt; {
+        expect(mockEventSender.calls.length).toEqual(2);
+        const output = mockEventSender.calls[1].events;
+        expect(output.length).toEqual(1);
+        checkSummaryEvent(output[0]);
+        done();
+      });
+    });
+  });
+
+  it(&apos;summarizes nontracked events&apos;, done =&gt; {
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
+    function makeEvent(key, date, version, variation, value, defaultVal) {
+      return {
+        kind: &apos;feature&apos;,
+        creationDate: date,
+        user: user,
+        key: key,
+        version: version,
+        variation: variation,
+        value: value,
+        default: defaultVal,
+        trackEvents: false,
+      };
+    }
+    const e1 = makeEvent(&apos;flagkey1&apos;, 1000, 11, 1, &apos;value1&apos;, &apos;default1&apos;);
+    const e2 = makeEvent(&apos;flagkey2&apos;, 2000, 22, 1, &apos;value2&apos;, &apos;default2&apos;);
+    ep.enqueue(e1);
+    ep.enqueue(e2);
+    ep.flush().then(() =&gt; {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(1);
+      const se = output[0];
+      checkSummaryEvent(se);
+      expect(se.startDate).toEqual(1000);
+      expect(se.endDate).toEqual(2000);
+      expect(se.features).toEqual({
+        flagkey1: {
+          default: &apos;default1&apos;,
+          counters: [{ version: 11, variation: 1, value: &apos;value1&apos;, count: 1 }],
+        },
+        flagkey2: {
+          default: &apos;default2&apos;,
+          counters: [{ version: 22, variation: 1, value: &apos;value2&apos;, count: 1 }],
+        },
+      });
+      done();
+    });
+  });
+
+  it(&apos;queues custom event&apos;, done =&gt; {
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
+    const e = {
+      kind: &apos;custom&apos;,
+      creationDate: 1000,
+      user: user,
+      key: &apos;eventkey&apos;,
+      data: { thing: &apos;stuff&apos; },
+    };
+    ep.enqueue(e);
+    ep.flush().then(() =&gt; {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(1);
+      checkCustomEvent(output[0], e);
+      done();
+    });
+  });
+
+  it(&apos;can include inline user in custom event&apos;, done =&gt; {
+    const config = { inlineUsersInEvents: true };
+    const ep = EventProcessor(eventsUrl, envId, config, null, mockEventSender);
+    const e = {
+      kind: &apos;custom&apos;,
+      creationDate: 1000,
+      user: user,
+      key: &apos;eventkey&apos;,
+      data: { thing: &apos;stuff&apos; },
+    };
+    ep.enqueue(e);
+    ep.flush().then(() =&gt; {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(1);
+      checkCustomEvent(output[0], e, user);
+      done();
+    });
+  });
+
+  it(&apos;filters user in custom event&apos;, done =&gt; {
+    const config = { allAttributesPrivate: true, inlineUsersInEvents: true };
+    const ep = EventProcessor(eventsUrl, envId, config, null, mockEventSender);
+    const e = {
+      kind: &apos;custom&apos;,
+      creationDate: 1000,
+      user: user,
+      key: &apos;eventkey&apos;,
+      data: { thing: &apos;stuff&apos; },
+    };
+    ep.enqueue(e);
+    ep.flush().then(() =&gt; {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(1);
+      checkCustomEvent(output[0], e, filteredUser);
+      done();
+    });
+  });
+
+  it(&apos;sends nothing if there are no events to flush&apos;, done =&gt; {
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
+    ep.flush().then(() =&gt; {
+      expect(mockEventSender.calls.length).toEqual(0);
+      done();
+    });
+  });
+
+  it(&apos;stops sending events after a 401 error&apos;, done =&gt; {
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
+    const e = { kind: &apos;identify&apos;, creationDate: 1000, user: user };
+    ep.enqueue(e);
+    mockEventSender.status = 401;
+    ep.flush().then(() =&gt; {
+      expect(mockEventSender.calls.length).toEqual(1);
+      ep.enqueue(e);
+      ep.flush().then(() =&gt; {
+        expect(mockEventSender.calls.length).toEqual(1); // still the one from our first flush
+        done();
+      });
+    });
+  });
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

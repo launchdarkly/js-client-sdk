@@ -1,0 +1,42 @@
+[
+  {
+    "name": "UserFilter",
+    "filePath": "src/UserFilter.js",
+    "lines": [
+      {
+        "lineNumber": 3,
+        "line": "/**"
+      },
+      {
+        "lineNumber": 4,
+        "line": " * The UserFilter object transforms user objects into objects suitable to be sent as JSON to"
+      },
+      {
+        "lineNumber": 5,
+        "line": " * the server, hiding any private user attributes."
+      },
+      {
+        "lineNumber": 6,
+        "line": " *"
+      },
+      {
+        "lineNumber": 7,
+        "line": " * @param {Object} the LaunchDarkly client configuration object"
+      },
+      {
+        "lineNumber": 8,
+        "line": " **/"
+      },
+      {
+        "lineNumber": 9,
+        "line": "export default function UserFilter(config) {"
+      }
+    ],
+    "codeParams": [
+      "config"
+    ],
+    "docParams": [
+      "the"
+    ]
+  }
+]

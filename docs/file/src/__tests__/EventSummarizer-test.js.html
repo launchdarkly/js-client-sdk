@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/__tests__/EventSummarizer-test.js | ldclient-js</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="LaunchDarkly SDK for JavaScript"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="ldclient-js"><meta property="twitter:description" content="LaunchDarkly SDK for JavaScript"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventEmitter">EventEmitter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventProcessor">EventProcessor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventSender">EventSender</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventSummarizer">EventSummarizer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-GoalTracker">GoalTracker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Identity">Identity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Requestor">Requestor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Store">Store</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Stream">Stream</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-UserFilter">UserFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-clientNotReady">clientNotReady</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deprecated">deprecated</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-environmentNotFound">environmentNotFound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-environmentNotSpecified">environmentNotSpecified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-errorFetchingFlags">errorFetchingFlags</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-invalidKey">invalidKey</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-invalidUser">invalidUser</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-localStorageUnavailable">localStorageUnavailable</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-unknownCustomEventKey">unknownCustomEventKey</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-userNotSpecified">userNotSpecified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDFlagFetchError">LDFlagFetchError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidArgumentError">LDInvalidArgumentError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidEnvironmentIdError">LDInvalidEnvironmentIdError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidEventKeyError">LDInvalidEventKeyError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidUserError">LDInvalidUserError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDUnexpectedResponseError">LDUnexpectedResponseError</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#--mocks--">__mocks__</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Requestor">Requestor</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/__tests__/EventSummarizer-test.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import EventSummarizer from &apos;../EventSummarizer&apos;;
+
+describe(&apos;EventSummarizer&apos;, () =&gt; {
+  const user = { key: &apos;key1&apos; };
+
+  it(&apos;does nothing for identify event&apos;, () =&gt; {
+    const es = EventSummarizer();
+    const snapshot = es.getSummary();
+    es.summarizeEvent({ kind: &apos;identify&apos;, creationDate: 1000, user: user });
+    expect(es.getSummary()).toEqual(snapshot);
+  });
+
+  it(&apos;does nothing for custom event&apos;, () =&gt; {
+    const es = EventSummarizer();
+    const snapshot = es.getSummary();
+    es.summarizeEvent({ kind: &apos;custom&apos;, creationDate: 1000, key: &apos;eventkey&apos;, user: user });
+    expect(es.getSummary()).toEqual(snapshot);
+  });
+
+  it(&apos;sets start and end dates for feature events&apos;, () =&gt; {
+    const es = EventSummarizer();
+    const event1 = { kind: &apos;feature&apos;, creationDate: 2000, key: &apos;key&apos;, user: user };
+    const event2 = { kind: &apos;feature&apos;, creationDate: 1000, key: &apos;key&apos;, user: user };
+    const event3 = { kind: &apos;feature&apos;, creationDate: 1500, key: &apos;key&apos;, user: user };
+    es.summarizeEvent(event1);
+    es.summarizeEvent(event2);
+    es.summarizeEvent(event3);
+    const data = es.getSummary();
+
+    expect(data.startDate).toEqual(1000);
+    expect(data.endDate).toEqual(2000);
+  });
+
+  function makeEvent(key, version, variation, value, defaultVal) {
+    return {
+      kind: &apos;feature&apos;,
+      creationDate: 1000,
+      key: key,
+      version: version,
+      user: user,
+      variation: variation,
+      value: value,
+      default: defaultVal,
+    };
+  }
+
+  it(&apos;increments counters for feature events&apos;, () =&gt; {
+    const es = EventSummarizer();
+    const event1 = makeEvent(&apos;key1&apos;, 11, 1, 100, 111);
+    const event2 = makeEvent(&apos;key1&apos;, 11, 2, 200, 111);
+    const event3 = makeEvent(&apos;key2&apos;, 22, 1, 999, 222);
+    const event4 = makeEvent(&apos;key1&apos;, 11, 1, 100, 111);
+    const event5 = makeEvent(&apos;badkey&apos;, null, null, 333, 333);
+    es.summarizeEvent(event1);
+    es.summarizeEvent(event2);
+    es.summarizeEvent(event3);
+    es.summarizeEvent(event4);
+    es.summarizeEvent(event5);
+    const data = es.getSummary();
+
+    data.features.key1.counters.sort((a, b) =&gt; a.value - b.value);
+    const expectedFeatures = {
+      key1: {
+        default: 111,
+        counters: [
+          { value: 100, variation: 1, version: 11, count: 2 },
+          { value: 200, variation: 2, version: 11, count: 1 },
+        ],
+      },
+      key2: {
+        default: 222,
+        counters: [{ value: 999, variation: 1, version: 22, count: 1 }],
+      },
+      badkey: {
+        default: 333,
+        counters: [{ value: 333, unknown: true, count: 1 }],
+      },
+    };
+    expect(data.features).toEqual(expectedFeatures);
+  });
+
+  it(&apos;distinguishes between zero and null/undefined in feature variation&apos;, () =&gt; {
+    const es = EventSummarizer();
+    const event1 = makeEvent(&apos;key1&apos;, 11, 0, 100, 111);
+    const event2 = makeEvent(&apos;key1&apos;, 11, null, 111, 111);
+    const event3 = makeEvent(&apos;key1&apos;, 11, undefined, 111, 111);
+    es.summarizeEvent(event1);
+    es.summarizeEvent(event2);
+    es.summarizeEvent(event3);
+    const data = es.getSummary();
+
+    data.features.key1.counters.sort((a, b) =&gt; a.value - b.value);
+    const expectedFeatures = {
+      key1: {
+        default: 111,
+        counters: [{ variation: 0, value: 100, version: 11, count: 1 }, { value: 111, version: 11, count: 2 }],
+      },
+    };
+    expect(data.features).toEqual(expectedFeatures);
+  });
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
