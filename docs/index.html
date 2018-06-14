@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl">
+  <title data-ice="title">Home | ldclient-js</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="LaunchDarkly SDK for JavaScript"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="ldclient-js"><meta property="twitter:description" content="LaunchDarkly SDK for JavaScript"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventEmitter">EventEmitter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventProcessor">EventProcessor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventSender">EventSender</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventSummarizer">EventSummarizer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-GoalTracker">GoalTracker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Identity">Identity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Requestor">Requestor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Store">Store</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Stream">Stream</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-UserFilter">UserFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-clientNotReady">clientNotReady</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deprecated">deprecated</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-environmentNotFound">environmentNotFound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-environmentNotSpecified">environmentNotSpecified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-errorFetchingFlags">errorFetchingFlags</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-invalidKey">invalidKey</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-invalidUser">invalidUser</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-localStorageUnavailable">localStorageUnavailable</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-unknownCustomEventKey">unknownCustomEventKey</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-userNotSpecified">userNotSpecified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDFlagFetchError">LDFlagFetchError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidArgumentError">LDInvalidArgumentError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidEnvironmentIdError">LDInvalidEnvironmentIdError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidEventKeyError">LDInvalidEventKeyError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidUserError">LDInvalidUserError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDUnexpectedResponseError">LDUnexpectedResponseError</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#--mocks--">__mocks__</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Requestor">Requestor</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="launchdarkly-sdk-for-client-side-javascript">LaunchDarkly SDK for Client-Side JavaScript</h1><p><a href="https://circleci.com/gh/launchdarkly/js-client/tree/master"><img src="https://circleci.com/gh/launchdarkly/js-client/tree/master.svg?style=svg" alt="Circle CI"></a></p>
+<h2 id="introduction">Introduction</h2><p>This is the official LaunchDarkly client-side JavaScript SDK. This SDK does two
+things:</p>
+<ul>
+<li>Makes feature flags available to your client-side (front-end) JavaScript code.</li>
+<li>Sends click, pageview, and custom events from your front-end for A/B tests and
+analytics.</li>
+</ul>
+<h2 id="browser-support">Browser Support</h2><p>The LaunchDarkly client-side JavaScript SDK supports the following browsers:</p>
+<ul>
+<li>Chrome (any recent)</li>
+<li>Firefox (any recent)</li>
+<li>Safari (any recent)*</li>
+<li>Internet Explorer (IE10+)*</li>
+<li>Edge (any recent)*</li>
+<li>Opera (any recent)*</li>
+</ul>
+<p>* These browsers do not support streaming new flags to connected clients, even
+when <code>client.on(&apos;change&apos;)</code> is called.</p>
+<h3 id="eventsource-polyfill">EventSource polyfill</h3><p>If you need streaming support, and you wish to support browsers that do not
+support <code>EventSource</code> natively, you can install a polyfill, such as
+<a href="https://github.com/Yaffle/EventSource">EventSource</a>.</p>
+<p>You can load the polyfill via a script tag in the <code>&lt;head&gt;</code> before the script
+where you initialize <code>LDClient</code>:</p>
+<pre><code><code class="source-code prettyprint">&lt;script src=&quot;/public/eventsource.js&quot;&gt;&lt;/script&gt;</code>
+</code></pre><p>If you use <a href="https://webpack.github.io/">webpack</a> or
+<a href="http://browserify.org/">browserify</a>, make sure to require the polyfill before
+<code>LDClient</code> is initialized.</p>
+<h3 id="document-queryselectorall---polyfill">Document.querySelectorAll() polyfill</h3><p>If you need to run A/B tests on IE7 or IE8 you will need to install a polyfill
+for <code>document.querySelector()</code> such as
+<a href="https://github.com/cobbdb/polyfill-queryselector">polyfill-queryselector</a>.</p>
+<p>You can load the polyfll via a script tag in the <code>&lt;head&gt;</code>:</p>
+<pre><code><code class="source-code prettyprint">&lt;script src=&quot;/public/querySelector.js&quot;&gt;&lt;/script&gt;</code>
+</code></pre><p>You can also install it with <code>npm install polyfill-queryselector</code> or <code>bower install polyfill-queryselector</code>.</p>
+<h2 id="installation">Installation</h2><p>There are two ways to install the client-side SDK:</p>
+<ol>
+<li><p>Via the <code>npm</code> package: <code>npm install --save ldclient-js</code></p>
+</li>
+<li><p>A minimized version of the script is also hosted on our CDN, and can be
+included via a <code>script</code> tag:</p>
+</li>
+</ol>
+<pre><code><code class="source-code prettyprint">&lt;script src=&quot;https://app.launchdarkly.com/snippet/ldclient.min.js&quot;&gt;</code>
+</code></pre><h2 id="basics">Basics</h2><p>To create a client instance, pass your environment&apos;s client-side ID (available
+on your
+<a href="https://app.launchdarkly.com/settings#/projects">account settings page</a>) and
+user context to the <code>LDClient.initialize</code> function:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var user = { key: &apos;user.example.com&apos; };
+var client = LDClient.initialize(&apos;YOUR_CLIENT_SIDE_ID&apos;, user);</code>
+</code></pre>
+<h2 id="feature-flags">Feature flags</h2><p>The client will emit a <code>ready</code> event when it has been initialized. Once it has
+been initialized, call <code>variation</code> to access your feature flags:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">client.on(&apos;ready&apos;, function() {
+ console.log(&quot;It&apos;s now safe to request feature flags&quot;);
+ var showFeature = client.variation(&quot;YOUR_FEATURE_KEY&quot;, false);
+
+ if (showFeature) {
+   ...
+ } else {
+   ...
+ }
+  });</code>
+</code></pre>
+<p>Out of the box, initializing the client will make a remote request to
+LaunchDarkly, so it may take approximately 100 milliseconds before the ready
+event is emitted. If you require feature flag values before rendering the page,
+we recommend bootstrapping the client. If the client is bootstrapped, it will
+emit the ready event immediately.</p>
+<p><em>Note</em>: Feature flags must marked available to the client-side SDK (see your
+feature flag&apos;s settings page) before they can be used in variation calls on the
+front-end. If you request a feature flag that is not available, you&apos;ll receive
+the default value for that flag.</p>
+<p>You can also fetch all feature flags for a user:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var flags = client.allFlags();</code>
+</code></pre>
+<p>This will return a key / value map of all your feature flags. The map will
+contain <code>null</code> values for any flags that would return the fallback value (the
+second argument that you normally pass to <code>variation</code>). Note that this will send
+analytics events to LaunchDarkly as if you&apos;d called <code>variation</code> for every
+feature flag.</p>
+<h3 id="bootstrapping">Bootstrapping</h3><p>Bootstrapping refers to providing the LaunchDarkly client object with an
+initial, immediately available set of feature flag values so that on page load
+<code>variation</code> can be called with no delay.</p>
+<h4 id="from-the-server-side-sdk">From the server-side SDK</h4><p>The preferred approach to bootstrapping is to populate the bootstrap values (a
+map of feature flag keys to flag values) from your backend. LaunchDarkly&apos;s
+server-side SDKs have a function called <code>allFlags</code>-- this function provides the
+initial set of bootstrap values. You can then provide these values to your
+front-end as a template. Depending on your templating language, this might look
+something like this:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var user = {key: &apos;user.example.com&apos;};
+var client = LDClient.initialize(&apos;YOUR_CLIENT_SIDE_ID&apos;, user, options = {
+ bootstrap: {
+   {{ ldclient.all_flags(user) }}
+ }
+});</code>
+</code></pre>
+<p>If you bootstrap from the server-side, feature flags will be ready immediately,
+and clients will always receive the latest feature flag values.</p>
+<h4 id="from-local-storage">From Local Storage</h4><p>Alternatively, you can bootstrap feature flags from local storage.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var client = LDClient.initialize(
+  &apos;YOUR_CLIENT_SIDE_ID&apos;,
+  user,
+  (options = {
+    bootstrap: &apos;localStorage&apos;,
+  })
+);</code>
+</code></pre>
+<p>When using local storage, the client will store the latest flag settings in
+local storage. On page load, the previous settings will be used and the &apos;ready&apos;
+event will be emitted immediately. This means that on page load, the user may
+see cached flag values until the next page load.</p>
+<p>You can still subscribe to flag changes if you&apos;re using local storage.</p>
+<h3 id="secure-mode">Secure mode</h3><p>Secure mode ensures that feature flag settings for a user are kept private, and
+that one user cannot inspect the settings for another user. Secure mode works by
+having you include a server-generated HMAC SHA256 hash of your user key, signed
+with the SDK key for your environment.</p>
+<p>You can enable secure mode for each environment on your
+<a href="https://app.launchdarkly.com/settings#/projects">account settings page</a>. You
+should send the computed hash for your user in the <code>options</code> array during client
+initialization:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var user = { key: &apos;user.example.com&apos; };
+var client = LDClient.initialize(
+  &apos;YOUR_CLIENT_SIDE_ID&apos;,
+  user,
+  (options = {
+    hash: &apos;SERVER_GENERATED_HASH&apos;,
+  })
+);</code>
+</code></pre>
+<p>Each of our server-side SDKs includes a method to compute the secure mode hash
+for a user. You can pass this to your front-end code in a template. For example:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var client = LDClient.initialize(&apos;YOUR_CLIENT_SIDE_ID&apos;, user, options = {
+       hash: {{ ldclient.secure_mode_hash(user) }} // this is a template directive, and the ldclient instance here is your server-side SDK client
+  });</code>
+</code></pre>
+<p>To compute the hash yourself, locate the SDK key for your environment on your
+account settings page. Then, compute an HMAC SHA256 hash of your user key, using
+your SDK key as a secret. Here&apos;s what this would look like in Node.js:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">var crypto = require(&apos;crypto&apos;);
+var hmac = crypto.createHmac(&apos;sha256&apos;, &apos;YOUR_SDK_KEY&apos;);
+hmac.update(&apos;YOUR_USER_KEY&apos;);
+hash = hmac.digest(&apos;hex&apos;);</code>
+</code></pre>
+<h3 id="listening-to-flag-change-events">Listening to flag change events</h3><p>The client uses an event emitter pattern to allow you to subscribe to feature
+flag changes in real time. To subscribe to all feature flag changes, listen for
+the <code>change</code> event:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">client.on(&apos;change&apos;, function(settings) {
+  console.log(&apos;flags changed:&apos;, settings);
+});</code>
+</code></pre>
+<p>The <code>settings</code> object will contain a map of updated feature flag keys and
+values. The map will only contain the keys to flags that have changed. You can
+also subscribe to specific flags:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">client.on(&apos;change:YOUR_FLAG_KEY&apos;, function(value, previous) {
+  console.log(&apos;YOUR_FLAG_KEY changed:&apos;, value, &apos;(&apos; + previous + &apos;)&apos;);
+});</code>
+</code></pre>
+<h2 id="events">Events</h2><h3 id="click-and-pageview-events">Click and pageview events</h3><p>If you&apos;ve defined
+<a href="https://docs.launchdarkly.com/docs/running-ab-tests">click or pageview goals</a>
+in LaunchDarkly, they&apos;ll be sent automatically once the client has been
+initialized. You do not have to do anything else with the client to send click
+or pageview goals.</p>
+<h3 id="custom-events">Custom events</h3><p>You can send custom events by calling the client&apos;s <code>track</code> method. For example:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">client.track(&apos;Signed up&apos;);</code>
+</code></pre>
+<h3 id="single-page-apps">Single page apps</h3><p>The SDK automatically handles URL changes (made via the HTML5 history API or by
+changing the URL hash fragment), and will trigger pageview and click events
+correctly.</p>
+<h2 id="changing-the-user-context">Changing the user context</h2><p>You may wish to change the user context dynamically and receive the new set of
+feature flags for that user or generate events for the new user. For example, on
+a sign-in page in a single-page app, you may initialize the client with an
+anonymous user. When the user logs in, you&apos;d want the feature flag settings for
+the authenticated user. To do this, you can call the <code>identify</code> function:</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">client.identify(newUser, hash, function() {
+  console.log(&quot;New user&apos;s flags available&quot;);
+});</code>
+</code></pre>
+<p>The <code>hash</code> parameter is the hash for the new user, assuming that the user&apos;s key
+has changed. It is only required in secure mode-- if secure mode is not enabled,
+you can pass in <code>null</code> for the hash.</p>
+<h2 id="development-information">Development information</h2><p>To build the module, first run <code>npm install</code>. Then run <code>npm run build</code>. You can
+also run <code>npm run watch</code> to rebuild the module automatically on file change.</p>
+<p>To run the tests, run <code>npm run test</code>.</p>
+<h2 id="community">Community</h2><p>Here are resources from our awesome community:</p>
+<ul>
+<li><a href="https://github.com/TrueCar/react-launch-darkly/">TrueCar/react-launch-darkly</a>: A set of component helpers to add support for LaunchDarkly to your React.js app</li>
+<li><a href="https://github.com/yusinto/ld-redux/">yusinto/ld-redux</a>: A library to integrate LaunchDarkly with React and Redux</li>
+<li><a href="https://github.com/tdeekens/flopflip">tdeekens/flopflip</a>: A flexible feature-toggling library that integrates with LaunchDarkly</li>
+</ul>
+<h2 id="about-launchdarkly">About LaunchDarkly</h2><ul>
+<li>LaunchDarkly is a continuous delivery platform that provides feature flags as a service and allows developers to iterate quickly and safely. We allow you to easily flag your features and manage them from the LaunchDarkly dashboard. With LaunchDarkly, you can:<ul>
+<li>Roll out a new feature to a subset of your users (like a group of users who opt-in to a beta tester group), gathering feedback and bug reports from real-world use cases.</li>
+<li>Gradually roll out a feature to an increasing percentage of users, and track the effect that the feature has on key metrics (for instance, how likely is a user to complete a purchase if they have feature A versus feature B?).</li>
+<li>Turn off a feature that you realize is causing performance problems in production, without needing to re-deploy, or even restart the application with a changed configuration file.</li>
+<li>Grant access to certain features based on user attributes, like payment plan (eg: users on the &#x2018;gold&#x2019; plan get access to more features than users in the &#x2018;silver&#x2019; plan). Disable parts of your application to facilitate maintenance, without taking everything offline.</li>
+</ul>
+</li>
+<li>LaunchDarkly provides feature flag SDKs for<ul>
+<li><a href="http://docs.launchdarkly.com/docs/java-sdk-reference" title="Java SDK">Java</a></li>
+<li><a href="http://docs.launchdarkly.com/docs/js-sdk-reference" title="LaunchDarkly JavaScript SDK">JavaScript</a></li>
+<li><a href="http://docs.launchdarkly.com/docs/php-sdk-reference" title="LaunchDarkly PHP SDK">PHP</a></li>
+<li><a href="http://docs.launchdarkly.com/docs/python-sdk-reference" title="LaunchDarkly Python SDK">Python</a></li>
+<li><a href="http://docs.launchdarkly.com/docs/python-twisted-sdk-reference" title="LaunchDarkly Python Twisted SDK">Python Twisted</a></li>
+<li><a href="http://docs.launchdarkly.com/docs/go-sdk-reference" title="LaunchDarkly Go SDK">Go</a></li>
+<li><a href="http://docs.launchdarkly.com/docs/node-sdk-reference" title="LaunchDarkly Node SDK">Node.JS</a></li>
+<li><a href="http://docs.launchdarkly.com/docs/dotnet-sdk-reference" title="LaunchDarkly .Net SDK">.NET</a></li>
+<li><a href="http://docs.launchdarkly.com/docs/ruby-sdk-reference" title="LaunchDarkly Ruby SDK">Ruby</a></li>
+<li><a href="http://docs.launchdarkly.com/docs/ios-sdk-reference" title="LaunchDarkly iOS SDK">iOS</a></li>
+<li><a href="http://docs.launchdarkly.com/docs/android-sdk-reference" title="LaunchDarkly Android SDK">Android</a></li>
+</ul>
+</li>
+<li>Explore LaunchDarkly<ul>
+<li><a href="http://www.launchdarkly.com/" title="LaunchDarkly Main Website">launchdarkly.com</a>
+for more information</li>
+<li><a href="http://docs.launchdarkly.com/" title="LaunchDarkly Documentation">docs.launchdarkly.com</a>
+for our documentation and SDKs</li>
+<li><a href="http://apidocs.launchdarkly.com/" title="LaunchDarkly API Documentation">apidocs.launchdarkly.com</a>
+for our API documentation</li>
+<li><a href="http://blog.launchdarkly.com/" title="LaunchDarkly Blog Documentation">blog.launchdarkly.com</a>
+for the latest product updates</li>
+<li><a href="https://github.com/launchdarkly/featureflags/" title="Feature Flagging Guide">Feature Flagging Guide</a>
+for best practices and strategies</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

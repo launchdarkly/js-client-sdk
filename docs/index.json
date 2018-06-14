@@ -1,0 +1,2038 @@
+[
+  {
+    "__docId__": 1,
+    "kind": "external",
+    "name": "Infinity",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Infinity",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 2,
+    "kind": "external",
+    "name": "NaN",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~NaN",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 3,
+    "kind": "external",
+    "name": "undefined",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~undefined",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 4,
+    "kind": "external",
+    "name": "null",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~null",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 5,
+    "kind": "external",
+    "name": "Object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Object",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 6,
+    "kind": "external",
+    "name": "object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~object",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 7,
+    "kind": "external",
+    "name": "Function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Function",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 8,
+    "kind": "external",
+    "name": "function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~function",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 9,
+    "kind": "external",
+    "name": "Boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Boolean",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 10,
+    "kind": "external",
+    "name": "boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~boolean",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 11,
+    "kind": "external",
+    "name": "Symbol",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Symbol",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 12,
+    "kind": "external",
+    "name": "Error",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Error",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 13,
+    "kind": "external",
+    "name": "EvalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/EvalError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~EvalError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 14,
+    "kind": "external",
+    "name": "InternalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/InternalError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~InternalError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 15,
+    "kind": "external",
+    "name": "RangeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~RangeError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 16,
+    "kind": "external",
+    "name": "ReferenceError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~ReferenceError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 17,
+    "kind": "external",
+    "name": "SyntaxError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~SyntaxError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 18,
+    "kind": "external",
+    "name": "TypeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~TypeError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 19,
+    "kind": "external",
+    "name": "URIError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URIError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~URIError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 20,
+    "kind": "external",
+    "name": "Number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Number",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 21,
+    "kind": "external",
+    "name": "number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~number",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 22,
+    "kind": "external",
+    "name": "Date",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Date",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 23,
+    "kind": "external",
+    "name": "String",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~String",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 24,
+    "kind": "external",
+    "name": "string",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~string",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 25,
+    "kind": "external",
+    "name": "RegExp",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~RegExp",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 26,
+    "kind": "external",
+    "name": "Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 27,
+    "kind": "external",
+    "name": "Int8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Int8Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 28,
+    "kind": "external",
+    "name": "Uint8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Uint8Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 29,
+    "kind": "external",
+    "name": "Uint8ClampedArray",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Uint8ClampedArray",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 30,
+    "kind": "external",
+    "name": "Int16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Int16Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 31,
+    "kind": "external",
+    "name": "Uint16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Uint16Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 32,
+    "kind": "external",
+    "name": "Int32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Int32Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 33,
+    "kind": "external",
+    "name": "Uint32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Uint32Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 34,
+    "kind": "external",
+    "name": "Float32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Float32Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 35,
+    "kind": "external",
+    "name": "Float64Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Float64Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 36,
+    "kind": "external",
+    "name": "Map",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Map",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 37,
+    "kind": "external",
+    "name": "Set",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Set",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 38,
+    "kind": "external",
+    "name": "WeakMap",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~WeakMap",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 39,
+    "kind": "external",
+    "name": "WeakSet",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~WeakSet",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 40,
+    "kind": "external",
+    "name": "ArrayBuffer",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~ArrayBuffer",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 41,
+    "kind": "external",
+    "name": "DataView",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~DataView",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 42,
+    "kind": "external",
+    "name": "JSON",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~JSON",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 43,
+    "kind": "external",
+    "name": "Promise",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Promise",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 44,
+    "kind": "external",
+    "name": "Generator",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Generator",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 45,
+    "kind": "external",
+    "name": "GeneratorFunction",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~GeneratorFunction",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 46,
+    "kind": "external",
+    "name": "Reflect",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Reflect",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 47,
+    "kind": "external",
+    "name": "Proxy",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Proxy",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 48,
+    "kind": "file",
+    "name": "src/EventEmitter.js",
+    "content": "export default function EventEmitter() {\n  const emitter = {};\n  const events = {};\n\n  const listeningTo = event => !!events[event];\n\n  emitter.on = function(event, handler, context) {\n    events[event] = events[event] || [];\n    events[event] = events[event].concat({\n      handler: handler,\n      context: context,\n    });\n  };\n\n  emitter.off = function(event, handler, context) {\n    if (!events[event]) {\n      return;\n    }\n    for (let i = 0; i < events[event].length; i++) {\n      if (events[event][i].handler === handler && events[event][i].context === context) {\n        events[event] = events[event].slice(0, i).concat(events[event].slice(i + 1));\n      }\n    }\n  };\n\n  emitter.emit = function(event) {\n    if (!events[event]) {\n      return;\n    }\n    for (let i = 0; i < events[event].length; i++) {\n      events[event][i].handler.apply(events[event][i].context, Array.prototype.slice.call(arguments, 1));\n    }\n  };\n\n  emitter.maybeReportError = function(error) {\n    if (!error) {\n      return;\n    }\n    if (listeningTo('error')) {\n      this.emit('error', error);\n    } else {\n      console.error(error.message);\n    }\n  };\n  return emitter;\n}\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/EventEmitter.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 49,
+    "kind": "function",
+    "name": "EventEmitter",
+    "memberof": "src/EventEmitter.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/EventEmitter.js~EventEmitter",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/EventEmitter.js",
+    "importStyle": "EventEmitter",
+    "description": null,
+    "lineNumber": 1,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 50,
+    "kind": "file",
+    "name": "src/EventProcessor.js",
+    "content": "import EventSender from './EventSender';\nimport EventSummarizer from './EventSummarizer';\nimport UserFilter from './UserFilter';\nimport * as errors from './errors';\nimport * as utils from './utils';\n\nexport default function EventProcessor(eventsUrl, environmentId, options = {}, emitter = null, sender = null) {\n  const processor = {};\n  const eventSender = sender || EventSender(eventsUrl, environmentId);\n  const summarizer = EventSummarizer();\n  const userFilter = UserFilter(options);\n  const inlineUsers = !!options.inlineUsersInEvents;\n  let queue = [];\n  let flushInterval;\n  let samplingInterval;\n  let lastKnownPastTime = 0;\n  let disabled = false;\n  let flushTimer;\n\n  function reportArgumentError(message) {\n    utils.onNextTick(() => {\n      emitter && emitter.maybeReportError(new errors.LDInvalidArgumentError(message));\n    });\n  }\n\n  if (options.samplingInterval !== undefined && (isNaN(options.samplingInterval) || options.samplingInterval < 0)) {\n    samplingInterval = 0;\n    reportArgumentError('Invalid sampling interval configured. Sampling interval must be an integer >= 0.');\n  } else {\n    samplingInterval = options.samplingInterval || 0;\n  }\n\n  if (options.flushInterval !== undefined && (isNan(options.flushInterval) || options.flushInterval < 2000)) {\n    flushInterval = 2000;\n    reportArgumentError('Invalid flush interval configured. Must be an integer >= 2000 (milliseconds).');\n  } else {\n    flushInterval = options.flushInterval || 2000;\n  }\n\n  function shouldSampleEvent() {\n    return samplingInterval === 0 || Math.floor(Math.random() * samplingInterval) === 0;\n  }\n\n  function shouldDebugEvent(e) {\n    if (e.debugEventsUntilDate) {\n      // The \"last known past time\" comes from the last HTTP response we got from the server.\n      // In case the client's time is set wrong, at least we know that any expiration date\n      // earlier than that point is definitely in the past.  If there's any discrepancy, we\n      // want to err on the side of cutting off event debugging sooner.\n      return e.debugEventsUntilDate > lastKnownPastTime && e.debugEventsUntilDate > new Date().getTime();\n    }\n    return false;\n  }\n\n  // Transform an event from its internal format to the format we use when sending a payload.\n  function makeOutputEvent(e) {\n    const ret = utils.extend({}, e);\n    if (inlineUsers || e.kind === 'identify') {\n      // identify events always have an inline user\n      ret.user = userFilter.filterUser(e.user);\n    } else {\n      ret.userKey = e.user.key;\n      delete ret['user'];\n    }\n    if (e.kind === 'feature') {\n      delete ret['trackEvents'];\n      delete ret['debugEventsUntilDate'];\n    }\n    return ret;\n  }\n\n  processor.enqueue = function(event) {\n    if (disabled) {\n      return;\n    }\n    let addFullEvent = false;\n    let addDebugEvent = false;\n\n    // Add event to the summary counters if appropriate\n    summarizer.summarizeEvent(event);\n\n    // Decide whether to add the event to the payload. Feature events may be added twice, once for\n    // the event (if tracked) and once for debugging.\n    if (event.kind === 'feature') {\n      if (shouldSampleEvent()) {\n        addFullEvent = !!event.trackEvents;\n        addDebugEvent = shouldDebugEvent(event);\n      }\n    } else {\n      addFullEvent = shouldSampleEvent();\n    }\n\n    if (addFullEvent) {\n      queue.push(makeOutputEvent(event));\n    }\n    if (addDebugEvent) {\n      const debugEvent = utils.extend({}, event, { kind: 'debug' });\n      delete debugEvent['trackEvents'];\n      delete debugEvent['debugEventsUntilDate'];\n      delete debugEvent['variation'];\n      queue.push(debugEvent);\n    }\n  };\n\n  processor.flush = function(sync) {\n    if (disabled) {\n      return Promise.resolve();\n    }\n    const eventsToSend = queue;\n    const summary = summarizer.getSummary();\n    summarizer.clearSummary();\n    if (summary) {\n      summary.kind = 'summary';\n      eventsToSend.push(summary);\n    }\n    if (eventsToSend.length === 0) {\n      return Promise.resolve();\n    }\n    queue = [];\n    return eventSender.sendEvents(eventsToSend, sync).then(responseInfo => {\n      if (responseInfo) {\n        if (responseInfo.serverTime) {\n          lastKnownPastTime = responseInfo.serverTime;\n        }\n        if (responseInfo.status === 401) {\n          disabled = true;\n          utils.onNextTick(() => {\n            emitter.maybeReportError(\n              new errors.LDUnexpectedResponseError('Received 401 error, no further events will be posted')\n            );\n          });\n        }\n      }\n    });\n  };\n\n  processor.start = function() {\n    const flushTick = () => {\n      processor.flush();\n      flushTimer = setTimeout(flushTick, flushInterval);\n    };\n    flushTimer = setTimeout(flushTick, flushInterval);\n  };\n\n  processor.stop = function() {\n    clearTimeout(flushTimer);\n  };\n\n  return processor;\n}\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/EventProcessor.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 51,
+    "kind": "function",
+    "name": "EventProcessor",
+    "memberof": "src/EventProcessor.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/EventProcessor.js~EventProcessor",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/EventProcessor.js",
+    "importStyle": "EventProcessor",
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "params": [
+      {
+        "name": "eventsUrl",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "environmentId",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "options",
+        "optional": true,
+        "types": [
+          "{}"
+        ],
+        "defaultRaw": {},
+        "defaultValue": "{}"
+      },
+      {
+        "name": "emitter",
+        "optional": true,
+        "types": [
+          "undefined"
+        ],
+        "defaultValue": "undefined"
+      },
+      {
+        "name": "sender",
+        "optional": true,
+        "types": [
+          "undefined"
+        ],
+        "defaultValue": "undefined"
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 52,
+    "kind": "file",
+    "name": "src/EventSender.js",
+    "content": "import * as utils from './utils';\n\nconst MAX_URL_LENGTH = 2000;\n\nexport default function EventSender(eventsUrl, environmentId, forceHasCors, imageCreator) {\n  let hasCors;\n  const postUrl = eventsUrl + '/events/bulk/' + environmentId;\n  const imageUrl = eventsUrl + '/a/' + environmentId + '.gif';\n  const sender = {};\n\n  function loadUrlUsingImage(src, onDone) {\n    const img = new Image();\n    if (onDone) {\n      img.addEventListener('load', onDone);\n    }\n    img.src = src;\n  }\n\n  function getResponseInfo(xhr) {\n    const ret = { status: xhr.status };\n    const dateStr = xhr.getResponseHeader('Date');\n    if (dateStr) {\n      const time = Date.parse(dateStr);\n      if (time) {\n        ret.serverTime = time;\n      }\n    }\n    return ret;\n  }\n\n  function sendChunk(events, usePost, sync) {\n    const createImage = imageCreator || loadUrlUsingImage;\n    const send = onDone => {\n      if (usePost) {\n        const xhr = new XMLHttpRequest();\n        xhr.open('POST', postUrl, !sync);\n        utils.addLDHeaders(xhr);\n        xhr.setRequestHeader('Content-Type', 'application/json');\n        xhr.setRequestHeader('X-LaunchDarkly-Event-Schema', '3');\n\n        if (!sync) {\n          xhr.addEventListener('load', () => {\n            onDone(getResponseInfo(xhr));\n          });\n        }\n\n        xhr.send(JSON.stringify(events));\n      } else {\n        const src = imageUrl + '?d=' + utils.base64URLEncode(JSON.stringify(events));\n        createImage(src, sync ? null : onDone);\n      }\n    };\n\n    if (sync) {\n      send();\n    } else {\n      return new Promise(resolve => {\n        send(resolve);\n      });\n    }\n  }\n\n  sender.sendEvents = function(events, sync) {\n    // Detect browser support for CORS (can be overridden by tests)\n    if (hasCors === undefined) {\n      if (forceHasCors === undefined) {\n        hasCors = 'withCredentials' in new XMLHttpRequest();\n      } else {\n        hasCors = forceHasCors;\n      }\n    }\n\n    const finalSync = sync === undefined ? false : sync;\n    let chunks;\n    if (hasCors) {\n      // no need to break up events into chunks if we can send a POST\n      chunks = [events];\n    } else {\n      chunks = utils.chunkUserEventsForUrl(MAX_URL_LENGTH - eventsUrl.length, events);\n    }\n    const results = [];\n    for (let i = 0; i < chunks.length; i++) {\n      results.push(sendChunk(chunks[i], hasCors, finalSync));\n    }\n    return sync ? Promise.resolve() : Promise.all(results);\n  };\n\n  return sender;\n}\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/EventSender.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 53,
+    "kind": "variable",
+    "name": "MAX_URL_LENGTH",
+    "memberof": "src/EventSender.js",
+    "static": true,
+    "longname": "src/EventSender.js~MAX_URL_LENGTH",
+    "access": "public",
+    "export": false,
+    "importPath": "ldclient-js/src/EventSender.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 3,
+    "undocument": true,
+    "type": {
+      "types": [
+        "number"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 54,
+    "kind": "function",
+    "name": "EventSender",
+    "memberof": "src/EventSender.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/EventSender.js~EventSender",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/EventSender.js",
+    "importStyle": "EventSender",
+    "description": null,
+    "lineNumber": 5,
+    "undocument": true,
+    "params": [
+      {
+        "name": "eventsUrl",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "environmentId",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "forceHasCors",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "imageCreator",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 55,
+    "kind": "file",
+    "name": "src/EventSummarizer.js",
+    "content": "export default function EventSummarizer() {\n  const es = {};\n\n  let startDate = 0,\n    endDate = 0,\n    counters = {};\n\n  es.summarizeEvent = function(event) {\n    if (event.kind === 'feature') {\n      const counterKey =\n        event.key +\n        ':' +\n        (event.variation !== null && event.variation !== undefined ? event.variation : '') +\n        ':' +\n        (event.version !== null && event.version !== undefined ? event.version : '');\n      const counterVal = counters[counterKey];\n      if (counterVal) {\n        counterVal.count = counterVal.count + 1;\n      } else {\n        counters[counterKey] = {\n          count: 1,\n          key: event.key,\n          variation: event.variation,\n          version: event.version,\n          value: event.value,\n          default: event.default,\n        };\n      }\n      if (startDate === 0 || event.creationDate < startDate) {\n        startDate = event.creationDate;\n      }\n      if (event.creationDate > endDate) {\n        endDate = event.creationDate;\n      }\n    }\n  };\n\n  es.getSummary = function() {\n    const flagsOut = {};\n    let empty = true;\n    for (const i in counters) {\n      const c = counters[i];\n      let flag = flagsOut[c.key];\n      if (!flag) {\n        flag = {\n          default: c.default,\n          counters: [],\n        };\n        flagsOut[c.key] = flag;\n      }\n      const counterOut = {\n        value: c.value,\n        count: c.count,\n      };\n      if (c.variation !== undefined && c.variation !== null) {\n        counterOut.variation = c.variation;\n      }\n      if (c.version) {\n        counterOut.version = c.version;\n      } else {\n        counterOut.unknown = true;\n      }\n      flag.counters.push(counterOut);\n      empty = false;\n    }\n    return empty\n      ? null\n      : {\n          startDate,\n          endDate,\n          features: flagsOut,\n        };\n  };\n\n  es.clearSummary = function() {\n    startDate = 0;\n    endDate = 0;\n    counters = {};\n  };\n\n  return es;\n}\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/EventSummarizer.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 56,
+    "kind": "function",
+    "name": "EventSummarizer",
+    "memberof": "src/EventSummarizer.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/EventSummarizer.js~EventSummarizer",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/EventSummarizer.js",
+    "importStyle": "EventSummarizer",
+    "description": null,
+    "lineNumber": 1,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 57,
+    "kind": "file",
+    "name": "src/GoalTracker.js",
+    "content": "import escapeStringRegexp from 'escape-string-regexp';\n\nfunction doesUrlMatch(matcher, href, search, hash) {\n  const canonicalUrl = href.replace(search, '').replace(hash, '');\n  let regex;\n  let testUrl;\n\n  switch (matcher.kind) {\n    case 'exact':\n      testUrl = href;\n      regex = new RegExp('^' + escapeStringRegexp(matcher.url) + '/?$');\n      break;\n    case 'canonical':\n      testUrl = canonicalUrl;\n      regex = new RegExp('^' + escapeStringRegexp(matcher.url) + '/?$');\n      break;\n    case 'substring':\n      testUrl = canonicalUrl;\n      regex = new RegExp('.*' + escapeStringRegexp(matcher.substring) + '.*$');\n      break;\n    case 'regex':\n      testUrl = canonicalUrl;\n      regex = new RegExp(matcher.pattern);\n      break;\n    default:\n      return false;\n  }\n  return regex.test(testUrl);\n}\n\nfunction findGoalsForClick(event, clickGoals) {\n  const matches = [];\n\n  for (let i = 0; i < clickGoals.length; i++) {\n    let target = event.target;\n    const goal = clickGoals[i];\n    const selector = goal.selector;\n    const elements = document.querySelectorAll(selector);\n    while (target && elements.length > 0) {\n      for (let j = 0; j < elements.length; j++) {\n        if (target === elements[j]) {\n          matches.push(goal);\n        }\n      }\n      target = target.parentNode;\n    }\n  }\n\n  return matches;\n}\n\nexport default function GoalTracker(goals, onEvent) {\n  const tracker = {};\n  let listenerFn = null;\n\n  const clickGoals = [];\n\n  for (let i = 0; i < goals.length; i++) {\n    const goal = goals[i];\n    const urls = goal.urls || [];\n\n    for (let j = 0; j < urls.length; j++) {\n      if (doesUrlMatch(urls[j], location.href, location.search, location.hash)) {\n        if (goal.kind === 'pageview') {\n          onEvent('pageview', goal);\n        } else {\n          clickGoals.push(goal);\n          onEvent('click_pageview', goal);\n        }\n        break;\n      }\n    }\n  }\n\n  if (clickGoals.length > 0) {\n    listenerFn = function(event) {\n      const goals = findGoalsForClick(event, clickGoals);\n      for (let i = 0; i < goals.length; i++) {\n        onEvent('click', goals[i]);\n      }\n    };\n\n    document.addEventListener('click', listenerFn);\n  }\n\n  tracker.dispose = function() {\n    document.removeEventListener('click', listenerFn);\n  };\n\n  return tracker;\n}\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/GoalTracker.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 58,
+    "kind": "function",
+    "name": "doesUrlMatch",
+    "memberof": "src/GoalTracker.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/GoalTracker.js~doesUrlMatch",
+    "access": "public",
+    "export": false,
+    "importPath": "ldclient-js/src/GoalTracker.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 3,
+    "undocument": true,
+    "params": [
+      {
+        "name": "matcher",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "href",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "search",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "hash",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 59,
+    "kind": "function",
+    "name": "findGoalsForClick",
+    "memberof": "src/GoalTracker.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/GoalTracker.js~findGoalsForClick",
+    "access": "public",
+    "export": false,
+    "importPath": "ldclient-js/src/GoalTracker.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 31,
+    "undocument": true,
+    "params": [
+      {
+        "name": "event",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "clickGoals",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 60,
+    "kind": "function",
+    "name": "GoalTracker",
+    "memberof": "src/GoalTracker.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/GoalTracker.js~GoalTracker",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/GoalTracker.js",
+    "importStyle": "GoalTracker",
+    "description": null,
+    "lineNumber": 52,
+    "undocument": true,
+    "params": [
+      {
+        "name": "goals",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "onEvent",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 61,
+    "kind": "file",
+    "name": "src/Identity.js",
+    "content": "import * as utils from './utils';\n\nfunction sanitizeUser(u) {\n  const sane = utils.clone(u);\n  if (sane.key) {\n    sane.key = sane.key.toString();\n  }\n  return sane;\n}\n\nexport default function Identity(initialUser, onChange) {\n  const ident = {};\n  let user;\n\n  ident.setUser = function(u) {\n    user = sanitizeUser(u);\n    onChange(utils.clone(user));\n  };\n\n  ident.getUser = function() {\n    return user ? utils.clone(user) : null;\n  };\n\n  if (initialUser) {\n    ident.setUser(initialUser);\n  }\n\n  return ident;\n}\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/Identity.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 62,
+    "kind": "function",
+    "name": "sanitizeUser",
+    "memberof": "src/Identity.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/Identity.js~sanitizeUser",
+    "access": "public",
+    "export": false,
+    "importPath": "ldclient-js/src/Identity.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 3,
+    "undocument": true,
+    "params": [
+      {
+        "name": "u",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 63,
+    "kind": "function",
+    "name": "Identity",
+    "memberof": "src/Identity.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/Identity.js~Identity",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/Identity.js",
+    "importStyle": "Identity",
+    "description": null,
+    "lineNumber": 11,
+    "undocument": true,
+    "params": [
+      {
+        "name": "initialUser",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "onChange",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 64,
+    "kind": "file",
+    "name": "src/Requestor.js",
+    "content": "import * as utils from './utils';\nimport * as errors from './errors';\nimport * as messages from './messages';\n\nconst json = 'application/json';\n\nfunction fetchJSON(endpoint, body, callback) {\n  const xhr = new XMLHttpRequest();\n\n  xhr.addEventListener('load', () => {\n    if (\n      xhr.status === 200 &&\n      xhr.getResponseHeader('Content-type') &&\n      xhr.getResponseHeader('Content-Type').lastIndexOf(json) === 0\n    ) {\n      callback(null, JSON.parse(xhr.responseText));\n    } else {\n      callback(xhr.statusText);\n    }\n  });\n\n  xhr.addEventListener('error', () => {\n    if (xhr.status === 404) {\n      callback(new errors.LDInvalidEnvironmentIdError(messages.environmentNotFound()));\n    }\n    callback(xhr.statusText);\n  });\n\n  if (body) {\n    xhr.open('REPORT', endpoint);\n    xhr.setRequestHeader('Content-Type', 'application/json');\n    utils.addLDHeaders(xhr);\n    xhr.send(JSON.stringify(body));\n  } else {\n    xhr.open('GET', endpoint);\n    utils.addLDHeaders(xhr);\n    xhr.send();\n  }\n\n  return xhr;\n}\n\nexport default function Requestor(baseUrl, environment, useReport) {\n  let flagSettingsRequest;\n  let lastFlagSettingsCallback;\n\n  const requestor = {};\n\n  requestor.fetchFlagSettings = function(user, hash, callback) {\n    let data;\n    let endpoint;\n    let body;\n    let cb;\n\n    if (useReport) {\n      endpoint = [baseUrl, '/sdk/evalx/', environment, '/user', hash ? '?h=' + hash : ''].join('');\n      body = user;\n    } else {\n      data = utils.base64URLEncode(JSON.stringify(user));\n      endpoint = [baseUrl, '/sdk/evalx/', environment, '/users/', data, hash ? '?h=' + hash : ''].join('');\n    }\n\n    const wrappedCallback = (function(currentCallback) {\n      return function(error, result) {\n        currentCallback(error, result);\n        flagSettingsRequest = null;\n        lastFlagSettingsCallback = null;\n      };\n    })(callback);\n\n    if (flagSettingsRequest) {\n      flagSettingsRequest.abort();\n      cb = (function(prevCallback) {\n        return function() {\n          prevCallback && prevCallback.apply(null, arguments);\n          wrappedCallback.apply(null, arguments);\n        };\n      })(lastFlagSettingsCallback);\n    } else {\n      cb = wrappedCallback;\n    }\n\n    lastFlagSettingsCallback = cb;\n    flagSettingsRequest = fetchJSON(endpoint, body, cb);\n  };\n\n  requestor.fetchGoals = function(callback) {\n    const endpoint = [baseUrl, '/sdk/goals/', environment].join('');\n    fetchJSON(endpoint, null, callback);\n  };\n\n  return requestor;\n}\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/Requestor.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 65,
+    "kind": "variable",
+    "name": "json",
+    "memberof": "src/Requestor.js",
+    "static": true,
+    "longname": "src/Requestor.js~json",
+    "access": "public",
+    "export": false,
+    "importPath": "ldclient-js/src/Requestor.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 5,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 66,
+    "kind": "function",
+    "name": "fetchJSON",
+    "memberof": "src/Requestor.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/Requestor.js~fetchJSON",
+    "access": "public",
+    "export": false,
+    "importPath": "ldclient-js/src/Requestor.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "params": [
+      {
+        "name": "endpoint",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "body",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "callback",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 67,
+    "kind": "function",
+    "name": "Requestor",
+    "memberof": "src/Requestor.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/Requestor.js~Requestor",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/Requestor.js",
+    "importStyle": "Requestor",
+    "description": null,
+    "lineNumber": 43,
+    "undocument": true,
+    "params": [
+      {
+        "name": "baseUrl",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "environment",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "useReport",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 68,
+    "kind": "file",
+    "name": "src/Store.js",
+    "content": "import * as messages from './messages';\nimport * as utils from './utils';\n\nexport default function Store(environment, hash, ident) {\n  const store = {};\n\n  function getFlagsKey() {\n    let key = '';\n    const user = ident.getUser();\n    if (user) {\n      key = hash || utils.btoa(JSON.stringify(user));\n    }\n    return 'ld:' + environment + ':' + key;\n  }\n\n  store.loadFlags = function() {\n    const key = getFlagsKey();\n    let dataStr, data;\n    try {\n      dataStr = localStorage.getItem(key);\n    } catch (ex) {\n      console.warn(messages.localStorageUnavailable());\n      return null;\n    }\n    try {\n      data = JSON.parse(dataStr);\n    } catch (ex) {\n      store.clearFlags();\n      return null;\n    }\n    if (data) {\n      const schema = data.$schema;\n      if (schema === undefined || schema < 1) {\n        data = utils.transformValuesToVersionedValues(data);\n      }\n    }\n    return data;\n  };\n\n  store.saveFlags = function(flags) {\n    const key = getFlagsKey();\n    const data = utils.extend({}, flags, { $schema: 1 });\n    try {\n      localStorage.setItem(key, JSON.stringify(data));\n    } catch (ex) {\n      console.warn(messages.localStorageUnavailable());\n    }\n  };\n\n  store.clearFlags = function() {\n    const key = getFlagsKey();\n    try {\n      localStorage.removeItem(key);\n    } catch (ex) {}\n  };\n\n  return store;\n}\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/Store.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 69,
+    "kind": "function",
+    "name": "Store",
+    "memberof": "src/Store.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/Store.js~Store",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/Store.js",
+    "importStyle": "Store",
+    "description": null,
+    "lineNumber": 4,
+    "undocument": true,
+    "params": [
+      {
+        "name": "environment",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "hash",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "ident",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 70,
+    "kind": "file",
+    "name": "src/Stream.js",
+    "content": "import { base64URLEncode } from './utils';\n\nexport default function Stream(baseUrl, environment, hash, useReport) {\n  const stream = {};\n  const evalUrlPrefix = baseUrl + '/eval/' + environment + '/';\n  let es = null;\n\n  stream.connect = function(user, handlers) {\n    if (typeof EventSource !== 'undefined') {\n      let url;\n      if (useReport) {\n        // we don't yet have an EventSource implementation that supports REPORT, so\n        // fall back to the old ping-based stream\n        url = baseUrl + '/ping/' + environment;\n      } else {\n        url = evalUrlPrefix + base64URLEncode(JSON.stringify(user));\n        if (hash !== null && hash !== undefined) {\n          url = url + '?h=' + hash;\n        }\n      }\n      es = new window.EventSource(url);\n      for (const key in handlers) {\n        if (handlers.hasOwnProperty(key)) {\n          es.addEventListener(key, handlers[key]);\n        }\n      }\n    }\n  };\n\n  stream.disconnect = function() {\n    if (es) {\n      es.close();\n    }\n  };\n\n  stream.isConnected = function() {\n    return es && (es.readyState === EventSource.OPEN || es.readyState === EventSource.CONNECTING);\n  };\n\n  return stream;\n}\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/Stream.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 71,
+    "kind": "function",
+    "name": "Stream",
+    "memberof": "src/Stream.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/Stream.js~Stream",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/Stream.js",
+    "importStyle": "Stream",
+    "description": null,
+    "lineNumber": 3,
+    "undocument": true,
+    "params": [
+      {
+        "name": "baseUrl",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "environment",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "hash",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "useReport",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 72,
+    "kind": "file",
+    "name": "src/UserFilter.js",
+    "content": "import * as messages from './messages';\nimport * as utils from './utils';\n\n/**\n * The UserFilter object transforms user objects into objects suitable to be sent as JSON to\n * the server, hiding any private user attributes.\n *\n * @param {Object} the LaunchDarkly client configuration object\n **/\nexport default function UserFilter(config) {\n  const filter = {};\n  const allAttributesPrivate =\n    config.allAttributesPrivate !== undefined ? config.allAttributesPrivate : config.all_attributes_private;\n  const privateAttributeNames =\n    (config.privateAttributeNames !== undefined ? config.privateAttributeNames : config.private_attribute_names) || [];\n  const ignoreAttrs = { key: true, custom: true, anonymous: true };\n  const allowedTopLevelAttrs = {\n    key: true,\n    secondary: true,\n    ip: true,\n    country: true,\n    email: true,\n    firstName: true,\n    lastName: true,\n    avatar: true,\n    name: true,\n    anonymous: true,\n    custom: true,\n  };\n\n  if (config.all_attributes_private !== undefined) {\n    console && console.warn && console.warn(messages.deprecated('all_attributes_private', 'allAttributesPrivate'));\n  }\n  if (config.private_attribute_names !== undefined) {\n    console && console.warn && console.warn(messages.deprecated('private_attribute_names', 'privateAttributeNames'));\n  }\n\n  filter.filterUser = function(user) {\n    if (!user) {\n      return null;\n    }\n    const userPrivateAttrs = user.privateAttributeNames || [];\n\n    const isPrivateAttr = function(name) {\n      return (\n        !ignoreAttrs[name] &&\n        (allAttributesPrivate || userPrivateAttrs.indexOf(name) !== -1 || privateAttributeNames.indexOf(name) !== -1)\n      );\n    };\n    const filterAttrs = function(props, isAttributeAllowed) {\n      return Object.keys(props).reduce(\n        (acc, name) => {\n          const ret = acc;\n          if (isAttributeAllowed(name)) {\n            if (isPrivateAttr(name)) {\n              // add to hidden list\n              ret[1][name] = true;\n            } else {\n              ret[0][name] = props[name];\n            }\n          }\n          return ret;\n        },\n        [{}, {}]\n      );\n    };\n    const result = filterAttrs(user, key => allowedTopLevelAttrs[key]);\n    const filteredProps = result[0];\n    let removedAttrs = result[1];\n    if (user.custom) {\n      const customResult = filterAttrs(user.custom, () => true);\n      filteredProps.custom = customResult[0];\n      removedAttrs = utils.extend({}, removedAttrs, customResult[1]);\n    }\n    const removedAttrNames = Object.keys(removedAttrs);\n    if (removedAttrNames.length) {\n      removedAttrNames.sort();\n      filteredProps.privateAttrs = removedAttrNames;\n    }\n    return filteredProps;\n  };\n  return filter;\n}\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/UserFilter.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 73,
+    "kind": "function",
+    "name": "UserFilter",
+    "memberof": "src/UserFilter.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/UserFilter.js~UserFilter",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/UserFilter.js",
+    "importStyle": "UserFilter",
+    "description": "The UserFilter object transforms user objects into objects suitable to be sent as JSON to\nthe server, hiding any private user attributes.",
+    "lineNumber": 10,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "the",
+        "description": "LaunchDarkly client configuration object"
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 74,
+    "kind": "file",
+    "name": "src/__mocks__/Requestor.js",
+    "content": "export default () => ({\n  fetchFlagSettings: jest.fn().mockImplementation((user, hash, callback) => callback(null, {})),\n  fetchGoals: jest.fn().mockImplementation(callback => callback(null, {})),\n});\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/__mocks__/Requestor.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 75,
+    "kind": "function",
+    "name": "Requestor",
+    "memberof": "src/__mocks__/Requestor.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/__mocks__/Requestor.js~Requestor",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/__mocks__/Requestor.js",
+    "importStyle": "Requestor",
+    "description": null,
+    "lineNumber": 1,
+    "undocument": true,
+    "params": [],
+    "return": null
+  },
+  {
+    "__docId__": 76,
+    "kind": "file",
+    "name": "src/__tests__/EventProcessor-test.js",
+    "content": "import sinon from 'sinon';\n\nimport EventProcessor from '../EventProcessor';\n\ndescribe('EventProcessor', () => {\n  let sandbox;\n  let warnSpy;\n  const mockEventSender = {};\n  const user = { key: 'userKey', name: 'Red' };\n  const filteredUser = { key: 'userKey', privateAttrs: ['name'] };\n  const eventsUrl = '/fake-url';\n  const envId = 'env';\n\n  mockEventSender.sendEvents = function(events, sync) {\n    mockEventSender.calls.push({\n      events: events,\n      sync: !!sync,\n    });\n    return Promise.resolve({ serverTime: mockEventSender.serverTime, status: mockEventSender.status || 200 });\n  };\n\n  beforeEach(() => {\n    sandbox = sinon.sandbox.create();\n    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});\n    mockEventSender.calls = [];\n    mockEventSender.serverTime = null;\n  });\n\n  afterEach(() => {\n    sandbox.restore();\n    warnSpy.mockRestore();\n  });\n\n  function checkFeatureEvent(e, source, debug, inlineUser) {\n    expect(e.kind).toEqual(debug ? 'debug' : 'feature');\n    expect(e.creationDate).toEqual(source.creationDate);\n    expect(e.key).toEqual(source.key);\n    expect(e.version).toEqual(source.version);\n    expect(e.value).toEqual(source.value);\n    expect(e.default).toEqual(source.default);\n    if (inlineUser) {\n      expect(e.user).toEqual(inlineUser);\n    } else {\n      expect(e.userKey).toEqual(source.user.key);\n    }\n  }\n\n  function checkCustomEvent(e, source, inlineUser) {\n    expect(e.kind).toEqual('custom');\n    expect(e.creationDate).toEqual(source.creationDate);\n    expect(e.key).toEqual(source.key);\n    expect(e.data).toEqual(source.data);\n    if (inlineUser) {\n      expect(e.user).toEqual(inlineUser);\n    } else {\n      expect(e.userKey).toEqual(source.user.key);\n    }\n  }\n\n  function checkSummaryEvent(e) {\n    expect(e.kind).toEqual('summary');\n  }\n\n  it('should flush asynchronously', () => {\n    const processor = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);\n    const event = { kind: 'identify', key: user.key };\n\n    processor.enqueue(event);\n    processor.enqueue(event);\n    processor.enqueue(event);\n    processor.enqueue(event);\n    processor.flush();\n\n    expect(mockEventSender.calls.length).toEqual(1);\n    expect(mockEventSender.calls[0].sync).toEqual(false);\n  });\n\n  it('should flush synchronously', () => {\n    const processor = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);\n    const user = { key: 'foo' };\n    const event = { kind: 'identify', key: user.key };\n\n    processor.enqueue(event);\n    processor.enqueue(event);\n    processor.enqueue(event);\n    processor.enqueue(event);\n    processor.flush(true);\n\n    expect(mockEventSender.calls.length).toEqual(1);\n    expect(mockEventSender.calls[0].sync).toEqual(true);\n  });\n\n  it('should enqueue identify event', done => {\n    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);\n    const event = { kind: 'identify', creationDate: 1000, key: user.key, user: user };\n    ep.enqueue(event);\n    ep.flush().then(() => {\n      expect(mockEventSender.calls.length).toEqual(1);\n      expect(mockEventSender.calls[0].events).toEqual([event]);\n      done();\n    });\n  });\n\n  it('filters user in identify event', done => {\n    const config = { allAttributesPrivate: true };\n    const ep = EventProcessor(eventsUrl, envId, config, null, mockEventSender);\n    const event = { kind: 'identify', creationDate: 1000, key: user.key, user: user };\n    ep.enqueue(event);\n    ep.flush().then(() => {\n      expect(mockEventSender.calls.length).toEqual(1);\n      expect(mockEventSender.calls[0].events).toEqual([\n        {\n          kind: 'identify',\n          creationDate: event.creationDate,\n          key: user.key,\n          user: filteredUser,\n        },\n      ]);\n      done();\n    });\n  });\n\n  it('queues individual feature event', done => {\n    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);\n    const event = {\n      kind: 'feature',\n      creationDate: 1000,\n      key: 'flagkey',\n      user: user,\n      trackEvents: true,\n    };\n    ep.enqueue(event);\n    ep.flush().then(() => {\n      expect(mockEventSender.calls.length).toEqual(1);\n      const output = mockEventSender.calls[0].events;\n      expect(output.length).toEqual(2);\n      checkFeatureEvent(output[0], event, false);\n      checkSummaryEvent(output[1]);\n      done();\n    });\n  });\n\n  it('can include inline user in feature event', done => {\n    const config = { inlineUsersInEvents: true };\n    const ep = EventProcessor(eventsUrl, envId, config, null, mockEventSender);\n    const event = {\n      kind: 'feature',\n      creationDate: 1000,\n      key: 'flagkey',\n      user: user,\n      trackEvents: true,\n    };\n    ep.enqueue(event);\n    ep.flush().then(() => {\n      expect(mockEventSender.calls.length).toEqual(1);\n      const output = mockEventSender.calls[0].events;\n      expect(output.length).toEqual(2);\n      checkFeatureEvent(output[0], event, false, user);\n      checkSummaryEvent(output[1]);\n      done();\n    });\n  });\n\n  it('filters user in feature event', done => {\n    const config = { allAttributesPrivate: true, inlineUsersInEvents: true };\n    const ep = EventProcessor(eventsUrl, envId, config, null, mockEventSender);\n    const event = {\n      kind: 'feature',\n      creationDate: 1000,\n      key: 'flagkey',\n      user: user,\n      trackEvents: true,\n    };\n    ep.enqueue(event);\n    ep.flush().then(() => {\n      expect(mockEventSender.calls.length).toEqual(1);\n      const output = mockEventSender.calls[0].events;\n      expect(output.length).toEqual(2);\n      checkFeatureEvent(output[0], event, false, filteredUser);\n      checkSummaryEvent(output[1]);\n      done();\n    });\n  });\n\n  it('sets event kind to debug if event is temporarily in debug mode', done => {\n    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);\n    const futureTime = new Date().getTime() + 1000000;\n    const e = {\n      kind: 'feature',\n      creationDate: 1000,\n      user: user,\n      key: 'flagkey',\n      version: 11,\n      variation: 1,\n      value: 'value',\n      trackEvents: false,\n      debugEventsUntilDate: futureTime,\n    };\n    ep.enqueue(e);\n    ep.flush().then(() => {\n      expect(mockEventSender.calls.length).toEqual(1);\n      const output = mockEventSender.calls[0].events;\n      expect(output.length).toEqual(2);\n      checkFeatureEvent(output[0], e, true, user);\n      checkSummaryEvent(output[1]);\n      done();\n    });\n  });\n\n  it('can both track and debug an event', done => {\n    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);\n    const futureTime = new Date().getTime() + 1000000;\n    const e = {\n      kind: 'feature',\n      creationDate: 1000,\n      user: user,\n      key: 'flagkey',\n      version: 11,\n      variation: 1,\n      value: 'value',\n      trackEvents: true,\n      debugEventsUntilDate: futureTime,\n    };\n    ep.enqueue(e);\n    ep.flush().then(() => {\n      expect(mockEventSender.calls.length).toEqual(1);\n      const output = mockEventSender.calls[0].events;\n      expect(output.length).toEqual(3);\n      checkFeatureEvent(output[0], e, false);\n      checkFeatureEvent(output[1], e, true, user);\n      checkSummaryEvent(output[2]);\n      done();\n    });\n  });\n\n  it('expires debug mode based on client time if client time is later than server time', done => {\n    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);\n\n    // Pick a server time that is somewhat behind the client time\n    const serverTime = new Date().getTime() - 20000;\n    mockEventSender.serverTime = serverTime;\n\n    // Send and flush an event we don't care about, just to set the last server time\n    ep.enqueue({ kind: 'identify', user: { key: 'otherUser' } });\n    ep.flush().then(() => {\n      // Now send an event with debug mode on, with a \"debug until\" time that is further in\n      // the future than the server time, but in the past compared to the client.\n      const debugUntil = serverTime + 1000;\n      const e = {\n        kind: 'feature',\n        creationDate: 1000,\n        user: user,\n        key: 'flagkey',\n        version: 11,\n        variation: 1,\n        value: 'value',\n        trackEvents: false,\n        debugEventsUntilDate: debugUntil,\n      };\n      ep.enqueue(e);\n\n      // Should get a summary event only, not a full feature event\n      ep.flush().then(() => {\n        expect(mockEventSender.calls.length).toEqual(2);\n        const output = mockEventSender.calls[1].events;\n        expect(output.length).toEqual(1);\n        checkSummaryEvent(output[0]);\n        done();\n      });\n    });\n  });\n\n  it('expires debug mode based on server time if server time is later than client time', done => {\n    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);\n\n    // Pick a server time that is somewhat ahead of the client time\n    const serverTime = new Date().getTime() + 20000;\n    mockEventSender.serverTime = serverTime;\n\n    // Send and flush an event we don't care about, just to set the last server time\n    ep.enqueue({ kind: 'identify', user: { key: 'otherUser' } });\n    ep.flush().then(() => {\n      // Now send an event with debug mode on, with a \"debug until\" time that is further in\n      // the future than the client time, but in the past compared to the server.\n      const debugUntil = serverTime - 1000;\n      const e = {\n        kind: 'feature',\n        creationDate: 1000,\n        user: user,\n        key: 'flagkey',\n        version: 11,\n        variation: 1,\n        value: 'value',\n        trackEvents: false,\n        debugEventsUntilDate: debugUntil,\n      };\n      ep.enqueue(e);\n\n      // Should get a summary event only, not a full feature event\n      ep.flush().then(() => {\n        expect(mockEventSender.calls.length).toEqual(2);\n        const output = mockEventSender.calls[1].events;\n        expect(output.length).toEqual(1);\n        checkSummaryEvent(output[0]);\n        done();\n      });\n    });\n  });\n\n  it('summarizes nontracked events', done => {\n    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);\n    function makeEvent(key, date, version, variation, value, defaultVal) {\n      return {\n        kind: 'feature',\n        creationDate: date,\n        user: user,\n        key: key,\n        version: version,\n        variation: variation,\n        value: value,\n        default: defaultVal,\n        trackEvents: false,\n      };\n    }\n    const e1 = makeEvent('flagkey1', 1000, 11, 1, 'value1', 'default1');\n    const e2 = makeEvent('flagkey2', 2000, 22, 1, 'value2', 'default2');\n    ep.enqueue(e1);\n    ep.enqueue(e2);\n    ep.flush().then(() => {\n      expect(mockEventSender.calls.length).toEqual(1);\n      const output = mockEventSender.calls[0].events;\n      expect(output.length).toEqual(1);\n      const se = output[0];\n      checkSummaryEvent(se);\n      expect(se.startDate).toEqual(1000);\n      expect(se.endDate).toEqual(2000);\n      expect(se.features).toEqual({\n        flagkey1: {\n          default: 'default1',\n          counters: [{ version: 11, variation: 1, value: 'value1', count: 1 }],\n        },\n        flagkey2: {\n          default: 'default2',\n          counters: [{ version: 22, variation: 1, value: 'value2', count: 1 }],\n        },\n      });\n      done();\n    });\n  });\n\n  it('queues custom event', done => {\n    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);\n    const e = {\n      kind: 'custom',\n      creationDate: 1000,\n      user: user,\n      key: 'eventkey',\n      data: { thing: 'stuff' },\n    };\n    ep.enqueue(e);\n    ep.flush().then(() => {\n      expect(mockEventSender.calls.length).toEqual(1);\n      const output = mockEventSender.calls[0].events;\n      expect(output.length).toEqual(1);\n      checkCustomEvent(output[0], e);\n      done();\n    });\n  });\n\n  it('can include inline user in custom event', done => {\n    const config = { inlineUsersInEvents: true };\n    const ep = EventProcessor(eventsUrl, envId, config, null, mockEventSender);\n    const e = {\n      kind: 'custom',\n      creationDate: 1000,\n      user: user,\n      key: 'eventkey',\n      data: { thing: 'stuff' },\n    };\n    ep.enqueue(e);\n    ep.flush().then(() => {\n      expect(mockEventSender.calls.length).toEqual(1);\n      const output = mockEventSender.calls[0].events;\n      expect(output.length).toEqual(1);\n      checkCustomEvent(output[0], e, user);\n      done();\n    });\n  });\n\n  it('filters user in custom event', done => {\n    const config = { allAttributesPrivate: true, inlineUsersInEvents: true };\n    const ep = EventProcessor(eventsUrl, envId, config, null, mockEventSender);\n    const e = {\n      kind: 'custom',\n      creationDate: 1000,\n      user: user,\n      key: 'eventkey',\n      data: { thing: 'stuff' },\n    };\n    ep.enqueue(e);\n    ep.flush().then(() => {\n      expect(mockEventSender.calls.length).toEqual(1);\n      const output = mockEventSender.calls[0].events;\n      expect(output.length).toEqual(1);\n      checkCustomEvent(output[0], e, filteredUser);\n      done();\n    });\n  });\n\n  it('sends nothing if there are no events to flush', done => {\n    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);\n    ep.flush().then(() => {\n      expect(mockEventSender.calls.length).toEqual(0);\n      done();\n    });\n  });\n\n  it('stops sending events after a 401 error', done => {\n    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);\n    const e = { kind: 'identify', creationDate: 1000, user: user };\n    ep.enqueue(e);\n    mockEventSender.status = 401;\n    ep.flush().then(() => {\n      expect(mockEventSender.calls.length).toEqual(1);\n      ep.enqueue(e);\n      ep.flush().then(() => {\n        expect(mockEventSender.calls.length).toEqual(1); // still the one from our first flush\n        done();\n      });\n    });\n  });\n});\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/__tests__/EventProcessor-test.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 77,
+    "kind": "file",
+    "name": "src/__tests__/EventSender-test.js",
+    "content": "import Base64 from 'Base64';\nimport sinon from 'sinon';\n\nimport EventSender from '../EventSender';\nimport * as utils from '../utils';\n\ndescribe('EventSender', () => {\n  let sandbox;\n  let xhr;\n  let requests = [];\n  const eventsUrl = '/fake-url';\n  const envId = 'env';\n\n  beforeEach(() => {\n    sandbox = sinon.sandbox.create();\n    requests = [];\n    xhr = sinon.useFakeXMLHttpRequest();\n    xhr.onCreate = function(xhr) {\n      requests.push(xhr);\n    };\n  });\n\n  afterEach(() => {\n    sandbox.restore();\n    xhr.restore();\n  });\n\n  function lastRequest() {\n    return requests[requests.length - 1];\n  }\n\n  function fakeImageCreator() {\n    const ret = function(url, onDone) {\n      ret.urls.push(url);\n      ret.onDone = onDone;\n    };\n    ret.urls = [];\n    return ret;\n  }\n\n  function base64URLDecode(str) {\n    let s = str;\n    while (s.length % 4 !== 0) {\n      s = s + '=';\n    }\n    s = s.replace(/_/g, '/').replace(/-/g, '+');\n    return decodeURIComponent(escape(Base64.atob(s)));\n  }\n\n  function decodeOutputFromUrl(url) {\n    const prefix = eventsUrl + '/a/' + envId + '.gif?d=';\n    if (!url.startsWith(prefix)) {\n      throw 'URL \"' + url + '\" did not have expected prefix \"' + prefix + '\"';\n    }\n    return JSON.parse(base64URLDecode(url.substring(prefix.length)));\n  }\n\n  describe('using image endpoint when CORS is not available', () => {\n    it('should encode events in a single chunk if they fit', () => {\n      const imageCreator = fakeImageCreator();\n      const sender = EventSender(eventsUrl, envId, false, imageCreator);\n      const event1 = { kind: 'identify', key: 'userKey1' };\n      const event2 = { kind: 'identify', key: 'userKey2' };\n      const events = [event1, event2];\n\n      sender.sendEvents(events, false);\n\n      const urls = imageCreator.urls;\n      expect(urls.length).toEqual(1);\n      expect(decodeOutputFromUrl(urls[0])).toEqual(events);\n    });\n\n    it('should send events in multiple chunks if necessary', () => {\n      const imageCreator = fakeImageCreator();\n      const sender = EventSender(eventsUrl, envId, false, imageCreator);\n      const events = [];\n      for (let i = 0; i < 80; i++) {\n        events.push({ kind: 'identify', key: 'thisIsALongUserKey' + i });\n      }\n\n      sender.sendEvents(events, false);\n\n      const urls = imageCreator.urls;\n      expect(urls.length).toEqual(3);\n      expect(decodeOutputFromUrl(urls[0])).toEqual(events.slice(0, 31));\n      expect(decodeOutputFromUrl(urls[1])).toEqual(events.slice(31, 62));\n      expect(decodeOutputFromUrl(urls[2])).toEqual(events.slice(62, 80));\n    });\n\n    it('should set a completion handler', () => {\n      const imageCreator = fakeImageCreator();\n      const sender = EventSender(eventsUrl, envId, false, imageCreator);\n      const event1 = { kind: 'identify', key: 'userKey1' };\n\n      sender.sendEvents([event1], false);\n\n      expect(imageCreator.onDone).toBeDefined();\n    });\n  });\n\n  describe('using POST when CORS is available', () => {\n    it('should send asynchronously', () => {\n      const sender = EventSender(eventsUrl, envId, true);\n      const event = { kind: 'identify', key: 'userKey' };\n      sender.sendEvents([event], false);\n      lastRequest().respond();\n      expect(lastRequest().async).toEqual(true);\n    });\n\n    it('should send synchronously', () => {\n      const sender = EventSender(eventsUrl, envId, true);\n      const event = { kind: 'identify', key: 'userKey' };\n      sender.sendEvents([event], true);\n      lastRequest().respond();\n      expect(lastRequest().async).toEqual(false);\n    });\n\n    it('should send all events in request body', () => {\n      const sender = EventSender(eventsUrl, envId, true);\n      const events = [];\n      for (let i = 0; i < 80; i++) {\n        events.push({ kind: 'identify', key: 'thisIsALongUserKey' + i });\n      }\n      sender.sendEvents(events, false);\n      lastRequest().respond();\n      const r = lastRequest();\n      expect(r.url).toEqual(eventsUrl + '/events/bulk/' + envId);\n      expect(r.method).toEqual('POST');\n      expect(JSON.parse(r.requestBody)).toEqual(events);\n    });\n\n    it('should send custom user-agent header', () => {\n      const sender = EventSender(eventsUrl, envId, true);\n      const event = { kind: 'identify', key: 'userKey' };\n      sender.sendEvents([event], true);\n      lastRequest().respond();\n      expect(lastRequest().requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());\n    });\n  });\n});\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/__tests__/EventSender-test.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 78,
+    "kind": "file",
+    "name": "src/__tests__/EventSummarizer-test.js",
+    "content": "import EventSummarizer from '../EventSummarizer';\n\ndescribe('EventSummarizer', () => {\n  const user = { key: 'key1' };\n\n  it('does nothing for identify event', () => {\n    const es = EventSummarizer();\n    const snapshot = es.getSummary();\n    es.summarizeEvent({ kind: 'identify', creationDate: 1000, user: user });\n    expect(es.getSummary()).toEqual(snapshot);\n  });\n\n  it('does nothing for custom event', () => {\n    const es = EventSummarizer();\n    const snapshot = es.getSummary();\n    es.summarizeEvent({ kind: 'custom', creationDate: 1000, key: 'eventkey', user: user });\n    expect(es.getSummary()).toEqual(snapshot);\n  });\n\n  it('sets start and end dates for feature events', () => {\n    const es = EventSummarizer();\n    const event1 = { kind: 'feature', creationDate: 2000, key: 'key', user: user };\n    const event2 = { kind: 'feature', creationDate: 1000, key: 'key', user: user };\n    const event3 = { kind: 'feature', creationDate: 1500, key: 'key', user: user };\n    es.summarizeEvent(event1);\n    es.summarizeEvent(event2);\n    es.summarizeEvent(event3);\n    const data = es.getSummary();\n\n    expect(data.startDate).toEqual(1000);\n    expect(data.endDate).toEqual(2000);\n  });\n\n  function makeEvent(key, version, variation, value, defaultVal) {\n    return {\n      kind: 'feature',\n      creationDate: 1000,\n      key: key,\n      version: version,\n      user: user,\n      variation: variation,\n      value: value,\n      default: defaultVal,\n    };\n  }\n\n  it('increments counters for feature events', () => {\n    const es = EventSummarizer();\n    const event1 = makeEvent('key1', 11, 1, 100, 111);\n    const event2 = makeEvent('key1', 11, 2, 200, 111);\n    const event3 = makeEvent('key2', 22, 1, 999, 222);\n    const event4 = makeEvent('key1', 11, 1, 100, 111);\n    const event5 = makeEvent('badkey', null, null, 333, 333);\n    es.summarizeEvent(event1);\n    es.summarizeEvent(event2);\n    es.summarizeEvent(event3);\n    es.summarizeEvent(event4);\n    es.summarizeEvent(event5);\n    const data = es.getSummary();\n\n    data.features.key1.counters.sort((a, b) => a.value - b.value);\n    const expectedFeatures = {\n      key1: {\n        default: 111,\n        counters: [\n          { value: 100, variation: 1, version: 11, count: 2 },\n          { value: 200, variation: 2, version: 11, count: 1 },\n        ],\n      },\n      key2: {\n        default: 222,\n        counters: [{ value: 999, variation: 1, version: 22, count: 1 }],\n      },\n      badkey: {\n        default: 333,\n        counters: [{ value: 333, unknown: true, count: 1 }],\n      },\n    };\n    expect(data.features).toEqual(expectedFeatures);\n  });\n\n  it('distinguishes between zero and null/undefined in feature variation', () => {\n    const es = EventSummarizer();\n    const event1 = makeEvent('key1', 11, 0, 100, 111);\n    const event2 = makeEvent('key1', 11, null, 111, 111);\n    const event3 = makeEvent('key1', 11, undefined, 111, 111);\n    es.summarizeEvent(event1);\n    es.summarizeEvent(event2);\n    es.summarizeEvent(event3);\n    const data = es.getSummary();\n\n    data.features.key1.counters.sort((a, b) => a.value - b.value);\n    const expectedFeatures = {\n      key1: {\n        default: 111,\n        counters: [{ variation: 0, value: 100, version: 11, count: 1 }, { value: 111, version: 11, count: 2 }],\n      },\n    };\n    expect(data.features).toEqual(expectedFeatures);\n  });\n});\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/__tests__/EventSummarizer-test.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 79,
+    "kind": "file",
+    "name": "src/__tests__/LDClient-test.js",
+    "content": "import sinon from 'sinon';\nimport semverCompare from 'semver-compare';\nimport EventSource, { sources } from 'eventsourcemock';\n\nimport LDClient from '../index';\nimport * as messages from '../messages';\nimport { btoa } from '../utils';\n\ndescribe('LDClient', () => {\n  const envName = 'UNKNOWN_ENVIRONMENT_ID';\n  const lsKey = 'ld:UNKNOWN_ENVIRONMENT_ID:' + btoa('{\"key\":\"user\"}');\n  const user = { key: 'user' };\n  const encodedUser = 'eyJrZXkiOiJ1c2VyIn0';\n  const hash = '012345789abcde';\n  let warnSpy;\n  let errorSpy;\n  let xhr;\n  let requests = [];\n\n  beforeEach(() => {\n    Object.defineProperty(window, 'EventSource', {\n      value: EventSource,\n      writable: true,\n    });\n\n    xhr = sinon.useFakeXMLHttpRequest();\n    xhr.onCreate = function(req) {\n      requests.push(req);\n    };\n\n    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});\n    errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});\n  });\n\n  afterEach(() => {\n    requests = [];\n    xhr.restore();\n    warnSpy.mockRestore();\n    errorSpy.mockRestore();\n  });\n\n  function getLastRequest() {\n    return requests[requests.length - 1];\n  }\n\n  it('should exist', () => {\n    expect(LDClient).toBeDefined();\n  });\n\n  describe('initialization', () => {\n    it('should trigger the ready event', done => {\n      const handleReady = jest.fn();\n      const client = LDClient.initialize(envName, user, {\n        bootstrap: {},\n      });\n\n      client.on('ready', handleReady);\n\n      setTimeout(() => {\n        expect(handleReady).toHaveBeenCalled();\n        done();\n      }, 0);\n    });\n\n    describe('waitUntilReady', () => {\n      it('should resolve waitUntilReady promise when ready', done => {\n        const handleReady = jest.fn();\n        const client = LDClient.initialize(envName, user, {\n          bootstrap: {},\n        });\n\n        client.waitUntilReady().then(handleReady);\n\n        client.on('ready', () => {\n          setTimeout(() => {\n            expect(handleReady).toHaveBeenCalled();\n            done();\n          }, 0);\n        });\n      });\n\n      it('should resolve waitUntilReady promise after ready event was already emitted', done => {\n        const handleInitialReady = jest.fn();\n        const handleReady = jest.fn();\n        const client = LDClient.initialize(envName, user, {\n          bootstrap: {},\n        });\n\n        client.on('ready', handleInitialReady);\n\n        setTimeout(() => {\n          client.waitUntilReady().then(handleReady);\n\n          setTimeout(() => {\n            expect(handleInitialReady).toHaveBeenCalled();\n            expect(handleReady).toHaveBeenCalled();\n            done();\n          }, 0);\n        }, 0);\n      });\n    });\n\n    it('should emit an error when an invalid samplingInterval is specified', done => {\n      const client = LDClient.initialize(envName, user, {\n        bootstrap: {},\n        samplingInterval: 'totally not a number',\n      });\n\n      client.on('error', err => {\n        expect(err.message).toEqual('Invalid sampling interval configured. Sampling interval must be an integer >= 0.');\n        done();\n      });\n    });\n\n    it('should emit an error when initialize is called without an environment key', done => {\n      const client = LDClient.initialize('', user, {\n        bootstrap: {},\n      });\n      client.on('error', err => {\n        expect(err.message).toEqual(messages.environmentNotSpecified());\n        done();\n      });\n    });\n\n    it('should emit an error when an invalid environment key is specified', () => {\n      const server = sinon.fakeServer.create();\n      server.respondWith(req => {\n        req.respond(404);\n      });\n      const client = LDClient.initialize('abc', user);\n      server.respond();\n      client.on('error', err => {\n        expect(err.message).toEqual(messages.environmentNotFound());\n        done();\n      });\n    });\n\n    it('should not fetch flag settings since bootstrap is provided', () => {\n      LDClient.initialize(envName, user, {\n        bootstrap: {},\n      });\n\n      const settingsRequest = requests[0];\n      expect(/sdk\\/eval/.test(settingsRequest.url)).toEqual(false);\n    });\n\n    it('should contain package version', () => {\n      // Arrange\n      const version = LDClient.version;\n\n      // Act: all client bundles above 1.0.7 should contain package version\n      // https://github.com/substack/semver-compare\n      const result = semverCompare(version, '1.0.6');\n\n      // Assert\n      expect(result).toEqual(1);\n    });\n\n    it('should clear cached settings if they are invalid JSON', done => {\n      window.localStorage.setItem(lsKey, 'foo{bar}');\n\n      const client = LDClient.initialize(envName, user, {\n        bootstrap: 'localstorage',\n      });\n\n      expect(window.localStorage.getItem(lsKey)).toBeNull();\n\n      client.on('ready', () => {\n        done();\n      });\n\n      requests[0].respond(200, { 'Content-Type': 'application/json' }, '{\"enable-foo\": {\"value\": true, \"version\": 1}}');\n    });\n\n    it('should not clear cached settings if they are valid JSON', done => {\n      const json = '{\"enable-thing\": true}';\n\n      window.localStorage.setItem(lsKey, json);\n\n      const client = LDClient.initialize(envName, user, {\n        bootstrap: 'localstorage',\n      });\n\n      client.on('ready', () => {\n        expect(window.localStorage.getItem(lsKey)).toEqual(json);\n        done();\n      });\n    });\n\n    it('should handle localStorage getItem throwing an exception', done => {\n      // sandbox.restore(window.localStorage.__proto__, 'getItem');\n      // sandbox.stub(window.localStorage.__proto__, 'getItem').throws();\n\n      localStorage.getItem.mockImplementationOnce(() => {\n        throw new Error();\n      });\n\n      const client = LDClient.initialize(envName, user, {\n        bootstrap: 'localstorage',\n      });\n\n      client.on('ready', () => {\n        expect(warnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());\n        done();\n      });\n\n      requests[0].respond(200, { 'Content-Type': 'application/json' }, '[{\"key\": \"known\", \"kind\": \"custom\"}]');\n    });\n\n    it('should handle localStorage setItem throwing an exception', done => {\n      localStorage.setItem.mockImplementationOnce(() => {\n        throw new Error();\n      });\n\n      const client = LDClient.initialize(envName, user, {\n        bootstrap: 'localstorage',\n      });\n\n      requests[0].respond(200, { 'Content-Type': 'application/json' }, '[{\"key\": \"known\", \"kind\": \"custom\"}]');\n\n      client.on('ready', () => {\n        expect(warnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());\n        done();\n      });\n    });\n\n    it('should not update cached settings if there was an error fetching flags', done => {\n      const json = '{\"enable-foo\": true}';\n\n      window.localStorage.setItem(lsKey, json);\n\n      const server = sinon.fakeServer.create();\n      server.respondWith(req => {\n        req.respond(503);\n      });\n\n      const client = LDClient.initialize(envName, user, {\n        bootstrap: 'localstorage',\n      });\n\n      client.on('ready', () => {\n        server.respond();\n        setTimeout(() => {\n          expect(window.localStorage.getItem(lsKey)).toEqual(json);\n          done();\n        }, 1);\n      });\n    });\n\n    it('should use hash as localStorage key when secure mode is enabled', done => {\n      const lsKeyHash = 'ld:UNKNOWN_ENVIRONMENT_ID:totallyLegitHash';\n      const client = LDClient.initialize(envName, user, {\n        bootstrap: 'localstorage',\n        hash: 'totallyLegitHash',\n      });\n\n      client.on('ready', () => {\n        expect(JSON.parse(window.localStorage.getItem(lsKeyHash))).toEqual({\n          $schema: 1,\n          'enable-foo': { value: true, version: 1 },\n        });\n        done();\n      });\n\n      requests[0].respond(200, { 'Content-Type': 'application/json' }, '{\"enable-foo\":{\"value\":true,\"version\":1}}');\n    });\n\n    it('should clear localStorage when user context is changed', done => {\n      const json = '{\"enable-foo\":{\"value\":true,\"version\":1}}';\n      const lsKey2 = 'ld:UNKNOWN_ENVIRONMENT_ID:' + btoa('{\"key\":\"user2\"}');\n\n      const user2 = { key: 'user2' };\n      const client = LDClient.initialize(envName, user, {\n        bootstrap: 'localstorage',\n      });\n\n      const server = sinon.fakeServer.create();\n      server.respondWith([200, { 'Content-Type': 'application/json' }, json]);\n\n      client.on('ready', () => {\n        client.identify(user2, null, () => {\n          expect(window.localStorage.getItem(lsKey)).toBeNull();\n          expect(JSON.parse(window.localStorage.getItem(lsKey2))).toEqual({\n            $schema: 1,\n            'enable-foo': { value: true, version: 1 },\n          });\n          done();\n        });\n        server.respond();\n      });\n      server.respond();\n    });\n\n    it('should not warn when tracking a known custom goal event', done => {\n      const client = LDClient.initialize(envName, user, {\n        bootstrap: {}, // so the client doesn't request settings\n      });\n\n      client.on('ready', () => {\n        client.track('known');\n        expect(warnSpy).not.toHaveBeenCalledWith('Custom event key does not exist');\n        done();\n      });\n\n      requests[0].respond(200, { 'Content-Type': 'application/json' }, '[{\"key\": \"known\", \"kind\": \"custom\"}]');\n    });\n\n    it('should emit an error when tracking a non-string custom goal event', done => {\n      const client = LDClient.initialize(envName, user, {\n        bootstrap: {}, // so the client doesn't request settings\n      });\n      client.on('ready', () => {\n        const badCustomEventKeys = [123, [], {}, null, undefined];\n        badCustomEventKeys.forEach(key => {\n          client.track(key);\n          expect(errorSpy).toHaveBeenCalledWith(messages.unknownCustomEventKey(key));\n        });\n        done();\n      });\n    });\n\n    it('should warn when tracking an unknown custom goal event', done => {\n      const client = LDClient.initialize(envName, user, {\n        bootstrap: {}, // so the client doesn't request settings\n      });\n\n      requests[0].respond(200, { 'Content-Type': 'application/json' }, '[{\"key\": \"known\", \"kind\": \"custom\"}]');\n\n      client.on('ready', () => {\n        client.track('unknown');\n        expect(warnSpy).toHaveBeenCalledWith(messages.unknownCustomEventKey('unknown'));\n        done();\n      });\n    });\n\n    it('should emit an error event if there was an error fetching flags', done => {\n      const server = sinon.fakeServer.create();\n      server.respondWith(req => {\n        req.respond(503);\n      });\n\n      const client = LDClient.initialize(envName, user);\n\n      const handleError = jest.fn();\n      client.on('error', handleError);\n      server.respond();\n\n      setTimeout(() => {\n        expect(handleError).toHaveBeenCalled();\n        done();\n      }, 0);\n    });\n\n    it('should warn about missing user on first event', () => {\n      const sandbox = sinon.sandbox.create();\n      const warnSpy = sandbox.spy(console, 'warn');\n      const client = LDClient.initialize(envName, null);\n      client.track('eventkey', null);\n      warnSpy.restore();\n      sandbox.restore();\n      expect(warnSpy.called).toEqual(true);\n    });\n  });\n\n  describe('event generation', () => {\n    function stubEventProcessor() {\n      const ep = { events: [] };\n      ep.start = function() {};\n      ep.flush = function() {};\n      ep.stop = function() {};\n      ep.enqueue = function(e) {\n        ep.events.push(e);\n      };\n      return ep;\n    }\n\n    function expectIdentifyEvent(e, user) {\n      expect(e.kind).toEqual('identify');\n      expect(e.user).toEqual(user);\n    }\n\n    function expectFeatureEvent(e, key, value, variation, version, defaultVal) {\n      expect(e.kind).toEqual('feature');\n      expect(e.key).toEqual(key);\n      expect(e.value).toEqual(value);\n      expect(e.variation).toEqual(variation);\n      expect(e.version).toEqual(version);\n      expect(e.default).toEqual(defaultVal);\n    }\n\n    it('sends an identify event at startup', done => {\n      const ep = stubEventProcessor();\n      const server = sinon.fakeServer.create();\n      server.respondWith([\n        200,\n        { 'Content-Type': 'application/json' },\n        '{\"foo\":{\"value\":\"a\",\"variation\":1,\"version\":2,\"flagVersion\":2000}}',\n      ]);\n      const client = LDClient.initialize(envName, user, { eventProcessor: ep });\n\n      client.on('ready', () => {\n        expect(ep.events.length).toEqual(1);\n        expectIdentifyEvent(ep.events[0], user);\n\n        done();\n      });\n\n      server.respond();\n    });\n\n    it('sends a feature event for variation()', done => {\n      const ep = stubEventProcessor();\n      const server = sinon.fakeServer.create();\n      server.respondWith([\n        200,\n        { 'Content-Type': 'application/json' },\n        '{\"foo\":{\"value\":\"a\",\"variation\":1,\"version\":2,\"flagVersion\":2000}}',\n      ]);\n      const client = LDClient.initialize(envName, user, { eventProcessor: ep });\n\n      client.on('ready', () => {\n        client.variation('foo', 'x');\n\n        expect(ep.events.length).toEqual(2);\n        expectIdentifyEvent(ep.events[0], user);\n        expectFeatureEvent(ep.events[1], 'foo', 'a', 1, 2000, 'x');\n\n        done();\n      });\n\n      server.respond();\n    });\n\n    it('uses \"version\" instead of \"flagVersion\" in event if \"flagVersion\" is absent', done => {\n      const ep = stubEventProcessor();\n      const server = sinon.fakeServer.create();\n      server.respondWith([\n        200,\n        { 'Content-Type': 'application/json' },\n        '{\"foo\":{\"value\":\"a\",\"variation\":1,\"version\":2}}',\n      ]);\n      const client = LDClient.initialize(envName, user, { eventProcessor: ep });\n\n      client.on('ready', () => {\n        client.variation('foo', 'x');\n\n        expect(ep.events.length).toEqual(2);\n        expectIdentifyEvent(ep.events[0], user);\n        expectFeatureEvent(ep.events[1], 'foo', 'a', 1, 2, 'x');\n\n        done();\n      });\n\n      server.respond();\n    });\n\n    it('omits event version if flag does not exist', done => {\n      const ep = stubEventProcessor();\n      const server = sinon.fakeServer.create();\n      server.respondWith([200, { 'Content-Type': 'application/json' }, '{}']);\n      const client = LDClient.initialize(envName, user, { eventProcessor: ep });\n\n      client.on('ready', () => {\n        client.variation('foo', 'x');\n\n        expect(ep.events.length).toEqual(2);\n        expectIdentifyEvent(ep.events[0], user);\n        expectFeatureEvent(ep.events[1], 'foo', 'x', undefined, undefined, 'x');\n\n        done();\n      });\n\n      server.respond();\n    });\n  });\n\n  describe('event listening', () => {\n    const streamUrl = 'https://clientstream.launchdarkly.com';\n\n    function streamEvents() {\n      return sources[`${streamUrl}/eval/${envName}/${encodedUser}`].__emitter._events;\n    }\n\n    it('does not connect to the stream by default', done => {\n      const client = LDClient.initialize(envName, user, { bootstrap: {} });\n\n      client.on('ready', () => {\n        expect(sources).toMatchObject({});\n        done();\n      });\n    });\n\n    it('connects to the stream when listening to global change events', done => {\n      const client = LDClient.initialize(envName, user, { bootstrap: {} });\n\n      client.on('ready', () => {\n        client.on('change', () => {});\n        expect(sources[streamUrl + '/eval/' + envName + '/' + encodedUser]).toBeDefined();\n        done();\n      });\n    });\n\n    it('connects to the stream when listening to change event for one flag', done => {\n      const client = LDClient.initialize(envName, user, { bootstrap: {} });\n\n      client.on('ready', () => {\n        client.on('change:flagkey', () => {});\n        expect(sources[streamUrl + '/eval/' + envName + '/' + encodedUser]).toBeDefined();\n        done();\n      });\n    });\n\n    it('passes the secure mode hash in the stream URL if provided', done => {\n      const client = LDClient.initialize(envName, user, { hash: hash, bootstrap: {} });\n\n      client.on('ready', () => {\n        client.on('change:flagkey', () => {});\n        expect(sources[streamUrl + '/eval/' + envName + '/' + encodedUser + '?h=' + hash]).toBeDefined();\n        done();\n      });\n    });\n\n    it('handles stream ping message by getting flags', done => {\n      const client = LDClient.initialize(envName, user, { bootstrap: {} });\n\n      client.on('ready', () => {\n        client.on('change', () => {});\n        streamEvents().ping();\n        getLastRequest().respond(\n          200,\n          { 'Content-Type': 'application/json' },\n          '{\"enable-foo\":{\"value\":true,\"version\":1}}'\n        );\n        expect(client.variation('enable-foo')).toEqual(true);\n        done();\n      });\n    });\n\n    it('handles stream put message by updating flags', done => {\n      const client = LDClient.initialize(envName, user, { bootstrap: {} });\n\n      client.on('ready', () => {\n        client.on('change', () => {});\n\n        streamEvents().put({\n          data: '{\"enable-foo\":{\"value\":true,\"version\":1}}',\n        });\n\n        expect(client.variation('enable-foo')).toEqual(true);\n        done();\n      });\n    });\n\n    it('updates local storage for put message if using local storage', done => {\n      window.localStorage.setItem(lsKey, '{\"enable-foo\":false}');\n      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' });\n\n      client.on('ready', () => {\n        client.on('change', () => {});\n\n        streamEvents().put({\n          data: '{\"enable-foo\":{\"value\":true,\"version\":1}}',\n        });\n\n        expect(client.variation('enable-foo')).toEqual(true);\n        expect(JSON.parse(window.localStorage.getItem(lsKey))).toEqual({\n          $schema: 1,\n          'enable-foo': { value: true, version: 1 },\n        });\n        done();\n      });\n    });\n\n    it('fires global change event when flags are updated from put event', done => {\n      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });\n\n      client.on('ready', () => {\n        client.on('change', changes => {\n          expect(changes).toEqual({\n            'enable-foo': { current: true, previous: false },\n          });\n\n          done();\n        });\n\n        streamEvents().put({\n          data: '{\"enable-foo\":{\"value\":true,\"version\":1}}',\n        });\n      });\n    });\n\n    it('fires individual change event when flags are updated from put event', done => {\n      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });\n\n      client.on('ready', () => {\n        client.on('change:enable-foo', (current, previous) => {\n          expect(current).toEqual(true);\n          expect(previous).toEqual(false);\n\n          done();\n        });\n\n        streamEvents().put({\n          data: '{\"enable-foo\":{\"value\":true,\"version\":1}}',\n        });\n      });\n    });\n\n    it('handles patch message by updating flag', done => {\n      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });\n\n      client.on('ready', () => {\n        client.on('change', () => {});\n\n        streamEvents().patch({ data: '{\"key\":\"enable-foo\",\"value\":true,\"version\":1}' });\n\n        expect(client.variation('enable-foo')).toEqual(true);\n        done();\n      });\n    });\n\n    it('does not update flag if patch version < flag version', done => {\n      const server = sinon.fakeServer.create();\n      server.respondWith([200, { 'Content-Type': 'application/json' }, '{\"enable-foo\":{\"value\":\"a\",\"version\":2}}']);\n\n      const client = LDClient.initialize(envName, user);\n      client.on('ready', () => {\n        expect(client.variation('enable-foo')).toEqual('a');\n\n        client.on('change', () => {});\n\n        streamEvents().patch({ data: '{\"key\":\"enable-foo\",\"value\":\"b\",\"version\":1}' });\n\n        expect(client.variation('enable-foo')).toEqual('a');\n\n        done();\n      });\n      server.respond();\n    });\n\n    it('does not update flag if patch version == flag version', done => {\n      const server = sinon.fakeServer.create();\n      server.respondWith([200, { 'Content-Type': 'application/json' }, '{\"enable-foo\":{\"value\":\"a\",\"version\":2}}']);\n\n      const client = LDClient.initialize(envName, user);\n      client.on('ready', () => {\n        expect(client.variation('enable-foo')).toEqual('a');\n\n        client.on('change', () => {});\n\n        streamEvents().patch({ data: '{\"key\":\"enable-foo\",\"value\":\"b\",\"version\":1}' });\n\n        expect(client.variation('enable-foo')).toEqual('a');\n\n        done();\n      });\n      server.respond();\n    });\n\n    it('updates flag if patch has a version and flag has no version', done => {\n      const server = sinon.fakeServer.create();\n      server.respondWith([200, { 'Content-Type': 'application/json' }, '{\"enable-foo\":{\"value\":\"a\"}}']);\n\n      const client = LDClient.initialize(envName, user);\n      client.on('ready', () => {\n        expect(client.variation('enable-foo')).toEqual('a');\n\n        client.on('change', () => {});\n\n        streamEvents().patch({ data: '{\"key\":\"enable-foo\",\"value\":\"b\",\"version\":1}' });\n\n        expect(client.variation('enable-foo')).toEqual('b');\n\n        done();\n      });\n      server.respond();\n    });\n\n    it('updates flag if flag has a version and patch has no version', done => {\n      const server = sinon.fakeServer.create();\n      server.respondWith([200, { 'Content-Type': 'application/json' }, '{\"enable-foo\":{\"value\":\"a\",\"version\":2}}']);\n\n      const client = LDClient.initialize(envName, user);\n      client.on('ready', () => {\n        expect(client.variation('enable-foo')).toEqual('a');\n\n        client.on('change', () => {});\n\n        streamEvents().patch({ data: '{\"key\":\"enable-foo\",\"value\":\"b\"}' });\n\n        expect(client.variation('enable-foo')).toEqual('b');\n\n        done();\n      });\n      server.respond();\n    });\n\n    it('updates local storage for patch message if using local storage', done => {\n      window.localStorage.setItem(lsKey, '{\"enable-foo\":false}');\n      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' });\n\n      client.on('ready', () => {\n        client.on('change', () => {});\n\n        streamEvents().put({\n          data: '{\"enable-foo\":{\"value\":true,\"version\":1}}',\n        });\n\n        expect(client.variation('enable-foo')).toEqual(true);\n        expect(JSON.parse(window.localStorage.getItem(lsKey))).toEqual({\n          $schema: 1,\n          'enable-foo': { value: true, version: 1 },\n        });\n        done();\n      });\n    });\n\n    it('fires global change event when flag is updated from patch event', done => {\n      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });\n\n      client.on('ready', () => {\n        client.on('change', changes => {\n          expect(changes).toEqual({\n            'enable-foo': { current: true, previous: false },\n          });\n\n          done();\n        });\n\n        streamEvents().patch({\n          data: '{\"key\":\"enable-foo\",\"value\":true,\"version\":1}',\n        });\n      });\n    });\n\n    it('fires individual change event when flag is updated from patch event', done => {\n      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });\n\n      client.on('ready', () => {\n        client.on('change:enable-foo', (current, previous) => {\n          expect(current).toEqual(true);\n          expect(previous).toEqual(false);\n\n          done();\n        });\n\n        streamEvents().patch({\n          data: '{\"key\":\"enable-foo\",\"value\":true,\"version\":1}',\n        });\n      });\n    });\n\n    it('fires global change event when flag is newly created from patch event', done => {\n      const client = LDClient.initialize(envName, user, { bootstrap: {} });\n\n      client.on('ready', () => {\n        client.on('change', changes => {\n          expect(changes).toEqual({\n            'enable-foo': { current: true },\n          });\n\n          done();\n        });\n\n        streamEvents().patch({\n          data: '{\"key\":\"enable-foo\",\"value\":true,\"version\":1}',\n        });\n      });\n    });\n\n    it('fires global change event when flag is newly created from patch event', done => {\n      const client = LDClient.initialize(envName, user, { bootstrap: {} });\n\n      client.on('ready', () => {\n        client.on('change:enable-foo', (current, previous) => {\n          expect(current).toEqual(true);\n          expect(previous).toEqual(undefined);\n\n          done();\n        });\n\n        streamEvents().patch({\n          data: '{\"key\":\"enable-foo\",\"value\":true,\"version\":1}',\n        });\n      });\n    });\n\n    it('handles delete message by deleting flag', done => {\n      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });\n\n      client.on('ready', () => {\n        client.on('change', () => {});\n\n        streamEvents().delete({\n          data: '{\"key\":\"enable-foo\",\"version\":1}',\n        });\n\n        expect(client.variation('enable-foo')).toBeUndefined();\n        done();\n      });\n    });\n\n    it('fires global change event when flag is deleted', done => {\n      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': true } });\n\n      client.on('ready', () => {\n        client.on('change', changes => {\n          expect(changes).toEqual({\n            'enable-foo': { previous: true },\n          });\n\n          done();\n        });\n\n        streamEvents().delete({\n          data: '{\"key\":\"enable-foo\",\"version\":1}',\n        });\n      });\n    });\n\n    it('fires individual change event when flag is deleted', done => {\n      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': true } });\n\n      client.on('ready', () => {\n        client.on('change:enable-foo', (current, previous) => {\n          expect(current).toEqual(undefined);\n          expect(previous).toEqual(true);\n\n          done();\n        });\n\n        streamEvents().delete({\n          data: '{\"key\":\"enable-foo\",\"version\":1}',\n        });\n      });\n    });\n\n    it('updates local storage for delete message if using local storage', done => {\n      window.localStorage.setItem(lsKey, '{\"enable-foo\":false}');\n      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' });\n\n      client.on('ready', () => {\n        client.on('change', () => {});\n\n        streamEvents().delete({\n          data: '{\"key\":\"enable-foo\",\"version\":1}',\n        });\n\n        expect(client.variation('enable-foo')).toEqual(undefined);\n        expect(JSON.parse(window.localStorage.getItem(lsKey))).toEqual({\n          $schema: 1,\n          'enable-foo': { version: 1, deleted: true },\n        });\n        done();\n      });\n    });\n\n    it('reconnects to stream if the user changes', done => {\n      const user2 = { key: 'user2' };\n      const encodedUser2 = 'eyJrZXkiOiJ1c2VyMiJ9';\n      const client = LDClient.initialize(envName, user, { bootstrap: {} });\n\n      client.on('ready', () => {\n        client.on('change', () => {});\n\n        expect(sources[streamUrl + '/eval/' + envName + '/' + encodedUser]).toBeDefined();\n\n        client.identify(user2, null, () => {\n          expect(sources[streamUrl + '/eval/' + envName + '/' + encodedUser2]).toBeDefined();\n          done();\n        });\n\n        getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{\"enable-foo\": true}');\n      });\n    });\n\n    it('returns an error when identify is called with null user', done => {\n      const client = LDClient.initialize(envName, user, { bootstrap: {} });\n\n      client.on('ready', () => {\n        client.identify(null).then(\n          () => {\n            throw Error('should not have succeeded');\n          },\n          () => {\n            done();\n          }\n        );\n      });\n    });\n\n    it('returns an error when identify is called with user with no key', done => {\n      const client = LDClient.initialize(envName, user, { bootstrap: {} });\n\n      client.on('ready', () => {\n        client.identify({ country: 'US' }).then(\n          () => {\n            throw Error('should not have succeeded');\n          },\n          () => {\n            done();\n          }\n        );\n      });\n    });\n\n    it('does not change flag values after identify is called with null user', done => {\n      const data = { foo: 'bar' };\n      const client = LDClient.initialize(envName, user, { bootstrap: data });\n\n      client.on('ready', () => {\n        expect(client.variation('foo', 'x')).toEqual('bar');\n        client.identify(null).then(\n          () => {\n            throw Error('should not have succeeded');\n          },\n          () => {\n            expect(client.variation('foo', 'x')).toEqual('bar');\n            done();\n          }\n        );\n      });\n    });\n\n    it('does not change flag values after identify is called with invalid user', done => {\n      const data = { foo: 'bar' };\n      const client = LDClient.initialize(envName, user, { bootstrap: data });\n\n      client.on('ready', () => {\n        expect(client.variation('foo', 'x')).toEqual('bar');\n        client.identify({ country: 'US' }).then(\n          () => {\n            throw Error('should not have succeeded');\n          },\n          () => {\n            expect(client.variation('foo', 'x')).toEqual('bar');\n            done();\n          }\n        );\n      });\n    });\n  });\n});\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/__tests__/LDClient-test.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 80,
+    "kind": "file",
+    "name": "src/__tests__/Requestor-test.js",
+    "content": "import sinon from 'sinon';\nimport Requestor from '../Requestor';\nimport * as utils from '../utils';\n\ndescribe('Requestor', () => {\n  let server;\n  let seq = 0;\n\n  beforeEach(() => {\n    server = sinon.fakeServer.create();\n  });\n\n  afterEach(() => {\n    server.restore();\n  });\n\n  it('should always call the callback', () => {\n    const handleOne = sinon.spy();\n    const handleTwo = sinon.spy();\n\n    const requestor = Requestor('http://requestee', 'FAKE_ENV');\n    requestor.fetchFlagSettings({ key: 'user1' }, 'hash1', handleOne);\n    requestor.fetchFlagSettings({ key: 'user2' }, 'hash2', handleTwo);\n\n    server.respondWith(req => {\n      seq++;\n      req.respond(200, { 'Content-type': 'application/json' }, JSON.stringify({ tag: seq }));\n    });\n\n    server.respond();\n\n    expect(server.requests).toHaveLength(2);\n    expect(handleOne.args[0]).toEqual(handleTwo.args[0]);\n  });\n\n  it('should make requests with the GET verb if useReport is disabled', () => {\n    const requestor = Requestor('http://requestee', 'FAKE_ENV', false);\n\n    requestor.fetchFlagSettings({ key: 'user1' }, 'hash1', sinon.spy());\n\n    expect(server.requests).toHaveLength(1);\n    expect(server.requests[0].method).toEqual('GET');\n  });\n\n  it('should make requests with the REPORT verb with a payload if useReport is enabled', () => {\n    const user = { key: 'user1' };\n    const requestor = Requestor('http://requestee', 'FAKE_ENV', true);\n\n    requestor.fetchFlagSettings(user, 'hash1', sinon.spy());\n\n    expect(server.requests).toHaveLength(1);\n    expect(server.requests[0].method).toEqual('REPORT');\n    expect(server.requests[0].requestBody).toEqual(JSON.stringify(user));\n  });\n\n  it('should call the each callback at most once', () => {\n    const handleOne = sinon.spy();\n    const handleTwo = sinon.spy();\n    const handleThree = sinon.spy();\n    const handleFour = sinon.spy();\n    const handleFive = sinon.spy();\n\n    server.respondWith(req => {\n      seq++;\n      req.respond(200, { 'Content-type': 'application/json' }, JSON.stringify({ tag: seq }));\n    });\n\n    const requestor = Requestor('http://requestee', 'FAKE_ENV');\n    requestor.fetchFlagSettings({ key: 'user1' }, 'hash1', handleOne);\n    server.respond();\n    requestor.fetchFlagSettings({ key: 'user2' }, 'hash2', handleTwo);\n    server.respond();\n    requestor.fetchFlagSettings({ key: 'user3' }, 'hash3', handleThree);\n    server.respond();\n    requestor.fetchFlagSettings({ key: 'user4' }, 'hash4', handleFour);\n    server.respond();\n    requestor.fetchFlagSettings({ key: 'user5' }, 'hash5', handleFive);\n    server.respond();\n\n    expect(server.requests).toHaveLength(5);\n    expect(handleOne.calledOnce).toEqual(true);\n    expect(handleTwo.calledOnce).toEqual(true);\n    expect(handleThree.calledOnce).toEqual(true);\n    expect(handleFour.calledOnce).toEqual(true);\n    expect(handleFive.calledOnce).toEqual(true);\n  });\n\n  it('should send custom user-agent header in GET mode', () => {\n    const requestor = Requestor('http://requestee', 'FAKE_ENV', false);\n    const user = { key: 'foo' };\n    requestor.fetchFlagSettings(user, 'hash1', sinon.spy());\n\n    expect(server.requests.length).toEqual(1);\n    expect(server.requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());\n  });\n\n  it('should send custom user-agent header in REPORT mode', () => {\n    const requestor = Requestor('http://requestee', 'FAKE_ENV', true);\n    const user = { key: 'foo' };\n    requestor.fetchFlagSettings(user, 'hash1', sinon.spy());\n\n    expect(server.requests.length).toEqual(1);\n    expect(server.requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());\n  });\n});\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/__tests__/Requestor-test.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 81,
+    "kind": "file",
+    "name": "src/__tests__/Store-test.js",
+    "content": "import Identity from '../Identity';\nimport Store from '../Store';\nimport * as messages from '../messages';\n\ndescribe('Store', () => {\n  const ident = Identity(null);\n\n  it('should handle localStorage getItem throwing an exception', () => {\n    const store = Store('env', 'hash', ident);\n    const getItemSpy = jest.spyOn(localStorage, 'getItem').mockImplementation(() => {\n      throw new Error('localstorage getitem error');\n    });\n\n    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});\n\n    store.loadFlags();\n    expect(consoleWarnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());\n\n    consoleWarnSpy.mockRestore();\n    getItemSpy.mockRestore();\n  });\n\n  it('should handle localStorage setItem throwing an exception', () => {\n    const store = Store('env', 'hash', ident);\n    const setItemSpy = jest.spyOn(localStorage, 'setItem').mockImplementation(() => {\n      throw new Error('localstorage getitem error');\n    });\n\n    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});\n\n    store.saveFlags({ foo: {} });\n    expect(consoleWarnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());\n\n    consoleWarnSpy.mockRestore();\n    setItemSpy.mockRestore();\n  });\n});\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/__tests__/Store-test.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 82,
+    "kind": "file",
+    "name": "src/__tests__/Stream-test.js",
+    "content": "import EventSource, { sources } from 'eventsourcemock';\n\nimport Stream from '../Stream';\n\nconst noop = () => {};\n\ndescribe('Stream', () => {\n  const baseUrl = 'https://example.com';\n  const envName = 'testenv';\n  const user = { key: 'me' };\n  const encodedUser = 'eyJrZXkiOiJtZSJ9';\n  const hash = '012345789abcde';\n\n  beforeEach(() => {\n    Object.defineProperty(window, 'EventSource', {\n      value: EventSource,\n      writable: true,\n    });\n  });\n\n  it('should not throw on EventSource when it does not exist', () => {\n    const prevEventSource = window.EventSource;\n    window.EventSource = undefined;\n\n    const stream = new Stream(baseUrl, envName);\n\n    const connect = () => {\n      stream.connect(noop);\n    };\n\n    expect(connect).not.toThrow(TypeError);\n\n    window.EventSource = prevEventSource;\n  });\n\n  it('should not throw when calling disconnect without first calling connect', () => {\n    const stream = new Stream(baseUrl, envName);\n    const disconnect = () => {\n      stream.disconnect(noop);\n    };\n\n    expect(disconnect).not.toThrow(TypeError);\n  });\n\n  it('connects to EventSource with eval stream URL by default', () => {\n    const stream = new Stream(baseUrl, envName, null, false);\n    stream.connect(user, {});\n\n    expect(sources[baseUrl + '/eval/' + envName + '/' + encodedUser]).toBeDefined();\n  });\n\n  it('adds secure mode hash to URL if provided', () => {\n    const stream = new Stream(baseUrl, envName, hash, false);\n    stream.connect(user, {});\n\n    expect(sources[baseUrl + '/eval/' + envName + '/' + encodedUser + '?h=' + hash]).toBeDefined();\n  });\n\n  it('falls back to ping stream URL if useReport is true', () => {\n    const stream = new Stream(baseUrl, envName, hash, true);\n    stream.connect(user, {});\n\n    expect(sources[baseUrl + '/ping/' + envName]).toBeDefined();\n  });\n\n  it('sets event listeners', () => {\n    const stream = new Stream(baseUrl, envName, hash, false);\n    const fn1 = () => 0;\n    const fn2 = () => 1;\n\n    stream.connect(user, {\n      birthday: fn1,\n      anniversary: fn2,\n    });\n\n    const es = sources[`${baseUrl}/eval/${envName}/${encodedUser}?h=${hash}`];\n\n    expect(es).toBeDefined();\n    expect(es.__emitter._events.birthday).toEqual(fn1);\n    expect(es.__emitter._events.anniversary).toEqual(fn2);\n  });\n});\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/__tests__/Stream-test.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 83,
+    "kind": "function",
+    "name": "noop",
+    "memberof": "src/__tests__/Stream-test.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/__tests__/Stream-test.js~noop",
+    "access": "public",
+    "export": false,
+    "importPath": "ldclient-js/src/__tests__/Stream-test.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 5,
+    "undocument": true,
+    "params": [],
+    "return": null,
+    "ignore": true
+  },
+  {
+    "__docId__": 84,
+    "kind": "file",
+    "name": "src/__tests__/UserFilter-test.js",
+    "content": "import UserFilter from '../UserFilter';\n\ndescribe('UserFilter', () => {\n  let warnSpy;\n\n  // users to serialize\n  const user = {\n    key: 'abc',\n    firstName: 'Sue',\n    custom: { bizzle: 'def', dizzle: 'ghi' },\n  };\n\n  const userSpecifyingOwnPrivateAttr = {\n    key: 'abc',\n    firstName: 'Sue',\n    custom: { bizzle: 'def', dizzle: 'ghi' },\n    privateAttributeNames: ['dizzle', 'unused'],\n  };\n\n  const userWithUnknownTopLevelAttrs = {\n    key: 'abc',\n    firstName: 'Sue',\n    species: 'human',\n    hatSize: 6,\n    custom: { bizzle: 'def', dizzle: 'ghi' },\n  };\n\n  const anonUser = {\n    key: 'abc',\n    anonymous: true,\n    custom: { bizzle: 'def', dizzle: 'ghi' },\n  };\n\n  // expected results from serializing user\n  const userWithAllAttrsHidden = {\n    key: 'abc',\n    custom: {},\n    privateAttrs: ['bizzle', 'dizzle', 'firstName'],\n  };\n\n  const userWithSomeAttrsHidden = {\n    key: 'abc',\n    custom: { dizzle: 'ghi' },\n    privateAttrs: ['bizzle', 'firstName'],\n  };\n\n  const userWithOwnSpecifiedAttrHidden = {\n    key: 'abc',\n    firstName: 'Sue',\n    custom: { bizzle: 'def' },\n    privateAttrs: ['dizzle'],\n  };\n\n  const anonUserWithAllAttrsHidden = {\n    key: 'abc',\n    anonymous: true,\n    custom: {},\n    privateAttrs: ['bizzle', 'dizzle'],\n  };\n\n  beforeEach(() => {\n    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});\n  });\n\n  afterEach(() => {\n    warnSpy.mockRestore();\n  });\n\n  it('includes all user attributes by default', () => {\n    const uf = UserFilter({});\n    expect(uf.filterUser(user)).toEqual(user);\n  });\n\n  it('hides all except key if allAttributesPrivate is true', () => {\n    const uf = UserFilter({ allAttributesPrivate: true });\n    expect(uf.filterUser(user)).toEqual(userWithAllAttrsHidden);\n  });\n\n  it('allows all_attributes_private as deprecated synonym for allAttributesPrivate', () => {\n    const uf = UserFilter({ all_attributes_private: true });\n    expect(uf.filterUser(user)).toEqual(userWithAllAttrsHidden);\n    expect(warnSpy).toHaveBeenCalled();\n  });\n\n  it('hides some attributes if privateAttributeNames is set', () => {\n    const uf = UserFilter({ privateAttributeNames: ['firstName', 'bizzle'] });\n    expect(uf.filterUser(user)).toEqual(userWithSomeAttrsHidden);\n  });\n\n  it('allows private_attribute_names as deprecated synonym for privateAttributeNames', () => {\n    const uf = UserFilter({ private_attribute_names: ['firstName', 'bizzle'] });\n    expect(uf.filterUser(user)).toEqual(userWithSomeAttrsHidden);\n    expect(warnSpy).toHaveBeenCalled();\n  });\n\n  it('hides attributes specified in per-user privateAttrs', () => {\n    const uf = UserFilter({});\n    expect(uf.filterUser(userSpecifyingOwnPrivateAttr)).toEqual(userWithOwnSpecifiedAttrHidden);\n  });\n\n  it('looks at both per-user privateAttrs and global config', () => {\n    const uf = UserFilter({ privateAttributeNames: ['firstName', 'bizzle'] });\n    expect(uf.filterUser(userSpecifyingOwnPrivateAttr)).toEqual(userWithAllAttrsHidden);\n  });\n\n  it('strips unknown top-level attributes', () => {\n    const uf = UserFilter({});\n    expect(uf.filterUser(userWithUnknownTopLevelAttrs)).toEqual(user);\n  });\n\n  it('leaves the \"anonymous\" attribute as is', () => {\n    const uf = UserFilter({ allAttributesPrivate: true });\n    expect(uf.filterUser(anonUser)).toEqual(anonUserWithAllAttrsHidden);\n  });\n});\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/__tests__/UserFilter-test.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 85,
+    "kind": "file",
+    "name": "src/__tests__/utils-test.js",
+    "content": "import { base64URLEncode, wrapPromiseCallback, chunkUserEventsForUrl } from '../utils';\n\ndescribe('utils', () => {\n  describe('wrapPromiseCallback', () => {\n    it('should resolve to the value', done => {\n      const promise = wrapPromiseCallback(Promise.resolve('woohoo'));\n      promise.then(value => {\n        expect(value).toEqual('woohoo');\n        done();\n      });\n    });\n\n    it('should reject with the error', done => {\n      const error = new Error('something went wrong');\n      const promise = wrapPromiseCallback(Promise.reject(error));\n      promise.catch(error => {\n        expect(error).toEqual(error);\n        done();\n      });\n    });\n\n    it('should call the callback with a value if the promise resolves', done => {\n      const promise = wrapPromiseCallback(Promise.resolve('woohoo'), (error, value) => {\n        expect(promise).toBeUndefined();\n        expect(error).toBeNull();\n        expect(value).toEqual('woohoo');\n        done();\n      });\n    });\n\n    it('should call the callback with an error if the promise rejects', done => {\n      const actualError = new Error('something went wrong');\n      const promise = wrapPromiseCallback(Promise.reject(actualError), (error, value) => {\n        expect(promise).toBeUndefined();\n        expect(error).toEqual(actualError);\n        expect(value).toBeNull();\n        done();\n      });\n    });\n  });\n\n  describe('chunkUserEventsForUrl', () => {\n    it('should properly chunk the list of events', () => {\n      const user = { key: 'foo' };\n      const event = { kind: 'identify', key: user.key };\n      const eventLength = base64URLEncode(JSON.stringify(event)).length;\n      const events = [event, event, event, event, event];\n      const chunks = chunkUserEventsForUrl(eventLength * 2, events);\n      expect(chunks).toEqual([[event, event], [event, event], [event]]);\n    });\n  });\n});\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/__tests__/utils-test.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 86,
+    "kind": "file",
+    "name": "src/errors.js",
+    "content": "function createCustomError(name) {\n  function CustomError(message, code) {\n    Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);\n    this.message = message;\n    this.code = code;\n  }\n\n  CustomError.prototype = new Error();\n  CustomError.prototype.name = name;\n  CustomError.prototype.constructor = CustomError;\n\n  return CustomError;\n}\n\nexport const LDUnexpectedResponseError = createCustomError('LaunchDarklyUnexpectedResponseError');\nexport const LDInvalidEnvironmentIdError = createCustomError('LaunchDarklyInvalidEnvironmentIdError');\nexport const LDInvalidUserError = createCustomError('LaunchDarklyInvalidUserError');\nexport const LDInvalidEventKeyError = createCustomError('LaunchDarklyInvalidEventKeyError');\nexport const LDInvalidArgumentError = createCustomError('LaunchDarklyInvalidArgumentError');\nexport const LDFlagFetchError = createCustomError('LaunchDarklyFlagFetchError');\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/errors.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 87,
+    "kind": "function",
+    "name": "createCustomError",
+    "memberof": "src/errors.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/errors.js~createCustomError",
+    "access": "public",
+    "export": false,
+    "importPath": "ldclient-js/src/errors.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 1,
+    "undocument": true,
+    "params": [
+      {
+        "name": "name",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 88,
+    "kind": "variable",
+    "name": "LDUnexpectedResponseError",
+    "memberof": "src/errors.js",
+    "static": true,
+    "longname": "src/errors.js~LDUnexpectedResponseError",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/errors.js",
+    "importStyle": "{LDUnexpectedResponseError}",
+    "description": null,
+    "lineNumber": 15,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 89,
+    "kind": "variable",
+    "name": "LDInvalidEnvironmentIdError",
+    "memberof": "src/errors.js",
+    "static": true,
+    "longname": "src/errors.js~LDInvalidEnvironmentIdError",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/errors.js",
+    "importStyle": "{LDInvalidEnvironmentIdError}",
+    "description": null,
+    "lineNumber": 16,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 90,
+    "kind": "variable",
+    "name": "LDInvalidUserError",
+    "memberof": "src/errors.js",
+    "static": true,
+    "longname": "src/errors.js~LDInvalidUserError",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/errors.js",
+    "importStyle": "{LDInvalidUserError}",
+    "description": null,
+    "lineNumber": 17,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 91,
+    "kind": "variable",
+    "name": "LDInvalidEventKeyError",
+    "memberof": "src/errors.js",
+    "static": true,
+    "longname": "src/errors.js~LDInvalidEventKeyError",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/errors.js",
+    "importStyle": "{LDInvalidEventKeyError}",
+    "description": null,
+    "lineNumber": 18,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 92,
+    "kind": "variable",
+    "name": "LDInvalidArgumentError",
+    "memberof": "src/errors.js",
+    "static": true,
+    "longname": "src/errors.js~LDInvalidArgumentError",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/errors.js",
+    "importStyle": "{LDInvalidArgumentError}",
+    "description": null,
+    "lineNumber": 19,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 93,
+    "kind": "variable",
+    "name": "LDFlagFetchError",
+    "memberof": "src/errors.js",
+    "static": true,
+    "longname": "src/errors.js~LDFlagFetchError",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/errors.js",
+    "importStyle": "{LDFlagFetchError}",
+    "description": null,
+    "lineNumber": 20,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 94,
+    "kind": "file",
+    "name": "src/index.js",
+    "content": "import EventProcessor from './EventProcessor';\nimport EventEmitter from './EventEmitter';\nimport GoalTracker from './GoalTracker';\nimport Store from './Store';\nimport Stream from './Stream';\nimport Requestor from './Requestor';\nimport Identity from './Identity';\nimport * as utils from './utils';\nimport * as messages from './messages';\nimport * as errors from './errors';\n\nconst readyEvent = 'ready';\nconst changeEvent = 'change';\nconst locationWatcherInterval = 300;\n\nfunction initialize(env, user, options = {}) {\n  const baseUrl = options.baseUrl || 'https://app.launchdarkly.com';\n  const eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';\n  const streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';\n  const hash = options.hash;\n  const sendEvents = typeof options.sendEvents === 'undefined' ? true : options.sendEvents;\n  const allowFrequentDuplicateEvents = !!options.allowFrequentDuplicateEvents;\n  const sendEventsOnlyForVariation = !!options.sendEventsOnlyForVariation;\n  const environment = env;\n  const emitter = EventEmitter();\n  const stream = Stream(streamUrl, environment, hash, options.useReport);\n  const events = options.eventProcessor || EventProcessor(eventsUrl, environment, options, emitter);\n  const requestor = Requestor(baseUrl, environment, options.useReport);\n  const seenRequests = {};\n  let flags = typeof options.bootstrap === 'object' ? utils.transformValuesToVersionedValues(options.bootstrap) : {};\n  let goalTracker;\n  let useLocalStorage;\n  let goals;\n  let subscribedToChangeEvents;\n  let firstEvent = true;\n\n  function shouldEnqueueEvent() {\n    return sendEvents && !doNotTrack();\n  }\n\n  function enqueueEvent(event) {\n    if (!event.user) {\n      if (firstEvent) {\n        if (console && console.warn) {\n          console.warn(\n            'Be sure to call `identify` in the LaunchDarkly client: http://docs.launchdarkly.com/docs/running-an-ab-test#include-the-client-side-snippet'\n          );\n        }\n        firstEvent = false;\n      }\n      return;\n    }\n    firstEvent = false;\n    if (shouldEnqueueEvent()) {\n      events.enqueue(event);\n    }\n  }\n\n  function sendIdentifyEvent(user) {\n    if (user) {\n      enqueueEvent({\n        kind: 'identify',\n        key: user.key,\n        user: user,\n        creationDate: new Date().getTime(),\n      });\n    }\n  }\n\n  const ident = Identity(user, sendIdentifyEvent);\n  const store = Store(environment, hash, ident);\n\n  function sendFlagEvent(key, value, defaultValue) {\n    const user = ident.getUser();\n    const now = new Date();\n    if (!allowFrequentDuplicateEvents) {\n      const cacheKey = JSON.stringify(value) + (user && user.key ? user.key : '') + key; // see below\n      const cached = seenRequests[cacheKey];\n      // cache TTL is five minutes\n      if (cached && now - cached < 300000) {\n        return;\n      }\n      seenRequests[cacheKey] = now;\n    }\n\n    const event = {\n      kind: 'feature',\n      key: key,\n      user: user,\n      value: value,\n      default: defaultValue,\n      creationDate: now.getTime(),\n    };\n    const flag = flags[key];\n    if (flag) {\n      event.version = flag.flagVersion ? flag.flagVersion : flag.version;\n      event.variation = flag.variation;\n      event.trackEvents = flag.trackEvents;\n      event.debugEventsUntilDate = flag.debugEventsUntilDate;\n    }\n\n    enqueueEvent(event);\n  }\n\n  function sendGoalEvent(kind, goal) {\n    const event = {\n      kind: kind,\n      key: goal.key,\n      data: null,\n      url: window.location.href,\n      user: ident.getUser(),\n      creationDate: new Date().getTime(),\n    };\n\n    if (kind === 'click') {\n      event.selector = goal.selector;\n    }\n\n    return enqueueEvent(event);\n  }\n\n  function identify(user, hash, onDone) {\n    if (useLocalStorage) {\n      store.clearFlags();\n    }\n    return utils.wrapPromiseCallback(\n      new Promise((resolve, reject) => {\n        if (!user || user.key === null || user.key === undefined) {\n          const err = new errors.LDInvalidUserError(user ? messages.invalidUser() : messages.userNotSpecified());\n          emitter.maybeReportError(err);\n          reject(err);\n        } else {\n          ident.setUser(user);\n          requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {\n            if (err) {\n              emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));\n              return reject(err);\n            }\n            if (settings) {\n              updateSettings(settings);\n            }\n            resolve(settings);\n            if (subscribedToChangeEvents) {\n              connectStream();\n            }\n          });\n        }\n      }),\n      onDone\n    );\n  }\n\n  function flush(onDone) {\n    return utils.wrapPromiseCallback(\n      new Promise(resolve => (sendEvents ? resolve(events.flush()) : resolve()), onDone)\n    );\n  }\n\n  function variation(key, defaultValue) {\n    return variationInternal(key, defaultValue, true);\n  }\n\n  function variationInternal(key, defaultValue, sendEvent) {\n    let value;\n\n    if (flags && flags.hasOwnProperty(key) && flags[key] && !flags[key].deleted) {\n      value = flags[key].value === null ? defaultValue : flags[key].value;\n    } else {\n      value = defaultValue;\n    }\n\n    if (sendEvent) {\n      sendFlagEvent(key, value, defaultValue);\n    }\n\n    return value;\n  }\n\n  function doNotTrack() {\n    let flag;\n    if (navigator && navigator.doNotTrack !== undefined) {\n      flag = navigator.doNotTrack; // FF, Chrome\n    } else if (navigator && navigator.msDoNotTrack !== undefined) {\n      flag = navigator.msDoNotTrack; // IE 9/10\n    } else {\n      flag = window.doNotTrack; // IE 11+, Safari\n    }\n    return flag === '1' || flag === 'yes';\n  }\n\n  function allFlags() {\n    const results = {};\n\n    if (!flags) {\n      return results;\n    }\n\n    for (const key in flags) {\n      if (flags.hasOwnProperty(key)) {\n        results[key] = variationInternal(key, null, !sendEventsOnlyForVariation);\n      }\n    }\n\n    return results;\n  }\n\n  function customEventExists(key) {\n    if (!goals || goals.length === 0) {\n      return false;\n    }\n\n    for (let i = 0; i < goals.length; i++) {\n      if (goals[i].kind === 'custom' && goals[i].key === key) {\n        return true;\n      }\n    }\n\n    return false;\n  }\n\n  function track(key, data) {\n    if (typeof key !== 'string') {\n      emitter.maybeReportError(new errors.LDInvalidEventKeyError(messages.unknownCustomEventKey(key)));\n      return;\n    }\n\n    // Validate key if we have goals\n    if (!!goals && !customEventExists(key)) {\n      console.warn(messages.unknownCustomEventKey(key));\n    }\n\n    enqueueEvent({\n      kind: 'custom',\n      key: key,\n      data: data,\n      user: ident.getUser(),\n      url: window.location.href,\n      creationDate: new Date().getTime(),\n    });\n  }\n\n  function connectStream() {\n    if (!ident.getUser()) {\n      return;\n    }\n    stream.disconnect();\n    stream.connect(ident.getUser(), {\n      ping: function() {\n        requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {\n          if (err) {\n            emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));\n          }\n          updateSettings(settings);\n        });\n      },\n      put: function(e) {\n        const data = JSON.parse(e.data);\n        updateSettings(data);\n      },\n      patch: function(e) {\n        const data = JSON.parse(e.data);\n        // If both the flag and the patch have a version property, then the patch version must be\n        // greater than the flag version for us to accept the patch.  If either one has no version\n        // then the patch always succeeds.\n        const oldFlag = flags[data.key];\n        if (!oldFlag || !oldFlag.version || !data.version || oldFlag.version < data.version) {\n          const mods = {};\n          const newFlag = utils.extend({}, data);\n          delete newFlag['key'];\n          flags[data.key] = newFlag;\n          if (oldFlag) {\n            mods[data.key] = { previous: oldFlag.value, current: data.value };\n          } else {\n            mods[data.key] = { current: data.value };\n          }\n          postProcessSettingsUpdate(mods);\n        }\n      },\n      delete: function(e) {\n        const data = JSON.parse(e.data);\n        if (!flags[data.key] || flags[data.key].version < data.version) {\n          const mods = {};\n          if (flags[data.key] && !flags[data.key].deleted) {\n            mods[data.key] = { previous: flags[data.key].value };\n          }\n          flags[data.key] = { version: data.version, deleted: true };\n          postProcessSettingsUpdate(mods);\n        }\n      },\n    });\n  }\n\n  function updateSettings(newFlags) {\n    const changes = {};\n\n    if (!newFlags) {\n      return;\n    }\n\n    for (const key in flags) {\n      if (flags.hasOwnProperty(key) && flags[key]) {\n        if (newFlags[key] && newFlags[key].value !== flags[key].value) {\n          changes[key] = { previous: flags[key].value, current: newFlags[key].value };\n        } else if (!newFlags[key] || newFlags[key].deleted) {\n          changes[key] = { previous: flags[key].value };\n        }\n      }\n    }\n    for (const key in newFlags) {\n      if (newFlags.hasOwnProperty(key) && newFlags[key] && (!flags[key] || flags[key].deleted)) {\n        changes[key] = { current: newFlags[key].value };\n      }\n    }\n\n    flags = newFlags;\n    postProcessSettingsUpdate(changes);\n  }\n\n  function postProcessSettingsUpdate(changes) {\n    const keys = Object.keys(changes);\n\n    if (useLocalStorage) {\n      store.saveFlags(flags);\n    }\n\n    if (keys.length > 0) {\n      keys.forEach(key => {\n        emitter.emit(changeEvent + ':' + key, changes[key].current, changes[key].previous);\n      });\n\n      emitter.emit(changeEvent, changes);\n\n      if (!sendEventsOnlyForVariation) {\n        keys.forEach(key => {\n          sendFlagEvent(key, changes[key].current);\n        });\n      }\n    }\n  }\n\n  function on(event, handler, context) {\n    if (event.substr(0, changeEvent.length) === changeEvent) {\n      subscribedToChangeEvents = true;\n      if (!stream.isConnected()) {\n        connectStream();\n      }\n      emitter.on.apply(emitter, [event, handler, context]);\n    } else {\n      emitter.on.apply(emitter, Array.prototype.slice.call(arguments));\n    }\n  }\n\n  function off(event) {\n    if (event === changeEvent) {\n      if ((subscribedToChangeEvents = true)) {\n        subscribedToChangeEvents = false;\n        stream.disconnect();\n      }\n    }\n    emitter.off.apply(emitter, Array.prototype.slice.call(arguments));\n  }\n\n  function handleMessage(event) {\n    if (event.origin !== baseUrl) {\n      return;\n    }\n    if (event.data.type === 'SYN') {\n      window.editorClientBaseUrl = baseUrl;\n      const editorTag = document.createElement('script');\n      editorTag.type = 'text/javascript';\n      editorTag.async = true;\n      editorTag.src = baseUrl + event.data.editorClientUrl;\n      const s = document.getElementsByTagName('script')[0];\n      s.parentNode.insertBefore(editorTag, s);\n    }\n  }\n\n  if (!env) {\n    utils.onNextTick(() => {\n      emitter.maybeReportError(new errors.LDInvalidEnvironmentIdError(messages.environmentNotSpecified()));\n    });\n  }\n\n  if (!user) {\n    utils.onNextTick(() => {\n      emitter.maybeReportError(new errors.LDInvalidUserError(messages.userNotSpecified()));\n    });\n  } else if (!user.key) {\n    utils.onNextTick(() => {\n      emitter.maybeReportError(new errors.LDInvalidUserError(messages.invalidUser()));\n    });\n  }\n\n  if (typeof options.bootstrap === 'object') {\n    utils.onNextTick(() => {\n      emitter.emit(readyEvent);\n    });\n  } else if (\n    typeof options.bootstrap === 'string' &&\n    options.bootstrap.toUpperCase() === 'LOCALSTORAGE' &&\n    !!localStorage\n  ) {\n    useLocalStorage = true;\n\n    flags = store.loadFlags();\n\n    if (flags === null) {\n      requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {\n        if (err) {\n          emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));\n        }\n        if (settings) {\n          flags = settings;\n          store.saveFlags(flags);\n        } else {\n          flags = {};\n        }\n        emitter.emit(readyEvent);\n      });\n    } else {\n      // We're reading the flags from local storage. Signal that we're ready,\n      // then update localStorage for the next page load. We won't signal changes or update\n      // the in-memory flags unless you subscribe for changes\n      utils.onNextTick(() => {\n        emitter.emit(readyEvent);\n      });\n\n      requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {\n        if (err) {\n          emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));\n        }\n        if (settings) {\n          store.saveFlags(settings);\n        }\n      });\n    }\n  } else {\n    requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {\n      if (err) {\n        emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));\n      }\n      flags = settings;\n      emitter.emit(readyEvent);\n    });\n  }\n\n  function refreshGoalTracker() {\n    if (goalTracker) {\n      goalTracker.dispose();\n    }\n    if (goals && goals.length) {\n      goalTracker = GoalTracker(goals, sendGoalEvent);\n    }\n  }\n\n  function watchLocation(interval, callback) {\n    let previousUrl = location.href;\n    let currentUrl;\n\n    function checkUrl() {\n      currentUrl = location.href;\n\n      if (currentUrl !== previousUrl) {\n        previousUrl = currentUrl;\n        callback();\n      }\n    }\n\n    function poll(fn, interval) {\n      fn();\n      setTimeout(() => {\n        poll(fn, interval);\n      }, interval);\n    }\n\n    poll(checkUrl, interval);\n\n    if (!!(window.history && history.pushState)) {\n      window.addEventListener('popstate', checkUrl);\n    } else {\n      window.addEventListener('hashchange', checkUrl);\n    }\n  }\n\n  requestor.fetchGoals((err, g) => {\n    if (err) {\n      emitter.maybeReportError(\n        new errors.LDUnexpectedResponseError('Error fetching goals: ' + err.message ? err.message : err)\n      );\n    }\n    if (g && g.length > 0) {\n      goals = g;\n      goalTracker = GoalTracker(goals, sendGoalEvent);\n      watchLocation(locationWatcherInterval, refreshGoalTracker);\n    }\n  });\n\n  function start() {\n    if (sendEvents) {\n      events.start();\n    }\n  }\n\n  if (document.readyState !== 'complete') {\n    window.addEventListener('load', start);\n  } else {\n    start();\n  }\n\n  window.addEventListener('beforeunload', () => {\n    if (sendEvents) {\n      events.stop();\n      events.flush(true);\n    }\n  });\n\n  window.addEventListener('message', handleMessage);\n\n  const readyPromise = new Promise(resolve => {\n    const onReady = emitter.on(readyEvent, () => {\n      emitter.off(readyEvent, onReady);\n      resolve();\n    });\n  });\n\n  const client = {\n    waitUntilReady: () => readyPromise,\n    identify: identify,\n    variation: variation,\n    track: track,\n    on: on,\n    off: off,\n    flush: flush,\n    allFlags: allFlags,\n  };\n\n  return client;\n}\n\nconst version = VERSION;\n\nexport default { initialize, version };\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/index.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 95,
+    "kind": "variable",
+    "name": "readyEvent",
+    "memberof": "src/index.js",
+    "static": true,
+    "longname": "src/index.js~readyEvent",
+    "access": "public",
+    "export": false,
+    "importPath": "ldclient-js/src/index.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 12,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 96,
+    "kind": "variable",
+    "name": "changeEvent",
+    "memberof": "src/index.js",
+    "static": true,
+    "longname": "src/index.js~changeEvent",
+    "access": "public",
+    "export": false,
+    "importPath": "ldclient-js/src/index.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 13,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 97,
+    "kind": "variable",
+    "name": "locationWatcherInterval",
+    "memberof": "src/index.js",
+    "static": true,
+    "longname": "src/index.js~locationWatcherInterval",
+    "access": "public",
+    "export": false,
+    "importPath": "ldclient-js/src/index.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 14,
+    "undocument": true,
+    "type": {
+      "types": [
+        "number"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 98,
+    "kind": "function",
+    "name": "initialize",
+    "memberof": "src/index.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/index.js~initialize",
+    "access": "public",
+    "export": false,
+    "importPath": "ldclient-js/src/index.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 16,
+    "undocument": true,
+    "params": [
+      {
+        "name": "env",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "user",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "options",
+        "optional": true,
+        "types": [
+          "{}"
+        ],
+        "defaultRaw": {},
+        "defaultValue": "{}"
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 99,
+    "kind": "variable",
+    "name": "version",
+    "memberof": "src/index.js",
+    "static": true,
+    "longname": "src/index.js~version",
+    "access": "public",
+    "export": false,
+    "importPath": "ldclient-js/src/index.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 540,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 100,
+    "kind": "file",
+    "name": "src/jest.setup.js",
+    "content": "// Test environment setup\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/jest.setup.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 101,
+    "kind": "file",
+    "name": "src/messages.js",
+    "content": "const docLink =\n  ' Please see https://docs.launchdarkly.com/docs/js-sdk-reference#section-initializing-the-client for instructions on SDK initialization.';\n\nexport const clientNotReady = function() {\n  return 'LaunchDarkly client is not ready';\n};\n\nexport const invalidKey = function() {\n  return 'Event key must be a string';\n};\n\nexport const localStorageUnavailable = function() {\n  return 'localStorage is unavailable';\n};\n\nexport const unknownCustomEventKey = function(key) {\n  return 'Custom event \"' + key + '\" does not exist';\n};\n\nexport const environmentNotFound = function() {\n  return 'environment not found.' + docLink;\n};\n\nexport const environmentNotSpecified = function() {\n  return 'No environment specified.' + docLink;\n};\n\nexport const errorFetchingFlags = function(err) {\n  return 'Error fetching flag settings: ' + (err.message || err);\n};\n\nexport const userNotSpecified = function() {\n  return 'No user specified.' + docLink;\n};\n\nexport const invalidUser = function() {\n  return 'Invalid user specified.' + docLink;\n};\n\nexport const deprecated = function(oldName, newName) {\n  return '[LaunchDarkly] \"' + oldName + '\" is deprecated, please use \"' + newName + '\"';\n};\n",
+    "static": true,
+    "longname": "/Users/levlazinskiy/git/js-client/src/messages.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 102,
+    "kind": "variable",
+    "name": "docLink",
+    "memberof": "src/messages.js",
+    "static": true,
+    "longname": "src/messages.js~docLink",
+    "access": "public",
+    "export": false,
+    "importPath": "ldclient-js/src/messages.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 1,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 103,
+    "kind": "function",
+    "name": "clientNotReady",
+    "memberof": "src/messages.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/messages.js~clientNotReady",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/messages.js",
+    "importStyle": "{clientNotReady}",
+    "description": null,
+    "lineNumber": 4,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "string"
+      ]
+    }
+  },
+  {
+    "__docId__": 104,
+    "kind": "function",
+    "name": "invalidKey",
+    "memberof": "src/messages.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/messages.js~invalidKey",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/messages.js",
+    "importStyle": "{invalidKey}",
+    "description": null,
+    "lineNumber": 8,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "string"
+      ]
+    }
+  },
+  {
+    "__docId__": 105,
+    "kind": "function",
+    "name": "localStorageUnavailable",
+    "memberof": "src/messages.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/messages.js~localStorageUnavailable",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/messages.js",
+    "importStyle": "{localStorageUnavailable}",
+    "description": null,
+    "lineNumber": 12,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "string"
+      ]
+    }
+  },
+  {
+    "__docId__": 106,
+    "kind": "function",
+    "name": "unknownCustomEventKey",
+    "memberof": "src/messages.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/messages.js~unknownCustomEventKey",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/messages.js",
+    "importStyle": "{unknownCustomEventKey}",
+    "description": null,
+    "lineNumber": 16,
+    "undocument": true,
+    "params": [
+      {
+        "name": "key",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 107,
+    "kind": "function",
+    "name": "environmentNotFound",
+    "memberof": "src/messages.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/messages.js~environmentNotFound",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/messages.js",
+    "importStyle": "{environmentNotFound}",
+    "description": null,
+    "lineNumber": 20,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 108,
+    "kind": "function",
+    "name": "environmentNotSpecified",
+    "memberof": "src/messages.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/messages.js~environmentNotSpecified",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/messages.js",
+    "importStyle": "{environmentNotSpecified}",
+    "description": null,
+    "lineNumber": 24,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 109,
+    "kind": "function",
+    "name": "errorFetchingFlags",
+    "memberof": "src/messages.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/messages.js~errorFetchingFlags",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/messages.js",
+    "importStyle": "{errorFetchingFlags}",
+    "description": null,
+    "lineNumber": 28,
+    "undocument": true,
+    "params": [
+      {
+        "name": "err",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 110,
+    "kind": "function",
+    "name": "userNotSpecified",
+    "memberof": "src/messages.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/messages.js~userNotSpecified",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/messages.js",
+    "importStyle": "{userNotSpecified}",
+    "description": null,
+    "lineNumber": 32,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 111,
+    "kind": "function",
+    "name": "invalidUser",
+    "memberof": "src/messages.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/messages.js~invalidUser",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/messages.js",
+    "importStyle": "{invalidUser}",
+    "description": null,
+    "lineNumber": 36,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 112,
+    "kind": "function",
+    "name": "deprecated",
+    "memberof": "src/messages.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/messages.js~deprecated",
+    "access": "public",
+    "export": true,
+    "importPath": "ldclient-js/src/messages.js",
+    "importStyle": "{deprecated}",
+    "description": null,
+    "lineNumber": 40,
+    "undocument": true,
+    "params": [
+      {
+        "name": "oldName",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "newName",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "kind": "index",
+    "content": "# LaunchDarkly SDK for Client-Side JavaScript\n\n[![Circle CI](https://circleci.com/gh/launchdarkly/js-client/tree/master.svg?style=svg)](https://circleci.com/gh/launchdarkly/js-client/tree/master)\n\n## Introduction\n\nThis is the official LaunchDarkly client-side JavaScript SDK. This SDK does two\nthings:\n\n* Makes feature flags available to your client-side (front-end) JavaScript code.\n* Sends click, pageview, and custom events from your front-end for A/B tests and\n  analytics.\n\n## Browser Support\n\nThe LaunchDarkly client-side JavaScript SDK supports the following browsers:\n\n* Chrome (any recent)\n* Firefox (any recent)\n* Safari (any recent)\\*\n* Internet Explorer (IE10+)\\*\n* Edge (any recent)\\*\n* Opera (any recent)\\*\n\n\\* These browsers do not support streaming new flags to connected clients, even\nwhen `client.on('change')` is called.\n\n### EventSource polyfill\n\nIf you need streaming support, and you wish to support browsers that do not\nsupport `EventSource` natively, you can install a polyfill, such as\n[EventSource](https://github.com/Yaffle/EventSource).\n\nYou can load the polyfill via a script tag in the `<head>` before the script\nwhere you initialize `LDClient`:\n\n    <script src=\"/public/eventsource.js\"></script>\n\nIf you use [webpack](https://webpack.github.io/) or\n[browserify](http://browserify.org/), make sure to require the polyfill before\n`LDClient` is initialized.\n\n### Document.querySelectorAll() polyfill\n\nIf you need to run A/B tests on IE7 or IE8 you will need to install a polyfill\nfor `document.querySelector()` such as\n[polyfill-queryselector](https://github.com/cobbdb/polyfill-queryselector).\n\nYou can load the polyfll via a script tag in the `<head>`:\n\n    <script src=\"/public/querySelector.js\"></script>\n\nYou can also install it with `npm install polyfill-queryselector` or `bower install polyfill-queryselector`.\n\n## Installation\n\nThere are two ways to install the client-side SDK:\n\n1.  Via the `npm` package: `npm install --save ldclient-js`\n\n2.  A minimized version of the script is also hosted on our CDN, and can be\n    included via a `script` tag:\n\n```\n<script src=\"https://app.launchdarkly.com/snippet/ldclient.min.js\">\n```\n\n## Basics\n\nTo create a client instance, pass your environment's client-side ID (available\non your\n[account settings page](https://app.launchdarkly.com/settings#/projects)) and\nuser context to the `LDClient.initialize` function:\n\n```js\nvar user = { key: 'user.example.com' };\nvar client = LDClient.initialize('YOUR_CLIENT_SIDE_ID', user);\n```\n\n## Feature flags\n\nThe client will emit a `ready` event when it has been initialized. Once it has\nbeen initialized, call `variation` to access your feature flags:\n\n```js\nclient.on('ready', function() {\n console.log(\"It's now safe to request feature flags\");\n var showFeature = client.variation(\"YOUR_FEATURE_KEY\", false);\n\n if (showFeature) {\n   ...\n } else {\n   ...\n }\n  });\n```\n\nOut of the box, initializing the client will make a remote request to\nLaunchDarkly, so it may take approximately 100 milliseconds before the ready\nevent is emitted. If you require feature flag values before rendering the page,\nwe recommend bootstrapping the client. If the client is bootstrapped, it will\nemit the ready event immediately.\n\n_Note_: Feature flags must marked available to the client-side SDK (see your\nfeature flag's settings page) before they can be used in variation calls on the\nfront-end. If you request a feature flag that is not available, you'll receive\nthe default value for that flag.\n\nYou can also fetch all feature flags for a user:\n\n```js\nvar flags = client.allFlags();\n```\n\nThis will return a key / value map of all your feature flags. The map will\ncontain `null` values for any flags that would return the fallback value (the\nsecond argument that you normally pass to `variation`). Note that this will send\nanalytics events to LaunchDarkly as if you'd called `variation` for every\nfeature flag.\n\n### Bootstrapping\n\nBootstrapping refers to providing the LaunchDarkly client object with an\ninitial, immediately available set of feature flag values so that on page load\n`variation` can be called with no delay.\n\n#### From the server-side SDK\n\nThe preferred approach to bootstrapping is to populate the bootstrap values (a\nmap of feature flag keys to flag values) from your backend. LaunchDarkly's\nserver-side SDKs have a function called `allFlags`-- this function provides the\ninitial set of bootstrap values. You can then provide these values to your\nfront-end as a template. Depending on your templating language, this might look\nsomething like this:\n\n```js\nvar user = {key: 'user.example.com'};\nvar client = LDClient.initialize('YOUR_CLIENT_SIDE_ID', user, options = {\n bootstrap: {\n   {{ ldclient.all_flags(user) }}\n }\n});\n```\n\nIf you bootstrap from the server-side, feature flags will be ready immediately,\nand clients will always receive the latest feature flag values.\n\n#### From Local Storage\n\nAlternatively, you can bootstrap feature flags from local storage.\n\n```js\nvar client = LDClient.initialize(\n  'YOUR_CLIENT_SIDE_ID',\n  user,\n  (options = {\n    bootstrap: 'localStorage',\n  })\n);\n```\n\nWhen using local storage, the client will store the latest flag settings in\nlocal storage. On page load, the previous settings will be used and the 'ready'\nevent will be emitted immediately. This means that on page load, the user may\nsee cached flag values until the next page load.\n\nYou can still subscribe to flag changes if you're using local storage.\n\n### Secure mode\n\nSecure mode ensures that feature flag settings for a user are kept private, and\nthat one user cannot inspect the settings for another user. Secure mode works by\nhaving you include a server-generated HMAC SHA256 hash of your user key, signed\nwith the SDK key for your environment.\n\nYou can enable secure mode for each environment on your\n[account settings page](https://app.launchdarkly.com/settings#/projects). You\nshould send the computed hash for your user in the `options` array during client\ninitialization:\n\n```js\nvar user = { key: 'user.example.com' };\nvar client = LDClient.initialize(\n  'YOUR_CLIENT_SIDE_ID',\n  user,\n  (options = {\n    hash: 'SERVER_GENERATED_HASH',\n  })\n);\n```\n\nEach of our server-side SDKs includes a method to compute the secure mode hash\nfor a user. You can pass this to your front-end code in a template. For example:\n\n```js\nvar client = LDClient.initialize('YOUR_CLIENT_SIDE_ID', user, options = {\n       hash: {{ ldclient.secure_mode_hash(user) }} // this is a template directive, and the ldclient instance here is your server-side SDK client\n  });\n```\n\nTo compute the hash yourself, locate the SDK key for your environment on your\naccount settings page. Then, compute an HMAC SHA256 hash of your user key, using\nyour SDK key as a secret. Here's what this would look like in Node.js:\n\n```js\nvar crypto = require('crypto');\nvar hmac = crypto.createHmac('sha256', 'YOUR_SDK_KEY');\nhmac.update('YOUR_USER_KEY');\nhash = hmac.digest('hex');\n```\n\n### Listening to flag change events\n\nThe client uses an event emitter pattern to allow you to subscribe to feature\nflag changes in real time. To subscribe to all feature flag changes, listen for\nthe `change` event:\n\n```js\nclient.on('change', function(settings) {\n  console.log('flags changed:', settings);\n});\n```\n\nThe `settings` object will contain a map of updated feature flag keys and\nvalues. The map will only contain the keys to flags that have changed. You can\nalso subscribe to specific flags:\n\n```js\nclient.on('change:YOUR_FLAG_KEY', function(value, previous) {\n  console.log('YOUR_FLAG_KEY changed:', value, '(' + previous + ')');\n});\n```\n\n## Events\n\n### Click and pageview events\n\nIf you've defined\n[click or pageview goals](https://docs.launchdarkly.com/docs/running-ab-tests)\nin LaunchDarkly, they'll be sent automatically once the client has been\ninitialized. You do not have to do anything else with the client to send click\nor pageview goals.\n\n### Custom events\n\nYou can send custom events by calling the client's `track` method. For example:\n\n```js\nclient.track('Signed up');\n```\n\n### Single page apps\n\nThe SDK automatically handles URL changes (made via the HTML5 history API or by\nchanging the URL hash fragment), and will trigger pageview and click events\ncorrectly.\n\n## Changing the user context\n\nYou may wish to change the user context dynamically and receive the new set of\nfeature flags for that user or generate events for the new user. For example, on\na sign-in page in a single-page app, you may initialize the client with an\nanonymous user. When the user logs in, you'd want the feature flag settings for\nthe authenticated user. To do this, you can call the `identify` function:\n\n```js\nclient.identify(newUser, hash, function() {\n  console.log(\"New user's flags available\");\n});\n```\n\nThe `hash` parameter is the hash for the new user, assuming that the user's key\nhas changed. It is only required in secure mode-- if secure mode is not enabled,\nyou can pass in `null` for the hash.\n\n## Development information\n\nTo build the module, first run `npm install`. Then run `npm run build`. You can\nalso run `npm run watch` to rebuild the module automatically on file change.\n\nTo run the tests, run `npm run test`.\n\n## Community\n\nHere are resources from our awesome community:\n\n* [TrueCar/react-launch-darkly](https://github.com/TrueCar/react-launch-darkly/): A set of component helpers to add support for LaunchDarkly to your React.js app\n* [yusinto/ld-redux](https://github.com/yusinto/ld-redux/): A library to integrate LaunchDarkly with React and Redux\n* [tdeekens/flopflip](https://github.com/tdeekens/flopflip): A flexible feature-toggling library that integrates with LaunchDarkly\n\n## About LaunchDarkly\n\n* LaunchDarkly is a continuous delivery platform that provides feature flags as a service and allows developers to iterate quickly and safely. We allow you to easily flag your features and manage them from the LaunchDarkly dashboard. With LaunchDarkly, you can:\n  * Roll out a new feature to a subset of your users (like a group of users who opt-in to a beta tester group), gathering feedback and bug reports from real-world use cases.\n  * Gradually roll out a feature to an increasing percentage of users, and track the effect that the feature has on key metrics (for instance, how likely is a user to complete a purchase if they have feature A versus feature B?).\n  * Turn off a feature that you realize is causing performance problems in production, without needing to re-deploy, or even restart the application with a changed configuration file.\n  * Grant access to certain features based on user attributes, like payment plan (eg: users on the ‘gold’ plan get access to more features than users in the ‘silver’ plan). Disable parts of your application to facilitate maintenance, without taking everything offline.\n* LaunchDarkly provides feature flag SDKs for\n  * [Java](http://docs.launchdarkly.com/docs/java-sdk-reference 'Java SDK')\n  * [JavaScript](http://docs.launchdarkly.com/docs/js-sdk-reference 'LaunchDarkly JavaScript SDK')\n  * [PHP](http://docs.launchdarkly.com/docs/php-sdk-reference 'LaunchDarkly PHP SDK')\n  * [Python](http://docs.launchdarkly.com/docs/python-sdk-reference 'LaunchDarkly Python SDK')\n  * [Python Twisted](http://docs.launchdarkly.com/docs/python-twisted-sdk-reference 'LaunchDarkly Python Twisted SDK')\n  * [Go](http://docs.launchdarkly.com/docs/go-sdk-reference 'LaunchDarkly Go SDK')\n  * [Node.JS](http://docs.launchdarkly.com/docs/node-sdk-reference 'LaunchDarkly Node SDK')\n  * [.NET](http://docs.launchdarkly.com/docs/dotnet-sdk-reference 'LaunchDarkly .Net SDK')\n  * [Ruby](http://docs.launchdarkly.com/docs/ruby-sdk-reference 'LaunchDarkly Ruby SDK')\n  * [iOS](http://docs.launchdarkly.com/docs/ios-sdk-reference 'LaunchDarkly iOS SDK')\n  * [Android](http://docs.launchdarkly.com/docs/android-sdk-reference 'LaunchDarkly Android SDK')\n* Explore LaunchDarkly\n  * [launchdarkly.com](http://www.launchdarkly.com/ 'LaunchDarkly Main Website')\n    for more information\n  * [docs.launchdarkly.com](http://docs.launchdarkly.com/ 'LaunchDarkly Documentation')\n    for our documentation and SDKs\n  * [apidocs.launchdarkly.com](http://apidocs.launchdarkly.com/ 'LaunchDarkly API Documentation')\n    for our API documentation\n  * [blog.launchdarkly.com](http://blog.launchdarkly.com/ 'LaunchDarkly Blog Documentation')\n    for the latest product updates\n  * [Feature Flagging Guide](https://github.com/launchdarkly/featureflags/ 'Feature Flagging Guide')\n    for best practices and strategies\n",
+    "longname": "/Users/levlazinskiy/git/js-client/README.md",
+    "name": "./README.md",
+    "static": true,
+    "access": "public"
+  },
+  {
+    "kind": "packageJSON",
+    "content": "{\n  \"name\": \"ldclient-js\",\n  \"version\": \"2.1.2\",\n  \"description\": \"LaunchDarkly SDK for JavaScript\",\n  \"author\": \"LaunchDarkly <team@launchdarkly.com>\",\n  \"license\": \"Apache-2.0\",\n  \"keywords\": [\n    \"launchdarkly\",\n    \"analytics\",\n    \"client\"\n  ],\n  \"files\": [\n    \"src\",\n    \"dist\"\n  ],\n  \"main\": \"dist/ldclient.cjs.js\",\n  \"module\": \"dist/ldclient.es.js\",\n  \"scripts\": {\n    \"lint\": \"eslint --format 'node_modules/eslint-formatter-pretty'\",\n    \"lint:all\": \"eslint --format 'node_modules/eslint-formatter-pretty' src\",\n    \"format\": \"npm run format:md && npm run format:js\",\n    \"format:md\": \"prettier --parser markdown --write '*.md'\",\n    \"format:js\": \"prettier --write 'src/**/*.js'\",\n    \"format:test\": \"npm run format:test:md && npm run format:test:js\",\n    \"format:test:md\": \"prettier --parser markdown --list-different '*.md'\",\n    \"format:test:js\": \"prettier --list-different 'src/**/*.js'\",\n    \"build\": \"cross-env NODE_ENV=development rollup -c rollup.config.js\",\n    \"build:min\": \"cross-env NODE_ENV=production rollup -c rollup.config.js\",\n    \"build:watch\": \"cross-env npm run build -- -w\",\n    \"test\": \"NODE_ENV=test jest\",\n    \"test:junit\": \"NODE_ENV=test jest --testResultsProcessor jest-junit\",\n    \"clean\": \"rimraf dist/**\",\n    \"prepublishOnly\": \"npm run build:min\",\n    \"docgen\": \"esdoc\"\n  },\n  \"types\": \"./src/index.d.ts\",\n  \"devDependencies\": {\n    \"babel-core\": \"6.26.0\",\n    \"babel-eslint\": \"8.2.2\",\n    \"babel-jest\": \"22.4.3\",\n    \"babel-polyfill\": \"6.26.0\",\n    \"babel-preset-env\": \"1.6.1\",\n    \"babel-preset-stage-1\": \"6.24.1\",\n    \"chai\": \"4.1.2\",\n    \"cross-env\": \"5.1.4\",\n    \"esdoc\": \"^1.1.0\",\n    \"esdoc-standard-plugin\": \"^1.0.0\",\n    \"eslint\": \"4.19.1\",\n    \"eslint-config-prettier\": \"2.9.0\",\n    \"eslint-config-xo\": \"0.20.1\",\n    \"eslint-formatter-pretty\": \"1.3.0\",\n    \"eslint-plugin-babel\": \"5.0.0\",\n    \"eslint-plugin-prettier\": \"2.6.0\",\n    \"eventsourcemock\": \"1.1.0\",\n    \"jest\": \"22.4.3\",\n    \"jest-junit\": \"3.6.0\",\n    \"jest-localstorage-mock\": \"2.2.0\",\n    \"prettier\": \"1.11.1\",\n    \"readline-sync\": \"1.4.9\",\n    \"rimraf\": \"2.6.2\",\n    \"rollup\": \"0.57.1\",\n    \"rollup-plugin-babel\": \"3.0.3\",\n    \"rollup-plugin-commonjs\": \"9.1.0\",\n    \"rollup-plugin-filesize\": \"1.5.0\",\n    \"rollup-plugin-includepaths\": \"0.2.2\",\n    \"rollup-plugin-node-builtins\": \"2.1.2\",\n    \"rollup-plugin-node-globals\": \"1.2.0\",\n    \"rollup-plugin-node-resolve\": \"3.3.0\",\n    \"rollup-plugin-replace\": \"2.0.0\",\n    \"rollup-plugin-uglify\": \"3.0.0\",\n    \"rollup-watch\": \"4.3.1\",\n    \"semver\": \"5.5.0\",\n    \"semver-compare\": \"1.0.0\",\n    \"sinon\": \"4.5.0\"\n  },\n  \"dependencies\": {\n    \"Base64\": \"1.0.1\",\n    \"escape-string-regexp\": \"1.0.5\"\n  },\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git://github.com/launchdarkly/js-client.git\"\n  }\n}\n",
+    "longname": "/Users/levlazinskiy/git/js-client/package.json",
+    "name": "package.json",
+    "static": true,
+    "access": "public"
+  }
+]

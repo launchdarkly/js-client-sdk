@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/EventProcessor.js | ldclient-js</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="LaunchDarkly SDK for JavaScript"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="ldclient-js"><meta property="twitter:description" content="LaunchDarkly SDK for JavaScript"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventEmitter">EventEmitter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventProcessor">EventProcessor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventSender">EventSender</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventSummarizer">EventSummarizer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-GoalTracker">GoalTracker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Identity">Identity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Requestor">Requestor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Store">Store</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Stream">Stream</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-UserFilter">UserFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-clientNotReady">clientNotReady</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deprecated">deprecated</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-environmentNotFound">environmentNotFound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-environmentNotSpecified">environmentNotSpecified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-errorFetchingFlags">errorFetchingFlags</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-invalidKey">invalidKey</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-invalidUser">invalidUser</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-localStorageUnavailable">localStorageUnavailable</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-unknownCustomEventKey">unknownCustomEventKey</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-userNotSpecified">userNotSpecified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDFlagFetchError">LDFlagFetchError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidArgumentError">LDInvalidArgumentError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidEnvironmentIdError">LDInvalidEnvironmentIdError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidEventKeyError">LDInvalidEventKeyError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidUserError">LDInvalidUserError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDUnexpectedResponseError">LDUnexpectedResponseError</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#--mocks--">__mocks__</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Requestor">Requestor</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/EventProcessor.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import EventSender from &apos;./EventSender&apos;;
+import EventSummarizer from &apos;./EventSummarizer&apos;;
+import UserFilter from &apos;./UserFilter&apos;;
+import * as errors from &apos;./errors&apos;;
+import * as utils from &apos;./utils&apos;;
+
+export default function EventProcessor(eventsUrl, environmentId, options = {}, emitter = null, sender = null) {
+  const processor = {};
+  const eventSender = sender || EventSender(eventsUrl, environmentId);
+  const summarizer = EventSummarizer();
+  const userFilter = UserFilter(options);
+  const inlineUsers = !!options.inlineUsersInEvents;
+  let queue = [];
+  let flushInterval;
+  let samplingInterval;
+  let lastKnownPastTime = 0;
+  let disabled = false;
+  let flushTimer;
+
+  function reportArgumentError(message) {
+    utils.onNextTick(() =&gt; {
+      emitter &amp;&amp; emitter.maybeReportError(new errors.LDInvalidArgumentError(message));
+    });
+  }
+
+  if (options.samplingInterval !== undefined &amp;&amp; (isNaN(options.samplingInterval) || options.samplingInterval &lt; 0)) {
+    samplingInterval = 0;
+    reportArgumentError(&apos;Invalid sampling interval configured. Sampling interval must be an integer &gt;= 0.&apos;);
+  } else {
+    samplingInterval = options.samplingInterval || 0;
+  }
+
+  if (options.flushInterval !== undefined &amp;&amp; (isNan(options.flushInterval) || options.flushInterval &lt; 2000)) {
+    flushInterval = 2000;
+    reportArgumentError(&apos;Invalid flush interval configured. Must be an integer &gt;= 2000 (milliseconds).&apos;);
+  } else {
+    flushInterval = options.flushInterval || 2000;
+  }
+
+  function shouldSampleEvent() {
+    return samplingInterval === 0 || Math.floor(Math.random() * samplingInterval) === 0;
+  }
+
+  function shouldDebugEvent(e) {
+    if (e.debugEventsUntilDate) {
+      // The &quot;last known past time&quot; comes from the last HTTP response we got from the server.
+      // In case the client&apos;s time is set wrong, at least we know that any expiration date
+      // earlier than that point is definitely in the past.  If there&apos;s any discrepancy, we
+      // want to err on the side of cutting off event debugging sooner.
+      return e.debugEventsUntilDate &gt; lastKnownPastTime &amp;&amp; e.debugEventsUntilDate &gt; new Date().getTime();
+    }
+    return false;
+  }
+
+  // Transform an event from its internal format to the format we use when sending a payload.
+  function makeOutputEvent(e) {
+    const ret = utils.extend({}, e);
+    if (inlineUsers || e.kind === &apos;identify&apos;) {
+      // identify events always have an inline user
+      ret.user = userFilter.filterUser(e.user);
+    } else {
+      ret.userKey = e.user.key;
+      delete ret[&apos;user&apos;];
+    }
+    if (e.kind === &apos;feature&apos;) {
+      delete ret[&apos;trackEvents&apos;];
+      delete ret[&apos;debugEventsUntilDate&apos;];
+    }
+    return ret;
+  }
+
+  processor.enqueue = function(event) {
+    if (disabled) {
+      return;
+    }
+    let addFullEvent = false;
+    let addDebugEvent = false;
+
+    // Add event to the summary counters if appropriate
+    summarizer.summarizeEvent(event);
+
+    // Decide whether to add the event to the payload. Feature events may be added twice, once for
+    // the event (if tracked) and once for debugging.
+    if (event.kind === &apos;feature&apos;) {
+      if (shouldSampleEvent()) {
+        addFullEvent = !!event.trackEvents;
+        addDebugEvent = shouldDebugEvent(event);
+      }
+    } else {
+      addFullEvent = shouldSampleEvent();
+    }
+
+    if (addFullEvent) {
+      queue.push(makeOutputEvent(event));
+    }
+    if (addDebugEvent) {
+      const debugEvent = utils.extend({}, event, { kind: &apos;debug&apos; });
+      delete debugEvent[&apos;trackEvents&apos;];
+      delete debugEvent[&apos;debugEventsUntilDate&apos;];
+      delete debugEvent[&apos;variation&apos;];
+      queue.push(debugEvent);
+    }
+  };
+
+  processor.flush = function(sync) {
+    if (disabled) {
+      return Promise.resolve();
+    }
+    const eventsToSend = queue;
+    const summary = summarizer.getSummary();
+    summarizer.clearSummary();
+    if (summary) {
+      summary.kind = &apos;summary&apos;;
+      eventsToSend.push(summary);
+    }
+    if (eventsToSend.length === 0) {
+      return Promise.resolve();
+    }
+    queue = [];
+    return eventSender.sendEvents(eventsToSend, sync).then(responseInfo =&gt; {
+      if (responseInfo) {
+        if (responseInfo.serverTime) {
+          lastKnownPastTime = responseInfo.serverTime;
+        }
+        if (responseInfo.status === 401) {
+          disabled = true;
+          utils.onNextTick(() =&gt; {
+            emitter.maybeReportError(
+              new errors.LDUnexpectedResponseError(&apos;Received 401 error, no further events will be posted&apos;)
+            );
+          });
+        }
+      }
+    });
+  };
+
+  processor.start = function() {
+    const flushTick = () =&gt; {
+      processor.flush();
+      flushTimer = setTimeout(flushTick, flushInterval);
+    };
+    flushTimer = setTimeout(flushTick, flushInterval);
+  };
+
+  processor.stop = function() {
+    clearTimeout(flushTimer);
+  };
+
+  return processor;
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

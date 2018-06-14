@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/__tests__/LDClient-test.js | ldclient-js</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="LaunchDarkly SDK for JavaScript"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="ldclient-js"><meta property="twitter:description" content="LaunchDarkly SDK for JavaScript"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventEmitter">EventEmitter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventProcessor">EventProcessor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventSender">EventSender</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-EventSummarizer">EventSummarizer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-GoalTracker">GoalTracker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Identity">Identity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Requestor">Requestor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Store">Store</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Stream">Stream</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-UserFilter">UserFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-clientNotReady">clientNotReady</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deprecated">deprecated</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-environmentNotFound">environmentNotFound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-environmentNotSpecified">environmentNotSpecified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-errorFetchingFlags">errorFetchingFlags</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-invalidKey">invalidKey</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-invalidUser">invalidUser</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-localStorageUnavailable">localStorageUnavailable</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-unknownCustomEventKey">unknownCustomEventKey</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-userNotSpecified">userNotSpecified</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDFlagFetchError">LDFlagFetchError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidArgumentError">LDInvalidArgumentError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidEnvironmentIdError">LDInvalidEnvironmentIdError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidEventKeyError">LDInvalidEventKeyError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDInvalidUserError">LDInvalidUserError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LDUnexpectedResponseError">LDUnexpectedResponseError</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#--mocks--">__mocks__</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-Requestor">Requestor</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/__tests__/LDClient-test.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import sinon from &apos;sinon&apos;;
+import semverCompare from &apos;semver-compare&apos;;
+import EventSource, { sources } from &apos;eventsourcemock&apos;;
+
+import LDClient from &apos;../index&apos;;
+import * as messages from &apos;../messages&apos;;
+import { btoa } from &apos;../utils&apos;;
+
+describe(&apos;LDClient&apos;, () =&gt; {
+  const envName = &apos;UNKNOWN_ENVIRONMENT_ID&apos;;
+  const lsKey = &apos;ld:UNKNOWN_ENVIRONMENT_ID:&apos; + btoa(&apos;{&quot;key&quot;:&quot;user&quot;}&apos;);
+  const user = { key: &apos;user&apos; };
+  const encodedUser = &apos;eyJrZXkiOiJ1c2VyIn0&apos;;
+  const hash = &apos;012345789abcde&apos;;
+  let warnSpy;
+  let errorSpy;
+  let xhr;
+  let requests = [];
+
+  beforeEach(() =&gt; {
+    Object.defineProperty(window, &apos;EventSource&apos;, {
+      value: EventSource,
+      writable: true,
+    });
+
+    xhr = sinon.useFakeXMLHttpRequest();
+    xhr.onCreate = function(req) {
+      requests.push(req);
+    };
+
+    warnSpy = jest.spyOn(console, &apos;warn&apos;).mockImplementation(() =&gt; {});
+    errorSpy = jest.spyOn(console, &apos;error&apos;).mockImplementation(() =&gt; {});
+  });
+
+  afterEach(() =&gt; {
+    requests = [];
+    xhr.restore();
+    warnSpy.mockRestore();
+    errorSpy.mockRestore();
+  });
+
+  function getLastRequest() {
+    return requests[requests.length - 1];
+  }
+
+  it(&apos;should exist&apos;, () =&gt; {
+    expect(LDClient).toBeDefined();
+  });
+
+  describe(&apos;initialization&apos;, () =&gt; {
+    it(&apos;should trigger the ready event&apos;, done =&gt; {
+      const handleReady = jest.fn();
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: {},
+      });
+
+      client.on(&apos;ready&apos;, handleReady);
+
+      setTimeout(() =&gt; {
+        expect(handleReady).toHaveBeenCalled();
+        done();
+      }, 0);
+    });
+
+    describe(&apos;waitUntilReady&apos;, () =&gt; {
+      it(&apos;should resolve waitUntilReady promise when ready&apos;, done =&gt; {
+        const handleReady = jest.fn();
+        const client = LDClient.initialize(envName, user, {
+          bootstrap: {},
+        });
+
+        client.waitUntilReady().then(handleReady);
+
+        client.on(&apos;ready&apos;, () =&gt; {
+          setTimeout(() =&gt; {
+            expect(handleReady).toHaveBeenCalled();
+            done();
+          }, 0);
+        });
+      });
+
+      it(&apos;should resolve waitUntilReady promise after ready event was already emitted&apos;, done =&gt; {
+        const handleInitialReady = jest.fn();
+        const handleReady = jest.fn();
+        const client = LDClient.initialize(envName, user, {
+          bootstrap: {},
+        });
+
+        client.on(&apos;ready&apos;, handleInitialReady);
+
+        setTimeout(() =&gt; {
+          client.waitUntilReady().then(handleReady);
+
+          setTimeout(() =&gt; {
+            expect(handleInitialReady).toHaveBeenCalled();
+            expect(handleReady).toHaveBeenCalled();
+            done();
+          }, 0);
+        }, 0);
+      });
+    });
+
+    it(&apos;should emit an error when an invalid samplingInterval is specified&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: {},
+        samplingInterval: &apos;totally not a number&apos;,
+      });
+
+      client.on(&apos;error&apos;, err =&gt; {
+        expect(err.message).toEqual(&apos;Invalid sampling interval configured. Sampling interval must be an integer &gt;= 0.&apos;);
+        done();
+      });
+    });
+
+    it(&apos;should emit an error when initialize is called without an environment key&apos;, done =&gt; {
+      const client = LDClient.initialize(&apos;&apos;, user, {
+        bootstrap: {},
+      });
+      client.on(&apos;error&apos;, err =&gt; {
+        expect(err.message).toEqual(messages.environmentNotSpecified());
+        done();
+      });
+    });
+
+    it(&apos;should emit an error when an invalid environment key is specified&apos;, () =&gt; {
+      const server = sinon.fakeServer.create();
+      server.respondWith(req =&gt; {
+        req.respond(404);
+      });
+      const client = LDClient.initialize(&apos;abc&apos;, user);
+      server.respond();
+      client.on(&apos;error&apos;, err =&gt; {
+        expect(err.message).toEqual(messages.environmentNotFound());
+        done();
+      });
+    });
+
+    it(&apos;should not fetch flag settings since bootstrap is provided&apos;, () =&gt; {
+      LDClient.initialize(envName, user, {
+        bootstrap: {},
+      });
+
+      const settingsRequest = requests[0];
+      expect(/sdk\/eval/.test(settingsRequest.url)).toEqual(false);
+    });
+
+    it(&apos;should contain package version&apos;, () =&gt; {
+      // Arrange
+      const version = LDClient.version;
+
+      // Act: all client bundles above 1.0.7 should contain package version
+      // https://github.com/substack/semver-compare
+      const result = semverCompare(version, &apos;1.0.6&apos;);
+
+      // Assert
+      expect(result).toEqual(1);
+    });
+
+    it(&apos;should clear cached settings if they are invalid JSON&apos;, done =&gt; {
+      window.localStorage.setItem(lsKey, &apos;foo{bar}&apos;);
+
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: &apos;localstorage&apos;,
+      });
+
+      expect(window.localStorage.getItem(lsKey)).toBeNull();
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        done();
+      });
+
+      requests[0].respond(200, { &apos;Content-Type&apos;: &apos;application/json&apos; }, &apos;{&quot;enable-foo&quot;: {&quot;value&quot;: true, &quot;version&quot;: 1}}&apos;);
+    });
+
+    it(&apos;should not clear cached settings if they are valid JSON&apos;, done =&gt; {
+      const json = &apos;{&quot;enable-thing&quot;: true}&apos;;
+
+      window.localStorage.setItem(lsKey, json);
+
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: &apos;localstorage&apos;,
+      });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        expect(window.localStorage.getItem(lsKey)).toEqual(json);
+        done();
+      });
+    });
+
+    it(&apos;should handle localStorage getItem throwing an exception&apos;, done =&gt; {
+      // sandbox.restore(window.localStorage.__proto__, &apos;getItem&apos;);
+      // sandbox.stub(window.localStorage.__proto__, &apos;getItem&apos;).throws();
+
+      localStorage.getItem.mockImplementationOnce(() =&gt; {
+        throw new Error();
+      });
+
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: &apos;localstorage&apos;,
+      });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        expect(warnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
+        done();
+      });
+
+      requests[0].respond(200, { &apos;Content-Type&apos;: &apos;application/json&apos; }, &apos;[{&quot;key&quot;: &quot;known&quot;, &quot;kind&quot;: &quot;custom&quot;}]&apos;);
+    });
+
+    it(&apos;should handle localStorage setItem throwing an exception&apos;, done =&gt; {
+      localStorage.setItem.mockImplementationOnce(() =&gt; {
+        throw new Error();
+      });
+
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: &apos;localstorage&apos;,
+      });
+
+      requests[0].respond(200, { &apos;Content-Type&apos;: &apos;application/json&apos; }, &apos;[{&quot;key&quot;: &quot;known&quot;, &quot;kind&quot;: &quot;custom&quot;}]&apos;);
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        expect(warnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
+        done();
+      });
+    });
+
+    it(&apos;should not update cached settings if there was an error fetching flags&apos;, done =&gt; {
+      const json = &apos;{&quot;enable-foo&quot;: true}&apos;;
+
+      window.localStorage.setItem(lsKey, json);
+
+      const server = sinon.fakeServer.create();
+      server.respondWith(req =&gt; {
+        req.respond(503);
+      });
+
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: &apos;localstorage&apos;,
+      });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        server.respond();
+        setTimeout(() =&gt; {
+          expect(window.localStorage.getItem(lsKey)).toEqual(json);
+          done();
+        }, 1);
+      });
+    });
+
+    it(&apos;should use hash as localStorage key when secure mode is enabled&apos;, done =&gt; {
+      const lsKeyHash = &apos;ld:UNKNOWN_ENVIRONMENT_ID:totallyLegitHash&apos;;
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: &apos;localstorage&apos;,
+        hash: &apos;totallyLegitHash&apos;,
+      });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        expect(JSON.parse(window.localStorage.getItem(lsKeyHash))).toEqual({
+          $schema: 1,
+          &apos;enable-foo&apos;: { value: true, version: 1 },
+        });
+        done();
+      });
+
+      requests[0].respond(200, { &apos;Content-Type&apos;: &apos;application/json&apos; }, &apos;{&quot;enable-foo&quot;:{&quot;value&quot;:true,&quot;version&quot;:1}}&apos;);
+    });
+
+    it(&apos;should clear localStorage when user context is changed&apos;, done =&gt; {
+      const json = &apos;{&quot;enable-foo&quot;:{&quot;value&quot;:true,&quot;version&quot;:1}}&apos;;
+      const lsKey2 = &apos;ld:UNKNOWN_ENVIRONMENT_ID:&apos; + btoa(&apos;{&quot;key&quot;:&quot;user2&quot;}&apos;);
+
+      const user2 = { key: &apos;user2&apos; };
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: &apos;localstorage&apos;,
+      });
+
+      const server = sinon.fakeServer.create();
+      server.respondWith([200, { &apos;Content-Type&apos;: &apos;application/json&apos; }, json]);
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.identify(user2, null, () =&gt; {
+          expect(window.localStorage.getItem(lsKey)).toBeNull();
+          expect(JSON.parse(window.localStorage.getItem(lsKey2))).toEqual({
+            $schema: 1,
+            &apos;enable-foo&apos;: { value: true, version: 1 },
+          });
+          done();
+        });
+        server.respond();
+      });
+      server.respond();
+    });
+
+    it(&apos;should not warn when tracking a known custom goal event&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: {}, // so the client doesn&apos;t request settings
+      });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.track(&apos;known&apos;);
+        expect(warnSpy).not.toHaveBeenCalledWith(&apos;Custom event key does not exist&apos;);
+        done();
+      });
+
+      requests[0].respond(200, { &apos;Content-Type&apos;: &apos;application/json&apos; }, &apos;[{&quot;key&quot;: &quot;known&quot;, &quot;kind&quot;: &quot;custom&quot;}]&apos;);
+    });
+
+    it(&apos;should emit an error when tracking a non-string custom goal event&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: {}, // so the client doesn&apos;t request settings
+      });
+      client.on(&apos;ready&apos;, () =&gt; {
+        const badCustomEventKeys = [123, [], {}, null, undefined];
+        badCustomEventKeys.forEach(key =&gt; {
+          client.track(key);
+          expect(errorSpy).toHaveBeenCalledWith(messages.unknownCustomEventKey(key));
+        });
+        done();
+      });
+    });
+
+    it(&apos;should warn when tracking an unknown custom goal event&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: {}, // so the client doesn&apos;t request settings
+      });
+
+      requests[0].respond(200, { &apos;Content-Type&apos;: &apos;application/json&apos; }, &apos;[{&quot;key&quot;: &quot;known&quot;, &quot;kind&quot;: &quot;custom&quot;}]&apos;);
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.track(&apos;unknown&apos;);
+        expect(warnSpy).toHaveBeenCalledWith(messages.unknownCustomEventKey(&apos;unknown&apos;));
+        done();
+      });
+    });
+
+    it(&apos;should emit an error event if there was an error fetching flags&apos;, done =&gt; {
+      const server = sinon.fakeServer.create();
+      server.respondWith(req =&gt; {
+        req.respond(503);
+      });
+
+      const client = LDClient.initialize(envName, user);
+
+      const handleError = jest.fn();
+      client.on(&apos;error&apos;, handleError);
+      server.respond();
+
+      setTimeout(() =&gt; {
+        expect(handleError).toHaveBeenCalled();
+        done();
+      }, 0);
+    });
+
+    it(&apos;should warn about missing user on first event&apos;, () =&gt; {
+      const sandbox = sinon.sandbox.create();
+      const warnSpy = sandbox.spy(console, &apos;warn&apos;);
+      const client = LDClient.initialize(envName, null);
+      client.track(&apos;eventkey&apos;, null);
+      warnSpy.restore();
+      sandbox.restore();
+      expect(warnSpy.called).toEqual(true);
+    });
+  });
+
+  describe(&apos;event generation&apos;, () =&gt; {
+    function stubEventProcessor() {
+      const ep = { events: [] };
+      ep.start = function() {};
+      ep.flush = function() {};
+      ep.stop = function() {};
+      ep.enqueue = function(e) {
+        ep.events.push(e);
+      };
+      return ep;
+    }
+
+    function expectIdentifyEvent(e, user) {
+      expect(e.kind).toEqual(&apos;identify&apos;);
+      expect(e.user).toEqual(user);
+    }
+
+    function expectFeatureEvent(e, key, value, variation, version, defaultVal) {
+      expect(e.kind).toEqual(&apos;feature&apos;);
+      expect(e.key).toEqual(key);
+      expect(e.value).toEqual(value);
+      expect(e.variation).toEqual(variation);
+      expect(e.version).toEqual(version);
+      expect(e.default).toEqual(defaultVal);
+    }
+
+    it(&apos;sends an identify event at startup&apos;, done =&gt; {
+      const ep = stubEventProcessor();
+      const server = sinon.fakeServer.create();
+      server.respondWith([
+        200,
+        { &apos;Content-Type&apos;: &apos;application/json&apos; },
+        &apos;{&quot;foo&quot;:{&quot;value&quot;:&quot;a&quot;,&quot;variation&quot;:1,&quot;version&quot;:2,&quot;flagVersion&quot;:2000}}&apos;,
+      ]);
+      const client = LDClient.initialize(envName, user, { eventProcessor: ep });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        expect(ep.events.length).toEqual(1);
+        expectIdentifyEvent(ep.events[0], user);
+
+        done();
+      });
+
+      server.respond();
+    });
+
+    it(&apos;sends a feature event for variation()&apos;, done =&gt; {
+      const ep = stubEventProcessor();
+      const server = sinon.fakeServer.create();
+      server.respondWith([
+        200,
+        { &apos;Content-Type&apos;: &apos;application/json&apos; },
+        &apos;{&quot;foo&quot;:{&quot;value&quot;:&quot;a&quot;,&quot;variation&quot;:1,&quot;version&quot;:2,&quot;flagVersion&quot;:2000}}&apos;,
+      ]);
+      const client = LDClient.initialize(envName, user, { eventProcessor: ep });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.variation(&apos;foo&apos;, &apos;x&apos;);
+
+        expect(ep.events.length).toEqual(2);
+        expectIdentifyEvent(ep.events[0], user);
+        expectFeatureEvent(ep.events[1], &apos;foo&apos;, &apos;a&apos;, 1, 2000, &apos;x&apos;);
+
+        done();
+      });
+
+      server.respond();
+    });
+
+    it(&apos;uses &quot;version&quot; instead of &quot;flagVersion&quot; in event if &quot;flagVersion&quot; is absent&apos;, done =&gt; {
+      const ep = stubEventProcessor();
+      const server = sinon.fakeServer.create();
+      server.respondWith([
+        200,
+        { &apos;Content-Type&apos;: &apos;application/json&apos; },
+        &apos;{&quot;foo&quot;:{&quot;value&quot;:&quot;a&quot;,&quot;variation&quot;:1,&quot;version&quot;:2}}&apos;,
+      ]);
+      const client = LDClient.initialize(envName, user, { eventProcessor: ep });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.variation(&apos;foo&apos;, &apos;x&apos;);
+
+        expect(ep.events.length).toEqual(2);
+        expectIdentifyEvent(ep.events[0], user);
+        expectFeatureEvent(ep.events[1], &apos;foo&apos;, &apos;a&apos;, 1, 2, &apos;x&apos;);
+
+        done();
+      });
+
+      server.respond();
+    });
+
+    it(&apos;omits event version if flag does not exist&apos;, done =&gt; {
+      const ep = stubEventProcessor();
+      const server = sinon.fakeServer.create();
+      server.respondWith([200, { &apos;Content-Type&apos;: &apos;application/json&apos; }, &apos;{}&apos;]);
+      const client = LDClient.initialize(envName, user, { eventProcessor: ep });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.variation(&apos;foo&apos;, &apos;x&apos;);
+
+        expect(ep.events.length).toEqual(2);
+        expectIdentifyEvent(ep.events[0], user);
+        expectFeatureEvent(ep.events[1], &apos;foo&apos;, &apos;x&apos;, undefined, undefined, &apos;x&apos;);
+
+        done();
+      });
+
+      server.respond();
+    });
+  });
+
+  describe(&apos;event listening&apos;, () =&gt; {
+    const streamUrl = &apos;https://clientstream.launchdarkly.com&apos;;
+
+    function streamEvents() {
+      return sources[`${streamUrl}/eval/${envName}/${encodedUser}`].__emitter._events;
+    }
+
+    it(&apos;does not connect to the stream by default&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        expect(sources).toMatchObject({});
+        done();
+      });
+    });
+
+    it(&apos;connects to the stream when listening to global change events&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change&apos;, () =&gt; {});
+        expect(sources[streamUrl + &apos;/eval/&apos; + envName + &apos;/&apos; + encodedUser]).toBeDefined();
+        done();
+      });
+    });
+
+    it(&apos;connects to the stream when listening to change event for one flag&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change:flagkey&apos;, () =&gt; {});
+        expect(sources[streamUrl + &apos;/eval/&apos; + envName + &apos;/&apos; + encodedUser]).toBeDefined();
+        done();
+      });
+    });
+
+    it(&apos;passes the secure mode hash in the stream URL if provided&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, { hash: hash, bootstrap: {} });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change:flagkey&apos;, () =&gt; {});
+        expect(sources[streamUrl + &apos;/eval/&apos; + envName + &apos;/&apos; + encodedUser + &apos;?h=&apos; + hash]).toBeDefined();
+        done();
+      });
+    });
+
+    it(&apos;handles stream ping message by getting flags&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change&apos;, () =&gt; {});
+        streamEvents().ping();
+        getLastRequest().respond(
+          200,
+          { &apos;Content-Type&apos;: &apos;application/json&apos; },
+          &apos;{&quot;enable-foo&quot;:{&quot;value&quot;:true,&quot;version&quot;:1}}&apos;
+        );
+        expect(client.variation(&apos;enable-foo&apos;)).toEqual(true);
+        done();
+      });
+    });
+
+    it(&apos;handles stream put message by updating flags&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change&apos;, () =&gt; {});
+
+        streamEvents().put({
+          data: &apos;{&quot;enable-foo&quot;:{&quot;value&quot;:true,&quot;version&quot;:1}}&apos;,
+        });
+
+        expect(client.variation(&apos;enable-foo&apos;)).toEqual(true);
+        done();
+      });
+    });
+
+    it(&apos;updates local storage for put message if using local storage&apos;, done =&gt; {
+      window.localStorage.setItem(lsKey, &apos;{&quot;enable-foo&quot;:false}&apos;);
+      const client = LDClient.initialize(envName, user, { bootstrap: &apos;localstorage&apos; });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change&apos;, () =&gt; {});
+
+        streamEvents().put({
+          data: &apos;{&quot;enable-foo&quot;:{&quot;value&quot;:true,&quot;version&quot;:1}}&apos;,
+        });
+
+        expect(client.variation(&apos;enable-foo&apos;)).toEqual(true);
+        expect(JSON.parse(window.localStorage.getItem(lsKey))).toEqual({
+          $schema: 1,
+          &apos;enable-foo&apos;: { value: true, version: 1 },
+        });
+        done();
+      });
+    });
+
+    it(&apos;fires global change event when flags are updated from put event&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, { bootstrap: { &apos;enable-foo&apos;: false } });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change&apos;, changes =&gt; {
+          expect(changes).toEqual({
+            &apos;enable-foo&apos;: { current: true, previous: false },
+          });
+
+          done();
+        });
+
+        streamEvents().put({
+          data: &apos;{&quot;enable-foo&quot;:{&quot;value&quot;:true,&quot;version&quot;:1}}&apos;,
+        });
+      });
+    });
+
+    it(&apos;fires individual change event when flags are updated from put event&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, { bootstrap: { &apos;enable-foo&apos;: false } });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change:enable-foo&apos;, (current, previous) =&gt; {
+          expect(current).toEqual(true);
+          expect(previous).toEqual(false);
+
+          done();
+        });
+
+        streamEvents().put({
+          data: &apos;{&quot;enable-foo&quot;:{&quot;value&quot;:true,&quot;version&quot;:1}}&apos;,
+        });
+      });
+    });
+
+    it(&apos;handles patch message by updating flag&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, { bootstrap: { &apos;enable-foo&apos;: false } });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change&apos;, () =&gt; {});
+
+        streamEvents().patch({ data: &apos;{&quot;key&quot;:&quot;enable-foo&quot;,&quot;value&quot;:true,&quot;version&quot;:1}&apos; });
+
+        expect(client.variation(&apos;enable-foo&apos;)).toEqual(true);
+        done();
+      });
+    });
+
+    it(&apos;does not update flag if patch version &lt; flag version&apos;, done =&gt; {
+      const server = sinon.fakeServer.create();
+      server.respondWith([200, { &apos;Content-Type&apos;: &apos;application/json&apos; }, &apos;{&quot;enable-foo&quot;:{&quot;value&quot;:&quot;a&quot;,&quot;version&quot;:2}}&apos;]);
+
+      const client = LDClient.initialize(envName, user);
+      client.on(&apos;ready&apos;, () =&gt; {
+        expect(client.variation(&apos;enable-foo&apos;)).toEqual(&apos;a&apos;);
+
+        client.on(&apos;change&apos;, () =&gt; {});
+
+        streamEvents().patch({ data: &apos;{&quot;key&quot;:&quot;enable-foo&quot;,&quot;value&quot;:&quot;b&quot;,&quot;version&quot;:1}&apos; });
+
+        expect(client.variation(&apos;enable-foo&apos;)).toEqual(&apos;a&apos;);
+
+        done();
+      });
+      server.respond();
+    });
+
+    it(&apos;does not update flag if patch version == flag version&apos;, done =&gt; {
+      const server = sinon.fakeServer.create();
+      server.respondWith([200, { &apos;Content-Type&apos;: &apos;application/json&apos; }, &apos;{&quot;enable-foo&quot;:{&quot;value&quot;:&quot;a&quot;,&quot;version&quot;:2}}&apos;]);
+
+      const client = LDClient.initialize(envName, user);
+      client.on(&apos;ready&apos;, () =&gt; {
+        expect(client.variation(&apos;enable-foo&apos;)).toEqual(&apos;a&apos;);
+
+        client.on(&apos;change&apos;, () =&gt; {});
+
+        streamEvents().patch({ data: &apos;{&quot;key&quot;:&quot;enable-foo&quot;,&quot;value&quot;:&quot;b&quot;,&quot;version&quot;:1}&apos; });
+
+        expect(client.variation(&apos;enable-foo&apos;)).toEqual(&apos;a&apos;);
+
+        done();
+      });
+      server.respond();
+    });
+
+    it(&apos;updates flag if patch has a version and flag has no version&apos;, done =&gt; {
+      const server = sinon.fakeServer.create();
+      server.respondWith([200, { &apos;Content-Type&apos;: &apos;application/json&apos; }, &apos;{&quot;enable-foo&quot;:{&quot;value&quot;:&quot;a&quot;}}&apos;]);
+
+      const client = LDClient.initialize(envName, user);
+      client.on(&apos;ready&apos;, () =&gt; {
+        expect(client.variation(&apos;enable-foo&apos;)).toEqual(&apos;a&apos;);
+
+        client.on(&apos;change&apos;, () =&gt; {});
+
+        streamEvents().patch({ data: &apos;{&quot;key&quot;:&quot;enable-foo&quot;,&quot;value&quot;:&quot;b&quot;,&quot;version&quot;:1}&apos; });
+
+        expect(client.variation(&apos;enable-foo&apos;)).toEqual(&apos;b&apos;);
+
+        done();
+      });
+      server.respond();
+    });
+
+    it(&apos;updates flag if flag has a version and patch has no version&apos;, done =&gt; {
+      const server = sinon.fakeServer.create();
+      server.respondWith([200, { &apos;Content-Type&apos;: &apos;application/json&apos; }, &apos;{&quot;enable-foo&quot;:{&quot;value&quot;:&quot;a&quot;,&quot;version&quot;:2}}&apos;]);
+
+      const client = LDClient.initialize(envName, user);
+      client.on(&apos;ready&apos;, () =&gt; {
+        expect(client.variation(&apos;enable-foo&apos;)).toEqual(&apos;a&apos;);
+
+        client.on(&apos;change&apos;, () =&gt; {});
+
+        streamEvents().patch({ data: &apos;{&quot;key&quot;:&quot;enable-foo&quot;,&quot;value&quot;:&quot;b&quot;}&apos; });
+
+        expect(client.variation(&apos;enable-foo&apos;)).toEqual(&apos;b&apos;);
+
+        done();
+      });
+      server.respond();
+    });
+
+    it(&apos;updates local storage for patch message if using local storage&apos;, done =&gt; {
+      window.localStorage.setItem(lsKey, &apos;{&quot;enable-foo&quot;:false}&apos;);
+      const client = LDClient.initialize(envName, user, { bootstrap: &apos;localstorage&apos; });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change&apos;, () =&gt; {});
+
+        streamEvents().put({
+          data: &apos;{&quot;enable-foo&quot;:{&quot;value&quot;:true,&quot;version&quot;:1}}&apos;,
+        });
+
+        expect(client.variation(&apos;enable-foo&apos;)).toEqual(true);
+        expect(JSON.parse(window.localStorage.getItem(lsKey))).toEqual({
+          $schema: 1,
+          &apos;enable-foo&apos;: { value: true, version: 1 },
+        });
+        done();
+      });
+    });
+
+    it(&apos;fires global change event when flag is updated from patch event&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, { bootstrap: { &apos;enable-foo&apos;: false } });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change&apos;, changes =&gt; {
+          expect(changes).toEqual({
+            &apos;enable-foo&apos;: { current: true, previous: false },
+          });
+
+          done();
+        });
+
+        streamEvents().patch({
+          data: &apos;{&quot;key&quot;:&quot;enable-foo&quot;,&quot;value&quot;:true,&quot;version&quot;:1}&apos;,
+        });
+      });
+    });
+
+    it(&apos;fires individual change event when flag is updated from patch event&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, { bootstrap: { &apos;enable-foo&apos;: false } });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change:enable-foo&apos;, (current, previous) =&gt; {
+          expect(current).toEqual(true);
+          expect(previous).toEqual(false);
+
+          done();
+        });
+
+        streamEvents().patch({
+          data: &apos;{&quot;key&quot;:&quot;enable-foo&quot;,&quot;value&quot;:true,&quot;version&quot;:1}&apos;,
+        });
+      });
+    });
+
+    it(&apos;fires global change event when flag is newly created from patch event&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change&apos;, changes =&gt; {
+          expect(changes).toEqual({
+            &apos;enable-foo&apos;: { current: true },
+          });
+
+          done();
+        });
+
+        streamEvents().patch({
+          data: &apos;{&quot;key&quot;:&quot;enable-foo&quot;,&quot;value&quot;:true,&quot;version&quot;:1}&apos;,
+        });
+      });
+    });
+
+    it(&apos;fires global change event when flag is newly created from patch event&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change:enable-foo&apos;, (current, previous) =&gt; {
+          expect(current).toEqual(true);
+          expect(previous).toEqual(undefined);
+
+          done();
+        });
+
+        streamEvents().patch({
+          data: &apos;{&quot;key&quot;:&quot;enable-foo&quot;,&quot;value&quot;:true,&quot;version&quot;:1}&apos;,
+        });
+      });
+    });
+
+    it(&apos;handles delete message by deleting flag&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, { bootstrap: { &apos;enable-foo&apos;: false } });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change&apos;, () =&gt; {});
+
+        streamEvents().delete({
+          data: &apos;{&quot;key&quot;:&quot;enable-foo&quot;,&quot;version&quot;:1}&apos;,
+        });
+
+        expect(client.variation(&apos;enable-foo&apos;)).toBeUndefined();
+        done();
+      });
+    });
+
+    it(&apos;fires global change event when flag is deleted&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, { bootstrap: { &apos;enable-foo&apos;: true } });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change&apos;, changes =&gt; {
+          expect(changes).toEqual({
+            &apos;enable-foo&apos;: { previous: true },
+          });
+
+          done();
+        });
+
+        streamEvents().delete({
+          data: &apos;{&quot;key&quot;:&quot;enable-foo&quot;,&quot;version&quot;:1}&apos;,
+        });
+      });
+    });
+
+    it(&apos;fires individual change event when flag is deleted&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, { bootstrap: { &apos;enable-foo&apos;: true } });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change:enable-foo&apos;, (current, previous) =&gt; {
+          expect(current).toEqual(undefined);
+          expect(previous).toEqual(true);
+
+          done();
+        });
+
+        streamEvents().delete({
+          data: &apos;{&quot;key&quot;:&quot;enable-foo&quot;,&quot;version&quot;:1}&apos;,
+        });
+      });
+    });
+
+    it(&apos;updates local storage for delete message if using local storage&apos;, done =&gt; {
+      window.localStorage.setItem(lsKey, &apos;{&quot;enable-foo&quot;:false}&apos;);
+      const client = LDClient.initialize(envName, user, { bootstrap: &apos;localstorage&apos; });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change&apos;, () =&gt; {});
+
+        streamEvents().delete({
+          data: &apos;{&quot;key&quot;:&quot;enable-foo&quot;,&quot;version&quot;:1}&apos;,
+        });
+
+        expect(client.variation(&apos;enable-foo&apos;)).toEqual(undefined);
+        expect(JSON.parse(window.localStorage.getItem(lsKey))).toEqual({
+          $schema: 1,
+          &apos;enable-foo&apos;: { version: 1, deleted: true },
+        });
+        done();
+      });
+    });
+
+    it(&apos;reconnects to stream if the user changes&apos;, done =&gt; {
+      const user2 = { key: &apos;user2&apos; };
+      const encodedUser2 = &apos;eyJrZXkiOiJ1c2VyMiJ9&apos;;
+      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.on(&apos;change&apos;, () =&gt; {});
+
+        expect(sources[streamUrl + &apos;/eval/&apos; + envName + &apos;/&apos; + encodedUser]).toBeDefined();
+
+        client.identify(user2, null, () =&gt; {
+          expect(sources[streamUrl + &apos;/eval/&apos; + envName + &apos;/&apos; + encodedUser2]).toBeDefined();
+          done();
+        });
+
+        getLastRequest().respond(200, { &apos;Content-Type&apos;: &apos;application/json&apos; }, &apos;{&quot;enable-foo&quot;: true}&apos;);
+      });
+    });
+
+    it(&apos;returns an error when identify is called with null user&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.identify(null).then(
+          () =&gt; {
+            throw Error(&apos;should not have succeeded&apos;);
+          },
+          () =&gt; {
+            done();
+          }
+        );
+      });
+    });
+
+    it(&apos;returns an error when identify is called with user with no key&apos;, done =&gt; {
+      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        client.identify({ country: &apos;US&apos; }).then(
+          () =&gt; {
+            throw Error(&apos;should not have succeeded&apos;);
+          },
+          () =&gt; {
+            done();
+          }
+        );
+      });
+    });
+
+    it(&apos;does not change flag values after identify is called with null user&apos;, done =&gt; {
+      const data = { foo: &apos;bar&apos; };
+      const client = LDClient.initialize(envName, user, { bootstrap: data });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        expect(client.variation(&apos;foo&apos;, &apos;x&apos;)).toEqual(&apos;bar&apos;);
+        client.identify(null).then(
+          () =&gt; {
+            throw Error(&apos;should not have succeeded&apos;);
+          },
+          () =&gt; {
+            expect(client.variation(&apos;foo&apos;, &apos;x&apos;)).toEqual(&apos;bar&apos;);
+            done();
+          }
+        );
+      });
+    });
+
+    it(&apos;does not change flag values after identify is called with invalid user&apos;, done =&gt; {
+      const data = { foo: &apos;bar&apos; };
+      const client = LDClient.initialize(envName, user, { bootstrap: data });
+
+      client.on(&apos;ready&apos;, () =&gt; {
+        expect(client.variation(&apos;foo&apos;, &apos;x&apos;)).toEqual(&apos;bar&apos;);
+        client.identify({ country: &apos;US&apos; }).then(
+          () =&gt; {
+            throw Error(&apos;should not have succeeded&apos;);
+          },
+          () =&gt; {
+            expect(client.variation(&apos;foo&apos;, &apos;x&apos;)).toEqual(&apos;bar&apos;);
+            done();
+          }
+        );
+      });
+    });
+  });
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
