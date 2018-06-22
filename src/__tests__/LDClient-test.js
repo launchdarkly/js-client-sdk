@@ -220,11 +220,7 @@ describe('LDClient', () => {
         expect(client.variation('flag-key')).toEqual(1);
         done();
       });
-      requests[0].respond(
-        200,
-        { 'Content-Type': 'application/json' },
-        '{"flag-key":{"value":1,"version":1}}'
-      );
+      requests[0].respond(200, { 'Content-Type': 'application/json' }, '{"flag-key":{"value":1,"version":1}}');
     });
 
     it('should handle localStorage getItem throwing an exception', done => {
