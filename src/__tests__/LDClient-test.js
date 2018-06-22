@@ -100,6 +100,24 @@ describe('LDClient', () => {
       });
     });
 
+    it('should resolve waitUntilGoalsReady when goals are loaded', done => {
+      const handleGoalsReady = jest.fn();
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: {},
+      });
+
+      client.waitUntilGoalsReady().then(handleGoalsReady);
+
+      client.on('goalsReady', () => {
+        setTimeout(() => {
+          expect(handleGoalsReady).toHaveBeenCalled();
+          done();
+        }, 0);
+      });
+
+      getLastRequest().respond(200);
+    });
+
     it('should emit an error when an invalid samplingInterval is specified', done => {
       const client = LDClient.initialize(envName, user, {
         bootstrap: {},
@@ -185,6 +203,24 @@ describe('LDClient', () => {
         expect(window.localStorage.getItem(lsKey)).toEqual(json);
         done();
       });
+    });
+
+    it('should start with empty flags if we tried to use cached settings and there are none', done => {
+      window.localStorage.removeItem(lsKey);
+
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: 'localstorage',
+      });
+
+      // don't wait for ready event - verifying that variation() doesn't throw an error if called before ready
+      expect(client.variation('flag-key', 0)).toEqual(0);
+
+      // verify that the flags get requested from LD
+      client.on('ready', () => {
+        expect(client.variation('flag-key')).toEqual(1);
+        done();
+      });
+      requests[0].respond(200, { 'Content-Type': 'application/json' }, '{"flag-key":{"value":1,"version":1}}');
     });
 
     it('should handle localStorage getItem throwing an exception', done => {

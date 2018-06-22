@@ -3,6 +3,13 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. 
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.2.0] - 2018-06-22
+### Added:
+- New event `goalsReady` (and new method `waitUntilGoalsReady`, which returns a Promise based on that event) indicates when the client has loaded goals-- i.e. when it is possible for pageview events and click events to be triggered.
+
+### Fixed:
+- Fixed a bug where calling `variation` would throw an error if the client was bootstrapped from local storage and there were no flags in local storage yet, and the initial HTTP request for flags from LaunchDarkly had not yet completed. (thanks, [mpcowan](https://github.com/launchdarkly/js-client/pull/97)!)
+
 ## [2.1.2] - 2018-06-08
 ### Fixed:
 - Fix the TypeScript definitions to properly support the ES default export.

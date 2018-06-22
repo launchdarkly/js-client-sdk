@@ -11,6 +11,7 @@ import * as errors from './errors';
 
 const readyEvent = 'ready';
 const changeEvent = 'change';
+const goalsEvent = 'goalsReady';
 const locationWatcherInterval = 300;
 
 function initialize(env, user, options = {}) {
@@ -405,7 +406,7 @@ function initialize(env, user, options = {}) {
     flags = store.loadFlags();
 
     if (flags === null) {
-      flags = {}
+      flags = {};
       requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
         if (err) {
           emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
@@ -494,6 +495,7 @@ function initialize(env, user, options = {}) {
       goalTracker = GoalTracker(goals, sendGoalEvent);
       watchLocation(locationWatcherInterval, refreshGoalTracker);
     }
+    emitter.emit(goalsEvent);
   });
 
   function start() {
@@ -524,8 +526,16 @@ function initialize(env, user, options = {}) {
     });
   });
 
+  const goalsPromise = new Promise(resolve => {
+    const onGoals = emitter.on(goalsEvent, () => {
+      emitter.off(goalsEvent, onGoals);
+      resolve();
+    });
+  });
+
   const client = {
     waitUntilReady: () => readyPromise,
+    waitUntilGoalsReady: () => goalsPromise,
     identify: identify,
     variation: variation,
     track: track,
