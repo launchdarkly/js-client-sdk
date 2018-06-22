@@ -405,6 +405,7 @@ function initialize(env, user, options = {}) {
     flags = store.loadFlags();
 
     if (flags === null) {
+      flags = {}
       requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
         if (err) {
           emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
