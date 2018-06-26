@@ -129,7 +129,9 @@ export default function EventProcessor(eventsUrl, environmentId, options = {}, e
         if (responseInfo.status >= 400) {
           utils.onNextTick(() => {
             emitter.maybeReportError(
-              new errors.LDUnexpectedResponseError(messages.httpErrorMessage(responseInfo.status, 'event posting', 'some events were dropped'))
+              new errors.LDUnexpectedResponseError(
+                messages.httpErrorMessage(responseInfo.status, 'event posting', 'some events were dropped')
+              )
             );
           });
         }

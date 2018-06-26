@@ -42,8 +42,13 @@ export const deprecated = function(oldName, newName) {
 };
 
 export const httpErrorMessage = function(status, context, retryMessage) {
-  return 'Received error ' + status
-    + (status == 401 ? ' (invalid SDK key)' : '')
-    + ' for ' + context
-    + ' - ' + (errors.isHttpErrorRecoverable(status) ? retryMessage : 'giving up permanently');
+  return (
+    'Received error ' +
+    status +
+    (status === 401 ? ' (invalid SDK key)' : '') +
+    ' for ' +
+    context +
+    ' - ' +
+    (errors.isHttpErrorRecoverable(status) ? retryMessage : 'giving up permanently')
+  );
 };
