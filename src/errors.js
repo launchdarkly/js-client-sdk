@@ -18,3 +18,10 @@ export const LDInvalidUserError = createCustomError('LaunchDarklyInvalidUserErro
 export const LDInvalidEventKeyError = createCustomError('LaunchDarklyInvalidEventKeyError');
 export const LDInvalidArgumentError = createCustomError('LaunchDarklyInvalidArgumentError');
 export const LDFlagFetchError = createCustomError('LaunchDarklyFlagFetchError');
+
+export function isHttpErrorRecoverable(status) {
+  if (status >= 400 && status < 500) {
+    return status === 408 || status === 429;
+  }
+  return true;
+}
