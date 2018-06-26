@@ -2,6 +2,7 @@ import EventSender from './EventSender';
 import EventSummarizer from './EventSummarizer';
 import UserFilter from './UserFilter';
 import * as errors from './errors';
+import * as messages from './messages';
 import * as utils from './utils';
 
 export default function EventProcessor(eventsUrl, environmentId, options = {}, emitter = null, sender = null) {
@@ -122,11 +123,13 @@ export default function EventProcessor(eventsUrl, environmentId, options = {}, e
         if (responseInfo.serverTime) {
           lastKnownPastTime = responseInfo.serverTime;
         }
-        if (responseInfo.status === 401) {
+        if (!errors.isHttpErrorRecoverable(responseInfo.status)) {
           disabled = true;
+        }
+        if (responseInfo.status >= 400) {
           utils.onNextTick(() => {
             emitter.maybeReportError(
-              new errors.LDUnexpectedResponseError('Received 401 error, no further events will be posted')
+              new errors.LDUnexpectedResponseError(messages.httpErrorMessage(responseInfo.status, 'event posting', 'some events were dropped'))
             );
           });
         }
