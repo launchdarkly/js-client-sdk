@@ -415,11 +415,11 @@ describe('EventProcessor', () => {
     });
   });
 
-  it('stops sending events after a 401 error', done => {
+  function verifyUnrecoverableHttpError(done, status) {
     const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
     const e = { kind: 'identify', creationDate: 1000, user: user };
     ep.enqueue(e);
-    mockEventSender.status = 401;
+    mockEventSender.status = status;
     ep.flush().then(() => {
       expect(mockEventSender.calls.length).toEqual(1);
       ep.enqueue(e);
@@ -428,5 +428,27 @@ describe('EventProcessor', () => {
         done();
       });
     });
-  });
+  }
+
+  function verifyRecoverableHttpError(done, status) {
+    const ep = EventProcessor(eventsUrl, envId, {}, null, mockEventSender);
+    const e = { kind: 'identify', creationDate: 1000, user: user };
+    ep.enqueue(e);
+    mockEventSender.status = status;
+    ep.flush().then(() => {
+      expect(mockEventSender.calls.length).toEqual(1);
+      ep.enqueue(e);
+      ep.flush().then(() => {
+        expect(mockEventSender.calls.length).toEqual(2);
+        done();
+      });
+    });
+  }
+
+  it('stops sending events after a 401 error', done => verifyUnrecoverableHttpError(done, 401));
+  it('stops sending events after a 403 error', done => verifyUnrecoverableHttpError(done, 403));
+  it('stops sending events after a 404 error', done => verifyUnrecoverableHttpError(done, 404));
+  it('continues sending events after a 408 error', done => verifyRecoverableHttpError(done, 408));
+  it('continues sending events after a 429 error', done => verifyRecoverableHttpError(done, 429));
+  it('continues sending events after a 500 error', done => verifyRecoverableHttpError(done, 500));
 });

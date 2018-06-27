@@ -3,6 +3,10 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. 
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.3.0] - 2018-06-26
+### Changed:
+The client will now stop trying to send analytics events if it receives almost any HTTP 4xx error from LaunchDarkly; such errors indicate either a configuration problem (invalid SDK key) or a bug, which is not likely to resolve without a restart or an upgrade. This does not apply if the error is 400, 408, or 429.
+
 ## [2.2.0] - 2018-06-22
 ### Added:
 - New event `goalsReady` (and new method `waitUntilGoalsReady`, which returns a Promise based on that event) indicates when the client has loaded goals-- i.e. when it is possible for pageview events and click events to be triggered.
