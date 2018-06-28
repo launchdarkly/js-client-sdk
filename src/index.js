@@ -441,7 +441,7 @@ function initialize(env, user, options = {}) {
       if (err) {
         emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
       }
-      flags = settings;
+      flags = settings || {};
       emitter.emit(readyEvent);
     });
   }
