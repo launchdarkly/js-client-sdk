@@ -140,17 +140,22 @@ describe('LDClient', () => {
       });
     });
 
-    it('should emit an error when an invalid environment key is specified', () => {
-      const server = sinon.fakeServer.create();
-      server.respondWith(req => {
-        req.respond(404);
-      });
+    it('should emit an error when an invalid environment key is specified', done => {
       const client = LDClient.initialize('abc', user);
-      server.respond();
       client.on('error', err => {
-        expect(err.message).toEqual(messages.environmentNotFound());
+        expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
         done();
       });
+      requests[0].respond(404);
+    });
+
+    it('returns default values when an invalid environment key is specified', done => {
+      const client = LDClient.initialize('abc', user);
+      client.on('error', () => {
+        expect(client.variation('flag-key', 1)).toEqual(1);
+        done();
+      });
+      requests[0].respond(404);
     });
 
     it('should not fetch flag settings since bootstrap is provided', () => {
