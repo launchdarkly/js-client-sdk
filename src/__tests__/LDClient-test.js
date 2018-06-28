@@ -151,7 +151,7 @@ describe('LDClient', () => {
 
     it('returns default values when an invalid environment key is specified', done => {
       const client = LDClient.initialize('abc', user);
-      client.on('error', err => {
+      client.on('error', () => {
         expect(client.variation('flag-key', 1)).toEqual(1);
         done();
       });
