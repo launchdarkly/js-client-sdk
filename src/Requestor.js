@@ -15,15 +15,12 @@ function fetchJSON(endpoint, body, callback) {
     ) {
       callback(null, JSON.parse(xhr.responseText));
     } else {
-      callback(xhr.statusText);
+      callback(getResponseError(xhr));
     }
   });
 
   xhr.addEventListener('error', () => {
-    if (xhr.status === 404) {
-      callback(new errors.LDInvalidEnvironmentIdError(messages.environmentNotFound()));
-    }
-    callback(xhr.statusText);
+    callback(getResponseError(xhr));
   });
 
   if (body) {
@@ -38,6 +35,14 @@ function fetchJSON(endpoint, body, callback) {
   }
 
   return xhr;
+}
+
+function getResponseError(xhr) {
+  if (xhr.status === 404) {
+    return new errors.LDInvalidEnvironmentIdError(messages.environmentNotFound());
+  } else {
+    return xhr.statusText;
+  }
 }
 
 export default function Requestor(baseUrl, environment, useReport) {
