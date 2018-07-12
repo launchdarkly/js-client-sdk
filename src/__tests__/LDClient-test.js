@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import semverCompare from 'semver-compare';
 import EventSource, { sources } from 'eventsourcemock';
 
-import LDClient from '../index';
+import * as LDClient from '../index';
 import * as messages from '../messages';
 import { btoa } from '../utils';
 
