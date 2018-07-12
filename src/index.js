@@ -14,7 +14,7 @@ const changeEvent = 'change';
 const goalsEvent = 'goalsReady';
 const locationWatcherInterval = 300;
 
-function initialize(env, user, options = {}) {
+export function initialize(env, user, options = {}) {
   const baseUrl = options.baseUrl || 'https://app.launchdarkly.com';
   const eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
   const streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
@@ -548,6 +548,11 @@ function initialize(env, user, options = {}) {
   return client;
 }
 
-const version = VERSION;
+export const version = VERSION;
 
-export default { initialize, version };
+function deprecatedInitialize(env, user, options = {}) {
+  console && console.warn && console.warn(messages.deprecated('default export', 'named LDClient export'));
+  return initialize(env, user, options);
+}
+
+export default { initialize: deprecatedInitialize, version };
