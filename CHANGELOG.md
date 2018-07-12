@@ -1,7 +1,14 @@
 # Change log
 
-All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. 
+All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org).
+
+## [2.4.0] - 2018-07-12
+### Added:
+- Named exports for the `initialize` method and `version` number exports.
+
+### Deprecated:
+- Default exports, use named exports instead.
 
 ## [2.3.1] - 2018-06-29
 ### Fixed:
