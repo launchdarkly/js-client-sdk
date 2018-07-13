@@ -10,6 +10,9 @@ This project adheres to [Semantic Versioning](http://semver.org).
 ### Deprecated:
 - Default exports, use named exports instead.
 
+### Changed:
+- Updated `package.json` to only export minified files.
+
 ## [2.3.1] - 2018-06-29
 ### Fixed:
 - If a polling request has failed due to an invalid environment key, calling `variation` now returns the default value; previously, it sometimes caused a null reference error.
