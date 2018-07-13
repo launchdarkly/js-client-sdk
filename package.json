@@ -10,8 +10,12 @@
     "client"
   ],
   "files": [
-    "src",
-    "dist"
+    "ldclient.cjs.js",
+    "ldclient.cjs.js.map",
+    "ldclient.es.js",
+    "ldclient.es.js.map",
+    "ldclient.min.js",
+    "ldclient.min.js.map"
   ],
   "main": "dist/ldclient.cjs.js",
   "module": "dist/ldclient.es.js",
