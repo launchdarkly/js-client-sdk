@@ -244,7 +244,6 @@ export function initialize(env, user, options = {}) {
     if (!ident.getUser()) {
       return;
     }
-    stream.disconnect();
     stream.connect(ident.getUser(), {
       ping: function() {
         requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {

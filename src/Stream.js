@@ -1,17 +1,46 @@
 import { base64URLEncode } from './utils';
 
 export default function Stream(baseUrl, environment, hash, config) {
+  config = config || {};
   const stream = {};
   const evalUrlPrefix = baseUrl + '/eval/' + environment + '/';
   const useReport = config.useReport || false;
-  const reconnectDelay = config.streamReconnectDelay || 5000;
-  let reconnectTimeoutReference;
+  const streamReconnectDelay = config.streamReconnectDelay || 1000;
   let es = null;
+  let reconnectTimeoutReference = null;
+  let user = null;
+  let handlers = null;
 
-  stream.connect = function(user, handlers) {
+  stream.connect = function(newUser, newHandlers) {
+    user = newUser;
+    handlers = newHandlers;
+    queueConnect();
+  }
+
+  stream.disconnect = function() {
+    clearTimeout(reconnectTimeoutReference);
+    reconnectTimeoutReference = null;
+    close()
+  };
+
+  stream.isConnected = function() {
+    return es && (es.readyState === EventSource.OPEN || es.readyState === EventSource.CONNECTING);
+  };
+
+  function queueConnect(reconnectDelay) {
+    close();
+    if (!reconnectTimeoutReference) {
+      if(reconnectDelay) {
+        setTimeout(tryConnect, reconnectDelay);
+      } else {
+        tryConnect();
+      }
+    }
+  }
+
+  function tryConnect() {
+    let url;
     if (typeof EventSource !== 'undefined') {
-      let url;
-      clearTimeout(reconnectTimeoutReference);
       if (useReport) {
         // we don't yet have an EventSource implementation that supports REPORT, so
         // fall back to the old ping-based stream
@@ -22,31 +51,25 @@ export default function Stream(baseUrl, environment, hash, config) {
           url = url + '?h=' + hash;
         }
       }
+
       es = new window.EventSource(url);
-      es.onerror = () => {
-        reconnectTimeoutReference = setTimeout(() => {
-          this.disconnect();
-          this.connect(user, handlers);
-        }, reconnectDelay);
-      };
       for (const key in handlers) {
         if (handlers.hasOwnProperty(key)) {
           es.addEventListener(key, handlers[key]);
         }
       }
+
+      es.onerror = () => {
+        queueConnect(streamReconnectDelay);
+      };
     }
   };
-
-  stream.disconnect = function() {
-    clearTimeout(reconnectTimeoutReference);
+  
+  function close() {
     if (es) {
       es.close();
     }
-  };
-
-  stream.isConnected = function() {
-    return es && (es.readyState === EventSource.OPEN || es.readyState === EventSource.CONNECTING);
-  };
+  }
 
   return stream;
 }
