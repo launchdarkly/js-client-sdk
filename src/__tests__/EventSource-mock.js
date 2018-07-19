@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 
-export let sources = {};
+export const sources = {};
 
 export default function EventSource(url) {
   sources[url] = this;
@@ -15,6 +15,7 @@ export default function EventSource(url) {
   this.removeEventListener = removeEventListener;
   this.close = close;
 
+  this.ockEmit = mockEmit;
   this.mockError = mockError;
   this.mockOpen = mockOpen;
   this.mockMessage = mockMessage;
@@ -31,17 +32,29 @@ export default function EventSource(url) {
     this.readyState = EventSource.CLOSED;
   }
 
+  function mockEmit(eventName, callback) {
+    if (this.readyState !== EventSource.CLOSED) {
+      this.__emitter.emit(eventName, callback);
+    }
+  }
+
   function mockError(error) {
-    this.onerror && this.onerror(error);
+    if (this.readyState !== EventSource.CLOSED) {
+      this.onerror && this.onerror(error);
+    }
   }
 
   function mockOpen() {
-    this.readyState = EventSource.OPEN;
-    this.onopen && this.onopen(error);
+    if (this.readyState === EventSource.CONNECTING) {
+      this.readyState = EventSource.OPEN;
+      this.onopen && this.onopen(error);
+    }
   }
 
   function mockMessage(message) {
-    this.onmessage && this.onmessage(message);
+    if (this.readyState === EventSource.OPEN) {
+      this.onmessage && this.onmessage(message);
+    }
   }
 }
 
