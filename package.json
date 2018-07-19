@@ -1,6 +1,6 @@
 {
   "name": "ldclient-js",
-  "version": "2.1.2",
+  "version": "2.4.0",
   "description": "LaunchDarkly SDK for JavaScript",
   "author": "LaunchDarkly <team@launchdarkly.com>",
   "license": "Apache-2.0",
@@ -10,8 +10,12 @@
     "client"
   ],
   "files": [
-    "src",
-    "dist"
+    "ldclient.cjs.js",
+    "ldclient.cjs.js.map",
+    "ldclient.es.js",
+    "ldclient.es.js.map",
+    "ldclient.min.js",
+    "ldclient.min.js.map"
   ],
   "main": "dist/ldclient.cjs.js",
   "module": "dist/ldclient.es.js",

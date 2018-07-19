@@ -1,7 +1,32 @@
 # Change log
 
-All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file. 
+All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org).
+
+## [2.4.0] - 2018-07-12
+### Added:
+- Named exports for the `initialize` method and `version` number exports.
+
+### Deprecated:
+- Default exports, use named exports instead.
+
+### Changed:
+- Updated `package.json` to only export minified files.
+
+## [2.3.1] - 2018-06-29
+### Fixed:
+- If a polling request has failed due to an invalid environment key, calling `variation` now returns the default value; previously, it sometimes caused a null reference error.
+
+## [2.3.0] - 2018-06-26
+### Changed:
+- The client will now stop trying to send analytics events if it receives almost any HTTP 4xx error from LaunchDarkly; such errors indicate either a configuration problem (invalid SDK key) or a bug, which is not likely to resolve without a restart or an upgrade. This does not apply if the error is 400, 408, or 429.
+
+## [2.2.0] - 2018-06-22
+### Added:
+- New event `goalsReady` (and new method `waitUntilGoalsReady`, which returns a Promise based on that event) indicates when the client has loaded goals-- i.e. when it is possible for pageview events and click events to be triggered.
+
+### Fixed:
+- Fixed a bug where calling `variation` would throw an error if the client was bootstrapped from local storage and there were no flags in local storage yet, and the initial HTTP request for flags from LaunchDarkly had not yet completed. (thanks, [mpcowan](https://github.com/launchdarkly/js-client/pull/97)!)
 
 ## [2.1.2] - 2018-06-08
 ### Fixed:

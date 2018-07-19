@@ -8,9 +8,12 @@
  * Documentation: http://docs.launchdarkly.com/docs/js-sdk-reference
  */
 declare module 'ldclient-js' {
-  const LaunchDarkly : {
-    initialize: (envKey: string, user: LDUser, options?: LDOptions) => LDClient
-    version: string
+  export const initialize: (envKey: string, user: LDUser, options?: LDOptions) => LDClient;
+  export const version: string;
+
+  const LaunchDarkly: {
+    initialize: (envKey: string, user: LDUser, options?: LDOptions) => LDClient;
+    version: string;
   };
 
   export default LaunchDarkly;
@@ -31,7 +34,7 @@ declare module 'ldclient-js' {
    * A map of feature flags from their keys to their values.
    */
   export type LDFlagSet = {
-    [key: string]: LDFlagValue,
+    [key: string]: LDFlagValue;
   };
 
   /**
@@ -39,9 +42,9 @@ declare module 'ldclient-js' {
    */
   export type LDFlagChangeset = {
     [key: string]: {
-      current: LDFlagValue,
-      previous: LDFlagValue,
-    },
+      current: LDFlagValue;
+      previous: LDFlagValue;
+    };
   };
 
   /**
@@ -50,10 +53,10 @@ declare module 'ldclient-js' {
    * See LDClient#on and LDClient#off.
    */
   type LDEventSignature = (
-      key: LDEventName,
-      callback: (current?: LDFlagValue | LDFlagChangeset, previous?: LDFlagValue) => void,
-      context?: any
-    ) => void;
+    key: LDEventName,
+    callback: (current?: LDFlagValue | LDFlagChangeset, previous?: LDFlagValue) => void,
+    context?: any
+  ) => void;
 
   /**
    * LaunchDarkly initialization options.
@@ -68,12 +71,10 @@ declare module 'ldclient-js' {
      */
     bootstrap?: 'localStorage' | LDFlagSet;
 
-
     /**
      * The signed user key for Secure Mode.
      */
     hash?: string;
-
 
     /**
      * The base url for the LaunchDarkly server.
@@ -84,7 +85,6 @@ declare module 'ldclient-js' {
      */
     baseUrl?: string;
 
-
     /**
      * The url for the LaunchDarkly events server.
      *
@@ -93,7 +93,6 @@ declare module 'ldclient-js' {
      *
      */
     eventsUrl?: string;
-
 
     /**
      * The url for the LaunchDarkly stream server.
@@ -192,7 +191,7 @@ declare module 'ldclient-js' {
      * Any additional attributes associated with the user.
      */
     custom?: {
-      [key: string]: string | boolean | number | Array<string | boolean | number>,
+      [key: string]: string | boolean | number | Array<string | boolean | number>;
     };
   }
   /**
@@ -201,7 +200,6 @@ declare module 'ldclient-js' {
    * @see http://docs.launchdarkly.com/docs/js-sdk-reference
    */
   export interface LDClient {
-
     /**
      * @returns a Promise containing the initialization state of the client
      */
@@ -226,7 +224,7 @@ declare module 'ldclient-js' {
 
     /**
      * Flushes pending events asynchronously.
-     * 
+     *
      * @param onDone
      *   A callback to invoke after the events were flushed.
      */
@@ -296,5 +294,4 @@ declare module 'ldclient-js' {
      */
     allFlags: () => LDFlagSet;
   }
-
 }

@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import semverCompare from 'semver-compare';
 import EventSource, { sources } from 'eventsourcemock';
 
-import LDClient from '../index';
+import * as LDClient from '../index';
 import * as messages from '../messages';
 import { btoa } from '../utils';
 
@@ -140,17 +140,22 @@ describe('LDClient', () => {
       });
     });
 
-    it('should emit an error when an invalid environment key is specified', () => {
-      const server = sinon.fakeServer.create();
-      server.respondWith(req => {
-        req.respond(404);
-      });
+    it('should emit an error when an invalid environment key is specified', done => {
       const client = LDClient.initialize('abc', user);
-      server.respond();
       client.on('error', err => {
-        expect(err.message).toEqual(messages.environmentNotFound());
+        expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
         done();
       });
+      requests[0].respond(404);
+    });
+
+    it('returns default values when an invalid environment key is specified', done => {
+      const client = LDClient.initialize('abc', user);
+      client.on('error', () => {
+        expect(client.variation('flag-key', 1)).toEqual(1);
+        done();
+      });
+      requests[0].respond(404);
     });
 
     it('should not fetch flag settings since bootstrap is provided', () => {
@@ -203,6 +208,24 @@ describe('LDClient', () => {
         expect(window.localStorage.getItem(lsKey)).toEqual(json);
         done();
       });
+    });
+
+    it('should start with empty flags if we tried to use cached settings and there are none', done => {
+      window.localStorage.removeItem(lsKey);
+
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: 'localstorage',
+      });
+
+      // don't wait for ready event - verifying that variation() doesn't throw an error if called before ready
+      expect(client.variation('flag-key', 0)).toEqual(0);
+
+      // verify that the flags get requested from LD
+      client.on('ready', () => {
+        expect(client.variation('flag-key')).toEqual(1);
+        done();
+      });
+      requests[0].respond(200, { 'Content-Type': 'application/json' }, '{"flag-key":{"value":1,"version":1}}');
     });
 
     it('should handle localStorage getItem throwing an exception', done => {
