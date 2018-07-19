@@ -1,11 +1,10 @@
 import { base64URLEncode } from './utils';
 
 export default function Stream(baseUrl, environment, hash, config) {
-  config = config || {};
   const stream = {};
   const evalUrlPrefix = baseUrl + '/eval/' + environment + '/';
   const useReport = config.useReport || false;
-  const streamReconnectDelay = config.streamReconnectDelay || 1000;
+  const streamReconnectDelay = (config && config.streamReconnectDelay) || 1000;
   let es = null;
   let reconnectTimeoutReference = null;
   let user = null;
@@ -15,12 +14,12 @@ export default function Stream(baseUrl, environment, hash, config) {
     user = newUser;
     handlers = newHandlers;
     queueConnect();
-  }
+  };
 
   stream.disconnect = function() {
     clearTimeout(reconnectTimeoutReference);
     reconnectTimeoutReference = null;
-    close()
+    close();
   };
 
   stream.isConnected = function() {
@@ -30,7 +29,7 @@ export default function Stream(baseUrl, environment, hash, config) {
   function queueConnect(reconnectDelay) {
     close();
     if (!reconnectTimeoutReference) {
-      if(reconnectDelay) {
+      if (reconnectDelay) {
         setTimeout(tryConnect, reconnectDelay);
       } else {
         tryConnect();
@@ -63,8 +62,8 @@ export default function Stream(baseUrl, environment, hash, config) {
         queueConnect(streamReconnectDelay);
       };
     }
-  };
-  
+  }
+
   function close() {
     if (es) {
       es.close();
