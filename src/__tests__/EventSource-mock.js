@@ -15,7 +15,7 @@ export default function EventSource(url) {
   this.removeEventListener = removeEventListener;
   this.close = close;
 
-  this.ockEmit = mockEmit;
+  this.mockEmit = mockEmit;
   this.mockError = mockError;
   this.mockOpen = mockOpen;
   this.mockMessage = mockMessage;

@@ -3,7 +3,7 @@ import { base64URLEncode } from './utils';
 export default function Stream(baseUrl, environment, hash, config) {
   const stream = {};
   const evalUrlPrefix = baseUrl + '/eval/' + environment + '/';
-  const useReport = config.useReport || false;
+  const useReport = (config && config.useReport) || false;
   const streamReconnectDelay = (config && config.streamReconnectDelay) || 1000;
   let es = null;
   let reconnectTimeoutReference = null;
@@ -13,7 +13,7 @@ export default function Stream(baseUrl, environment, hash, config) {
   stream.connect = function(newUser, newHandlers) {
     user = newUser;
     handlers = newHandlers;
-    queueConnect();
+    tryConnect();
   };
 
   stream.disconnect = function() {
@@ -26,18 +26,22 @@ export default function Stream(baseUrl, environment, hash, config) {
     return es && (es.readyState === EventSource.OPEN || es.readyState === EventSource.CONNECTING);
   };
 
-  function queueConnect(reconnectDelay) {
-    close();
+  function reconnect() {
+    closeConnection();
+    tryConnect(streamReconnectDelay);
+  }
+
+  function tryConnect(delay) {
     if (!reconnectTimeoutReference) {
-      if (reconnectDelay) {
-        setTimeout(tryConnect, reconnectDelay);
+      if (delay) {
+        setTimeout(openConnection, delay);
       } else {
-        tryConnect();
+        openConnection();
       }
     }
   }
 
-  function tryConnect() {
+  function openConnection() {
     let url;
     if (typeof EventSource !== 'undefined') {
       if (useReport) {
@@ -51,6 +55,7 @@ export default function Stream(baseUrl, environment, hash, config) {
         }
       }
 
+      closeConnection();
       es = new window.EventSource(url);
       for (const key in handlers) {
         if (handlers.hasOwnProperty(key)) {
@@ -58,15 +63,14 @@ export default function Stream(baseUrl, environment, hash, config) {
         }
       }
 
-      es.onerror = () => {
-        queueConnect(streamReconnectDelay);
-      };
+      es.onerror = reconnect;
     }
   }
 
-  function close() {
+  function closeConnection() {
     if (es) {
       es.close();
+      es = null;
     }
   }
 
