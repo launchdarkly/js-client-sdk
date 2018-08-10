@@ -140,7 +140,7 @@ describe('EventSender', () => {
       expect(lastRequest().requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
     });
 
-    each([[400], [408], [429], [500], [503]]).test('should retry on error %d', (status) => {
+    each([[400], [408], [429], [500], [503]]).test('should retry on error %d', status => {
       const sender = EventSender(eventsUrl, envId, true);
       const event = { kind: 'false', key: 'userKey' };
       sender.sendEvents([event], false);
