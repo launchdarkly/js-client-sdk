@@ -1,3 +1,4 @@
+import * as errors from './errors';
 import * as utils from './utils';
 
 const MAX_URL_LENGTH = 2000;
@@ -30,23 +31,34 @@ export default function EventSender(eventsUrl, environmentId, forceHasCors, imag
 
   function sendChunk(events, usePost, sync) {
     const createImage = imageCreator || loadUrlUsingImage;
+    const jsonBody = JSON.stringify(events);
     const send = onDone => {
-      if (usePost) {
+      function createRequest(canRetry) {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', postUrl, !sync);
         utils.addLDHeaders(xhr);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.setRequestHeader('X-LaunchDarkly-Event-Schema', '3');
-
         if (!sync) {
           xhr.addEventListener('load', () => {
-            onDone(getResponseInfo(xhr));
+            if (xhr.status >= 400 && errors.isHttpErrorRecoverable(xhr.status) && canRetry) {
+              createRequest(false).send(jsonBody);
+            } else {
+              onDone(getResponseInfo(xhr));
+            }
           });
+          if (canRetry) {
+            xhr.addEventListener('error', () => {
+              createRequest(false).send(jsonBody);
+            });
+          }
         }
-
-        xhr.send(JSON.stringify(events));
+        return xhr;
+      }
+      if (usePost) {
+        createRequest(true).send(jsonBody);
       } else {
-        const src = imageUrl + '?d=' + utils.base64URLEncode(JSON.stringify(events));
+        const src = imageUrl + '?d=' + utils.base64URLEncode(jsonBody);
         createImage(src, sync ? null : onDone);
       }
     };
