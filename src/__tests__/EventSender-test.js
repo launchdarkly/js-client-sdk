@@ -1,5 +1,4 @@
 import Base64 from 'Base64';
-import each from 'jest-each';
 import sinon from 'sinon';
 
 import EventSender from '../EventSender';
@@ -140,14 +139,18 @@ describe('EventSender', () => {
       expect(lastRequest().requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
     });
 
-    each([[400], [408], [429], [500], [503]]).test('should retry on error %d', status => {
-      const sender = EventSender(eventsUrl, envId, true);
-      const event = { kind: 'false', key: 'userKey' };
-      sender.sendEvents([event], false);
-      requests[0].respond(status);
-      expect(requests.length).toEqual(2);
-      expect(JSON.parse(requests[1].requestBody)).toEqual([event]);
-    });
+    const retryableStatuses = [400, 408, 429, 500, 503];
+    for (const i in retryableStatuses) {
+      const status = retryableStatuses[i];
+      it('should retry on error ' + status, () => {
+        const sender = EventSender(eventsUrl, envId, true);
+        const event = { kind: 'false', key: 'userKey' };
+        sender.sendEvents([event], false);
+        requests[0].respond(status);
+        expect(requests.length).toEqual(2);
+        expect(JSON.parse(requests[1].requestBody)).toEqual([event]);
+      });
+    }
 
     it('should not retry more than once', () => {
       const sender = EventSender(eventsUrl, envId, true);
