@@ -13,5 +13,4 @@ module.exports = {
     window: true,
     VERSION: version,
   },
-  testURL: "http://localhost/"
 };
