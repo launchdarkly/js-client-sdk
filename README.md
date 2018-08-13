@@ -28,17 +28,22 @@ when `client.on('change')` is called.
 ### EventSource polyfill
 
 If you need streaming support, and you wish to support browsers that do not
-support `EventSource` natively, you can install a polyfill, such as
+support `EventSource` natively, you can install a polyfill such as
 [EventSource](https://github.com/Yaffle/EventSource).
 
-You can load the polyfill via a script tag in the `<head>` before the script
-where you initialize `LDClient`:
+#### CDN
 
-    <script src="/public/eventsource.js"></script>
+You can load the polyfill via a script tag in the `<head>` before the script where you initialize `LDClient`:
 
-If you use [webpack](https://webpack.github.io/) or
-[browserify](http://browserify.org/), make sure to require the polyfill before
-`LDClient` is initialized.
+    <script src="https://unpkg.com/event-source-polyfill@0.0.12/src/eventsource.min.js"></script>
+
+#### NPM or Yarn
+
+    npm install event-source-polyfill@0.0.12
+
+Then import it before the module that initializes the LaunchDarkly client:
+
+    require('event-source-polyfill');
 
 ### Document.querySelectorAll() polyfill
 
@@ -46,11 +51,39 @@ If you need to run A/B tests on IE7 or IE8 you will need to install a polyfill
 for `document.querySelector()` such as
 [polyfill-queryselector](https://github.com/cobbdb/polyfill-queryselector).
 
-You can load the polyfll via a script tag in the `<head>`:
+#### CDN
 
-    <script src="/public/querySelector.js"></script>
+You can load the polyfill via a script tag in the `<head>` before the script where you initialize `LDClient`:
 
-You can also install it with `npm install polyfill-queryselector` or `bower install polyfill-queryselector`.
+    <script src="https://unpkg.com/polyfill-queryselector@1.0.2/querySelector.js"></script>
+
+#### NPM or Yarn
+
+    npm install polyfill-queryselector@1.0.2
+
+Then import it before the module that initializes the LaunchDarkly client:
+
+    require('polyfill-queryselector');
+
+### Promise polyfill
+
+The newer versions of the use `Promise`. If you need to support older browsers, you will
+need to install a polyfill for it, such as [es6-promise](https://github.com/stefanpenner/es6-promise).
+
+#### CDN
+
+You can load the polyfill via a script tag in the `<head>` before the script where you initialize `LDClient`:
+
+    <script src="https://unpkg.com/es6-promise@4.2.4/dist/es6-promise.auto.min.js"></script>
+
+#### NPM or Yarn
+
+    npm install es6-promise@4.2.4
+
+Then import it before the module that initializes the LaunchDarkly client:
+
+    require('polyfill-queryselector');
+
 
 ## Installation
 
