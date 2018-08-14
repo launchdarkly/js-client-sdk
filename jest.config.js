@@ -6,7 +6,6 @@ module.exports = {
   rootDir: 'src',
   setupFiles: ['jest-localstorage-mock', './jest.setup.js'],
   testMatch: ['**/__tests__/**/*-test.js'],
-  testURL: 'http://localhost',
   transform: {
     '^.+\\.js$': 'babel-jest',
   },
