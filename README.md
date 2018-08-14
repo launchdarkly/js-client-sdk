@@ -82,7 +82,7 @@ You can load the polyfill via a script tag in the `<head>` before the script whe
 
 Then import it before the module that initializes the LaunchDarkly client:
 
-    require('polyfill-queryselector');
+    require('es6-promise/auto');
 
 
 ## Installation
