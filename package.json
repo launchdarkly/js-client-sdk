@@ -56,6 +56,7 @@
     "jest": "23.5.0",
     "jest-junit": "3.6.0",
     "jest-localstorage-mock": "2.2.0",
+    "jsdom": "11.11.0",
     "prettier": "1.11.1",
     "readline-sync": "1.4.9",
     "rimraf": "2.6.2",
