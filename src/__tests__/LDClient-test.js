@@ -916,7 +916,7 @@ describe('LDClient', () => {
 
       client.on('ready', () => {
         client.identify(user2, null).then(flagMap => {
-          expect(flagMap).toEqual({ "enable-foo": true });
+          expect(flagMap).toEqual({ 'enable-foo': true });
           done();
         });
 
