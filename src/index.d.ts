@@ -220,7 +220,7 @@ declare module 'ldclient-js' {
      * @param onDone
      *   A callback to invoke after the user is identified.
      */
-    identify: (user: LDUser, hash?: string, onDone?: () => void) => Promise<void>;
+    identify: (user: LDUser, hash?: string, onDone?: (err: Error | null, flags: LDFlagSet | null) => void) => Promise<void>;
 
     /**
      * Flushes pending events asynchronously.
