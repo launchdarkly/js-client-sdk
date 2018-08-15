@@ -77,6 +77,19 @@ export function transformValuesToVersionedValues(flags) {
 }
 
 /**
+ * Converts the internal flag state map to a simple map of flag keys to values.
+ */
+export function transformVersionedValuesToValues(flagsState) {
+  const ret = {};
+  for (const key in flagsState) {
+    if (flagsState.hasOwnProperty(key)) {
+      ret[key] = flagsState[key].value;
+    }
+  }
+  return ret;
+}
+
+/**
  * Returns an array of event groups each of which can be safely URL-encoded
  * without hitting the safe maximum URL length of certain browsers.
  *

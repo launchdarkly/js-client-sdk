@@ -140,7 +140,7 @@ export function initialize(env, user, options = {}) {
             if (settings) {
               updateSettings(settings);
             }
-            resolve(settings);
+            resolve(utils.transformVersionedValuesToValues(settings));
             if (subscribedToChangeEvents) {
               connectStream();
             }
