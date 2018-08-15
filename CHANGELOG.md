@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org).
 ### Fixed:
 - The result value of `identify()` (provided by either a promise or a callback, once the flag values for the new user have been retrieved) used to be a simple map of flag keys to values, until it was accidentally changed to an internal data structure in version 2.0.0. It is now a map of flag keys to values again, consistent with what is returned by `allFlags()`.
 - Added TypeScript definitions for the result values of `identify()`. (Thanks, [1999](https://github.com/launchdarkly/js-client/pull/102)!)
+- Documented all optional compatibility polyfills in `README.md`.
 
 ## [2.4.0] - 2018-07-12
 ### Added:
