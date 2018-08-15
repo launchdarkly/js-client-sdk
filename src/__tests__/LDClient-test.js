@@ -896,6 +896,34 @@ describe('LDClient', () => {
       });
     });
 
+    it('updates flag values when the user changes', done => {
+      const user2 = { key: 'user2' };
+      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on('ready', () => {
+        client.identify(user2, null, () => {
+          expect(client.variation('enable-foo')).toEqual(true);
+          done();
+        });
+
+        getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": {"value": true}}');
+      });
+    });
+
+    it('yields map of flag values as the result of identify()', done => {
+      const user2 = { key: 'user2' };
+      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+      client.on('ready', () => {
+        client.identify(user2, null).then(flagMap => {
+          expect(flagMap).toEqual({ 'enable-foo': true });
+          done();
+        });
+
+        getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": {"value": true}}');
+      });
+    });
+
     it('reconnects to stream if the user changes', done => {
       const user2 = { key: 'user2' };
       const encodedUser2 = 'eyJrZXkiOiJ1c2VyMiJ9';
@@ -911,7 +939,7 @@ describe('LDClient', () => {
           done();
         });
 
-        getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": true}');
+        getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": {"value": true}}');
       });
     });
 
