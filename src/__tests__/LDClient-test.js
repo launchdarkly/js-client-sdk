@@ -177,7 +177,7 @@ describe('LDClient', () => {
 
     it('sets flag values from bootstrap object with new format', () => {
       const client = LDClient.initialize(envName, user, {
-        bootstrap: { foo: 'bar', '$flagsState': { foo: { version: 1 } } },
+        bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1 } } },
       });
 
       expect(client.variation('foo')).toEqual('bar');
@@ -536,14 +536,14 @@ describe('LDClient', () => {
       const ep = stubEventProcessor();
       const bootstrapData = {
         foo: 'bar',
-        '$flagsState': {
+        $flagsState: {
           foo: {
             variation: 1,
             version: 2,
             trackEvents: true,
-            debugEventsUntilDate: 1000
-          }
-        }
+            debugEventsUntilDate: 1000,
+          },
+        },
       };
       const client = LDClient.initialize(envName, user, { eventProcessor: ep, bootstrap: bootstrapData });
 
