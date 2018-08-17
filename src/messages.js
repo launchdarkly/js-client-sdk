@@ -38,7 +38,11 @@ export const invalidUser = function() {
 };
 
 export const bootstrapOldFormat = function() {
-  'LaunchDarkly client was initialized with bootstrap data that did not include flag metadata. Events may not be sent correctly.' + docLink;
+  return (
+    'LaunchDarkly client was initialized with bootstrap data that did not include flag metadata. ' +
+    'Events may not be sent correctly.' +
+    docLink
+  );
 };
 
 export const deprecated = function(oldName, newName) {

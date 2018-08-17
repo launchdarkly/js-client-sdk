@@ -46,7 +46,7 @@ export function initialize(env, user, options = {}) {
       console.warn(messages.bootstrapOldFormat());
     }
     const ret = {};
-    keys.forEach(function(key) {
+    keys.forEach(key => {
       if (key !== metadataKey) {
         let flag = { value: data[key] };
         if (metadata && metadata[key]) {

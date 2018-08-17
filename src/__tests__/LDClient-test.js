@@ -176,7 +176,7 @@ describe('LDClient', () => {
     });
 
     it('logs warning when bootstrap object uses old format', () => {
-      const client = LDClient.initialize(envName, user, {
+      LDClient.initialize(envName, user, {
         bootstrap: { foo: 'bar' },
       });
 
@@ -192,7 +192,7 @@ describe('LDClient', () => {
     });
 
     it('does not log warning when bootstrap object uses new format', () => {
-      const client = LDClient.initialize(envName, user, {
+      LDClient.initialize(envName, user, {
         bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1 } } },
       });
 
