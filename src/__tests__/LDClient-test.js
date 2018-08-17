@@ -175,12 +175,28 @@ describe('LDClient', () => {
       expect(client.variation('foo')).toEqual('bar');
     });
 
+    it('logs warning when bootstrap object uses old format', () => {
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: { foo: 'bar' },
+      });
+
+      expect(warnSpy).toHaveBeenCalledWith(messages.bootstrapOldFormat());
+    });
+
     it('sets flag values from bootstrap object with new format', () => {
       const client = LDClient.initialize(envName, user, {
         bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1 } } },
       });
 
       expect(client.variation('foo')).toEqual('bar');
+    });
+
+    it('does not log warning when bootstrap object uses new format', () => {
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1 } } },
+      });
+
+      expect(warnSpy).not.toHaveBeenCalled();
     });
 
     it('should contain package version', () => {

@@ -39,11 +39,15 @@ export function initialize(env, user, options = {}) {
     // If the bootstrap data came from an older server-side SDK, we'll have just a map of keys to values.
     // Newer SDKs that have an allFlagsState method will provide an extra "$flagsState" key that contains
     // the rest of the metadata we want. We do it this way for backward compatibility with older JS SDKs.
+    const keys = Object.keys(data);
     const metadataKey = '$flagsState';
     const metadata = data[metadataKey];
+    if (!metadata && keys.length) {
+      console.warn(messages.bootstrapOldFormat());
+    }
     const ret = {};
-    for (const key in data) {
-      if (key !== metadataKey && data.hasOwnProperty(key)) {
+    keys.forEach(function(key) {
+      if (key !== metadataKey) {
         let flag = { value: data[key] };
         if (metadata && metadata[key]) {
           flag = utils.extend(flag, metadata[key]);
@@ -52,7 +56,7 @@ export function initialize(env, user, options = {}) {
         }
         ret[key] = flag;
       }
-    }
+    });
     return ret;
   }
 
