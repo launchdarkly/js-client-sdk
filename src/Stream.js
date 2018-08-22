@@ -34,7 +34,7 @@ export default function Stream(baseUrl, environment, hash, config) {
   function tryConnect(delay) {
     if (!reconnectTimeoutReference) {
       if (delay) {
-        setTimeout(openConnection, delay);
+        reconnectTimeoutReference = setTimeout(openConnection, delay);
       } else {
         openConnection();
       }

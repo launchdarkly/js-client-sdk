@@ -80,7 +80,7 @@ describe('Stream', () => {
   });
 
   it('reconnects after encountering an error', () => {
-    const stream = new Stream(baseUrl, envName, null, { useReport: false });
+    const stream = new Stream(baseUrl, envName, null, { streamReconnectDelay: 0, useReport: false });
     stream.connect(user);
     expect(sources[baseUrl + '/eval/' + envName + '/' + encodedUser]).toBeDefined();
     expect(sources[baseUrl + '/eval/' + envName + '/' + encodedUser].readyState).toBe(EventSource.CONNECTING);
