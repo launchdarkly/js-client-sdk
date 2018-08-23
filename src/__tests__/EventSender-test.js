@@ -103,8 +103,10 @@ describe('EventSender', () => {
       const sender = EventSender(eventsUrl, envId, true);
       const event = { kind: 'identify', key: 'userKey' };
       sender.sendEvents([event], false);
-      lastRequest().respond();
-      expect(lastRequest().async).toEqual(true);
+      requests[0].respond();
+      expect(requests.length).toEqual(1);
+      expect(requests[0].async).toEqual(true);
+      expect(JSON.parse(requests[0].requestBody)).toEqual([event]);
     });
 
     it('should send synchronously', () => {
@@ -132,9 +134,49 @@ describe('EventSender', () => {
     it('should send custom user-agent header', () => {
       const sender = EventSender(eventsUrl, envId, true);
       const event = { kind: 'identify', key: 'userKey' };
-      sender.sendEvents([event], true);
+      sender.sendEvents([event], false);
       lastRequest().respond();
       expect(lastRequest().requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
+    });
+
+    const retryableStatuses = [400, 408, 429, 500, 503];
+    for (const i in retryableStatuses) {
+      const status = retryableStatuses[i];
+      it('should retry on error ' + status, () => {
+        const sender = EventSender(eventsUrl, envId, true);
+        const event = { kind: 'false', key: 'userKey' };
+        sender.sendEvents([event], false);
+        requests[0].respond(status);
+        expect(requests.length).toEqual(2);
+        expect(JSON.parse(requests[1].requestBody)).toEqual([event]);
+      });
+    }
+
+    it('should not retry more than once', () => {
+      const sender = EventSender(eventsUrl, envId, true);
+      const event = { kind: 'false', key: 'userKey' };
+      sender.sendEvents([event], false);
+      requests[0].respond(503);
+      expect(requests.length).toEqual(2);
+      requests[1].respond(503);
+      expect(requests.length).toEqual(2);
+    });
+
+    it('should not retry on error 401', () => {
+      const sender = EventSender(eventsUrl, envId, true);
+      const event = { kind: 'false', key: 'userKey' };
+      sender.sendEvents([event], false);
+      requests[0].respond(401);
+      expect(requests.length).toEqual(1);
+    });
+
+    it('should retry on I/O error', () => {
+      const sender = EventSender(eventsUrl, envId, true);
+      const event = { kind: 'false', key: 'userKey' };
+      sender.sendEvents([event], false);
+      requests[0].error();
+      expect(requests.length).toEqual(2);
+      expect(JSON.parse(requests[1].requestBody)).toEqual([event]);
     });
   });
 });
