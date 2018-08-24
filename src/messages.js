@@ -47,7 +47,7 @@ export const bootstrapOldFormat = function() {
 
 export const bootstrapInvalid = function() {
   return 'LaunchDarkly bootstrap data is not available because the back end could not read the flags.';
-}
+};
 
 export const deprecated = function(oldName, newName) {
   return '[LaunchDarkly] "' + oldName + '" is deprecated, please use "' + newName + '"';
