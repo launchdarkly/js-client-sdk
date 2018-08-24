@@ -41,13 +41,17 @@ export function initialize(env, user, options = {}) {
     // the rest of the metadata we want. We do it this way for backward compatibility with older JS SDKs.
     const keys = Object.keys(data);
     const metadataKey = '$flagsState';
+    const validKey = '$valid';
     const metadata = data[metadataKey];
     if (!metadata && keys.length) {
       console.warn(messages.bootstrapOldFormat());
     }
+    if (data[validKey] === false) {
+      console.warn(messages.bootstrapInvalid());
+    }
     const ret = {};
     keys.forEach(key => {
-      if (key !== metadataKey) {
+      if (key !== metadataKey && key !== validKey) {
         let flag = { value: data[key] };
         if (metadata && metadata[key]) {
           flag = utils.extend(flag, metadata[key]);
