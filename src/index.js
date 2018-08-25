@@ -28,12 +28,41 @@ export function initialize(env, user, options = {}) {
   const events = options.eventProcessor || EventProcessor(eventsUrl, environment, options, emitter);
   const requestor = Requestor(baseUrl, environment, options.useReport);
   const seenRequests = {};
-  let flags = typeof options.bootstrap === 'object' ? utils.transformValuesToVersionedValues(options.bootstrap) : {};
+  let flags = typeof options.bootstrap === 'object' ? readFlagsFromBootstrap(options.bootstrap) : {};
   let goalTracker;
   let useLocalStorage;
   let goals;
   let subscribedToChangeEvents;
   let firstEvent = true;
+
+  function readFlagsFromBootstrap(data) {
+    // If the bootstrap data came from an older server-side SDK, we'll have just a map of keys to values.
+    // Newer SDKs that have an allFlagsState method will provide an extra "$flagsState" key that contains
+    // the rest of the metadata we want. We do it this way for backward compatibility with older JS SDKs.
+    const keys = Object.keys(data);
+    const metadataKey = '$flagsState';
+    const validKey = '$valid';
+    const metadata = data[metadataKey];
+    if (!metadata && keys.length) {
+      console.warn(messages.bootstrapOldFormat());
+    }
+    if (data[validKey] === false) {
+      console.warn(messages.bootstrapInvalid());
+    }
+    const ret = {};
+    keys.forEach(key => {
+      if (key !== metadataKey && key !== validKey) {
+        let flag = { value: data[key] };
+        if (metadata && metadata[key]) {
+          flag = utils.extend(flag, metadata[key]);
+        } else {
+          flag.version = 0;
+        }
+        ret[key] = flag;
+      }
+    });
+    return ret;
+  }
 
   function shouldEnqueueEvent() {
     return sendEvents && !doNotTrack();
