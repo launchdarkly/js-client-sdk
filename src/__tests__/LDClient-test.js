@@ -158,13 +158,45 @@ describe('LDClient', () => {
       requests[0].respond(404);
     });
 
-    it('should not fetch flag settings since bootstrap is provided', () => {
+    it('should not fetch flag settings if bootstrap is provided', () => {
       LDClient.initialize(envName, user, {
         bootstrap: {},
       });
 
       const settingsRequest = requests[0];
       expect(/sdk\/eval/.test(settingsRequest.url)).toEqual(false);
+    });
+
+    it('sets flag values from bootstrap object with old format', () => {
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: { foo: 'bar' },
+      });
+
+      expect(client.variation('foo')).toEqual('bar');
+    });
+
+    it('logs warning when bootstrap object uses old format', () => {
+      LDClient.initialize(envName, user, {
+        bootstrap: { foo: 'bar' },
+      });
+
+      expect(warnSpy).toHaveBeenCalledWith(messages.bootstrapOldFormat());
+    });
+
+    it('sets flag values from bootstrap object with new format', () => {
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1 } } },
+      });
+
+      expect(client.variation('foo')).toEqual('bar');
+    });
+
+    it('does not log warning when bootstrap object uses new format', () => {
+      LDClient.initialize(envName, user, {
+        bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1 } } },
+      });
+
+      expect(warnSpy).not.toHaveBeenCalled();
     });
 
     it('should contain package version', () => {
@@ -420,13 +452,15 @@ describe('LDClient', () => {
       expect(e.user).toEqual(user);
     }
 
-    function expectFeatureEvent(e, key, value, variation, version, defaultVal) {
+    function expectFeatureEvent(e, key, value, variation, version, defaultVal, trackEvents, debugEventsUntilDate) {
       expect(e.kind).toEqual('feature');
       expect(e.key).toEqual(key);
       expect(e.value).toEqual(value);
       expect(e.variation).toEqual(variation);
       expect(e.version).toEqual(version);
       expect(e.default).toEqual(defaultVal);
+      expect(e.trackEvents).toEqual(trackEvents);
+      expect(e.debugEventsUntilDate).toEqual(debugEventsUntilDate);
     }
 
     it('sends an identify event at startup', done => {
@@ -512,6 +546,32 @@ describe('LDClient', () => {
       });
 
       server.respond();
+    });
+
+    it('can get metadata for events from bootstrap object', done => {
+      const ep = stubEventProcessor();
+      const bootstrapData = {
+        foo: 'bar',
+        $flagsState: {
+          foo: {
+            variation: 1,
+            version: 2,
+            trackEvents: true,
+            debugEventsUntilDate: 1000,
+          },
+        },
+      };
+      const client = LDClient.initialize(envName, user, { eventProcessor: ep, bootstrap: bootstrapData });
+
+      client.on('ready', () => {
+        client.variation('foo', 'x');
+
+        expect(ep.events.length).toEqual(2);
+        expectIdentifyEvent(ep.events[0], user);
+        expectFeatureEvent(ep.events[1], 'foo', 'bar', 1, 2, 'x', true, 1000);
+
+        done();
+      });
     });
   });
 
