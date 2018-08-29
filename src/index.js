@@ -24,7 +24,7 @@ export function initialize(env, user, options = {}) {
   const sendEventsOnlyForVariation = !!options.sendEventsOnlyForVariation;
   const environment = env;
   const emitter = EventEmitter();
-  const stream = Stream(streamUrl, environment, hash, options.useReport);
+  const stream = Stream(streamUrl, environment, hash, options);
   const events = options.eventProcessor || EventProcessor(eventsUrl, environment, options, emitter);
   const requestor = Requestor(baseUrl, environment, options.useReport);
   const seenRequests = {};
@@ -273,7 +273,6 @@ export function initialize(env, user, options = {}) {
     if (!ident.getUser()) {
       return;
     }
-    stream.disconnect();
     stream.connect(ident.getUser(), {
       ping: function() {
         requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
