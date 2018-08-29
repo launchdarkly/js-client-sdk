@@ -37,6 +37,18 @@ export const invalidUser = function() {
   return 'Invalid user specified.' + docLink;
 };
 
+export const bootstrapOldFormat = function() {
+  return (
+    'LaunchDarkly client was initialized with bootstrap data that did not include flag metadata. ' +
+    'Events may not be sent correctly.' +
+    docLink
+  );
+};
+
+export const bootstrapInvalid = function() {
+  return 'LaunchDarkly bootstrap data is not available because the back end could not read the flags.';
+};
+
 export const deprecated = function(oldName, newName) {
   return '[LaunchDarkly] "' + oldName + '" is deprecated, please use "' + newName + '"';
 };

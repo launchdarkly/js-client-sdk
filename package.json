@@ -1,6 +1,6 @@
 {
   "name": "ldclient-js",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "LaunchDarkly SDK for JavaScript",
   "author": "LaunchDarkly <team@launchdarkly.com>",
   "license": "Apache-2.0",
@@ -15,8 +15,10 @@
     "ldclient.es.js",
     "ldclient.es.js.map",
     "ldclient.min.js",
-    "ldclient.min.js.map"
+    "ldclient.min.js.map",
+    "typings.d.ts"
   ],
+  "types": "./typings.d.ts",
   "main": "dist/ldclient.cjs.js",
   "module": "dist/ldclient.es.js",
   "scripts": {
@@ -36,7 +38,6 @@
     "clean": "rimraf dist/**",
     "prepublishOnly": "npm run build:min"
   },
-  "types": "./src/index.d.ts",
   "devDependencies": {
     "babel-core": "6.26.0",
     "babel-eslint": "8.2.2",
@@ -55,6 +56,7 @@
     "jest": "22.4.3",
     "jest-junit": "3.6.0",
     "jest-localstorage-mock": "2.2.0",
+    "jsdom": "11.11.0",
     "prettier": "1.11.1",
     "readline-sync": "1.4.9",
     "rimraf": "2.6.2",
