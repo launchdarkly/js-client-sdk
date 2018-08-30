@@ -485,7 +485,7 @@ describe('LDClient', () => {
         bootstrap: { foo: 'bar' },
       });
 
-      expect(client.variationDetail('foo')).toEqual({ value: 'bar', variationIndex: undefined, reason: null });
+      expect(client.variationDetail('foo')).toEqual({ value: 'bar', variationIndex: null, reason: null });
     });
 
     it('returns details for an existing flag - from polling', done => {
@@ -506,7 +506,7 @@ describe('LDClient', () => {
       client.on('ready', () => {
         expect(client.variationDetail('foo', 'default')).toEqual({
           value: 'default',
-          variationIndex: undefined,
+          variationIndex: null,
           reason: null,
         });
         done();
