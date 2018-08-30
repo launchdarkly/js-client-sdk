@@ -217,7 +217,14 @@ export function initialize(env, user, options = {}) {
   }
 
   function getFlagDetail(flag) {
-    return { value: flag.value, variationIndex: flag.variation, reason: flag.reason || null };
+    return {
+      value: flag.value,
+      variationIndex: flag.variation === undefined ? null : flag.variation,
+      reason: flag.reason || null,
+    };
+    // Note, the logic above ensures that variationIndex and reason will always be null rather than
+    // undefined if we don't have values for them. That's just to avoid subtle errors that depend on
+    // whether an object was JSON-encoded with null properties omitted or not.
   }
 
   function doNotTrack() {
