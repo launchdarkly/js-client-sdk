@@ -4,6 +4,7 @@ export default function Stream(baseUrl, environment, hash, config) {
   const stream = {};
   const evalUrlPrefix = baseUrl + '/eval/' + environment + '/';
   const useReport = (config && config.useReport) || false;
+  const withReasons = (config && config.evaluationReasons) || false;
   const streamReconnectDelay = (config && config.streamReconnectDelay) || 1000;
   let es = null;
   let reconnectTimeoutReference = null;
@@ -43,6 +44,7 @@ export default function Stream(baseUrl, environment, hash, config) {
 
   function openConnection() {
     let url;
+    let query = '';
     if (typeof EventSource !== 'undefined') {
       if (useReport) {
         // we don't yet have an EventSource implementation that supports REPORT, so
@@ -51,9 +53,13 @@ export default function Stream(baseUrl, environment, hash, config) {
       } else {
         url = evalUrlPrefix + base64URLEncode(JSON.stringify(user));
         if (hash !== null && hash !== undefined) {
-          url = url + '?h=' + hash;
+          query = 'h=' + hash;
         }
       }
+      if (withReasons) {
+        query = query + (query ? '&' : '') + 'withReasons=true';
+      }
+      url = url + (query ? '?' : '') + query;
 
       closeConnection();
       es = new window.EventSource(url);
