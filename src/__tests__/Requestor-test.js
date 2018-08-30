@@ -80,7 +80,9 @@ describe('Requestor', () => {
     requestor.fetchFlagSettings(user, null, sinon.spy());
 
     expect(server.requests).toHaveLength(1);
-    expect(server.requests[0].url).toEqual('http://requestee/sdk/evalx/FAKE_ENV/users/eyJrZXkiOiJ1c2VyIn0?withReasons=true');
+    expect(server.requests[0].url).toEqual(
+      'http://requestee/sdk/evalx/FAKE_ENV/users/eyJrZXkiOiJ1c2VyIn0?withReasons=true'
+    );
   });
 
   it('should include environment, user, hash, and withReasons in GET URL', () => {
@@ -90,7 +92,9 @@ describe('Requestor', () => {
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
     expect(server.requests).toHaveLength(1);
-    expect(server.requests[0].url).toEqual('http://requestee/sdk/evalx/FAKE_ENV/users/eyJrZXkiOiJ1c2VyIn0?h=hash1&withReasons=true');
+    expect(server.requests[0].url).toEqual(
+      'http://requestee/sdk/evalx/FAKE_ENV/users/eyJrZXkiOiJ1c2VyIn0?h=hash1&withReasons=true'
+    );
   });
 
   it('should include environment in REPORT URL', () => {
