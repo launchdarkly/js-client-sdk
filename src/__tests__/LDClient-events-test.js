@@ -95,6 +95,30 @@ describe('LDClient', () => {
       server.respond();
     });
 
+    it('sends a feature event for variationDetail()', done => {
+      const ep = stubEventProcessor();
+      const server = sinon.fakeServer.create();
+      server.respondWith([
+        200,
+        { 'Content-Type': 'application/json' },
+        '{"foo":{"value":"a","variation":1,"version":2,"flagVersion":2000,"reason":{"kind":"OFF"}}}',
+      ]);
+      const client = LDClient.initialize(envName, user, { eventProcessor: ep });
+
+      client.on('ready', () => {
+        client.variationDetail('foo', 'x');
+
+        expect(ep.events.length).toEqual(2);
+        expectIdentifyEvent(ep.events[0], user);
+        expectFeatureEvent(ep.events[1], 'foo', 'a', 1, 2000, 'x');
+        expect(ep.events[1].reason).toEqual({ kind: 'OFF' });
+
+        done();
+      });
+
+      server.respond();
+    });
+
     it('uses "version" instead of "flagVersion" in event if "flagVersion" is absent', done => {
       const ep = stubEventProcessor();
       const server = sinon.fakeServer.create();
@@ -159,6 +183,24 @@ describe('LDClient', () => {
         expectIdentifyEvent(ep.events[0], user);
         expectFeatureEvent(ep.events[1], 'foo', 'bar', 1, 2, 'x', true, 1000);
 
+        done();
+      });
+    });
+
+    it('sends an event for track()', done => {
+      const ep = stubEventProcessor();
+      const client = LDClient.initialize(envName, user, { eventProcessor: ep, bootstrap: {} });
+      const data = { thing: 'stuff' };
+      client.on('ready', () => {
+        client.track('eventkey', data);
+
+        expect(ep.events.length).toEqual(2);
+        expectIdentifyEvent(ep.events[0], user);
+        const trackEvent = ep.events[1];
+        expect(trackEvent.kind).toEqual('custom');
+        expect(trackEvent.key).toEqual('eventkey');
+        expect(trackEvent.user).toEqual(user);
+        expect(trackEvent.data).toEqual(data);
         done();
       });
     });

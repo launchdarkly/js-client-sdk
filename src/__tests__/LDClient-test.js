@@ -522,7 +522,7 @@ describe('LDClient', () => {
       expect(client.variationDetail('foo', 'default')).toEqual({
         value: 'default',
         variationIndex: null,
-        reason: { kind: 'ERROR', errorKind: 'FLAG_NOT_FOUND' }
+        reason: { kind: 'ERROR', errorKind: 'FLAG_NOT_FOUND' },
       });
     });
   });
