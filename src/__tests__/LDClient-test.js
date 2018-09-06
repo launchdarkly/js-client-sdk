@@ -30,6 +30,10 @@ describe('LDClient', () => {
 
     warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    for (const key in sources) {
+      delete sources[key];
+    }
   });
 
   afterEach(() => {
@@ -158,6 +162,44 @@ describe('LDClient', () => {
       requests[0].respond(404);
     });
 
+    it('fetches flag settings if bootstrap is not provided (without reasons)', done => {
+      const client = LDClient.initialize(envName, user);
+      client.on('ready', () => {
+        expect(client.variation('enable-foo', 1)).toEqual(true);
+        expect(client.variationDetail('enable-foo', 1)).toEqual({
+          value: true,
+          variationIndex: 2,
+          reason: null,
+        });
+        done();
+      });
+      expect(/withReasons=true/.test(requests[0].url)).toEqual(false);
+      requests[0].respond(
+        200,
+        { 'Content-Type': 'application/json' },
+        '{"enable-foo": {"value": true, "version": 1, "variation": 2}}'
+      );
+    });
+
+    it('fetches flag settings if bootstrap is not provided (with reasons)', done => {
+      const client = LDClient.initialize(envName, user, { evaluationReasons: true });
+      client.on('ready', () => {
+        expect(client.variation('enable-foo', 1)).toEqual(true);
+        expect(client.variationDetail('enable-foo', 1)).toEqual({
+          value: true,
+          variationIndex: 2,
+          reason: { kind: 'OFF' },
+        });
+        done();
+      });
+      expect(/withReasons=true/.test(requests[0].url)).toEqual(true);
+      requests[0].respond(
+        200,
+        { 'Content-Type': 'application/json' },
+        '{"enable-foo": {"value": true, "version": 1, "variation": 2, "reason":{"kind":"OFF"}}}'
+      );
+    });
+
     it('should not fetch flag settings if bootstrap is provided', () => {
       LDClient.initialize(envName, user, {
         bootstrap: {},
@@ -189,6 +231,15 @@ describe('LDClient', () => {
       });
 
       expect(client.variation('foo')).toEqual('bar');
+    });
+
+    it('can include evaluation reasons in bootstrap object with new format', () => {
+      const reason = { kind: 'FALLTHROUGH' };
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1, variation: 2, reason: reason } } },
+      });
+
+      expect(client.variationDetail('foo')).toEqual({ value: 'bar', variationIndex: 2, reason: reason });
     });
 
     it('does not log warning when bootstrap object uses new format', () => {
@@ -540,7 +591,7 @@ describe('LDClient', () => {
 
         expect(ep.events.length).toEqual(2);
         expectIdentifyEvent(ep.events[0], user);
-        expectFeatureEvent(ep.events[1], 'foo', 'x', undefined, undefined, 'x');
+        expectFeatureEvent(ep.events[1], 'foo', 'x', null, undefined, 'x');
 
         done();
       });
@@ -596,7 +647,7 @@ describe('LDClient', () => {
 
       client.on('ready', () => {
         client.on('change', () => {});
-        expect(sources[streamUrl + '/eval/' + envName + '/' + encodedUser]).toBeDefined();
+        expect(Object.keys(sources)).toEqual([streamUrl + '/eval/' + envName + '/' + encodedUser]);
         done();
       });
     });
@@ -606,7 +657,7 @@ describe('LDClient', () => {
 
       client.on('ready', () => {
         client.on('change:flagkey', () => {});
-        expect(sources[streamUrl + '/eval/' + envName + '/' + encodedUser]).toBeDefined();
+        expect(Object.keys(sources)).toEqual([streamUrl + '/eval/' + envName + '/' + encodedUser]);
         done();
       });
     });
@@ -616,7 +667,31 @@ describe('LDClient', () => {
 
       client.on('ready', () => {
         client.on('change:flagkey', () => {});
-        expect(sources[streamUrl + '/eval/' + envName + '/' + encodedUser + '?h=' + hash]).toBeDefined();
+        expect(Object.keys(sources)).toEqual([streamUrl + '/eval/' + envName + '/' + encodedUser + '?h=' + hash]);
+        done();
+      });
+    });
+
+    it('passes withReasons parameter if provided', done => {
+      const client = LDClient.initialize(envName, user, { bootstrap: {}, evaluationReasons: true });
+
+      client.on('ready', () => {
+        client.on('change', () => {});
+        expect(Object.keys(sources)).toEqual([
+          streamUrl + '/eval/' + envName + '/' + encodedUser + '?withReasons=true',
+        ]);
+        done();
+      });
+    });
+
+    it('passes secure mode hash and withReasons if provided', done => {
+      const client = LDClient.initialize(envName, user, { bootstrap: {}, hash: hash, evaluationReasons: true });
+
+      client.on('ready', () => {
+        client.on('change', () => {});
+        expect(Object.keys(sources)).toEqual([
+          streamUrl + '/eval/' + envName + '/' + encodedUser + '?h=' + hash + '&withReasons=true',
+        ]);
         done();
       });
     });

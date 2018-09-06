@@ -45,7 +45,7 @@ function getResponseError(xhr) {
   }
 }
 
-export default function Requestor(baseUrl, environment, useReport) {
+export default function Requestor(baseUrl, environment, useReport, withReasons) {
   let flagSettingsRequest;
   let lastFlagSettingsCallback;
 
@@ -54,16 +54,24 @@ export default function Requestor(baseUrl, environment, useReport) {
   requestor.fetchFlagSettings = function(user, hash, callback) {
     let data;
     let endpoint;
+    let query = '';
     let body;
     let cb;
 
     if (useReport) {
-      endpoint = [baseUrl, '/sdk/evalx/', environment, '/user', hash ? '?h=' + hash : ''].join('');
+      endpoint = [baseUrl, '/sdk/evalx/', environment, '/user'].join('');
       body = user;
     } else {
       data = utils.base64URLEncode(JSON.stringify(user));
-      endpoint = [baseUrl, '/sdk/evalx/', environment, '/users/', data, hash ? '?h=' + hash : ''].join('');
+      endpoint = [baseUrl, '/sdk/evalx/', environment, '/users/', data].join('');
     }
+    if (hash) {
+      query = 'h=' + hash;
+    }
+    if (withReasons) {
+      query = query + (query ? '&' : '') + 'withReasons=true';
+    }
+    endpoint = endpoint + (query ? '?' : '') + query;
 
     const wrappedCallback = (function(currentCallback) {
       return function(error, result) {
