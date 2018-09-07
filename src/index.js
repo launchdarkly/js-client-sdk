@@ -248,7 +248,7 @@ export function initialize(env, user, options = {}) {
 
     for (const key in flags) {
       if (flags.hasOwnProperty(key)) {
-        results[key] = variationInternal(key, null, !sendEventsOnlyForVariation);
+        results[key] = variationDetailInternal(key, null, !sendEventsOnlyForVariation).value;
       }
     }
 
