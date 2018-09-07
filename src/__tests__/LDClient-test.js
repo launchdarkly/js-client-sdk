@@ -527,6 +527,27 @@ describe('LDClient', () => {
     });
   });
 
+  describe('allFlags', () => {
+    it('returns flag values', done => {
+      const client = LDClient.initialize(envName, user);
+      client.on('ready', () => {
+        expect(client.allFlags()).toEqual({ key1: 'value1', key2: 'value2' });
+        done();
+      });
+      requests[0].respond(
+        200,
+        { 'Content-Type': 'application/json' },
+        '{"key1": {"value": "value1", "version": 1, "variation": 2},' +
+         '"key2": {"value": "value2", "version": 1, "variation": 2}}'
+      );
+    });
+
+    it('returns empty map if client is not initialized', () => {
+      const client = LDClient.initialize(envName, user);
+      expect(client.allFlags()).toEqual({});
+    });
+  });
+
   describe('identify', () => {
     it('updates flag values when the user changes', done => {
       const user2 = { key: 'user2' };
