@@ -53,6 +53,90 @@ describe('Requestor', () => {
     expect(server.requests[0].requestBody).toEqual(JSON.stringify(user));
   });
 
+  it('should include environment and user in GET URL', () => {
+    const user = { key: 'user' };
+    const requestor = Requestor('http://requestee', 'FAKE_ENV', false);
+
+    requestor.fetchFlagSettings(user, null, sinon.spy());
+
+    expect(server.requests).toHaveLength(1);
+    expect(server.requests[0].url).toEqual('http://requestee/sdk/evalx/FAKE_ENV/users/eyJrZXkiOiJ1c2VyIn0');
+  });
+
+  it('should include environment, user, and hash in GET URL', () => {
+    const user = { key: 'user' };
+    const requestor = Requestor('http://requestee', 'FAKE_ENV', false);
+
+    requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
+
+    expect(server.requests).toHaveLength(1);
+    expect(server.requests[0].url).toEqual('http://requestee/sdk/evalx/FAKE_ENV/users/eyJrZXkiOiJ1c2VyIn0?h=hash1');
+  });
+
+  it('should include environment, user, and withReasons in GET URL', () => {
+    const user = { key: 'user' };
+    const requestor = Requestor('http://requestee', 'FAKE_ENV', false, true);
+
+    requestor.fetchFlagSettings(user, null, sinon.spy());
+
+    expect(server.requests).toHaveLength(1);
+    expect(server.requests[0].url).toEqual(
+      'http://requestee/sdk/evalx/FAKE_ENV/users/eyJrZXkiOiJ1c2VyIn0?withReasons=true'
+    );
+  });
+
+  it('should include environment, user, hash, and withReasons in GET URL', () => {
+    const user = { key: 'user' };
+    const requestor = Requestor('http://requestee', 'FAKE_ENV', false, true);
+
+    requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
+
+    expect(server.requests).toHaveLength(1);
+    expect(server.requests[0].url).toEqual(
+      'http://requestee/sdk/evalx/FAKE_ENV/users/eyJrZXkiOiJ1c2VyIn0?h=hash1&withReasons=true'
+    );
+  });
+
+  it('should include environment in REPORT URL', () => {
+    const user = { key: 'user' };
+    const requestor = Requestor('http://requestee', 'FAKE_ENV', true);
+
+    requestor.fetchFlagSettings(user, null, sinon.spy());
+
+    expect(server.requests).toHaveLength(1);
+    expect(server.requests[0].url).toEqual('http://requestee/sdk/evalx/FAKE_ENV/user');
+  });
+
+  it('should include environment and hash in REPORT URL', () => {
+    const user = { key: 'user' };
+    const requestor = Requestor('http://requestee', 'FAKE_ENV', true);
+
+    requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
+
+    expect(server.requests).toHaveLength(1);
+    expect(server.requests[0].url).toEqual('http://requestee/sdk/evalx/FAKE_ENV/user?h=hash1');
+  });
+
+  it('should include environment and withReasons in GET URL', () => {
+    const user = { key: 'user' };
+    const requestor = Requestor('http://requestee', 'FAKE_ENV', true, true);
+
+    requestor.fetchFlagSettings(user, null, sinon.spy());
+
+    expect(server.requests).toHaveLength(1);
+    expect(server.requests[0].url).toEqual('http://requestee/sdk/evalx/FAKE_ENV/user?withReasons=true');
+  });
+
+  it('should include environment, hash, and withReasons in GET URL', () => {
+    const user = { key: 'user' };
+    const requestor = Requestor('http://requestee', 'FAKE_ENV', true, true);
+
+    requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
+
+    expect(server.requests).toHaveLength(1);
+    expect(server.requests[0].url).toEqual('http://requestee/sdk/evalx/FAKE_ENV/user?h=hash1&withReasons=true');
+  });
+
   it('should call the each callback at most once', () => {
     const handleOne = sinon.spy();
     const handleTwo = sinon.spy();

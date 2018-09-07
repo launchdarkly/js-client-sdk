@@ -24,9 +24,9 @@ export function initialize(env, user, options = {}) {
   const sendEventsOnlyForVariation = !!options.sendEventsOnlyForVariation;
   const environment = env;
   const emitter = EventEmitter();
-  const stream = Stream(streamUrl, environment, hash, options.useReport);
+  const stream = Stream(streamUrl, environment, hash, options);
   const events = options.eventProcessor || EventProcessor(eventsUrl, environment, options, emitter);
-  const requestor = Requestor(baseUrl, environment, options.useReport);
+  const requestor = Requestor(baseUrl, environment, options.useReport, options.evaluationReasons);
   const seenRequests = {};
   let flags = typeof options.bootstrap === 'object' ? readFlagsFromBootstrap(options.bootstrap) : {};
   let goalTracker;
@@ -100,9 +100,10 @@ export function initialize(env, user, options = {}) {
   const ident = Identity(user, sendIdentifyEvent);
   const store = Store(environment, hash, ident);
 
-  function sendFlagEvent(key, value, defaultValue) {
+  function sendFlagEvent(key, detail, defaultValue) {
     const user = ident.getUser();
     const now = new Date();
+    const value = detail ? detail.value : null;
     if (!allowFrequentDuplicateEvents) {
       const cacheKey = JSON.stringify(value) + (user && user.key ? user.key : '') + key; // see below
       const cached = seenRequests[cacheKey];
@@ -118,13 +119,14 @@ export function initialize(env, user, options = {}) {
       key: key,
       user: user,
       value: value,
+      variation: detail ? detail.variationIndex : null,
       default: defaultValue,
       creationDate: now.getTime(),
+      reason: detail ? detail.reason : null,
     };
     const flag = flags[key];
     if (flag) {
       event.version = flag.flagVersion ? flag.flagVersion : flag.version;
-      event.variation = flag.variation;
       event.trackEvents = flag.trackEvents;
       event.debugEventsUntilDate = flag.debugEventsUntilDate;
     }
@@ -187,23 +189,42 @@ export function initialize(env, user, options = {}) {
   }
 
   function variation(key, defaultValue) {
-    return variationInternal(key, defaultValue, true);
+    return variationDetailInternal(key, defaultValue, true).value;
   }
 
-  function variationInternal(key, defaultValue, sendEvent) {
-    let value;
+  function variationDetail(key, defaultValue) {
+    return variationDetailInternal(key, defaultValue, true);
+  }
+
+  function variationDetailInternal(key, defaultValue, sendEvent) {
+    let detail;
 
     if (flags && flags.hasOwnProperty(key) && flags[key] && !flags[key].deleted) {
-      value = flags[key].value === null ? defaultValue : flags[key].value;
+      const flag = flags[key];
+      detail = getFlagDetail(flag);
+      if (flag.value === null || flag.value === undefined) {
+        detail.value = defaultValue;
+      }
     } else {
-      value = defaultValue;
+      detail = { value: defaultValue, variationIndex: null, reason: { kind: 'ERROR', errorKind: 'FLAG_NOT_FOUND' } };
     }
 
     if (sendEvent) {
-      sendFlagEvent(key, value, defaultValue);
+      sendFlagEvent(key, detail, defaultValue);
     }
 
-    return value;
+    return detail;
+  }
+
+  function getFlagDetail(flag) {
+    return {
+      value: flag.value,
+      variationIndex: flag.variation === undefined ? null : flag.variation,
+      reason: flag.reason || null,
+    };
+    // Note, the logic above ensures that variationIndex and reason will always be null rather than
+    // undefined if we don't have values for them. That's just to avoid subtle errors that depend on
+    // whether an object was JSON-encoded with null properties omitted or not.
   }
 
   function doNotTrack() {
@@ -227,7 +248,7 @@ export function initialize(env, user, options = {}) {
 
     for (const key in flags) {
       if (flags.hasOwnProperty(key)) {
-        results[key] = variationInternal(key, null, !sendEventsOnlyForVariation);
+        results[key] = variationDetailInternal(key, null, !sendEventsOnlyForVariation).value;
       }
     }
 
@@ -273,7 +294,6 @@ export function initialize(env, user, options = {}) {
     if (!ident.getUser()) {
       return;
     }
-    stream.disconnect();
     stream.connect(ident.getUser(), {
       ping: function() {
         requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
@@ -298,10 +318,11 @@ export function initialize(env, user, options = {}) {
           const newFlag = utils.extend({}, data);
           delete newFlag['key'];
           flags[data.key] = newFlag;
+          const newDetail = getFlagDetail(newFlag);
           if (oldFlag) {
-            mods[data.key] = { previous: oldFlag.value, current: data.value };
+            mods[data.key] = { previous: oldFlag.value, current: newDetail };
           } else {
-            mods[data.key] = { current: data.value };
+            mods[data.key] = { current: newDetail };
           }
           postProcessSettingsUpdate(mods);
         }
@@ -330,7 +351,7 @@ export function initialize(env, user, options = {}) {
     for (const key in flags) {
       if (flags.hasOwnProperty(key) && flags[key]) {
         if (newFlags[key] && newFlags[key].value !== flags[key].value) {
-          changes[key] = { previous: flags[key].value, current: newFlags[key].value };
+          changes[key] = { previous: flags[key].value, current: getFlagDetail(newFlags[key]) };
         } else if (!newFlags[key] || newFlags[key].deleted) {
           changes[key] = { previous: flags[key].value };
         }
@@ -338,7 +359,7 @@ export function initialize(env, user, options = {}) {
     }
     for (const key in newFlags) {
       if (newFlags.hasOwnProperty(key) && newFlags[key] && (!flags[key] || flags[key].deleted)) {
-        changes[key] = { current: newFlags[key].value };
+        changes[key] = { current: getFlagDetail(newFlags[key]) };
       }
     }
 
@@ -354,11 +375,16 @@ export function initialize(env, user, options = {}) {
     }
 
     if (keys.length > 0) {
+      const changeEventParams = {};
       keys.forEach(key => {
-        emitter.emit(changeEvent + ':' + key, changes[key].current, changes[key].previous);
+        const current = changes[key].current;
+        const value = current ? current.value : undefined;
+        const previous = changes[key].previous;
+        emitter.emit(changeEvent + ':' + key, value, previous);
+        changeEventParams[key] = current ? { current: value, previous: previous } : { previous: previous };
       });
 
-      emitter.emit(changeEvent, changes);
+      emitter.emit(changeEvent, changeEventParams);
 
       if (!sendEventsOnlyForVariation) {
         keys.forEach(key => {
@@ -567,6 +593,7 @@ export function initialize(env, user, options = {}) {
     waitUntilGoalsReady: () => goalsPromise,
     identify: identify,
     variation: variation,
+    variationDetail: variationDetail,
     track: track,
     on: on,
     off: off,

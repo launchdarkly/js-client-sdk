@@ -1,6 +1,5 @@
 import sinon from 'sinon';
 import semverCompare from 'semver-compare';
-import EventSource, { sources } from 'eventsourcemock';
 
 import * as LDClient from '../index';
 import * as messages from '../messages';
@@ -10,19 +9,12 @@ describe('LDClient', () => {
   const envName = 'UNKNOWN_ENVIRONMENT_ID';
   const lsKey = 'ld:UNKNOWN_ENVIRONMENT_ID:' + btoa('{"key":"user"}');
   const user = { key: 'user' };
-  const encodedUser = 'eyJrZXkiOiJ1c2VyIn0';
-  const hash = '012345789abcde';
   let warnSpy;
   let errorSpy;
   let xhr;
   let requests = [];
 
   beforeEach(() => {
-    Object.defineProperty(window, 'EventSource', {
-      value: EventSource,
-      writable: true,
-    });
-
     xhr = sinon.useFakeXMLHttpRequest();
     xhr.onCreate = function(req) {
       requests.push(req);
@@ -60,62 +52,6 @@ describe('LDClient', () => {
         expect(handleReady).toHaveBeenCalled();
         done();
       }, 0);
-    });
-
-    describe('waitUntilReady', () => {
-      it('should resolve waitUntilReady promise when ready', done => {
-        const handleReady = jest.fn();
-        const client = LDClient.initialize(envName, user, {
-          bootstrap: {},
-        });
-
-        client.waitUntilReady().then(handleReady);
-
-        client.on('ready', () => {
-          setTimeout(() => {
-            expect(handleReady).toHaveBeenCalled();
-            done();
-          }, 0);
-        });
-      });
-
-      it('should resolve waitUntilReady promise after ready event was already emitted', done => {
-        const handleInitialReady = jest.fn();
-        const handleReady = jest.fn();
-        const client = LDClient.initialize(envName, user, {
-          bootstrap: {},
-        });
-
-        client.on('ready', handleInitialReady);
-
-        setTimeout(() => {
-          client.waitUntilReady().then(handleReady);
-
-          setTimeout(() => {
-            expect(handleInitialReady).toHaveBeenCalled();
-            expect(handleReady).toHaveBeenCalled();
-            done();
-          }, 0);
-        }, 0);
-      });
-    });
-
-    it('should resolve waitUntilGoalsReady when goals are loaded', done => {
-      const handleGoalsReady = jest.fn();
-      const client = LDClient.initialize(envName, user, {
-        bootstrap: {},
-      });
-
-      client.waitUntilGoalsReady().then(handleGoalsReady);
-
-      client.on('goalsReady', () => {
-        setTimeout(() => {
-          expect(handleGoalsReady).toHaveBeenCalled();
-          done();
-        }, 0);
-      });
-
-      getLastRequest().respond(200);
     });
 
     it('should emit an error when an invalid samplingInterval is specified', done => {
@@ -158,21 +94,24 @@ describe('LDClient', () => {
       requests[0].respond(404);
     });
 
+    it('fetches flag settings if bootstrap is not provided (without reasons)', () => {
+      LDClient.initialize(envName, user);
+      expect(/sdk\/eval/.test(requests[0].url)).toEqual(true);
+      expect(/withReasons=true/.test(requests[0].url)).toEqual(false);
+    });
+
+    it('fetches flag settings if bootstrap is not provided (with reasons)', () => {
+      LDClient.initialize(envName, user, { evaluationReasons: true });
+      expect(/sdk\/eval/.test(requests[0].url)).toEqual(true);
+      expect(/withReasons=true/.test(requests[0].url)).toEqual(true);
+    });
+
     it('should not fetch flag settings if bootstrap is provided', () => {
       LDClient.initialize(envName, user, {
         bootstrap: {},
       });
 
-      const settingsRequest = requests[0];
-      expect(/sdk\/eval/.test(settingsRequest.url)).toEqual(false);
-    });
-
-    it('sets flag values from bootstrap object with old format', () => {
-      const client = LDClient.initialize(envName, user, {
-        bootstrap: { foo: 'bar' },
-      });
-
-      expect(client.variation('foo')).toEqual('bar');
+      expect(/sdk\/eval/.test(requests[0].url)).toEqual(false); // it's the goals request
     });
 
     it('logs warning when bootstrap object uses old format', () => {
@@ -181,14 +120,6 @@ describe('LDClient', () => {
       });
 
       expect(warnSpy).toHaveBeenCalledWith(messages.bootstrapOldFormat());
-    });
-
-    it('sets flag values from bootstrap object with new format', () => {
-      const client = LDClient.initialize(envName, user, {
-        bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1 } } },
-      });
-
-      expect(client.variation('foo')).toEqual('bar');
     });
 
     it('does not log warning when bootstrap object uses new format', () => {
@@ -435,527 +366,189 @@ describe('LDClient', () => {
     });
   });
 
-  describe('event generation', () => {
-    function stubEventProcessor() {
-      const ep = { events: [] };
-      ep.start = function() {};
-      ep.flush = function() {};
-      ep.stop = function() {};
-      ep.enqueue = function(e) {
-        ep.events.push(e);
-      };
-      return ep;
-    }
+  describe('waitUntilReady', () => {
+    it('should resolve waitUntilReady promise when ready', done => {
+      const handleReady = jest.fn();
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: {},
+      });
 
-    function expectIdentifyEvent(e, user) {
-      expect(e.kind).toEqual('identify');
-      expect(e.user).toEqual(user);
-    }
+      client.waitUntilReady().then(handleReady);
 
-    function expectFeatureEvent(e, key, value, variation, version, defaultVal, trackEvents, debugEventsUntilDate) {
-      expect(e.kind).toEqual('feature');
-      expect(e.key).toEqual(key);
-      expect(e.value).toEqual(value);
-      expect(e.variation).toEqual(variation);
-      expect(e.version).toEqual(version);
-      expect(e.default).toEqual(defaultVal);
-      expect(e.trackEvents).toEqual(trackEvents);
-      expect(e.debugEventsUntilDate).toEqual(debugEventsUntilDate);
-    }
+      client.on('ready', () => {
+        setTimeout(() => {
+          expect(handleReady).toHaveBeenCalled();
+          done();
+        }, 0);
+      });
+    });
 
-    it('sends an identify event at startup', done => {
-      const ep = stubEventProcessor();
-      const server = sinon.fakeServer.create();
-      server.respondWith([
+    it('should resolve waitUntilReady promise after ready event was already emitted', done => {
+      const handleInitialReady = jest.fn();
+      const handleReady = jest.fn();
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: {},
+      });
+
+      client.on('ready', handleInitialReady);
+
+      setTimeout(() => {
+        client.waitUntilReady().then(handleReady);
+
+        setTimeout(() => {
+          expect(handleInitialReady).toHaveBeenCalled();
+          expect(handleReady).toHaveBeenCalled();
+          done();
+        }, 0);
+      }, 0);
+    });
+
+    it('should resolve waitUntilGoalsReady when goals are loaded', done => {
+      const handleGoalsReady = jest.fn();
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: {},
+      });
+
+      client.waitUntilGoalsReady().then(handleGoalsReady);
+
+      client.on('goalsReady', () => {
+        setTimeout(() => {
+          expect(handleGoalsReady).toHaveBeenCalled();
+          done();
+        }, 0);
+      });
+
+      getLastRequest().respond(200);
+    });
+  });
+
+  describe('variation', () => {
+    it('returns value for an existing flag - from bootstrap', () => {
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1 } } },
+      });
+
+      expect(client.variation('foo')).toEqual('bar');
+    });
+
+    it('returns value for an existing flag - from bootstrap with old format', () => {
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: { foo: 'bar' },
+      });
+
+      expect(client.variation('foo')).toEqual('bar');
+    });
+
+    it('returns value for an existing flag - from polling', done => {
+      const client = LDClient.initialize(envName, user);
+      client.on('ready', () => {
+        expect(client.variation('enable-foo', 1)).toEqual(true);
+        done();
+      });
+      requests[0].respond(
         200,
         { 'Content-Type': 'application/json' },
-        '{"foo":{"value":"a","variation":1,"version":2,"flagVersion":2000}}',
-      ]);
-      const client = LDClient.initialize(envName, user, { eventProcessor: ep });
-
-      client.on('ready', () => {
-        expect(ep.events.length).toEqual(1);
-        expectIdentifyEvent(ep.events[0], user);
-
-        done();
-      });
-
-      server.respond();
+        '{"enable-foo": {"value": true, "version": 1, "variation": 2}}'
+      );
     });
 
-    it('sends a feature event for variation()', done => {
-      const ep = stubEventProcessor();
-      const server = sinon.fakeServer.create();
-      server.respondWith([
+    it('returns default value for flag that had null value', done => {
+      const client = LDClient.initialize(envName, user);
+      client.on('ready', () => {
+        expect(client.variation('foo', 'default')).toEqual('default');
+        done();
+      });
+      requests[0].respond(200, { 'Content-Type': 'application/json' }, '{"foo": {"value": null, "version": 1}}');
+    });
+
+    it('returns default value for unknown flag', () => {
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: { $flagsState: {} },
+      });
+
+      expect(client.variation('foo', 'default')).toEqual('default');
+    });
+  });
+
+  describe('variationDetail', () => {
+    const reason = { kind: 'FALLTHROUGH' };
+    it('returns details for an existing flag - from bootstrap', () => {
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1, variation: 2, reason: reason } } },
+      });
+
+      expect(client.variationDetail('foo')).toEqual({ value: 'bar', variationIndex: 2, reason: reason });
+    });
+
+    it('returns details for an existing flag - from bootstrap with old format', () => {
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: { foo: 'bar' },
+      });
+
+      expect(client.variationDetail('foo')).toEqual({ value: 'bar', variationIndex: null, reason: null });
+    });
+
+    it('returns details for an existing flag - from polling', done => {
+      const client = LDClient.initialize(envName, user);
+      client.on('ready', () => {
+        expect(client.variationDetail('foo', 'default')).toEqual({ value: 'bar', variationIndex: 2, reason: reason });
+        done();
+      });
+      requests[0].respond(
         200,
         { 'Content-Type': 'application/json' },
-        '{"foo":{"value":"a","variation":1,"version":2,"flagVersion":2000}}',
-      ]);
-      const client = LDClient.initialize(envName, user, { eventProcessor: ep });
-
-      client.on('ready', () => {
-        client.variation('foo', 'x');
-
-        expect(ep.events.length).toEqual(2);
-        expectIdentifyEvent(ep.events[0], user);
-        expectFeatureEvent(ep.events[1], 'foo', 'a', 1, 2000, 'x');
-
-        done();
-      });
-
-      server.respond();
+        '{"foo": {"value": "bar", "version": 1, "variation": 2, "reason":' + JSON.stringify(reason) + '}}'
+      );
     });
 
-    it('uses "version" instead of "flagVersion" in event if "flagVersion" is absent', done => {
-      const ep = stubEventProcessor();
-      const server = sinon.fakeServer.create();
-      server.respondWith([
-        200,
-        { 'Content-Type': 'application/json' },
-        '{"foo":{"value":"a","variation":1,"version":2}}',
-      ]);
-      const client = LDClient.initialize(envName, user, { eventProcessor: ep });
-
+    it('returns default value for flag that had null value', done => {
+      const client = LDClient.initialize(envName, user);
       client.on('ready', () => {
-        client.variation('foo', 'x');
-
-        expect(ep.events.length).toEqual(2);
-        expectIdentifyEvent(ep.events[0], user);
-        expectFeatureEvent(ep.events[1], 'foo', 'a', 1, 2, 'x');
-
+        expect(client.variationDetail('foo', 'default')).toEqual({
+          value: 'default',
+          variationIndex: null,
+          reason: null,
+        });
         done();
       });
-
-      server.respond();
+      requests[0].respond(200, { 'Content-Type': 'application/json' }, '{"foo": {"value": null, "version": 1}}');
     });
 
-    it('omits event version if flag does not exist', done => {
-      const ep = stubEventProcessor();
-      const server = sinon.fakeServer.create();
-      server.respondWith([200, { 'Content-Type': 'application/json' }, '{}']);
-      const client = LDClient.initialize(envName, user, { eventProcessor: ep });
-
-      client.on('ready', () => {
-        client.variation('foo', 'x');
-
-        expect(ep.events.length).toEqual(2);
-        expectIdentifyEvent(ep.events[0], user);
-        expectFeatureEvent(ep.events[1], 'foo', 'x', undefined, undefined, 'x');
-
-        done();
+    it('returns default value and error for unknown flag', () => {
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: { $flagsState: {} },
       });
 
-      server.respond();
-    });
-
-    it('can get metadata for events from bootstrap object', done => {
-      const ep = stubEventProcessor();
-      const bootstrapData = {
-        foo: 'bar',
-        $flagsState: {
-          foo: {
-            variation: 1,
-            version: 2,
-            trackEvents: true,
-            debugEventsUntilDate: 1000,
-          },
-        },
-      };
-      const client = LDClient.initialize(envName, user, { eventProcessor: ep, bootstrap: bootstrapData });
-
-      client.on('ready', () => {
-        client.variation('foo', 'x');
-
-        expect(ep.events.length).toEqual(2);
-        expectIdentifyEvent(ep.events[0], user);
-        expectFeatureEvent(ep.events[1], 'foo', 'bar', 1, 2, 'x', true, 1000);
-
-        done();
+      expect(client.variationDetail('foo', 'default')).toEqual({
+        value: 'default',
+        variationIndex: null,
+        reason: { kind: 'ERROR', errorKind: 'FLAG_NOT_FOUND' },
       });
     });
   });
 
-  describe('event listening', () => {
-    const streamUrl = 'https://clientstream.launchdarkly.com';
-
-    function streamEvents() {
-      return sources[`${streamUrl}/eval/${envName}/${encodedUser}`].__emitter._events;
-    }
-
-    it('does not connect to the stream by default', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
-
-      client.on('ready', () => {
-        expect(sources).toMatchObject({});
-        done();
-      });
-    });
-
-    it('connects to the stream when listening to global change events', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
-
-      client.on('ready', () => {
-        client.on('change', () => {});
-        expect(sources[streamUrl + '/eval/' + envName + '/' + encodedUser]).toBeDefined();
-        done();
-      });
-    });
-
-    it('connects to the stream when listening to change event for one flag', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
-
-      client.on('ready', () => {
-        client.on('change:flagkey', () => {});
-        expect(sources[streamUrl + '/eval/' + envName + '/' + encodedUser]).toBeDefined();
-        done();
-      });
-    });
-
-    it('passes the secure mode hash in the stream URL if provided', done => {
-      const client = LDClient.initialize(envName, user, { hash: hash, bootstrap: {} });
-
-      client.on('ready', () => {
-        client.on('change:flagkey', () => {});
-        expect(sources[streamUrl + '/eval/' + envName + '/' + encodedUser + '?h=' + hash]).toBeDefined();
-        done();
-      });
-    });
-
-    it('handles stream ping message by getting flags', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
-
-      client.on('ready', () => {
-        client.on('change', () => {});
-        streamEvents().ping();
-        getLastRequest().respond(
-          200,
-          { 'Content-Type': 'application/json' },
-          '{"enable-foo":{"value":true,"version":1}}'
-        );
-        expect(client.variation('enable-foo')).toEqual(true);
-        done();
-      });
-    });
-
-    it('handles stream put message by updating flags', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
-
-      client.on('ready', () => {
-        client.on('change', () => {});
-
-        streamEvents().put({
-          data: '{"enable-foo":{"value":true,"version":1}}',
-        });
-
-        expect(client.variation('enable-foo')).toEqual(true);
-        done();
-      });
-    });
-
-    it('updates local storage for put message if using local storage', done => {
-      window.localStorage.setItem(lsKey, '{"enable-foo":false}');
-      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' });
-
-      client.on('ready', () => {
-        client.on('change', () => {});
-
-        streamEvents().put({
-          data: '{"enable-foo":{"value":true,"version":1}}',
-        });
-
-        expect(client.variation('enable-foo')).toEqual(true);
-        expect(JSON.parse(window.localStorage.getItem(lsKey))).toEqual({
-          $schema: 1,
-          'enable-foo': { value: true, version: 1 },
-        });
-        done();
-      });
-    });
-
-    it('fires global change event when flags are updated from put event', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
-
-      client.on('ready', () => {
-        client.on('change', changes => {
-          expect(changes).toEqual({
-            'enable-foo': { current: true, previous: false },
-          });
-
-          done();
-        });
-
-        streamEvents().put({
-          data: '{"enable-foo":{"value":true,"version":1}}',
-        });
-      });
-    });
-
-    it('fires individual change event when flags are updated from put event', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
-
-      client.on('ready', () => {
-        client.on('change:enable-foo', (current, previous) => {
-          expect(current).toEqual(true);
-          expect(previous).toEqual(false);
-
-          done();
-        });
-
-        streamEvents().put({
-          data: '{"enable-foo":{"value":true,"version":1}}',
-        });
-      });
-    });
-
-    it('handles patch message by updating flag', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
-
-      client.on('ready', () => {
-        client.on('change', () => {});
-
-        streamEvents().patch({ data: '{"key":"enable-foo","value":true,"version":1}' });
-
-        expect(client.variation('enable-foo')).toEqual(true);
-        done();
-      });
-    });
-
-    it('does not update flag if patch version < flag version', done => {
-      const server = sinon.fakeServer.create();
-      server.respondWith([200, { 'Content-Type': 'application/json' }, '{"enable-foo":{"value":"a","version":2}}']);
-
+  describe('allFlags', () => {
+    it('returns flag values', done => {
       const client = LDClient.initialize(envName, user);
       client.on('ready', () => {
-        expect(client.variation('enable-foo')).toEqual('a');
-
-        client.on('change', () => {});
-
-        streamEvents().patch({ data: '{"key":"enable-foo","value":"b","version":1}' });
-
-        expect(client.variation('enable-foo')).toEqual('a');
-
+        expect(client.allFlags()).toEqual({ key1: 'value1', key2: 'value2' });
         done();
       });
-      server.respond();
+      requests[0].respond(
+        200,
+        { 'Content-Type': 'application/json' },
+        '{"key1": {"value": "value1", "version": 1, "variation": 2},' +
+          '"key2": {"value": "value2", "version": 1, "variation": 2}}'
+      );
     });
 
-    it('does not update flag if patch version == flag version', done => {
-      const server = sinon.fakeServer.create();
-      server.respondWith([200, { 'Content-Type': 'application/json' }, '{"enable-foo":{"value":"a","version":2}}']);
-
+    it('returns empty map if client is not initialized', () => {
       const client = LDClient.initialize(envName, user);
-      client.on('ready', () => {
-        expect(client.variation('enable-foo')).toEqual('a');
-
-        client.on('change', () => {});
-
-        streamEvents().patch({ data: '{"key":"enable-foo","value":"b","version":1}' });
-
-        expect(client.variation('enable-foo')).toEqual('a');
-
-        done();
-      });
-      server.respond();
+      expect(client.allFlags()).toEqual({});
     });
+  });
 
-    it('updates flag if patch has a version and flag has no version', done => {
-      const server = sinon.fakeServer.create();
-      server.respondWith([200, { 'Content-Type': 'application/json' }, '{"enable-foo":{"value":"a"}}']);
-
-      const client = LDClient.initialize(envName, user);
-      client.on('ready', () => {
-        expect(client.variation('enable-foo')).toEqual('a');
-
-        client.on('change', () => {});
-
-        streamEvents().patch({ data: '{"key":"enable-foo","value":"b","version":1}' });
-
-        expect(client.variation('enable-foo')).toEqual('b');
-
-        done();
-      });
-      server.respond();
-    });
-
-    it('updates flag if flag has a version and patch has no version', done => {
-      const server = sinon.fakeServer.create();
-      server.respondWith([200, { 'Content-Type': 'application/json' }, '{"enable-foo":{"value":"a","version":2}}']);
-
-      const client = LDClient.initialize(envName, user);
-      client.on('ready', () => {
-        expect(client.variation('enable-foo')).toEqual('a');
-
-        client.on('change', () => {});
-
-        streamEvents().patch({ data: '{"key":"enable-foo","value":"b"}' });
-
-        expect(client.variation('enable-foo')).toEqual('b');
-
-        done();
-      });
-      server.respond();
-    });
-
-    it('updates local storage for patch message if using local storage', done => {
-      window.localStorage.setItem(lsKey, '{"enable-foo":false}');
-      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' });
-
-      client.on('ready', () => {
-        client.on('change', () => {});
-
-        streamEvents().put({
-          data: '{"enable-foo":{"value":true,"version":1}}',
-        });
-
-        expect(client.variation('enable-foo')).toEqual(true);
-        expect(JSON.parse(window.localStorage.getItem(lsKey))).toEqual({
-          $schema: 1,
-          'enable-foo': { value: true, version: 1 },
-        });
-        done();
-      });
-    });
-
-    it('fires global change event when flag is updated from patch event', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
-
-      client.on('ready', () => {
-        client.on('change', changes => {
-          expect(changes).toEqual({
-            'enable-foo': { current: true, previous: false },
-          });
-
-          done();
-        });
-
-        streamEvents().patch({
-          data: '{"key":"enable-foo","value":true,"version":1}',
-        });
-      });
-    });
-
-    it('fires individual change event when flag is updated from patch event', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
-
-      client.on('ready', () => {
-        client.on('change:enable-foo', (current, previous) => {
-          expect(current).toEqual(true);
-          expect(previous).toEqual(false);
-
-          done();
-        });
-
-        streamEvents().patch({
-          data: '{"key":"enable-foo","value":true,"version":1}',
-        });
-      });
-    });
-
-    it('fires global change event when flag is newly created from patch event', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
-
-      client.on('ready', () => {
-        client.on('change', changes => {
-          expect(changes).toEqual({
-            'enable-foo': { current: true },
-          });
-
-          done();
-        });
-
-        streamEvents().patch({
-          data: '{"key":"enable-foo","value":true,"version":1}',
-        });
-      });
-    });
-
-    it('fires global change event when flag is newly created from patch event', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
-
-      client.on('ready', () => {
-        client.on('change:enable-foo', (current, previous) => {
-          expect(current).toEqual(true);
-          expect(previous).toEqual(undefined);
-
-          done();
-        });
-
-        streamEvents().patch({
-          data: '{"key":"enable-foo","value":true,"version":1}',
-        });
-      });
-    });
-
-    it('handles delete message by deleting flag', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
-
-      client.on('ready', () => {
-        client.on('change', () => {});
-
-        streamEvents().delete({
-          data: '{"key":"enable-foo","version":1}',
-        });
-
-        expect(client.variation('enable-foo')).toBeUndefined();
-        done();
-      });
-    });
-
-    it('fires global change event when flag is deleted', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': true } });
-
-      client.on('ready', () => {
-        client.on('change', changes => {
-          expect(changes).toEqual({
-            'enable-foo': { previous: true },
-          });
-
-          done();
-        });
-
-        streamEvents().delete({
-          data: '{"key":"enable-foo","version":1}',
-        });
-      });
-    });
-
-    it('fires individual change event when flag is deleted', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': true } });
-
-      client.on('ready', () => {
-        client.on('change:enable-foo', (current, previous) => {
-          expect(current).toEqual(undefined);
-          expect(previous).toEqual(true);
-
-          done();
-        });
-
-        streamEvents().delete({
-          data: '{"key":"enable-foo","version":1}',
-        });
-      });
-    });
-
-    it('updates local storage for delete message if using local storage', done => {
-      window.localStorage.setItem(lsKey, '{"enable-foo":false}');
-      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' });
-
-      client.on('ready', () => {
-        client.on('change', () => {});
-
-        streamEvents().delete({
-          data: '{"key":"enable-foo","version":1}',
-        });
-
-        expect(client.variation('enable-foo')).toEqual(undefined);
-        expect(JSON.parse(window.localStorage.getItem(lsKey))).toEqual({
-          $schema: 1,
-          'enable-foo': { version: 1, deleted: true },
-        });
-        done();
-      });
-    });
-
+  describe('identify', () => {
     it('updates flag values when the user changes', done => {
       const user2 = { key: 'user2' };
       const client = LDClient.initialize(envName, user, { bootstrap: {} });
@@ -977,25 +570,6 @@ describe('LDClient', () => {
       client.on('ready', () => {
         client.identify(user2, null).then(flagMap => {
           expect(flagMap).toEqual({ 'enable-foo': true });
-          done();
-        });
-
-        getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": {"value": true}}');
-      });
-    });
-
-    it('reconnects to stream if the user changes', done => {
-      const user2 = { key: 'user2' };
-      const encodedUser2 = 'eyJrZXkiOiJ1c2VyMiJ9';
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
-
-      client.on('ready', () => {
-        client.on('change', () => {});
-
-        expect(sources[streamUrl + '/eval/' + envName + '/' + encodedUser]).toBeDefined();
-
-        client.identify(user2, null, () => {
-          expect(sources[streamUrl + '/eval/' + envName + '/' + encodedUser2]).toBeDefined();
           done();
         });
 

@@ -38,6 +38,7 @@ describe('EventProcessor', () => {
     expect(e.version).toEqual(source.version);
     expect(e.value).toEqual(source.value);
     expect(e.default).toEqual(source.default);
+    expect(e.reason).toEqual(source.reason);
     if (inlineUser) {
       expect(e.user).toEqual(inlineUser);
     } else {
@@ -149,6 +150,29 @@ describe('EventProcessor', () => {
       key: 'flagkey',
       user: user,
       trackEvents: true,
+    };
+    ep.enqueue(event);
+    ep.flush().then(() => {
+      expect(mockEventSender.calls.length).toEqual(1);
+      const output = mockEventSender.calls[0].events;
+      expect(output.length).toEqual(2);
+      checkFeatureEvent(output[0], event, false, user);
+      checkSummaryEvent(output[1]);
+      done();
+    });
+  });
+
+  it('can include reason in feature event', done => {
+    const config = { inlineUsersInEvents: true };
+    const reason = { kind: 'FALLTHROUGH' };
+    const ep = EventProcessor(eventsUrl, envId, config, null, mockEventSender);
+    const event = {
+      kind: 'feature',
+      creationDate: 1000,
+      key: 'flagkey',
+      user: user,
+      trackEvents: true,
+      reason: reason,
     };
     ep.enqueue(event);
     ep.flush().then(() => {

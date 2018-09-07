@@ -117,6 +117,14 @@ declare module 'ldclient-js' {
     useReport?: boolean;
 
     /**
+     * True if you want LaunchDarkly to provide additional information about how
+     * flag values were calculated, which is then available through the client's
+     * variationDetail() method. Since this increases the size of network requests,
+     * such information is not sent unless you request it with this option.
+     */
+    evaluationExplanations?: boolean;
+
+    /**
      * Whether all user attributes (except the user key) should be marked as
      * private, and not sent to LaunchDarkly.
      *
@@ -194,6 +202,76 @@ declare module 'ldclient-js' {
       [key: string]: string | boolean | number | Array<string | boolean | number>;
     };
   }
+
+  /**
+   * Describes the reason that a flag evaluation produced a particular value. This is
+   * part of the LDEvaluationDetail object returned by variationDetail().
+   */
+  export type LDEvaluationReason = {
+    /**
+     * The general category of the reason:
+     *
+     * 'OFF': the flag was off and therefore returned its configured off value
+     *
+     * 'FALLTHROUGH': the flag was on but the user did not match any targets or rules
+     *
+     * 'TARGET_MATCH': the user key was specifically targeted for this flag
+     *
+     * 'RULE_MATCH': the user matched one of the flag's rules
+     *
+     * 'PREREQUISITE_FAILED': the flag was considered off because it had at least one
+     * prerequisite flag that either was off or did not return the desired variation
+     *
+     * 'ERROR': the flag could not be evaluated, e.g. because it does not exist or due
+     * to an unexpected error
+     */
+    kind: string;
+
+    /**
+     * A further description of the error condition, if the kind was 'ERROR'.
+     */
+    errorKind?: string;
+
+    /**
+     * The index of the matched rule (0 for the first), if the kind was 'RULE_MATCH'.
+     */
+    ruleIndex?: number;
+
+    /**
+     * The unique identifier of the matched rule, if the kind was 'RULE_MATCH'.
+     */
+    ruleId?: string;
+
+    /**
+     * The key of the failed prerequisite flag, if the kind was 'PREREQUISITE_FAILED'.
+     */
+    prerequisiteKey?: string;
+  };
+
+  /**
+   * An object returned by LDClient.variationDetail(), combining the result of a feature flag
+   * evaluation with information about how it was calculated.
+   */
+  export type LDEvaluationDetail = {
+    /**
+     * The result of the flag evaluation. This will be either one of the flag's variations or
+     * the default value that was passed to variationDetail().
+     */
+    value: LDFlagValue;
+
+    /**
+     * The index of the returned value within the flag's list of variations, e.g. 0 for the
+     * first variation - or null if the default value was returned.
+     */
+    variationIndex?: number;
+
+    /**
+     * An object describing the main factor that influenced the flag evaluation value.
+     * This will be null if you did not specify "explanationReasons: true" in your configuration.
+     */
+    reason: LDEvaluationReason;
+  };
+  
   /**
    * The LaunchDarkly client's instance interface.
    *
@@ -243,6 +321,24 @@ declare module 'ldclient-js' {
      *   The flag's value.
      */
     variation: (key: string, defaultValue?: LDFlagValue) => LDFlagValue;
+
+    /**
+     * Retrieves a flag's value, along with information about how it was calculated, in the form
+     * of an LDEvaluationDetail object. Note that the "reason" property will only have a value
+     * if you specified "evaluationExplanations: true" in your configuration.
+     *
+     * The reason property of the result will also be included in analytics events, if you are
+     * capturing detailed event data for this flag.
+     *
+     * @param key
+     *   The key of the flag for which to retrieve the corresponding value.
+     * @param defaultValue
+     *   The value to use if the flag is not available (for example, if the
+     *   user is offline or a flag is requested that does not exist).
+     *
+     * @returns LDEvaluationDetail object containing the value and explanation.
+     */
+    variationDetail: (key: string, defaultValue?: LDFlagValue) => LDEvaluationDetail;
 
     /**
      * Registers an event listener.
