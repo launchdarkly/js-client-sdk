@@ -538,7 +538,7 @@ describe('LDClient', () => {
         200,
         { 'Content-Type': 'application/json' },
         '{"key1": {"value": "value1", "version": 1, "variation": 2},' +
-         '"key2": {"value": "value2", "version": 1, "variation": 2}}'
+          '"key2": {"value": "value2", "version": 1, "variation": 2}}'
       );
     });
 
