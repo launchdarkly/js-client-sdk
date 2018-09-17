@@ -125,6 +125,19 @@ declare module 'ldclient-js' {
     evaluationExplanations?: boolean;
 
     /**
+     * True (the default) if the client should make a request to LaunchDarkly for
+     * A/B testing goals. By default, this request is made on every page load.
+     * Set it to false if you are not using A/B testing and want to skip the request.
+     */
+    fetchGoals?: boolean;
+
+    /**
+     * True (the default) if the client should send analytics events to LaunchDarkly.
+     * Set it to false if you are not using analytics events.
+     */
+    sendEvents?: boolean;
+    
+    /**
      * Whether all user attributes (except the user key) should be marked as
      * private, and not sent to LaunchDarkly.
      *

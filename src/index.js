@@ -22,6 +22,7 @@ export function initialize(env, user, options = {}) {
   const sendEvents = typeof options.sendEvents === 'undefined' ? true : options.sendEvents;
   const allowFrequentDuplicateEvents = !!options.allowFrequentDuplicateEvents;
   const sendEventsOnlyForVariation = !!options.sendEventsOnlyForVariation;
+  const fetchGoals = typeof options.fetchGoals === 'undefined' ? true : options.fetchGoals;
   const environment = env;
   const emitter = EventEmitter();
   const stream = Stream(streamUrl, environment, hash, options);
@@ -539,19 +540,21 @@ export function initialize(env, user, options = {}) {
     }
   }
 
-  requestor.fetchGoals((err, g) => {
-    if (err) {
-      emitter.maybeReportError(
-        new errors.LDUnexpectedResponseError('Error fetching goals: ' + err.message ? err.message : err)
-      );
-    }
-    if (g && g.length > 0) {
-      goals = g;
-      goalTracker = GoalTracker(goals, sendGoalEvent);
-      watchLocation(locationWatcherInterval, refreshGoalTracker);
-    }
-    emitter.emit(goalsEvent);
-  });
+  if (fetchGoals) {
+    requestor.fetchGoals((err, g) => {
+      if (err) {
+        emitter.maybeReportError(
+          new errors.LDUnexpectedResponseError('Error fetching goals: ' + err.message ? err.message : err)
+        );
+      }
+      if (g && g.length > 0) {
+        goals = g;
+        goalTracker = GoalTracker(goals, sendGoalEvent);
+        watchLocation(locationWatcherInterval, refreshGoalTracker);
+      }
+      emitter.emit(goalsEvent);
+    });
+  }
 
   function start() {
     if (sendEvents) {
