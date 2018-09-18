@@ -82,6 +82,7 @@ describe('LDClient', () => {
         expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
         done();
       });
+      client.waitForInitialization().catch(() => {}); // jest doesn't like unhandled rejections
       requests[0].respond(404);
     });
 
@@ -91,6 +92,7 @@ describe('LDClient', () => {
         expect(client.variation('flag-key', 1)).toEqual(1);
         done();
       });
+      client.waitForInitialization().catch(() => {});
       requests[0].respond(404);
     });
 
@@ -167,10 +169,13 @@ describe('LDClient', () => {
         bootstrap: 'localstorage',
       });
 
-      client.on('ready', () => {
-        expect(window.localStorage.getItem(lsKey)).toEqual(json);
-        done();
-      });
+      client
+        .waitForInitialization()
+        .then(() => {
+          expect(window.localStorage.getItem(lsKey)).toEqual(json);
+          done();
+        })
+        .catch(() => {});
     });
 
     it('should start with empty flags if we tried to use cached settings and there are none', done => {
@@ -349,6 +354,8 @@ describe('LDClient', () => {
       client.on('error', handleError);
       server.respond();
 
+      client.waitForInitialization().catch(() => {});
+
       setTimeout(() => {
         expect(handleError).toHaveBeenCalled();
         done();
@@ -419,6 +426,33 @@ describe('LDClient', () => {
       });
 
       getLastRequest().respond(200);
+    });
+  });
+
+  describe('waitForInitialization', () => {
+    it('resolves promise on successful init', done => {
+      const handleReady = jest.fn();
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: {},
+      });
+
+      client.waitForInitialization().then(handleReady);
+
+      client.on('ready', () => {
+        setTimeout(() => {
+          expect(handleReady).toHaveBeenCalled();
+          done();
+        }, 0);
+      });
+    });
+
+    it('rejects promise if flags request fails', done => {
+      const client = LDClient.initialize('abc', user);
+      client.waitForInitialization().catch(err => {
+        expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
+        done();
+      });
+      requests[0].respond(404);
     });
   });
 

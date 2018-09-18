@@ -279,9 +279,33 @@ declare module 'ldclient-js' {
    */
   export interface LDClient {
     /**
+     * Allows you to wait for client initialization using Promise syntax. The returned
+     * Promise will be resolved once the client has either successfully initialized or
+     * failed to initialize (e.g. due to an invalid environment key or a server error).
+     * 
+     * If you want to distinguish between these success and failure conditions, use
+     * waitForInitialization() instead.
+     * 
+     * If you prefer to use event handlers rather than Promises, you can listen on the
+     * client for a "ready" event.
+     * 
      * @returns a Promise containing the initialization state of the client
      */
     waitUntilReady: () => Promise<void>;
+
+    /**
+     * Allows you to wait for client initialization using Promise syntax. The returned
+     * Promise will be resolved if the client successfully initializes, or rejected (with
+     * an error object) if it fails to initialize (e.g. due to an invalid environment key
+     * or a server error). This is different from waitUntilReady(), which resolves the
+     * Promise in either case.
+     * 
+     * If you prefer to use event handlers rather than Promises, you can listen on the
+     * client for the events "inited" and "failed".
+     * 
+     * @returns a Promise containing the initialization state of the client
+     */
+    waitForInitialization: () => Promise<void>;
 
     /**
      * Identifies a user to LaunchDarkly.
