@@ -114,6 +114,21 @@ describe('LDClient', () => {
       expect(/sdk\/eval/.test(requests[0].url)).toEqual(false); // it's the goals request
     });
 
+    it('fetches goals if fetchGoals is unspecified', () => {
+      LDClient.initialize(envName, user);
+      expect(/sdk\/goals/.test(requests[1].url)).toEqual(true);
+    });
+
+    it('fetches goals if fetchGoals is true', () => {
+      LDClient.initialize(envName, user, { fetchGoals: true });
+      expect(/sdk\/goals/.test(requests[1].url)).toEqual(true);
+    });
+
+    it('does not fetch goals if fetchGoals is false', () => {
+      LDClient.initialize(envName, user, { fetchGoals: false });
+      expect(requests.length).toEqual(1);
+    });
+
     it('logs warning when bootstrap object uses old format', () => {
       LDClient.initialize(envName, user, {
         bootstrap: { foo: 'bar' },
