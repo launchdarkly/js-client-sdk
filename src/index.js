@@ -10,6 +10,8 @@ import * as messages from './messages';
 import * as errors from './errors';
 
 const readyEvent = 'ready';
+const successEvent = 'initialized';
+const failedEvent = 'failed';
 const changeEvent = 'change';
 const goalsEvent = 'goalsReady';
 const locationWatcherInterval = 300;
@@ -449,9 +451,7 @@ export function initialize(env, user, options = {}) {
   }
 
   if (typeof options.bootstrap === 'object') {
-    utils.onNextTick(() => {
-      emitter.emit(readyEvent);
-    });
+    utils.onNextTick(signalSuccessfulInit);
   } else if (
     typeof options.bootstrap === 'string' &&
     options.bootstrap.toUpperCase() === 'LOCALSTORAGE' &&
@@ -465,23 +465,23 @@ export function initialize(env, user, options = {}) {
       flags = {};
       requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
         if (err) {
-          emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
-        }
-        if (settings) {
-          flags = settings;
-          store.saveFlags(flags);
+          const initErr = new errors.LDFlagFetchError(messages.errorFetchingFlags(err));
+          signalFailedInit(initErr);
         } else {
-          flags = {};
+          if (settings) {
+            flags = settings;
+            store.saveFlags(flags);
+          } else {
+            flags = {};
+          }
+          signalSuccessfulInit();
         }
-        emitter.emit(readyEvent);
       });
     } else {
       // We're reading the flags from local storage. Signal that we're ready,
       // then update localStorage for the next page load. We won't signal changes or update
       // the in-memory flags unless you subscribe for changes
-      utils.onNextTick(() => {
-        emitter.emit(readyEvent);
-      });
+      utils.onNextTick(signalSuccessfulInit);
 
       requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
         if (err) {
@@ -495,10 +495,13 @@ export function initialize(env, user, options = {}) {
   } else {
     requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
       if (err) {
-        emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+        flags = {};
+        const initErr = new errors.LDFlagFetchError(messages.errorFetchingFlags(err));
+        signalFailedInit(initErr);
+      } else {
+        flags = settings || {};
+        signalSuccessfulInit();
       }
-      flags = settings || {};
-      emitter.emit(readyEvent);
     });
   }
 
@@ -556,6 +559,17 @@ export function initialize(env, user, options = {}) {
     });
   }
 
+  function signalSuccessfulInit() {
+    emitter.emit(readyEvent);
+    emitter.emit(successEvent); // allows initPromise to distinguish between success and failure
+  }
+
+  function signalFailedInit(err) {
+    emitter.maybeReportError(err);
+    emitter.emit(failedEvent, err);
+    emitter.emit(readyEvent); // for backward compatibility, this event happens even on failure
+  }
+
   function start() {
     if (sendEvents) {
       events.start();
@@ -591,7 +605,19 @@ export function initialize(env, user, options = {}) {
     });
   });
 
+  const initPromise = new Promise((resolve, reject) => {
+    const onSuccess = emitter.on(successEvent, () => {
+      emitter.off(successEvent, onSuccess);
+      resolve();
+    });
+    const onFailure = emitter.on(failedEvent, err => {
+      emitter.off(failedEvent, onFailure);
+      reject(err);
+    });
+  });
+
   const client = {
+    waitForInitialization: () => initPromise,
     waitUntilReady: () => readyPromise,
     waitUntilGoalsReady: () => goalsPromise,
     identify: identify,
