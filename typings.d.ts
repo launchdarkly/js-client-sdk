@@ -301,7 +301,7 @@ declare module 'ldclient-js' {
      * Promise in either case.
      * 
      * If you prefer to use event handlers rather than Promises, you can listen on the
-     * client for the events "inited" and "failed".
+     * client for the events "initialized" and "failed".
      * 
      * @returns a Promise containing the initialization state of the client
      */

@@ -54,6 +54,20 @@ describe('LDClient', () => {
       }, 0);
     });
 
+    it('should trigger the initialized event', done => {
+      const handleReady = jest.fn();
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: {},
+      });
+
+      client.on('initialized', handleReady);
+
+      setTimeout(() => {
+        expect(handleReady).toHaveBeenCalled();
+        done();
+      }, 0);
+    });
+
     it('should emit an error when an invalid samplingInterval is specified', done => {
       const client = LDClient.initialize(envName, user, {
         bootstrap: {},
@@ -83,6 +97,16 @@ describe('LDClient', () => {
         done();
       });
       client.waitForInitialization().catch(() => {}); // jest doesn't like unhandled rejections
+      requests[0].respond(404);
+    });
+
+    it('should emit a failure event when an invalid environment key is specified', done => {
+      const client = LDClient.initialize('abc', user);
+      client.on('failed', err => {
+        expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
+        done();
+      });
+      client.waitForInitialization().catch(() => {});
       requests[0].respond(404);
     });
 

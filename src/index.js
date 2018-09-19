@@ -10,7 +10,7 @@ import * as messages from './messages';
 import * as errors from './errors';
 
 const readyEvent = 'ready';
-const successEvent = 'inited';
+const successEvent = 'initialized';
 const failedEvent = 'failed';
 const changeEvent = 'change';
 const goalsEvent = 'goalsReady';
