@@ -26,7 +26,7 @@ export function initialize(env, user, options = {}) {
   const emitter = EventEmitter();
   const stream = Stream(streamUrl, environment, hash, options);
   const events = options.eventProcessor || EventProcessor(eventsUrl, environment, options, emitter);
-  const requestor = Requestor(baseUrl, environment, options.useReport, options.evaluationReasons);
+  const requestor = Requestor(baseUrl, environment, options.useReport, options.evaluationReasons, options.useLDHeaders);
   const seenRequests = {};
   let flags = typeof options.bootstrap === 'object' ? readFlagsFromBootstrap(options.bootstrap) : {};
   let goalTracker;

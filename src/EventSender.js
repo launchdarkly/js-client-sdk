@@ -3,11 +3,12 @@ import * as utils from './utils';
 
 const MAX_URL_LENGTH = 2000;
 
-export default function EventSender(eventsUrl, environmentId, forceHasCors, imageCreator) {
+export default function EventSender(eventsUrl, environmentId, forceHasCors, imageCreator, shouldUseLDHeaders) {
   let hasCors;
   const postUrl = eventsUrl + '/events/bulk/' + environmentId;
   const imageUrl = eventsUrl + '/a/' + environmentId + '.gif';
   const sender = {};
+  const useLDHeaders = shouldUseLDHeaders === undefined ? true : !!shouldUseLDHeaders;
 
   function loadUrlUsingImage(src, onDone) {
     const img = new Image();
@@ -36,7 +37,9 @@ export default function EventSender(eventsUrl, environmentId, forceHasCors, imag
       function createRequest(canRetry) {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', postUrl, !sync);
-        utils.addLDHeaders(xhr);
+        if (useLDHeaders) {
+          utils.addLDHeaders(xhr);
+        }
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.setRequestHeader('X-LaunchDarkly-Event-Schema', '3');
         if (!sync) {

@@ -186,4 +186,20 @@ describe('Requestor', () => {
     expect(server.requests.length).toEqual(1);
     expect(server.requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
   });
+
+  it('should NOT send custom user-agent header in when useLDHeaders is false', () => {
+    const baseUrl = 'http://requestee';
+    const environment = 'FAKE_ENV';
+    const useReport = true;
+    const withReasons = false;
+    const useLDHeaders = false;
+
+    const requestor = Requestor(baseUrl, environment, useReport, withReasons, useLDHeaders);
+    const user = { key: 'foo' };
+
+    requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
+
+    expect(server.requests.length).toEqual(1);
+    expect(server.requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(undefined);
+  });
 });

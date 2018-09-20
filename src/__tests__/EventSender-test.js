@@ -139,6 +139,17 @@ describe('EventSender', () => {
       expect(lastRequest().requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
     });
 
+    it('should send custom user-agent header when useLDHeaders is false', () => {
+      const forceHasCors = true;
+      const imageCreator = undefined;
+      const shouldUseLDHeaders = false;
+      const sender = EventSender(eventsUrl, envId, forceHasCors, imageCreator, shouldUseLDHeaders);
+      const event = { kind: 'identify', key: 'userKey' };
+      sender.sendEvents([event], false);
+      lastRequest().respond();
+      expect(lastRequest().requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(undefined);
+    });
+
     const retryableStatuses = [400, 408, 429, 500, 503];
     for (const i in retryableStatuses) {
       const status = retryableStatuses[i];
