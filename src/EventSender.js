@@ -3,7 +3,7 @@ import * as utils from './utils';
 
 const MAX_URL_LENGTH = 2000;
 
-export default function EventSender(eventsUrl, environmentId, forceHasCors, imageCreator, sendLDHeaders = true) {
+export default function EventSender(eventsUrl, environmentId, forceHasCors, imageCreator, preventLDHeaders) {
   let hasCors;
   const postUrl = eventsUrl + '/events/bulk/' + environmentId;
   const imageUrl = eventsUrl + '/a/' + environmentId + '.gif';
@@ -36,7 +36,7 @@ export default function EventSender(eventsUrl, environmentId, forceHasCors, imag
       function createRequest(canRetry) {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', postUrl, !sync);
-        if (sendLDHeaders) {
+        if (preventLDHeaders) {
           utils.addLDHeaders(xhr);
         }
         xhr.setRequestHeader('Content-Type', 'application/json');

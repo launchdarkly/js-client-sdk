@@ -4,7 +4,7 @@ import * as messages from './messages';
 
 const json = 'application/json';
 
-function fetchJSON(endpoint, body, callback, sendLDHeaders) {
+function fetchJSON(endpoint, body, callback, preventLDHeaders) {
   const xhr = new XMLHttpRequest();
   let data = undefined;
 
@@ -32,7 +32,7 @@ function fetchJSON(endpoint, body, callback, sendLDHeaders) {
     xhr.open('GET', endpoint);
   }
 
-  if (sendLDHeaders) {
+  if (preventLDHeaders) {
     utils.addLDHeaders(xhr);
   }
 
@@ -49,7 +49,7 @@ function getResponseError(xhr) {
   }
 }
 
-export default function Requestor(baseUrl, environment, useReport, withReasons, sendLDHeaders = true) {
+export default function Requestor(baseUrl, environment, useReport, withReasons, preventLDHeaders = true) {
   let flagSettingsRequest;
   let lastFlagSettingsCallback;
 
@@ -98,12 +98,12 @@ export default function Requestor(baseUrl, environment, useReport, withReasons, 
     }
 
     lastFlagSettingsCallback = cb;
-    flagSettingsRequest = fetchJSON(endpoint, body, cb, sendLDHeaders);
+    flagSettingsRequest = fetchJSON(endpoint, body, cb, preventLDHeaders);
   };
 
   requestor.fetchGoals = function(callback) {
     const endpoint = [baseUrl, '/sdk/goals/', environment].join('');
-    fetchJSON(endpoint, null, callback, sendLDHeaders);
+    fetchJSON(endpoint, null, callback, preventLDHeaders);
   };
 
   return requestor;

@@ -139,11 +139,11 @@ describe('EventSender', () => {
       expect(lastRequest().requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
     });
 
-    it('should not send custom user-agent header when sendLDHeaders is false', () => {
+    it('should not send custom user-agent header when preventLDHeaders is true', () => {
       const forceHasCors = true;
       const imageCreator = undefined;
-      const sendLDHeaders = false;
-      const sender = EventSender(eventsUrl, envId, forceHasCors, imageCreator, sendLDHeaders);
+      const preventLDHeaders = true;
+      const sender = EventSender(eventsUrl, envId, forceHasCors, imageCreator, preventLDHeaders);
       const event = { kind: 'identify', key: 'userKey' };
       sender.sendEvents([event], false);
       lastRequest().respond();
