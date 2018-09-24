@@ -32,7 +32,7 @@ function fetchJSON(endpoint, body, callback, preventLDHeaders) {
     xhr.open('GET', endpoint);
   }
 
-  if (preventLDHeaders) {
+  if (!preventLDHeaders) {
     utils.addLDHeaders(xhr);
   }
 
@@ -49,7 +49,7 @@ function getResponseError(xhr) {
   }
 }
 
-export default function Requestor(baseUrl, environment, useReport, withReasons, preventLDHeaders = true) {
+export default function Requestor(baseUrl, environment, useReport, withReasons, preventLDHeaders) {
   let flagSettingsRequest;
   let lastFlagSettingsCallback;
 
