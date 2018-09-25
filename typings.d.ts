@@ -95,6 +95,11 @@ declare module 'ldclient-js' {
     eventsUrl?: string;
 
     /**
+     * Whether or not to send analytics events. This defaults to true (events will be sent).
+     */
+    sendEvents?: boolean;
+
+    /**
      * The url for the LaunchDarkly stream server.
      *
      * This is used for enterprise customers with their own LaunchDarkly instances.
@@ -148,6 +153,19 @@ declare module 'ldclient-js' {
      * Must be a list of strings. Defaults to empty list.
      */
     privateAttributeNames?: Array<string>;
+
+    /**
+     * Whether or not to send an analytics event for a flag evaluation even if the same flag was
+     * evaluated with the same value within the last five minutes. This defaults to false (duplicate
+     * events within five minutes will be dropped).
+     */
+    allowFrequentDuplicateEvents?: boolean;
+
+    /**
+     * Whether analytics events should be sent only when you call variation (true), or also when you
+     * call allFlags (false). This defaults to false (events will be sent in both cases).
+     */
+    sendEventsOnlyForVariation?: boolean;
   }
 
   /**
