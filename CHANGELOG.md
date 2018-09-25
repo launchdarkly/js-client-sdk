@@ -3,6 +3,12 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.7.0] - 2018-09-19
+### Added:
+- New client method `waitForInitialization` returns a Promise, like `waitUntilReady`; but while `waitUntilReady` will be resolved as soon as client initialization either succeeds or fails, `waitForInitialization` will be resolved only if initialization succeeds, and will be rejected (with an error object) if it fails.
+- New config option `fetchGoals` (default: true) allows you to control whether the client will request A/B testing parameters from LaunchDarkly. If you do not use A/B testing, you may wish to disable this to reduce the number of HTTP requests.
+- New config option `sendLDHeaders` (default: true) allows you to control whether the client will add a custom header to LaunchDarkly HTTP requests (to indicate the SDK version). You may wish to disable this behavior if you have performance concerns, as it causes browsers to make an additional CORS preflight check (since it is no longer a [simple request](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)).
+
 ## [2.6.0] - 2018-09-07
 ### Added:
 - The new configuration option `evaluationReasons` causes LaunchDarkly to report information about how each feature flag value was determined; you can access this information with the new client method `variationDetail`. The new method returns an object that contains both the flag value and a "reason" object which will tell you, for instance, if the user was individually targeted for the flag or was matched by one of the flag's rules, or if the flag returned the default value due to an error.
