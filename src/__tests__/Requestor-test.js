@@ -187,14 +187,14 @@ describe('Requestor', () => {
     expect(server.requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
   });
 
-  it('should NOT send custom user-agent header in when preventLDHeaders is true', () => {
+  it('should NOT send custom user-agent header in when sendLDHeaders is false', () => {
     const baseUrl = 'http://requestee';
     const environment = 'FAKE_ENV';
     const useReport = true;
     const withReasons = false;
-    const preventLDHeaders = false;
+    const sendLDHeaders = false;
 
-    const requestor = Requestor(baseUrl, environment, useReport, withReasons, preventLDHeaders);
+    const requestor = Requestor(baseUrl, environment, useReport, withReasons, sendLDHeaders);
     const user = { key: 'foo' };
 
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());

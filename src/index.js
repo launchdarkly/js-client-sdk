@@ -20,14 +20,14 @@ export function initialize(env, user, options = {}) {
   const streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
   const hash = options.hash;
   const sendEvents = typeof options.sendEvents === 'undefined' ? true : options.sendEvents;
-  const preventLDHeaders = !!options.preventLDHeaders;
+  const sendLDHeaders = 'sendLDHeaders' in options ? options.sendLDHeaders : true;
   const allowFrequentDuplicateEvents = !!options.allowFrequentDuplicateEvents;
   const sendEventsOnlyForVariation = !!options.sendEventsOnlyForVariation;
   const environment = env;
   const emitter = EventEmitter();
   const stream = Stream(streamUrl, environment, hash, options);
-  const events = options.eventProcessor || EventProcessor(eventsUrl, environment, options, emitter, preventLDHeaders);
-  const requestor = Requestor(baseUrl, environment, options.useReport, options.evaluationReasons, preventLDHeaders);
+  const events = options.eventProcessor || EventProcessor(eventsUrl, environment, options, emitter, sendLDHeaders);
+  const requestor = Requestor(baseUrl, environment, options.useReport, options.evaluationReasons, sendLDHeaders);
   const seenRequests = {};
   let flags = typeof options.bootstrap === 'object' ? readFlagsFromBootstrap(options.bootstrap) : {};
   let goalTracker;

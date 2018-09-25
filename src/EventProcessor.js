@@ -11,10 +11,10 @@ export default function EventProcessor(
   options = {},
   emitter = null,
   sender = null,
-  preventLDHeaders
+  sendLDHeaders = true
 ) {
   const processor = {};
-  const eventSender = sender || EventSender(eventsUrl, environmentId, preventLDHeaders);
+  const eventSender = sender || EventSender(eventsUrl, environmentId, sendLDHeaders);
   const summarizer = EventSummarizer();
   const userFilter = UserFilter(options);
   const inlineUsers = !!options.inlineUsersInEvents;
