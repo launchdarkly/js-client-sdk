@@ -95,11 +95,6 @@ declare module 'ldclient-js' {
     eventsUrl?: string;
 
     /**
-     * Whether or not to send analytics events. This defaults to true (events will be sent).
-     */
-    sendEvents?: boolean;
-
-    /**
      * The url for the LaunchDarkly stream server.
      *
      * This is used for enterprise customers with their own LaunchDarkly instances.
