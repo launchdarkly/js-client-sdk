@@ -117,9 +117,9 @@ declare module 'ldclient-js' {
     useReport?: boolean;
 
     /**
-     * Whether or not to include custom headers in HTTP requests to LaunchDarkly; currently
-     * these are used to track what version of the SDK is active. This defaults to true (custom
-     * headers will be sent). One reason you might want to set it to false is that the presence
+     * Whether or not to include custom HTTP headers when requesting flags from LaunchDarkly;
+     * currently these are used to track what version of the SDK is active. This defaults to true
+     * (custom headers will be sent). One reason you might want to set it to false is that the presence
      * of custom headers causes browsers to make an extra OPTIONS request (a CORS preflight check)
      * before each flag request, which could affect performance.
      */
