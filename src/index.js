@@ -10,6 +10,8 @@ import * as messages from './messages';
 import * as errors from './errors';
 
 const readyEvent = 'ready';
+const successEvent = 'initialized';
+const failedEvent = 'failed';
 const changeEvent = 'change';
 const goalsEvent = 'goalsReady';
 const locationWatcherInterval = 300;
@@ -19,14 +21,17 @@ export function initialize(env, user, options = {}) {
   const eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
   const streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
   const hash = options.hash;
-  const sendEvents = typeof options.sendEvents === 'undefined' ? true : options.sendEvents;
+  const sendEvents = optionWithDefault('sendEvents', true);
+  const sendLDHeaders = optionWithDefault('sendLDHeaders', true);
   const allowFrequentDuplicateEvents = !!options.allowFrequentDuplicateEvents;
   const sendEventsOnlyForVariation = !!options.sendEventsOnlyForVariation;
+  const fetchGoals = typeof options.fetchGoals === 'undefined' ? true : options.fetchGoals;
   const environment = env;
   const emitter = EventEmitter();
   const stream = Stream(streamUrl, environment, hash, options);
-  const events = options.eventProcessor || EventProcessor(eventsUrl, environment, options, emitter);
-  const requestor = Requestor(baseUrl, environment, options.useReport, options.evaluationReasons);
+  const events =
+    options.eventProcessor || EventProcessor(eventsUrl, environment, options, emitter, null, sendLDHeaders);
+  const requestor = Requestor(baseUrl, environment, options.useReport, options.evaluationReasons, sendLDHeaders);
   const seenRequests = {};
   let flags = typeof options.bootstrap === 'object' ? readFlagsFromBootstrap(options.bootstrap) : {};
   let goalTracker;
@@ -34,6 +39,10 @@ export function initialize(env, user, options = {}) {
   let goals;
   let subscribedToChangeEvents;
   let firstEvent = true;
+
+  function optionWithDefault(name, defaultVal) {
+    return typeof options[name] === 'undefined' ? defaultVal : options[name];
+  }
 
   function readFlagsFromBootstrap(data) {
     // If the bootstrap data came from an older server-side SDK, we'll have just a map of keys to values.
@@ -448,9 +457,7 @@ export function initialize(env, user, options = {}) {
   }
 
   if (typeof options.bootstrap === 'object') {
-    utils.onNextTick(() => {
-      emitter.emit(readyEvent);
-    });
+    utils.onNextTick(signalSuccessfulInit);
   } else if (
     typeof options.bootstrap === 'string' &&
     options.bootstrap.toUpperCase() === 'LOCALSTORAGE' &&
@@ -464,23 +471,23 @@ export function initialize(env, user, options = {}) {
       flags = {};
       requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
         if (err) {
-          emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
-        }
-        if (settings) {
-          flags = settings;
-          store.saveFlags(flags);
+          const initErr = new errors.LDFlagFetchError(messages.errorFetchingFlags(err));
+          signalFailedInit(initErr);
         } else {
-          flags = {};
+          if (settings) {
+            flags = settings;
+            store.saveFlags(flags);
+          } else {
+            flags = {};
+          }
+          signalSuccessfulInit();
         }
-        emitter.emit(readyEvent);
       });
     } else {
       // We're reading the flags from local storage. Signal that we're ready,
       // then update localStorage for the next page load. We won't signal changes or update
       // the in-memory flags unless you subscribe for changes
-      utils.onNextTick(() => {
-        emitter.emit(readyEvent);
-      });
+      utils.onNextTick(signalSuccessfulInit);
 
       requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
         if (err) {
@@ -494,10 +501,13 @@ export function initialize(env, user, options = {}) {
   } else {
     requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
       if (err) {
-        emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+        flags = {};
+        const initErr = new errors.LDFlagFetchError(messages.errorFetchingFlags(err));
+        signalFailedInit(initErr);
+      } else {
+        flags = settings || {};
+        signalSuccessfulInit();
       }
-      flags = settings || {};
-      emitter.emit(readyEvent);
     });
   }
 
@@ -539,19 +549,32 @@ export function initialize(env, user, options = {}) {
     }
   }
 
-  requestor.fetchGoals((err, g) => {
-    if (err) {
-      emitter.maybeReportError(
-        new errors.LDUnexpectedResponseError('Error fetching goals: ' + err.message ? err.message : err)
-      );
-    }
-    if (g && g.length > 0) {
-      goals = g;
-      goalTracker = GoalTracker(goals, sendGoalEvent);
-      watchLocation(locationWatcherInterval, refreshGoalTracker);
-    }
-    emitter.emit(goalsEvent);
-  });
+  if (fetchGoals) {
+    requestor.fetchGoals((err, g) => {
+      if (err) {
+        emitter.maybeReportError(
+          new errors.LDUnexpectedResponseError('Error fetching goals: ' + err.message ? err.message : err)
+        );
+      }
+      if (g && g.length > 0) {
+        goals = g;
+        goalTracker = GoalTracker(goals, sendGoalEvent);
+        watchLocation(locationWatcherInterval, refreshGoalTracker);
+      }
+      emitter.emit(goalsEvent);
+    });
+  }
+
+  function signalSuccessfulInit() {
+    emitter.emit(readyEvent);
+    emitter.emit(successEvent); // allows initPromise to distinguish between success and failure
+  }
+
+  function signalFailedInit(err) {
+    emitter.maybeReportError(err);
+    emitter.emit(failedEvent, err);
+    emitter.emit(readyEvent); // for backward compatibility, this event happens even on failure
+  }
 
   function start() {
     if (sendEvents) {
@@ -588,7 +611,19 @@ export function initialize(env, user, options = {}) {
     });
   });
 
+  const initPromise = new Promise((resolve, reject) => {
+    const onSuccess = emitter.on(successEvent, () => {
+      emitter.off(successEvent, onSuccess);
+      resolve();
+    });
+    const onFailure = emitter.on(failedEvent, err => {
+      emitter.off(failedEvent, onFailure);
+      reject(err);
+    });
+  });
+
   const client = {
+    waitForInitialization: () => initPromise,
     waitUntilReady: () => readyPromise,
     waitUntilGoalsReady: () => goalsPromise,
     identify: identify,

@@ -54,6 +54,20 @@ describe('LDClient', () => {
       }, 0);
     });
 
+    it('should trigger the initialized event', done => {
+      const handleReady = jest.fn();
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: {},
+      });
+
+      client.on('initialized', handleReady);
+
+      setTimeout(() => {
+        expect(handleReady).toHaveBeenCalled();
+        done();
+      }, 0);
+    });
+
     it('should emit an error when an invalid samplingInterval is specified', done => {
       const client = LDClient.initialize(envName, user, {
         bootstrap: {},
@@ -82,6 +96,17 @@ describe('LDClient', () => {
         expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
         done();
       });
+      client.waitForInitialization().catch(() => {}); // jest doesn't like unhandled rejections
+      requests[0].respond(404);
+    });
+
+    it('should emit a failure event when an invalid environment key is specified', done => {
+      const client = LDClient.initialize('abc', user);
+      client.on('failed', err => {
+        expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
+        done();
+      });
+      client.waitForInitialization().catch(() => {});
       requests[0].respond(404);
     });
 
@@ -91,6 +116,7 @@ describe('LDClient', () => {
         expect(client.variation('flag-key', 1)).toEqual(1);
         done();
       });
+      client.waitForInitialization().catch(() => {});
       requests[0].respond(404);
     });
 
@@ -112,6 +138,21 @@ describe('LDClient', () => {
       });
 
       expect(/sdk\/eval/.test(requests[0].url)).toEqual(false); // it's the goals request
+    });
+
+    it('fetches goals if fetchGoals is unspecified', () => {
+      LDClient.initialize(envName, user);
+      expect(/sdk\/goals/.test(requests[1].url)).toEqual(true);
+    });
+
+    it('fetches goals if fetchGoals is true', () => {
+      LDClient.initialize(envName, user, { fetchGoals: true });
+      expect(/sdk\/goals/.test(requests[1].url)).toEqual(true);
+    });
+
+    it('does not fetch goals if fetchGoals is false', () => {
+      LDClient.initialize(envName, user, { fetchGoals: false });
+      expect(requests.length).toEqual(1);
     });
 
     it('logs warning when bootstrap object uses old format', () => {
@@ -167,10 +208,13 @@ describe('LDClient', () => {
         bootstrap: 'localstorage',
       });
 
-      client.on('ready', () => {
-        expect(window.localStorage.getItem(lsKey)).toEqual(json);
-        done();
-      });
+      client
+        .waitForInitialization()
+        .then(() => {
+          expect(window.localStorage.getItem(lsKey)).toEqual(json);
+          done();
+        })
+        .catch(() => {});
     });
 
     it('should start with empty flags if we tried to use cached settings and there are none', done => {
@@ -349,6 +393,8 @@ describe('LDClient', () => {
       client.on('error', handleError);
       server.respond();
 
+      client.waitForInitialization().catch(() => {});
+
       setTimeout(() => {
         expect(handleError).toHaveBeenCalled();
         done();
@@ -419,6 +465,33 @@ describe('LDClient', () => {
       });
 
       getLastRequest().respond(200);
+    });
+  });
+
+  describe('waitForInitialization', () => {
+    it('resolves promise on successful init', done => {
+      const handleReady = jest.fn();
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: {},
+      });
+
+      client.waitForInitialization().then(handleReady);
+
+      client.on('ready', () => {
+        setTimeout(() => {
+          expect(handleReady).toHaveBeenCalled();
+          done();
+        }, 0);
+      });
+    });
+
+    it('rejects promise if flags request fails', done => {
+      const client = LDClient.initialize('abc', user);
+      client.waitForInitialization().catch(err => {
+        expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
+        done();
+      });
+      requests[0].respond(404);
     });
   });
 

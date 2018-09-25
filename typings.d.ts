@@ -117,6 +117,15 @@ declare module 'ldclient-js' {
     useReport?: boolean;
 
     /**
+     * Whether or not to include custom headers in HTTP requests to LaunchDarkly; currently
+     * these are used to track what version of the SDK is active. This defaults to true (custom
+     * headers will be sent). One reason you might want to set it to false is that the presence
+     * of custom headers causes browsers to make an extra OPTIONS request (a CORS preflight check)
+     * before each flag request, which could affect performance.
+     */
+    sendLDHeaders?: boolean;
+
+    /**
      * True if you want LaunchDarkly to provide additional information about how
      * flag values were calculated, which is then available through the client's
      * variationDetail() method. Since this increases the size of network requests,
@@ -124,6 +133,19 @@ declare module 'ldclient-js' {
      */
     evaluationExplanations?: boolean;
 
+    /**
+     * True (the default) if the client should make a request to LaunchDarkly for
+     * A/B testing goals. By default, this request is made on every page load.
+     * Set it to false if you are not using A/B testing and want to skip the request.
+     */
+    fetchGoals?: boolean;
+
+    /**
+     * True (the default) if the client should send analytics events to LaunchDarkly.
+     * Set it to false if you are not using analytics events.
+     */
+    sendEvents?: boolean;
+    
     /**
      * Whether all user attributes (except the user key) should be marked as
      * private, and not sent to LaunchDarkly.
@@ -139,6 +161,19 @@ declare module 'ldclient-js' {
      * Must be a list of strings. Defaults to empty list.
      */
     privateAttributeNames?: Array<string>;
+
+    /**
+     * Whether or not to send an analytics event for a flag evaluation even if the same flag was
+     * evaluated with the same value within the last five minutes. This defaults to false (duplicate
+     * events within five minutes will be dropped).
+     */
+    allowFrequentDuplicateEvents?: boolean;
+
+    /**
+     * Whether analytics events should be sent only when you call variation (true), or also when you
+     * call allFlags (false). This defaults to false (events will be sent in both cases).
+     */
+    sendEventsOnlyForVariation?: boolean;
   }
 
   /**
@@ -279,9 +314,33 @@ declare module 'ldclient-js' {
    */
   export interface LDClient {
     /**
+     * Allows you to wait for client initialization using Promise syntax. The returned
+     * Promise will be resolved once the client has either successfully initialized or
+     * failed to initialize (e.g. due to an invalid environment key or a server error).
+     * 
+     * If you want to distinguish between these success and failure conditions, use
+     * waitForInitialization() instead.
+     * 
+     * If you prefer to use event handlers rather than Promises, you can listen on the
+     * client for a "ready" event.
+     * 
      * @returns a Promise containing the initialization state of the client
      */
     waitUntilReady: () => Promise<void>;
+
+    /**
+     * Allows you to wait for client initialization using Promise syntax. The returned
+     * Promise will be resolved if the client successfully initializes, or rejected (with
+     * an error object) if it fails to initialize (e.g. due to an invalid environment key
+     * or a server error). This is different from waitUntilReady(), which resolves the
+     * Promise in either case.
+     * 
+     * If you prefer to use event handlers rather than Promises, you can listen on the
+     * client for the events "initialized" and "failed".
+     * 
+     * @returns a Promise containing the initialization state of the client
+     */
+    waitForInitialization: () => Promise<void>;
 
     /**
      * Identifies a user to LaunchDarkly.
