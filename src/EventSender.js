@@ -36,7 +36,7 @@ export default function EventSender(eventsUrl, environmentId, forceHasCors, imag
       function createRequest(canRetry) {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', postUrl, !sync);
-        if (!preventLDHeaders) {
+        if (preventLDHeaders) {
           utils.addLDHeaders(xhr);
         }
         xhr.setRequestHeader('Content-Type', 'application/json');

@@ -192,7 +192,7 @@ describe('Requestor', () => {
     const environment = 'FAKE_ENV';
     const useReport = true;
     const withReasons = false;
-    const preventLDHeaders = true;
+    const preventLDHeaders = false;
 
     const requestor = Requestor(baseUrl, environment, useReport, withReasons, preventLDHeaders);
     const user = { key: 'foo' };
