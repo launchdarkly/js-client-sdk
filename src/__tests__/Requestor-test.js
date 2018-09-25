@@ -169,8 +169,11 @@ describe('Requestor', () => {
     expect(handleFive.calledOnce).toEqual(true);
   });
 
-  it('should send custom user-agent header in GET mode', () => {
-    const requestor = Requestor('http://requestee', 'FAKE_ENV', false);
+  it('should send custom user-agent header in GET mode when sendLDHeaders is true', () => {
+    const useReport = false;
+    const withReasons = false;
+    const sendLDHeaders = true;
+    const requestor = Requestor('http://requestee', 'FAKE_ENV', useReport, withReasons, sendLDHeaders);
     const user = { key: 'foo' };
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
@@ -178,12 +181,31 @@ describe('Requestor', () => {
     expect(server.requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
   });
 
-  it('should send custom user-agent header in REPORT mode', () => {
-    const requestor = Requestor('http://requestee', 'FAKE_ENV', true);
+  it('should send custom user-agent header in REPORT mode when sendLDHeaders is true', () => {
+    const useReport = true;
+    const withReasons = false;
+    const sendLDHeaders = true;
+    const requestor = Requestor('http://requestee', 'FAKE_ENV', useReport, withReasons, sendLDHeaders);
     const user = { key: 'foo' };
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
     expect(server.requests.length).toEqual(1);
     expect(server.requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
+  });
+
+  it('should NOT send custom user-agent header when sendLDHeaders is false', () => {
+    const baseUrl = 'http://requestee';
+    const environment = 'FAKE_ENV';
+    const useReport = true;
+    const withReasons = false;
+    const sendLDHeaders = false;
+
+    const requestor = Requestor(baseUrl, environment, useReport, withReasons, sendLDHeaders);
+    const user = { key: 'foo' };
+
+    requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
+
+    expect(server.requests.length).toEqual(1);
+    expect(server.requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(undefined);
   });
 });

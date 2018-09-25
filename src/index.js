@@ -21,15 +21,17 @@ export function initialize(env, user, options = {}) {
   const eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
   const streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
   const hash = options.hash;
-  const sendEvents = typeof options.sendEvents === 'undefined' ? true : options.sendEvents;
+  const sendEvents = optionWithDefault('sendEvents', true);
+  const sendLDHeaders = optionWithDefault('sendLDHeaders', true);
   const allowFrequentDuplicateEvents = !!options.allowFrequentDuplicateEvents;
   const sendEventsOnlyForVariation = !!options.sendEventsOnlyForVariation;
   const fetchGoals = typeof options.fetchGoals === 'undefined' ? true : options.fetchGoals;
   const environment = env;
   const emitter = EventEmitter();
   const stream = Stream(streamUrl, environment, hash, options);
-  const events = options.eventProcessor || EventProcessor(eventsUrl, environment, options, emitter);
-  const requestor = Requestor(baseUrl, environment, options.useReport, options.evaluationReasons);
+  const events =
+    options.eventProcessor || EventProcessor(eventsUrl, environment, options, emitter, null, sendLDHeaders);
+  const requestor = Requestor(baseUrl, environment, options.useReport, options.evaluationReasons, sendLDHeaders);
   const seenRequests = {};
   let flags = typeof options.bootstrap === 'object' ? readFlagsFromBootstrap(options.bootstrap) : {};
   let goalTracker;
@@ -37,6 +39,10 @@ export function initialize(env, user, options = {}) {
   let goals;
   let subscribedToChangeEvents;
   let firstEvent = true;
+
+  function optionWithDefault(name, defaultVal) {
+    return typeof options[name] === 'undefined' ? defaultVal : options[name];
+  }
 
   function readFlagsFromBootstrap(data) {
     // If the bootstrap data came from an older server-side SDK, we'll have just a map of keys to values.
