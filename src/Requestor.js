@@ -49,7 +49,7 @@ function getResponseError(xhr) {
   }
 }
 
-export default function Requestor(baseUrl, environment, useReport, withReasons, sendLDHeaders = true) {
+export default function Requestor(baseUrl, environment, useReport, withReasons, sendLDHeaders) {
   let flagSettingsRequest;
   let lastFlagSettingsCallback;
 

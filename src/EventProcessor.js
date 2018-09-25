@@ -11,7 +11,7 @@ export default function EventProcessor(
   options = {},
   emitter = null,
   sender = null,
-  sendLDHeaders = true
+  sendLDHeaders
 ) {
   const processor = {};
   const eventSender = sender || EventSender(eventsUrl, environmentId, sendLDHeaders);

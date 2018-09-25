@@ -131,7 +131,7 @@ describe('EventSender', () => {
       expect(JSON.parse(r.requestBody)).toEqual(events);
     });
 
-    it('should send custom user-agent header', () => {
+    it('should send custom user-agent header when sendLDHeaders is true', () => {
       const sender = EventSender(eventsUrl, envId, true);
       const event = { kind: 'identify', key: 'userKey' };
       sender.sendEvents([event], false);
