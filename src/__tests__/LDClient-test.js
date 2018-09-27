@@ -412,8 +412,8 @@ describe('LDClient', () => {
     });
 
     function verifyCustomHeader(sendLDHeaders, shouldGetHeaders) {
-      const client = LDClient.initialize(envName, user, { sendLDHeaders: sendLDHeaders });
-      var request = requests[0];
+      LDClient.initialize(envName, user, { sendLDHeaders: sendLDHeaders });
+      const request = requests[0];
       expect(request.requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(
         shouldGetHeaders ? utils.getLDUserAgentString() : undefined
       );
