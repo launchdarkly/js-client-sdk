@@ -131,23 +131,12 @@ describe('EventSender', () => {
       expect(JSON.parse(r.requestBody)).toEqual(events);
     });
 
-    it('should send custom user-agent header when sendLDHeaders is true', () => {
+    it('should send custom user-agent header', () => {
       const sender = EventSender(eventsUrl, envId, true);
       const event = { kind: 'identify', key: 'userKey' };
       sender.sendEvents([event], false);
       lastRequest().respond();
       expect(lastRequest().requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
-    });
-
-    it('should not send custom user-agent header when sendLDHeaders is false', () => {
-      const forceHasCors = true;
-      const imageCreator = undefined;
-      const sendLDHeaders = false;
-      const sender = EventSender(eventsUrl, envId, forceHasCors, imageCreator, sendLDHeaders);
-      const event = { kind: 'identify', key: 'userKey' };
-      sender.sendEvents([event], false);
-      lastRequest().respond();
-      expect(lastRequest().requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(undefined);
     });
 
     const retryableStatuses = [400, 408, 429, 500, 503];

@@ -5,16 +5,9 @@ import * as errors from './errors';
 import * as messages from './messages';
 import * as utils from './utils';
 
-export default function EventProcessor(
-  eventsUrl,
-  environmentId,
-  options = {},
-  emitter = null,
-  sender = null,
-  sendLDHeaders
-) {
+export default function EventProcessor(eventsUrl, environmentId, options = {}, emitter = null, sender = null) {
   const processor = {};
-  const eventSender = sender || EventSender(eventsUrl, environmentId, sendLDHeaders);
+  const eventSender = sender || EventSender(eventsUrl, environmentId);
   const summarizer = EventSummarizer();
   const userFilter = UserFilter(options);
   const inlineUsers = !!options.inlineUsersInEvents;
