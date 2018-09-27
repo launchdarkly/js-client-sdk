@@ -3,11 +3,11 @@ import semverCompare from 'semver-compare';
 
 import * as LDClient from '../index';
 import * as messages from '../messages';
-import { btoa } from '../utils';
+import * as utils from '../utils';
 
 describe('LDClient', () => {
   const envName = 'UNKNOWN_ENVIRONMENT_ID';
-  const lsKey = 'ld:UNKNOWN_ENVIRONMENT_ID:' + btoa('{"key":"user"}');
+  const lsKey = 'ld:UNKNOWN_ENVIRONMENT_ID:' + utils.btoa('{"key":"user"}');
   const user = { key: 'user' };
   let warnSpy;
   let errorSpy;
@@ -315,7 +315,7 @@ describe('LDClient', () => {
 
     it('should clear localStorage when user context is changed', done => {
       const json = '{"enable-foo":{"value":true,"version":1}}';
-      const lsKey2 = 'ld:UNKNOWN_ENVIRONMENT_ID:' + btoa('{"key":"user2"}');
+      const lsKey2 = 'ld:UNKNOWN_ENVIRONMENT_ID:' + utils.btoa('{"key":"user2"}');
 
       const user2 = { key: 'user2' };
       const client = LDClient.initialize(envName, user, {
@@ -409,6 +409,26 @@ describe('LDClient', () => {
       warnSpy.restore();
       sandbox.restore();
       expect(warnSpy.called).toEqual(true);
+    });
+
+    function verifyCustomHeader(sendLDHeaders, shouldGetHeaders) {
+      const client = LDClient.initialize(envName, user, { sendLDHeaders: sendLDHeaders });
+      var request = requests[0];
+      expect(request.requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(
+        shouldGetHeaders ? utils.getLDUserAgentString() : undefined
+      );
+    }
+
+    it('sends custom header by default', () => {
+      verifyCustomHeader(undefined, true);
+    });
+
+    it('sends custom header if sendLDHeaders is true', () => {
+      verifyCustomHeader(true, true);
+    });
+
+    it('does not send custom header if sendLDHeaders is false', () => {
+      verifyCustomHeader(undefined, true);
     });
   });
 
