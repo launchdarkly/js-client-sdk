@@ -29,8 +29,7 @@ export function initialize(env, user, options = {}) {
   const environment = env;
   const emitter = EventEmitter();
   const stream = Stream(streamUrl, environment, hash, options);
-  const events =
-    options.eventProcessor || EventProcessor(eventsUrl, environment, options, emitter, null, sendLDHeaders);
+  const events = options.eventProcessor || EventProcessor(eventsUrl, environment, options, emitter);
   const requestor = Requestor(baseUrl, environment, options.useReport, options.evaluationReasons, sendLDHeaders);
   const seenRequests = {};
   let flags = typeof options.bootstrap === 'object' ? readFlagsFromBootstrap(options.bootstrap) : {};

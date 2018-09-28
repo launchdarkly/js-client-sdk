@@ -3,11 +3,15 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org).
 
-## [2.7.0] - 2018-09-19
+## [2.7.1] - 2018-09-27
+### Fixed:
+- Event posts did not include the HTTP header that specifies the SDK version. They now do again. Note that the `sendLDHeaders` option does not affect this; if the header is turned off for flag requests, it should still be sent in events, since events always require a CORS preflight check anyway (and are delivered asynchronously, so the OPTIONS request does not slow down page loads).
+
+## [2.7.0] - 2018-09-26
 ### Added:
 - New client method `waitForInitialization` returns a Promise, like `waitUntilReady`; but while `waitUntilReady` will be resolved as soon as client initialization either succeeds or fails, `waitForInitialization` will be resolved only if initialization succeeds, and will be rejected (with an error object) if it fails.
 - New config option `fetchGoals` (default: true) allows you to control whether the client will request A/B testing parameters from LaunchDarkly. If you do not use A/B testing, you may wish to disable this to reduce the number of HTTP requests.
-- New config option `sendLDHeaders` (default: true) allows you to control whether the client will add a custom header to LaunchDarkly HTTP requests (to indicate the SDK version). You may wish to disable this behavior if you have performance concerns, as it causes browsers to make an additional CORS preflight check (since it is no longer a [simple request](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)).
+- New config option `sendLDHeaders` (default: true) allows you to control whether the client will add a custom HTTP header to LaunchDarkly flag requests (to indicate the SDK version). You may wish to disable this behavior if you have performance concerns, as it causes browsers to make an additional CORS preflight check (since it is no longer a [simple request](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)).
 
 ## [2.6.0] - 2018-09-07
 ### Added:
