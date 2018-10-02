@@ -131,7 +131,7 @@ declare module 'ldclient-js' {
      * variationDetail() method. Since this increases the size of network requests,
      * such information is not sent unless you request it with this option.
      */
-    evaluationExplanations?: boolean;
+    evaluationReasons?: boolean;
 
     /**
      * True (the default) if the client should make a request to LaunchDarkly for
