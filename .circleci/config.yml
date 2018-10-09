@@ -3,17 +3,20 @@ jobs:
   build:
     docker:
       - image: circleci/node:6-browsers
+    environment:
+      LERNA: ./node_modules/.bin/lerna
     steps:
       - checkout
       - run: npm install
+      - run: $LERNA exec -- npm install
       - run: mkdir -p reports/junit
-      - run: npm run lint:all
-      - run: npm run build
+      - run: $LERNA run lint:all
+      - run: $LERNA run build
       - run:
-          command: npm run test:junit
+          command: cd ~/project/packages/ldclient-js && npm run test:junit
           environment:
             JEST_JUNIT_OUTPUT: "./reports/junit/js-test-results.xml"
-      - run: npm run check-typescript
+      - run: cd ~/project && $LERNA run check-typescript
       - store_test_results:
           path: reports/junit/
       - store_artifacts:
