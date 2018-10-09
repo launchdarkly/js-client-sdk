@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import semverCompare from 'semver-compare';
+import * as common from 'ldclient-js-common';
 
 import * as LDClient from '../index';
-import * as messages from '../messages';
 import * as utils from '../utils';
 
 describe('LDClient', () => {
@@ -85,7 +85,7 @@ describe('LDClient', () => {
         bootstrap: {},
       });
       client.on('error', err => {
-        expect(err.message).toEqual(messages.environmentNotSpecified());
+        expect(err.message).toEqual(common.messages.environmentNotSpecified());
         done();
       });
     });
@@ -93,7 +93,7 @@ describe('LDClient', () => {
     it('should emit an error when an invalid environment key is specified', done => {
       const client = LDClient.initialize('abc', user);
       client.on('error', err => {
-        expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
+        expect(err.message).toEqual('Error fetching flag settings: ' + common.messages.environmentNotFound());
         done();
       });
       client.waitForInitialization().catch(() => {}); // jest doesn't like unhandled rejections
@@ -103,7 +103,7 @@ describe('LDClient', () => {
     it('should emit a failure event when an invalid environment key is specified', done => {
       const client = LDClient.initialize('abc', user);
       client.on('failed', err => {
-        expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
+        expect(err.message).toEqual('Error fetching flag settings: ' + common.messages.environmentNotFound());
         done();
       });
       client.waitForInitialization().catch(() => {});
@@ -160,7 +160,7 @@ describe('LDClient', () => {
         bootstrap: { foo: 'bar' },
       });
 
-      expect(warnSpy).toHaveBeenCalledWith(messages.bootstrapOldFormat());
+      expect(warnSpy).toHaveBeenCalledWith(common.messages.bootstrapOldFormat());
     });
 
     it('does not log warning when bootstrap object uses new format', () => {
@@ -248,7 +248,7 @@ describe('LDClient', () => {
       });
 
       client.on('ready', () => {
-        expect(warnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
+        expect(warnSpy).toHaveBeenCalledWith(common.messages.localStorageUnavailable());
         done();
       });
 
@@ -267,7 +267,7 @@ describe('LDClient', () => {
       requests[0].respond(200, { 'Content-Type': 'application/json' }, '[{"key": "known", "kind": "custom"}]');
 
       client.on('ready', () => {
-        expect(warnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
+        expect(warnSpy).toHaveBeenCalledWith(common.messages.localStorageUnavailable());
         done();
       });
     });
@@ -361,7 +361,7 @@ describe('LDClient', () => {
         const badCustomEventKeys = [123, [], {}, null, undefined];
         badCustomEventKeys.forEach(key => {
           client.track(key);
-          expect(errorSpy).toHaveBeenCalledWith(messages.unknownCustomEventKey(key));
+          expect(errorSpy).toHaveBeenCalledWith(common.messages.unknownCustomEventKey(key));
         });
         done();
       });
@@ -376,7 +376,7 @@ describe('LDClient', () => {
 
       client.on('ready', () => {
         client.track('unknown');
-        expect(warnSpy).toHaveBeenCalledWith(messages.unknownCustomEventKey('unknown'));
+        expect(warnSpy).toHaveBeenCalledWith(common.messages.unknownCustomEventKey('unknown'));
         done();
       });
     });
@@ -508,7 +508,7 @@ describe('LDClient', () => {
     it('rejects promise if flags request fails', done => {
       const client = LDClient.initialize('abc', user);
       client.waitForInitialization().catch(err => {
-        expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
+        expect(err.message).toEqual('Error fetching flag settings: ' + common.messages.environmentNotFound());
         done();
       });
       requests[0].respond(404);

@@ -1,0 +1,55 @@
+---
+parser: babel-eslint
+extends:
+  - prettier
+env:
+  es6: true
+  node: true
+  browser: true
+plugins:
+  - babel
+  - prettier
+globals:
+  VERSION: true
+rules:
+  prettier/prettier:
+    - error
+  array-callback-return: error
+  curly:
+    - error
+    - all
+  no-implicit-coercion:
+    - 'off'
+    - boolean: false
+      number: true
+      string: true
+      allow: []
+  no-eval: error
+  no-implied-eval: error
+  no-param-reassign:
+    - error
+    - props: true
+  no-return-assign: error
+  no-self-compare: error
+  radix: error
+  no-array-constructor: error
+  no-new-wrappers: error
+  no-cond-assign: error
+  no-use-before-define:
+    - error
+    - functions: false
+  eqeqeq: error
+
+  # Deprecations are required to turn enforce this
+  camelcase: warn
+  
+  no-new-object: error
+  no-nested-ternary: error
+  no-unused-vars: error
+  no-var: error
+  prefer-const: error
+  prefer-arrow-callback: error
+  arrow-body-style:
+    - error
+    - as-needed
+  babel/semi: error
