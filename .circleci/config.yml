@@ -13,10 +13,10 @@ jobs:
       - run: $LERNA run lint:all
       - run: $LERNA run build
       - run:
-          command: cd $CIRCLE_WORKING_DIRECTORY/packages/ldclient-js && npm run test:junit
+          command: cd ~/project/packages/ldclient-js && npm run test:junit
           environment:
             JEST_JUNIT_OUTPUT: "./reports/junit/js-test-results.xml"
-      - run: cd $CIRCLE_WORKING_DIRECTORY && $LERNA run check-typescript
+      - run: cd ~/project && $LERNA run check-typescript
       - store_test_results:
           path: reports/junit/
       - store_artifacts:
