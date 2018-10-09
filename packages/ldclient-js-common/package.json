@@ -4,11 +4,6 @@
   "description": "LaunchDarkly SDK for JavaScript - common code",
   "author": "LaunchDarkly <team@launchdarkly.com>",
   "license": "Apache-2.0",
-  "keywords": [
-    "launchdarkly",
-    "analytics",
-    "client"
-  ],
   "files": [
     "ldclient-common.cjs.js",
     "ldclient-common.cjs.js.map",
