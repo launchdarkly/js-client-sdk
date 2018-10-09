@@ -5,15 +5,16 @@ jobs:
       - image: circleci/node:6-browsers
     steps:
       - checkout
-      - run: npm install
+      - run: npm install -g lerna
+      - run: lerna install
       - run: mkdir -p reports/junit
-      - run: npm run lint:all
-      - run: npm run build
+      - run: lerna run lint:all
+      - run: lerna run build
       - run:
-          command: npm run test:junit
+          command: cd packages/ldclient-js && npm run test:junit
           environment:
             JEST_JUNIT_OUTPUT: "./reports/junit/js-test-results.xml"
-      - run: npm run check-typescript
+      - run: lerna run check-typescript
       - store_test_results:
           path: reports/junit/
       - store_artifacts:
