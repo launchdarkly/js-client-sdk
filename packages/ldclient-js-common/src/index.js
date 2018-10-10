@@ -16,7 +16,7 @@ const changeEvent = 'change';
 const goalsEvent = 'goalsReady';
 const locationWatcherInterval = 300;
 
-export function initialize(env, user, options = {}) {
+export function initialize(env, user, options, platform) {
   const baseUrl = options.baseUrl || 'https://app.launchdarkly.com';
   const eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
   const streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
@@ -73,7 +73,7 @@ export function initialize(env, user, options = {}) {
   }
 
   function shouldEnqueueEvent() {
-    return sendEvents && !doNotTrack();
+    return sendEvents && !platform.isDoNotTrack();
   }
 
   function enqueueEvent(event) {
@@ -147,7 +147,7 @@ export function initialize(env, user, options = {}) {
       kind: kind,
       key: goal.key,
       data: null,
-      url: window.location.href,
+      url: platform.getCurrentUrl(),
       user: ident.getUser(),
       creationDate: new Date().getTime(),
     };
@@ -235,18 +235,6 @@ export function initialize(env, user, options = {}) {
     // whether an object was JSON-encoded with null properties omitted or not.
   }
 
-  function doNotTrack() {
-    let flag;
-    if (navigator && navigator.doNotTrack !== undefined) {
-      flag = navigator.doNotTrack; // FF, Chrome
-    } else if (navigator && navigator.msDoNotTrack !== undefined) {
-      flag = navigator.msDoNotTrack; // IE 9/10
-    } else {
-      flag = window.doNotTrack; // IE 11+, Safari
-    }
-    return flag === '1' || flag === 'yes';
-  }
-
   function allFlags() {
     const results = {};
 
@@ -293,7 +281,7 @@ export function initialize(env, user, options = {}) {
       key: key,
       data: data,
       user: ident.getUser(),
-      url: window.location.href,
+      url: platform.getCurrentUrl(),
       creationDate: new Date().getTime(),
     });
   }
