@@ -4,7 +4,7 @@ let currentUrl = null;
 let doNotTrack = false;
 
 export function stubEnvironment() {
-	return {
+  return {
     getCurrentUrl: () => currentUrl,
     isDoNotTrack: () => doNotTrack
   };
