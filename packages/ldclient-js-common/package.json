@@ -72,7 +72,10 @@
     "sinon": "4.5.0",
     "typescript": "3.0.1"
   },
-  "dependencies": {},
+  "dependencies": {
+    "Base64": "1.0.1",
+    "escape-string-regexp": "1.0.5"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/launchdarkly/js-client.git"

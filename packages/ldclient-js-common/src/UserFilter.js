@@ -1,5 +1,4 @@
-import * as common from 'ldclient-js-common';
-
+import * as messages from './messages';
 import * as utils from './utils';
 
 /**
@@ -32,12 +31,12 @@ export default function UserFilter(config) {
   if (config.all_attributes_private !== undefined) {
     console &&
       console.warn &&
-      console.warn(common.messages.deprecated('all_attributes_private', 'allAttributesPrivate'));
+      console.warn(messages.deprecated('all_attributes_private', 'allAttributesPrivate'));
   }
   if (config.private_attribute_names !== undefined) {
     console &&
       console.warn &&
-      console.warn(common.messages.deprecated('private_attribute_names', 'privateAttributeNames'));
+      console.warn(messages.deprecated('private_attribute_names', 'privateAttributeNames'));
   }
 
   filter.filterUser = function(user) {

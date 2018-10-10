@@ -1,5 +1,4 @@
-import * as common from 'ldclient-js-common';
-
+import * as messages from '../messages';
 import Identity from '../Identity';
 import Store from '../Store';
 
@@ -15,7 +14,7 @@ describe('Store', () => {
     const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
     store.loadFlags();
-    expect(consoleWarnSpy).toHaveBeenCalledWith(common.messages.localStorageUnavailable());
+    expect(consoleWarnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
 
     consoleWarnSpy.mockRestore();
     getItemSpy.mockRestore();
@@ -30,7 +29,7 @@ describe('Store', () => {
     const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
     store.saveFlags({ foo: {} });
-    expect(consoleWarnSpy).toHaveBeenCalledWith(common.messages.localStorageUnavailable());
+    expect(consoleWarnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
 
     consoleWarnSpy.mockRestore();
     setItemSpy.mockRestore();
