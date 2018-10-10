@@ -1,4 +1,3 @@
-
 export default function makeBrowserPlatform() {
   const ret = {};
   ret.getCurrentUrl = () => window.location.href;
@@ -6,7 +5,7 @@ export default function makeBrowserPlatform() {
     let flag;
     if (window.navigator && window.navigator.doNotTrack !== undefined) {
       flag = navigator.doNotTrack; // FF, Chrome
-    } else if (window,navigator && window.navigator.msDoNotTrack !== undefined) {
+    } else if (window.navigator && window.navigator.msDoNotTrack !== undefined) {
       flag = window.navigator.msDoNotTrack; // IE 9/10
     } else {
       flag = window.doNotTrack; // IE 11+, Safari
