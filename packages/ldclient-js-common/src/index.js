@@ -642,8 +642,3 @@ export function initialize(env, user, options = {}) {
 
 export const version = VERSION;
 export { messages };
-
-function deprecatedInitialize(env, user, options = {}) {
-  console && console.warn && console.warn(messages.deprecated('default export', 'named LDClient export'));
-  return initialize(env, user, options);
-}
