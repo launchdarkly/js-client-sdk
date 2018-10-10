@@ -29,14 +29,10 @@ export default function UserFilter(config) {
   };
 
   if (config.all_attributes_private !== undefined) {
-    console &&
-      console.warn &&
-      console.warn(messages.deprecated('all_attributes_private', 'allAttributesPrivate'));
+    console && console.warn && console.warn(messages.deprecated('all_attributes_private', 'allAttributesPrivate'));
   }
   if (config.private_attribute_names !== undefined) {
-    console &&
-      console.warn &&
-      console.warn(messages.deprecated('private_attribute_names', 'privateAttributeNames'));
+    console && console.warn && console.warn(messages.deprecated('private_attribute_names', 'privateAttributeNames'));
   }
 
   filter.filterUser = function(user) {

@@ -166,9 +166,7 @@ export function initialize(env, user, options = {}) {
     return utils.wrapPromiseCallback(
       new Promise((resolve, reject) => {
         if (!user || user.key === null || user.key === undefined) {
-          const err = new errors.LDInvalidUserError(
-            user ? messages.invalidUser() : messages.userNotSpecified()
-          );
+          const err = new errors.LDInvalidUserError(user ? messages.invalidUser() : messages.userNotSpecified());
           emitter.maybeReportError(err);
           reject(err);
         } else {
