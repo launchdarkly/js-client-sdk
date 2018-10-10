@@ -27,10 +27,6 @@ describe('LDClient', () => {
     errorSpy.mockRestore();
   });
 
-  function getLastRequest() {
-    return requests[requests.length - 1];
-  }
-
   it('should exist', () => {
     expect(LDClient).toBeDefined();
   });
