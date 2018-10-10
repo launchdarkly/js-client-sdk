@@ -6,7 +6,7 @@ let doNotTrack = false;
 export function stubEnvironment() {
   return {
     getCurrentUrl: () => currentUrl,
-    isDoNotTrack: () => doNotTrack
+    isDoNotTrack: () => doNotTrack,
   };
 }
 

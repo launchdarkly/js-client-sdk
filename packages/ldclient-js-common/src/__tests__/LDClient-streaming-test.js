@@ -1,7 +1,6 @@
 import sinon from 'sinon';
 import EventSource, { sources } from './EventSource-mock';
 
-import * as LDClient from '../index';
 import { btoa } from '../utils';
 import * as stubPlatform from './stubPlatform';
 

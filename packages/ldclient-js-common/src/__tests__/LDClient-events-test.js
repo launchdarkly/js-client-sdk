@@ -1,6 +1,5 @@
 import sinon from 'sinon';
 
-import * as LDClient from '../index';
 import * as stubPlatform from './stubPlatform';
 
 describe('LDClient', () => {
@@ -79,7 +78,7 @@ describe('LDClient', () => {
       client.on('ready', () => {
         expect(ep.events.length).toEqual(1);
         client.identify(user1).then(() => {
-          expect(ep.events.length).toEqual(2);          
+          expect(ep.events.length).toEqual(2);
           expectIdentifyEvent(ep.events[1], user1);
           done();
         });
