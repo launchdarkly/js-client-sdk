@@ -598,10 +598,10 @@ export function initialize(env, user, specifiedOptions, platform) {
   };
 
   return {
-    client: client,     // The client object containing all public methods.
-    options: options,   // The validated configuration object, including all defaults.
-    start: start,       // Platform-specific code should call this function to start the client.
-    stop: stop,         // Platform-specific code should call this function to shut down the client.
+    client: client, // The client object containing all public methods.
+    options: options, // The validated configuration object, including all defaults.
+    start: start, // Platform-specific code should call this function to start the client.
+    stop: stop, // Platform-specific code should call this function to shut down the client.
   };
 }
 
