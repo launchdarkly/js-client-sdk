@@ -5,6 +5,7 @@ import Store from './Store';
 import Stream from './Stream';
 import Requestor from './Requestor';
 import Identity from './Identity';
+import * as configuration from './configuration';
 import * as utils from './utils';
 import * as errors from './errors';
 import * as messages from './messages';
@@ -16,21 +17,21 @@ const changeEvent = 'change';
 const goalsEvent = 'goalsReady';
 const locationWatcherInterval = 300;
 
-export function initialize(env, user, options, platform) {
-  const baseUrl = options.baseUrl || 'https://app.launchdarkly.com';
-  const eventsUrl = options.eventsUrl || 'https://events.launchdarkly.com';
-  const streamUrl = options.streamUrl || 'https://clientstream.launchdarkly.com';
-  const hash = options.hash;
-  const sendEvents = optionWithDefault('sendEvents', true);
-  const sendLDHeaders = optionWithDefault('sendLDHeaders', true);
-  const allowFrequentDuplicateEvents = !!options.allowFrequentDuplicateEvents;
-  const sendEventsOnlyForVariation = !!options.sendEventsOnlyForVariation;
-  const fetchGoals = typeof options.fetchGoals === 'undefined' ? true : options.fetchGoals;
-  const environment = env;
+// This is called by the per-platform initialize functions to create the base client object that we
+// may also extend with additional behavior. It returns an object with these properties:
+//   client: the actual client object
+//   options: the configuration (after any appropriate defaults have been applied)
+// If we need to give the platform-specific clients access to any internals here, we should add those
+// as properties of the return object, not public properties of the client.
+export function initialize(env, user, specifiedOptions, platform) {
   const emitter = EventEmitter();
-  const stream = Stream(streamUrl, environment, hash, options);
-  const events = options.eventProcessor || EventProcessor(eventsUrl, environment, options, emitter);
-  const requestor = Requestor(baseUrl, environment, options.useReport, options.evaluationReasons, sendLDHeaders);
+  const options = configuration.validate(specifiedOptions, emitter);
+  const hash = options.hash;
+  const sendEvents = options.sendEvents;
+  const environment = env;
+  const stream = Stream(options, environment, hash);
+  const events = options.eventProcessor || EventProcessor(options, environment, emitter);
+  const requestor = Requestor(options, environment);
   const seenRequests = {};
   let flags = typeof options.bootstrap === 'object' ? readFlagsFromBootstrap(options.bootstrap) : {};
   let goalTracker;
@@ -38,10 +39,6 @@ export function initialize(env, user, options, platform) {
   let goals;
   let subscribedToChangeEvents;
   let firstEvent = true;
-
-  function optionWithDefault(name, defaultVal) {
-    return typeof options[name] === 'undefined' ? defaultVal : options[name];
-  }
 
   function readFlagsFromBootstrap(data) {
     // If the bootstrap data came from an older server-side SDK, we'll have just a map of keys to values.
@@ -112,7 +109,7 @@ export function initialize(env, user, options, platform) {
     const user = ident.getUser();
     const now = new Date();
     const value = detail ? detail.value : null;
-    if (!allowFrequentDuplicateEvents) {
+    if (!options.allowFrequentDuplicateEvents) {
       const cacheKey = JSON.stringify(value) + (user && user.key ? user.key : '') + key; // see below
       const cached = seenRequests[cacheKey];
       // cache TTL is five minutes
@@ -244,7 +241,7 @@ export function initialize(env, user, options, platform) {
 
     for (const key in flags) {
       if (flags.hasOwnProperty(key)) {
-        results[key] = variationDetailInternal(key, null, !sendEventsOnlyForVariation).value;
+        results[key] = variationDetailInternal(key, null, !options.sendEventsOnlyForVariation).value;
       }
     }
 
@@ -382,7 +379,7 @@ export function initialize(env, user, options, platform) {
 
       emitter.emit(changeEvent, changeEventParams);
 
-      if (!sendEventsOnlyForVariation) {
+      if (!options.sendEventsOnlyForVariation) {
         keys.forEach(key => {
           sendFlagEvent(key, changes[key].current);
         });
@@ -413,15 +410,15 @@ export function initialize(env, user, options, platform) {
   }
 
   function handleMessage(event) {
-    if (event.origin !== baseUrl) {
+    if (event.origin !== options.baseUrl) {
       return;
     }
     if (event.data.type === 'SYN') {
-      window.editorClientBaseUrl = baseUrl;
+      window.editorClientBaseUrl = options.baseUrl;
       const editorTag = document.createElement('script');
       editorTag.type = 'text/javascript';
       editorTag.async = true;
-      editorTag.src = baseUrl + event.data.editorClientUrl;
+      editorTag.src = options.baseUrl + event.data.editorClientUrl;
       const s = document.getElementsByTagName('script')[0];
       s.parentNode.insertBefore(editorTag, s);
     }
@@ -536,7 +533,7 @@ export function initialize(env, user, options, platform) {
     }
   }
 
-  if (fetchGoals) {
+  if (options.fetchGoals) {
     requestor.fetchGoals((err, g) => {
       if (err) {
         emitter.maybeReportError(
@@ -623,7 +620,10 @@ export function initialize(env, user, options, platform) {
     allFlags: allFlags,
   };
 
-  return client;
+  return {
+    client: client,
+    options: options
+  };
 }
 
 export const version = VERSION;

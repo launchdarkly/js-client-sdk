@@ -1,11 +1,12 @@
 import { base64URLEncode } from './utils';
 
-export default function Stream(baseUrl, environment, hash, config) {
+export default function Stream(config, environment, hash) {
+  const baseUrl = config.streamUrl;
   const stream = {};
   const evalUrlPrefix = baseUrl + '/eval/' + environment + '/';
-  const useReport = (config && config.useReport) || false;
-  const withReasons = (config && config.evaluationReasons) || false;
-  const streamReconnectDelay = (config && config.streamReconnectDelay) || 1000;
+  const useReport = config.useReport;
+  const withReasons = config.evaluationReasons;
+  const streamReconnectDelay = config.streamReconnectDelay;
   let es = null;
   let reconnectTimeoutReference = null;
   let user = null;

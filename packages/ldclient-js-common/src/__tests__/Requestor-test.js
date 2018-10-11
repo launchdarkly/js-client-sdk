@@ -3,6 +3,8 @@ import Requestor from '../Requestor';
 import * as utils from '../utils';
 
 describe('Requestor', () => {
+  const defaultConfig = { baseUrl: 'http://requestee' };
+  const env = 'FAKE_ENV';
   let server;
   let seq = 0;
 
@@ -18,7 +20,7 @@ describe('Requestor', () => {
     const handleOne = sinon.spy();
     const handleTwo = sinon.spy();
 
-    const requestor = Requestor('http://requestee', 'FAKE_ENV');
+    const requestor = Requestor(defaultConfig, 'FAKE_ENV');
     requestor.fetchFlagSettings({ key: 'user1' }, 'hash1', handleOne);
     requestor.fetchFlagSettings({ key: 'user2' }, 'hash2', handleTwo);
 
@@ -34,7 +36,8 @@ describe('Requestor', () => {
   });
 
   it('should make requests with the GET verb if useReport is disabled', () => {
-    const requestor = Requestor('http://requestee', 'FAKE_ENV', false);
+    const config = Object.assign({}, defaultConfig, { useReport: false });
+    const requestor = Requestor(config, env);
 
     requestor.fetchFlagSettings({ key: 'user1' }, 'hash1', sinon.spy());
 
@@ -43,8 +46,9 @@ describe('Requestor', () => {
   });
 
   it('should make requests with the REPORT verb with a payload if useReport is enabled', () => {
+    const config = Object.assign({}, defaultConfig, { useReport: true });
     const user = { key: 'user1' };
-    const requestor = Requestor('http://requestee', 'FAKE_ENV', true);
+    const requestor = Requestor(config, env);
 
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
@@ -55,7 +59,7 @@ describe('Requestor', () => {
 
   it('should include environment and user in GET URL', () => {
     const user = { key: 'user' };
-    const requestor = Requestor('http://requestee', 'FAKE_ENV', false);
+    const requestor = Requestor(defaultConfig, env);
 
     requestor.fetchFlagSettings(user, null, sinon.spy());
 
@@ -65,7 +69,7 @@ describe('Requestor', () => {
 
   it('should include environment, user, and hash in GET URL', () => {
     const user = { key: 'user' };
-    const requestor = Requestor('http://requestee', 'FAKE_ENV', false);
+    const requestor = Requestor(defaultConfig, env);
 
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
@@ -74,8 +78,9 @@ describe('Requestor', () => {
   });
 
   it('should include environment, user, and withReasons in GET URL', () => {
+    const config = Object.assign({}, defaultConfig, { evaluationReasons: true });
     const user = { key: 'user' };
-    const requestor = Requestor('http://requestee', 'FAKE_ENV', false, true);
+    const requestor = Requestor(config, env);
 
     requestor.fetchFlagSettings(user, null, sinon.spy());
 
@@ -86,8 +91,9 @@ describe('Requestor', () => {
   });
 
   it('should include environment, user, hash, and withReasons in GET URL', () => {
+    const config = Object.assign({}, defaultConfig, { evaluationReasons: true });
     const user = { key: 'user' };
-    const requestor = Requestor('http://requestee', 'FAKE_ENV', false, true);
+    const requestor = Requestor(config, env);
 
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
@@ -98,8 +104,9 @@ describe('Requestor', () => {
   });
 
   it('should include environment in REPORT URL', () => {
+    const config = Object.assign({}, defaultConfig, { useReport: true });
     const user = { key: 'user' };
-    const requestor = Requestor('http://requestee', 'FAKE_ENV', true);
+    const requestor = Requestor(config, env);
 
     requestor.fetchFlagSettings(user, null, sinon.spy());
 
@@ -108,8 +115,9 @@ describe('Requestor', () => {
   });
 
   it('should include environment and hash in REPORT URL', () => {
+    const config = Object.assign({}, defaultConfig, { useReport: true });
     const user = { key: 'user' };
-    const requestor = Requestor('http://requestee', 'FAKE_ENV', true);
+    const requestor = Requestor(config, env);
 
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
@@ -117,9 +125,10 @@ describe('Requestor', () => {
     expect(server.requests[0].url).toEqual('http://requestee/sdk/evalx/FAKE_ENV/user?h=hash1');
   });
 
-  it('should include environment and withReasons in GET URL', () => {
+  it('should include environment and withReasons in REPORT URL', () => {
+    const config = Object.assign({}, defaultConfig, { useReport: true, evaluationReasons: true });
     const user = { key: 'user' };
-    const requestor = Requestor('http://requestee', 'FAKE_ENV', true, true);
+    const requestor = Requestor(config, env);
 
     requestor.fetchFlagSettings(user, null, sinon.spy());
 
@@ -127,9 +136,10 @@ describe('Requestor', () => {
     expect(server.requests[0].url).toEqual('http://requestee/sdk/evalx/FAKE_ENV/user?withReasons=true');
   });
 
-  it('should include environment, hash, and withReasons in GET URL', () => {
+  it('should include environment, hash, and withReasons in REPORT URL', () => {
+    const config = Object.assign({}, defaultConfig, { useReport: true, evaluationReasons: true });
     const user = { key: 'user' };
-    const requestor = Requestor('http://requestee', 'FAKE_ENV', true, true);
+    const requestor = Requestor(config, env);
 
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
@@ -149,7 +159,7 @@ describe('Requestor', () => {
       req.respond(200, { 'Content-type': 'application/json' }, JSON.stringify({ tag: seq }));
     });
 
-    const requestor = Requestor('http://requestee', 'FAKE_ENV');
+    const requestor = Requestor(defaultConfig, env);
     requestor.fetchFlagSettings({ key: 'user1' }, 'hash1', handleOne);
     server.respond();
     requestor.fetchFlagSettings({ key: 'user2' }, 'hash2', handleTwo);
@@ -170,10 +180,8 @@ describe('Requestor', () => {
   });
 
   it('should send custom user-agent header in GET mode when sendLDHeaders is true', () => {
-    const useReport = false;
-    const withReasons = false;
-    const sendLDHeaders = true;
-    const requestor = Requestor('http://requestee', 'FAKE_ENV', useReport, withReasons, sendLDHeaders);
+    const config = Object.assign({}, defaultConfig, { sendLDHeaders: true });
+    const requestor = Requestor(config, env);
     const user = { key: 'foo' };
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
@@ -182,10 +190,8 @@ describe('Requestor', () => {
   });
 
   it('should send custom user-agent header in REPORT mode when sendLDHeaders is true', () => {
-    const useReport = true;
-    const withReasons = false;
-    const sendLDHeaders = true;
-    const requestor = Requestor('http://requestee', 'FAKE_ENV', useReport, withReasons, sendLDHeaders);
+    const config = Object.assign({}, defaultConfig, { useReport: true, sendLDHeaders: true });
+    const requestor = Requestor(config, env);
     const user = { key: 'foo' };
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
@@ -194,13 +200,8 @@ describe('Requestor', () => {
   });
 
   it('should NOT send custom user-agent header when sendLDHeaders is false', () => {
-    const baseUrl = 'http://requestee';
-    const environment = 'FAKE_ENV';
-    const useReport = true;
-    const withReasons = false;
-    const sendLDHeaders = false;
-
-    const requestor = Requestor(baseUrl, environment, useReport, withReasons, sendLDHeaders);
+    const config = Object.assign({}, defaultConfig, { useReport: true, sendLDHeaders: false });
+    const requestor = Requestor(config, env);
     const user = { key: 'foo' };
 
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());

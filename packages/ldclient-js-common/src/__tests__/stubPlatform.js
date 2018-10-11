@@ -19,5 +19,5 @@ export function setDoNotTrack(value) {
 }
 
 export function makeClient(env, user, options = {}) {
-  return LDClient.initialize(env, user, options, stubEnvironment());
+  return LDClient.initialize(env, user, options, stubEnvironment()).client;
 }

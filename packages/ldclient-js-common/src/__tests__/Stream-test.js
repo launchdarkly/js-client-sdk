@@ -9,6 +9,7 @@ describe('Stream', () => {
   const user = { key: 'me' };
   const encodedUser = 'eyJrZXkiOiJtZSJ9';
   const hash = '012345789abcde';
+  const defaultConfig = { streamUrl: baseUrl };
 
   beforeEach(() => {
     Object.defineProperty(window, 'EventSource', {
@@ -21,7 +22,7 @@ describe('Stream', () => {
     const prevEventSource = window.EventSource;
     window.EventSource = undefined;
 
-    const stream = new Stream(baseUrl, envName);
+    const stream = new Stream(defaultConfig, envName);
 
     const connect = () => {
       stream.connect(noop);
@@ -33,7 +34,7 @@ describe('Stream', () => {
   });
 
   it('should not throw when calling disconnect without first calling connect', () => {
-    const stream = new Stream(baseUrl, envName);
+    const stream = new Stream(defaultConfig, envName);
     const disconnect = () => {
       stream.disconnect(noop);
     };
@@ -42,28 +43,29 @@ describe('Stream', () => {
   });
 
   it('connects to EventSource with eval stream URL by default', () => {
-    const stream = new Stream(baseUrl, envName, null, { useReport: false });
+    const stream = new Stream(defaultConfig, envName);
     stream.connect(user, {});
 
     expect(sources[baseUrl + '/eval/' + envName + '/' + encodedUser]).toBeDefined();
   });
 
   it('adds secure mode hash to URL if provided', () => {
-    const stream = new Stream(baseUrl, envName, hash, { useReport: false });
+    const stream = new Stream(defaultConfig, envName, hash);
     stream.connect(user, {});
 
     expect(sources[baseUrl + '/eval/' + envName + '/' + encodedUser + '?h=' + hash]).toBeDefined();
   });
 
   it('falls back to ping stream URL if useReport is true', () => {
-    const stream = new Stream(baseUrl, envName, hash, { useReport: true });
+    const config = Object.assign({}, defaultConfig, { useReport: true });
+    const stream = new Stream(config, envName, hash);
     stream.connect(user, {});
 
     expect(sources[baseUrl + '/ping/' + envName]).toBeDefined();
   });
 
   it('sets event listeners', () => {
-    const stream = new Stream(baseUrl, envName, hash, { useReport: false });
+    const stream = new Stream(defaultConfig, envName, hash);
     const fn1 = () => 0;
     const fn2 = () => 1;
 
@@ -80,7 +82,8 @@ describe('Stream', () => {
   });
 
   it('reconnects after encountering an error', () => {
-    const stream = new Stream(baseUrl, envName, null, { streamReconnectDelay: 0.1, useReport: false });
+    const config = Object.assign({}, defaultConfig, { streamReconnectDelay: 0.1, useReport: false });
+    const stream = new Stream(config, envName);
     stream.connect(user);
     expect(sources[baseUrl + '/eval/' + envName + '/' + encodedUser]).toBeDefined();
     expect(sources[baseUrl + '/eval/' + envName + '/' + encodedUser].readyState).toBe(EventSource.CONNECTING);
