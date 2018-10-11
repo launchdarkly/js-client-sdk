@@ -409,21 +409,6 @@ export function initialize(env, user, specifiedOptions, platform) {
     emitter.off.apply(emitter, Array.prototype.slice.call(arguments));
   }
 
-  function handleMessage(event) {
-    if (event.origin !== options.baseUrl) {
-      return;
-    }
-    if (event.data.type === 'SYN') {
-      window.editorClientBaseUrl = options.baseUrl;
-      const editorTag = document.createElement('script');
-      editorTag.type = 'text/javascript';
-      editorTag.async = true;
-      editorTag.src = options.baseUrl + event.data.editorClientUrl;
-      const s = document.getElementsByTagName('script')[0];
-      s.parentNode.insertBefore(editorTag, s);
-    }
-  }
-
   if (!env) {
     utils.onNextTick(() => {
       emitter.maybeReportError(new errors.LDInvalidEnvironmentIdError(messages.environmentNotSpecified()));
@@ -566,20 +551,12 @@ export function initialize(env, user, specifiedOptions, platform) {
     }
   }
 
-  if (document.readyState !== 'complete') {
-    window.addEventListener('load', start);
-  } else {
-    start();
-  }
-
-  window.addEventListener('beforeunload', () => {
+  function stop() {
     if (sendEvents) {
       events.stop();
       events.flush(true);
     }
-  });
-
-  window.addEventListener('message', handleMessage);
+  }
 
   const readyPromise = new Promise(resolve => {
     const onReady = emitter.on(readyEvent, () => {
@@ -621,8 +598,10 @@ export function initialize(env, user, specifiedOptions, platform) {
   };
 
   return {
-    client: client,
-    options: options,
+    client: client,     // The client object containing all public methods.
+    options: options,   // The validated configuration object, including all defaults.
+    start: start,       // Platform-specific code should call this function to start the client.
+    stop: stop,         // Platform-specific code should call this function to shut down the client.
   };
 }
 
