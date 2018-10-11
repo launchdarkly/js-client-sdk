@@ -622,7 +622,7 @@ export function initialize(env, user, specifiedOptions, platform) {
 
   return {
     client: client,
-    options: options
+    options: options,
   };
 }
 

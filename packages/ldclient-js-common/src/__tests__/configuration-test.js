@@ -1,7 +1,7 @@
 import * as configuration from '../configuration';
 import EventEmitter from '../EventEmitter';
 
-describe('configuration', function() {
+describe('configuration', () => {
   let warnSpy;
 
   beforeEach(() => {
@@ -38,10 +38,10 @@ describe('configuration', function() {
   checkDefault('streamReconnectDelay', 1000, 2000);
 
   function checkDeprecated(oldName, newName, value) {
-    it('allows "' + oldName + '" as a deprecated equivalent to "' + newName + '"', function() {
+    it('allows "' + oldName + '" as a deprecated equivalent to "' + newName + '"', () => {
       const config0 = {};
       config0[oldName] = value;
-      var config1 = configuration.validate(config0);
+      const config1 = configuration.validate(config0);
       expect(config1[newName]).toBe(value);
       expect(config1[oldName]).toBeUndefined();
       expect(warnSpy).toHaveBeenCalledTimes(1);
