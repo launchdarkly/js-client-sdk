@@ -22,8 +22,8 @@
   "main": "dist/ldclient.cjs.js",
   "module": "dist/ldclient.es.js",
   "scripts": {
-    "lint": "eslint --format 'node_modules/eslint-formatter-pretty'",
-    "lint:all": "eslint --format 'node_modules/eslint-formatter-pretty' src",
+    "lint": "eslint --format 'node_modules/eslint-formatter-pretty' --ignore-path ../../.eslintignore",
+    "lint:all": "eslint --format 'node_modules/eslint-formatter-pretty' --ignore-path ../../.eslintignore src",
     "format": "npm run format:md && npm run format:js",
     "format:md": "prettier --parser markdown --write '*.md'",
     "format:js": "prettier --write 'src/**/*.js'",
