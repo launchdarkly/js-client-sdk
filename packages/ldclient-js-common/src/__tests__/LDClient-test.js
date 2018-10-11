@@ -137,23 +137,7 @@ describe('LDClient', () => {
       stubPlatform.makeClient(envName, user, {
         bootstrap: {},
       });
-
-      expect(/sdk\/eval/.test(requests[0].url)).toEqual(false); // it's the goals request
-    });
-
-    it('fetches goals if fetchGoals is unspecified', () => {
-      stubPlatform.makeClient(envName, user, {});
-      expect(/sdk\/goals/.test(requests[1].url)).toEqual(true);
-    });
-
-    it('fetches goals if fetchGoals is true', () => {
-      stubPlatform.makeClient(envName, user, { fetchGoals: true });
-      expect(/sdk\/goals/.test(requests[1].url)).toEqual(true);
-    });
-
-    it('does not fetch goals if fetchGoals is false', () => {
-      stubPlatform.makeClient(envName, user, { fetchGoals: false });
-      expect(requests.length).toEqual(1);
+      expect(requests.length).toEqual(0);
     });
 
     it('logs warning when bootstrap object uses old format', () => {
@@ -340,44 +324,25 @@ describe('LDClient', () => {
       server.respond();
     });
 
-    it('should not warn when tracking a known custom goal event', done => {
-      const client = stubPlatform.makeClient(envName, user, {
-        bootstrap: {}, // so the client doesn't request settings
-      });
+    it('should not warn when tracking a custom event', done => {
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: {} });
 
       client.on('ready', () => {
         client.track('known');
-        expect(warnSpy).not.toHaveBeenCalledWith('Custom event key does not exist');
+        expect(warnSpy).not.toHaveBeenCalled();
+        expect(errorSpy).not.toHaveBeenCalled();
         done();
       });
-
-      requests[0].respond(200, { 'Content-Type': 'application/json' }, '[{"key": "known", "kind": "custom"}]');
     });
 
-    it('should emit an error when tracking a non-string custom goal event', done => {
-      const client = stubPlatform.makeClient(envName, user, {
-        bootstrap: {}, // so the client doesn't request settings
-      });
+    it('should emit an error when tracking a non-string custom event', done => {
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: {} });
       client.on('ready', () => {
         const badCustomEventKeys = [123, [], {}, null, undefined];
         badCustomEventKeys.forEach(key => {
           client.track(key);
           expect(errorSpy).toHaveBeenCalledWith(messages.unknownCustomEventKey(key));
         });
-        done();
-      });
-    });
-
-    it('should warn when tracking an unknown custom goal event', done => {
-      const client = stubPlatform.makeClient(envName, user, {
-        bootstrap: {}, // so the client doesn't request settings
-      });
-
-      requests[0].respond(200, { 'Content-Type': 'application/json' }, '[{"key": "known", "kind": "custom"}]');
-
-      client.on('ready', () => {
-        client.track('unknown');
-        expect(warnSpy).toHaveBeenCalledWith(messages.unknownCustomEventKey('unknown'));
         done();
       });
     });
@@ -468,24 +433,6 @@ describe('LDClient', () => {
           done();
         }, 0);
       }, 0);
-    });
-
-    it('should resolve waitUntilGoalsReady when goals are loaded', done => {
-      const handleGoalsReady = jest.fn();
-      const client = stubPlatform.makeClient(envName, user, {
-        bootstrap: {},
-      });
-
-      client.waitUntilGoalsReady().then(handleGoalsReady);
-
-      client.on('goalsReady', () => {
-        setTimeout(() => {
-          expect(handleGoalsReady).toHaveBeenCalled();
-          done();
-        }, 0);
-      });
-
-      getLastRequest().respond(200);
     });
   });
 
