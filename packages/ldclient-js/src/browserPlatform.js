@@ -1,6 +1,19 @@
 export default function makeBrowserPlatform() {
   const ret = {};
+
+  ret.newHttpRequest = () => new XMLHttpRequest();
+
+  let hasCors;
+  ret.httpAllowsPost = () => {
+    // We compute this lazily because calling XMLHttpRequest() at initialization time can disrupt tests
+    if (hasCors === undefined) {
+      hasCors = 'withCredentials' in new XMLHttpRequest();
+    }
+    return hasCors;
+  };
+
   ret.getCurrentUrl = () => window.location.href;
+
   ret.isDoNotTrack = () => {
     let flag;
     if (window.navigator && window.navigator.doNotTrack !== undefined) {
@@ -12,7 +25,10 @@ export default function makeBrowserPlatform() {
     }
     return flag === 1 || flag === true || flag === '1' || flag === 'yes';
   };
+
   ret.eventSourceFactory = url => new window.EventSource(url);
+
   ret.eventSourceAllowsReport = false;
+
   return ret;
 }

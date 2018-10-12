@@ -3,8 +3,7 @@ import * as utils from './utils';
 
 const MAX_URL_LENGTH = 2000;
 
-export default function EventSender(eventsUrl, environmentId, forceHasCors, imageCreator) {
-  let hasCors;
+export default function EventSender(platform, eventsUrl, environmentId, imageCreator) {
   const postUrl = eventsUrl + '/events/bulk/' + environmentId;
   const imageUrl = eventsUrl + '/a/' + environmentId + '.gif';
   const sender = {};
@@ -73,18 +72,10 @@ export default function EventSender(eventsUrl, environmentId, forceHasCors, imag
   }
 
   sender.sendEvents = function(events, sync) {
-    // Detect browser support for CORS (can be overridden by tests)
-    if (hasCors === undefined) {
-      if (forceHasCors === undefined) {
-        hasCors = 'withCredentials' in new XMLHttpRequest();
-      } else {
-        hasCors = forceHasCors;
-      }
-    }
-
+    const canPost = platform.httpAllowsPost();
     const finalSync = sync === undefined ? false : sync;
     let chunks;
-    if (hasCors) {
+    if (canPost) {
       // no need to break up events into chunks if we can send a POST
       chunks = [events];
     } else {
@@ -92,7 +83,7 @@ export default function EventSender(eventsUrl, environmentId, forceHasCors, imag
     }
     const results = [];
     for (let i = 0; i < chunks.length; i++) {
-      results.push(sendChunk(chunks[i], hasCors, finalSync));
+      results.push(sendChunk(chunks[i], canPost, finalSync));
     }
     return sync ? Promise.resolve() : Promise.all(results);
   };

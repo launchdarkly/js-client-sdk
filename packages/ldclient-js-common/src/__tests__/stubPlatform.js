@@ -1,11 +1,17 @@
+import sinon from 'sinon';
 import EventSource from './EventSource-mock';
 import * as LDClient from '../index';
 
 let currentUrl = null;
 let doNotTrack = false;
 
+const sinonXhr = sinon.useFakeXMLHttpRequest();
+sinonXhr.restore();
+
 export function stubEnvironment() {
   return {
+    newHttpRequest: () => new sinonXhr(),
+    httpAllowsPost: () => true,
     getCurrentUrl: () => currentUrl,
     isDoNotTrack: () => doNotTrack,
     eventSourceFactory: (url, body) => {

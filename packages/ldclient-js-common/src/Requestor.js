@@ -4,43 +4,6 @@ import * as messages from './messages';
 
 const json = 'application/json';
 
-function fetchJSON(endpoint, body, callback, sendLDHeaders) {
-  const xhr = new XMLHttpRequest();
-  let data = undefined;
-
-  xhr.addEventListener('load', () => {
-    if (
-      xhr.status === 200 &&
-      xhr.getResponseHeader('Content-type') &&
-      xhr.getResponseHeader('Content-Type').lastIndexOf(json) === 0
-    ) {
-      callback(null, JSON.parse(xhr.responseText));
-    } else {
-      callback(getResponseError(xhr));
-    }
-  });
-
-  xhr.addEventListener('error', () => {
-    callback(getResponseError(xhr));
-  });
-
-  if (body) {
-    xhr.open('REPORT', endpoint);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    data = JSON.stringify(body);
-  } else {
-    xhr.open('GET', endpoint);
-  }
-
-  if (sendLDHeaders) {
-    utils.addLDHeaders(xhr);
-  }
-
-  xhr.send(data);
-
-  return xhr;
-}
-
 function getResponseError(xhr) {
   if (xhr.status === 404) {
     return new errors.LDInvalidEnvironmentIdError(messages.environmentNotFound());
@@ -49,7 +12,7 @@ function getResponseError(xhr) {
   }
 }
 
-export default function Requestor(options, environment) {
+export default function Requestor(platform, options, environment) {
   const baseUrl = options.baseUrl;
   const useReport = options.useReport;
   const withReasons = options.evaluationReasons;
@@ -58,6 +21,43 @@ export default function Requestor(options, environment) {
   let lastFlagSettingsCallback;
 
   const requestor = {};
+
+  function fetchJSON(endpoint, body, callback) {
+    const xhr = platform.newHttpRequest();
+    let data = undefined;
+
+    xhr.addEventListener('load', () => {
+      if (
+        xhr.status === 200 &&
+        xhr.getResponseHeader('Content-type') &&
+        xhr.getResponseHeader('Content-Type').lastIndexOf(json) === 0
+      ) {
+        callback(null, JSON.parse(xhr.responseText));
+      } else {
+        callback(getResponseError(xhr));
+      }
+    });
+
+    xhr.addEventListener('error', () => {
+      callback(getResponseError(xhr));
+    });
+
+    if (body) {
+      xhr.open('REPORT', endpoint);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      data = JSON.stringify(body);
+    } else {
+      xhr.open('GET', endpoint);
+    }
+
+    if (sendLDHeaders) {
+      utils.addLDHeaders(xhr);
+    }
+
+    xhr.send(data);
+
+    return xhr;
+  }
 
   requestor.fetchFlagSettings = function(user, hash, callback) {
     let data;
@@ -102,12 +102,12 @@ export default function Requestor(options, environment) {
     }
 
     lastFlagSettingsCallback = cb;
-    flagSettingsRequest = fetchJSON(endpoint, body, cb, sendLDHeaders);
+    flagSettingsRequest = fetchJSON(endpoint, body, cb);
   };
 
   requestor.fetchGoals = function(callback) {
     const endpoint = [baseUrl, '/sdk/goals/', environment].join('');
-    fetchJSON(endpoint, null, callback, sendLDHeaders);
+    fetchJSON(endpoint, null, callback);
   };
 
   return requestor;
