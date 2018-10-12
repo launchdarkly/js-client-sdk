@@ -102,7 +102,6 @@ describe('Requestor', () => {
 
   it('should include environment in REPORT URL', () => {
     const config = Object.assign({}, defaultConfig, { useReport: true });
-    const user = { key: 'user' };
     const requestor = Requestor(platform, config, env);
 
     requestor.fetchFlagSettings(user, null, sinon.spy());
@@ -113,7 +112,6 @@ describe('Requestor', () => {
 
   it('should include environment and hash in REPORT URL', () => {
     const config = Object.assign({}, defaultConfig, { useReport: true });
-    const user = { key: 'user' };
     const requestor = Requestor(platform, config, env);
 
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
@@ -124,7 +122,6 @@ describe('Requestor', () => {
 
   it('should include environment and withReasons in REPORT URL', () => {
     const config = Object.assign({}, defaultConfig, { useReport: true, evaluationReasons: true });
-    const user = { key: 'user' };
     const requestor = Requestor(platform, config, env);
 
     requestor.fetchFlagSettings(user, null, sinon.spy());
@@ -135,7 +132,6 @@ describe('Requestor', () => {
 
   it('should include environment, hash, and withReasons in REPORT URL', () => {
     const config = Object.assign({}, defaultConfig, { useReport: true, evaluationReasons: true });
-    const user = { key: 'user' };
     const requestor = Requestor(platform, config, env);
 
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
@@ -179,7 +175,6 @@ describe('Requestor', () => {
   it('should send custom user-agent header in GET mode when sendLDHeaders is true', () => {
     const config = Object.assign({}, defaultConfig, { sendLDHeaders: true });
     const requestor = Requestor(platform, config, env);
-    const user = { key: 'foo' };
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
     expect(server.requests.length).toEqual(1);
@@ -189,7 +184,6 @@ describe('Requestor', () => {
   it('should send custom user-agent header in REPORT mode when sendLDHeaders is true', () => {
     const config = Object.assign({}, defaultConfig, { useReport: true, sendLDHeaders: true });
     const requestor = Requestor(platform, config, env);
-    const user = { key: 'foo' };
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
     expect(server.requests.length).toEqual(1);
@@ -199,7 +193,6 @@ describe('Requestor', () => {
   it('should NOT send custom user-agent header when sendLDHeaders is false', () => {
     const config = Object.assign({}, defaultConfig, { useReport: true, sendLDHeaders: false });
     const requestor = Requestor(platform, config, env);
-    const user = { key: 'foo' };
 
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
