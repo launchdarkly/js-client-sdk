@@ -23,6 +23,13 @@ export default function Requestor(platform, options, environment) {
   const requestor = {};
 
   function fetchJSON(endpoint, body, callback) {
+    if (!platform.newHttpRequest) {
+      utils.onNextTick(() => {
+        callback(new errors.LDFlagFetchError(messages.httpUnavailable()));
+      });
+      return;
+    }
+
     const xhr = platform.newHttpRequest();
     let data = undefined;
 

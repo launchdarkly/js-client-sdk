@@ -1,13 +1,16 @@
 export default function makeBrowserPlatform() {
   const ret = {};
 
-  ret.newHttpRequest = () => new XMLHttpRequest();
+  // XMLHttpRequest may not exist if we're running in a server-side rendering context
+  if (XMLHttpRequest) {
+    ret.newHttpRequest = () => new XMLHttpRequest();
+  }
 
   let hasCors;
   ret.httpAllowsPost = () => {
     // We compute this lazily because calling XMLHttpRequest() at initialization time can disrupt tests
     if (hasCors === undefined) {
-      hasCors = 'withCredentials' in new XMLHttpRequest();
+      hasCors = XMLHttpRequest ? 'withCredentials' in new XMLHttpRequest() : false;
     }
     return hasCors;
   };

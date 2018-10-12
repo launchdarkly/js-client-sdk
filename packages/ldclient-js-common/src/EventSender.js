@@ -33,7 +33,7 @@ export default function EventSender(platform, eventsUrl, environmentId, imageCre
     const jsonBody = JSON.stringify(events);
     const send = onDone => {
       function createRequest(canRetry) {
-        const xhr = new XMLHttpRequest();
+        const xhr = platform.newHttpRequest();
         xhr.open('POST', postUrl, !sync);
         utils.addLDHeaders(xhr);
         xhr.setRequestHeader('Content-Type', 'application/json');
@@ -72,6 +72,9 @@ export default function EventSender(platform, eventsUrl, environmentId, imageCre
   }
 
   sender.sendEvents = function(events, sync) {
+    if (!platform.newHttpRequest) {
+      return Promise.resolve();
+    }
     const canPost = platform.httpAllowsPost();
     const finalSync = sync === undefined ? false : sync;
     let chunks;
