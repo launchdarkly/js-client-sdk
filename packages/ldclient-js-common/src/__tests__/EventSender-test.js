@@ -6,7 +6,7 @@ import EventSender from '../EventSender';
 import * as utils from '../utils';
 
 describe('EventSender', () => {
-  const platform = stubPlatform.stubEnvironment();
+  const platform = stubPlatform.defaults();
   const platformWithoutCors = Object.assign({}, platform, { httpAllowsPost: () => false });
   let sandbox;
   let xhr;
@@ -180,6 +180,15 @@ describe('EventSender', () => {
       requests[0].error();
       expect(requests.length).toEqual(2);
       expect(JSON.parse(requests[1].requestBody)).toEqual([event]);
+    });
+  });
+
+  describe('When HTTP requests are not available at all', () => {
+    it('should silently discard events', () => {
+      const sender = EventSender(stubPlatform.withoutHttp(), eventsUrl, envId);
+      const event = { kind: 'false', key: 'userKey' };
+      sender.sendEvents([event], false);
+      expect(requests.length).toEqual(0);
     });
   });
 });

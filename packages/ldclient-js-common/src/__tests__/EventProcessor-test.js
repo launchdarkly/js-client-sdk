@@ -12,7 +12,7 @@ describe('EventProcessor', () => {
   const eventsUrl = '/fake-url';
   const envId = 'env';
   const defaultConfig = { eventsUrl: eventsUrl, flushInterval: 2000, samplingInterval: 0 };
-  const platform = stubPlatform.stubEnvironment();
+  const platform = stubPlatform.defaults();
 
   mockEventSender.sendEvents = function(events, sync) {
     mockEventSender.calls.push({

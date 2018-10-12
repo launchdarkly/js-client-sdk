@@ -8,7 +8,7 @@ let doNotTrack = false;
 const sinonXhr = sinon.useFakeXMLHttpRequest();
 sinonXhr.restore();
 
-export function stubEnvironment() {
+export function defaults() {
   return {
     newHttpRequest: () => new sinonXhr(),
     httpAllowsPost: () => true,
@@ -22,6 +22,12 @@ export function stubEnvironment() {
   };
 }
 
+export function withoutHttp() {
+  const e = defaults();
+  delete e.newHttpRequest;
+  return e;
+}
+
 export function setCurrentUrl(url) {
   currentUrl = url;
 }
@@ -31,5 +37,5 @@ export function setDoNotTrack(value) {
 }
 
 export function makeClient(env, user, options = {}) {
-  return LDClient.initialize(env, user, options, stubEnvironment()).client;
+  return LDClient.initialize(env, user, options, defaults()).client;
 }

@@ -11,7 +11,7 @@ describe('Stream', () => {
   const encodedUser = 'eyJrZXkiOiJtZSJ9';
   const hash = '012345789abcde';
   const defaultConfig = { streamUrl: baseUrl };
-  const platform = stubPlatform.stubEnvironment();
+  const platform = stubPlatform.defaults();
 
   beforeEach(resetSources);
 
