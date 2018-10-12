@@ -24,7 +24,9 @@ export function validate(options, emitter, extraDefaults) {
   const defaults = utils.extend({}, baseDefaults, extraDefaults);
 
   const deprecatedOptions = {
+    // eslint-disable-next-line camelcase
     all_attributes_private: 'allAttributesPrivate',
+    // eslint-disable-next-line camelcase
     private_attribute_names: 'privateAttributeNames',
   };
 
