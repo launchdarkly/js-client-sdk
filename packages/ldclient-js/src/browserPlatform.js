@@ -29,7 +29,10 @@ export default function makeBrowserPlatform() {
     return flag === 1 || flag === true || flag === '1' || flag === 'yes';
   };
 
-  ret.eventSourceFactory = url => new window.EventSource(url);
+  // If EventSource does not exist, the absence of eventSourceFactory will make us not try to open streams
+  if (window.EventSource) {
+    ret.eventSourceFactory = url => new window.EventSource(url);
+  }
 
   ret.eventSourceAllowsReport = false;
 
