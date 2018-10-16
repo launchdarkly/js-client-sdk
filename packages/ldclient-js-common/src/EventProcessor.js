@@ -1,9 +1,8 @@
-import * as common from 'ldclient-js-common';
-
 import EventSender from './EventSender';
 import EventSummarizer from './EventSummarizer';
 import UserFilter from './UserFilter';
 import * as errors from './errors';
+import * as messages from './messages';
 import * as utils from './utils';
 
 export default function EventProcessor(eventsUrl, environmentId, options = {}, emitter = null, sender = null) {
@@ -131,7 +130,7 @@ export default function EventProcessor(eventsUrl, environmentId, options = {}, e
           utils.onNextTick(() => {
             emitter.maybeReportError(
               new errors.LDUnexpectedResponseError(
-                common.messages.httpErrorMessage(responseInfo.status, 'event posting', 'some events were dropped')
+                messages.httpErrorMessage(responseInfo.status, 'event posting', 'some events were dropped')
               )
             );
           });

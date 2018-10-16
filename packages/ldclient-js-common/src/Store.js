@@ -1,5 +1,4 @@
-import * as common from 'ldclient-js-common';
-
+import * as messages from './messages';
 import * as utils from './utils';
 
 export default function Store(environment, hash, ident) {
@@ -20,7 +19,7 @@ export default function Store(environment, hash, ident) {
     try {
       dataStr = localStorage.getItem(key);
     } catch (ex) {
-      console.warn(common.messages.localStorageUnavailable());
+      console.warn(messages.localStorageUnavailable());
       return null;
     }
     try {
@@ -44,7 +43,7 @@ export default function Store(environment, hash, ident) {
     try {
       localStorage.setItem(key, JSON.stringify(data));
     } catch (ex) {
-      console.warn(common.messages.localStorageUnavailable());
+      console.warn(messages.localStorageUnavailable());
     }
   };
 
