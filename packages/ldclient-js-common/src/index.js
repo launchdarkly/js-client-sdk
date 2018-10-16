@@ -1,6 +1,5 @@
 import EventProcessor from './EventProcessor';
 import EventEmitter from './EventEmitter';
-import GoalTracker from './GoalTracker';
 import Store from './Store';
 import Stream from './Stream';
 import Requestor from './Requestor';
@@ -14,8 +13,6 @@ const readyEvent = 'ready';
 const successEvent = 'initialized';
 const failedEvent = 'failed';
 const changeEvent = 'change';
-const goalsEvent = 'goalsReady';
-const locationWatcherInterval = 300;
 
 // This is called by the per-platform initialize functions to create the base client object that we
 // may also extend with additional behavior. It returns an object with these properties:
@@ -23,9 +20,9 @@ const locationWatcherInterval = 300;
 //   options: the configuration (after any appropriate defaults have been applied)
 // If we need to give the platform-specific clients access to any internals here, we should add those
 // as properties of the return object, not public properties of the client.
-export function initialize(env, user, specifiedOptions, platform) {
+export function initialize(env, user, specifiedOptions, platform, extraDefaults) {
   const emitter = EventEmitter();
-  const options = configuration.validate(specifiedOptions, emitter);
+  const options = configuration.validate(specifiedOptions, emitter, extraDefaults);
   const hash = options.hash;
   const sendEvents = options.sendEvents;
   const environment = env;
@@ -34,9 +31,7 @@ export function initialize(env, user, specifiedOptions, platform) {
   const requestor = Requestor(options, environment);
   const seenRequests = {};
   let flags = typeof options.bootstrap === 'object' ? readFlagsFromBootstrap(options.bootstrap) : {};
-  let goalTracker;
   let useLocalStorage;
-  let goals;
   let subscribedToChangeEvents;
   let firstEvent = true;
 
@@ -139,23 +134,6 @@ export function initialize(env, user, specifiedOptions, platform) {
     enqueueEvent(event);
   }
 
-  function sendGoalEvent(kind, goal) {
-    const event = {
-      kind: kind,
-      key: goal.key,
-      data: null,
-      url: platform.getCurrentUrl(),
-      user: ident.getUser(),
-      creationDate: new Date().getTime(),
-    };
-
-    if (kind === 'click') {
-      event.selector = goal.selector;
-    }
-
-    return enqueueEvent(event);
-  }
-
   function identify(user, hash, onDone) {
     if (useLocalStorage) {
       store.clearFlags();
@@ -248,28 +226,13 @@ export function initialize(env, user, specifiedOptions, platform) {
     return results;
   }
 
-  function customEventExists(key) {
-    if (!goals || goals.length === 0) {
-      return false;
-    }
-
-    for (let i = 0; i < goals.length; i++) {
-      if (goals[i].kind === 'custom' && goals[i].key === key) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
   function track(key, data) {
     if (typeof key !== 'string') {
       emitter.maybeReportError(new errors.LDInvalidEventKeyError(messages.unknownCustomEventKey(key)));
       return;
     }
 
-    // Validate key if we have goals
-    if (!!goals && !customEventExists(key)) {
+    if (platform.customEventFilter && !platform.customEventFilter(key)) {
       console.warn(messages.unknownCustomEventKey(key));
     }
 
@@ -480,60 +443,6 @@ export function initialize(env, user, specifiedOptions, platform) {
     });
   }
 
-  function refreshGoalTracker() {
-    if (goalTracker) {
-      goalTracker.dispose();
-    }
-    if (goals && goals.length) {
-      goalTracker = GoalTracker(goals, sendGoalEvent);
-    }
-  }
-
-  function watchLocation(interval, callback) {
-    let previousUrl = location.href;
-    let currentUrl;
-
-    function checkUrl() {
-      currentUrl = location.href;
-
-      if (currentUrl !== previousUrl) {
-        previousUrl = currentUrl;
-        callback();
-      }
-    }
-
-    function poll(fn, interval) {
-      fn();
-      setTimeout(() => {
-        poll(fn, interval);
-      }, interval);
-    }
-
-    poll(checkUrl, interval);
-
-    if (!!(window.history && history.pushState)) {
-      window.addEventListener('popstate', checkUrl);
-    } else {
-      window.addEventListener('hashchange', checkUrl);
-    }
-  }
-
-  if (options.fetchGoals) {
-    requestor.fetchGoals((err, g) => {
-      if (err) {
-        emitter.maybeReportError(
-          new errors.LDUnexpectedResponseError('Error fetching goals: ' + err.message ? err.message : err)
-        );
-      }
-      if (g && g.length > 0) {
-        goals = g;
-        goalTracker = GoalTracker(goals, sendGoalEvent);
-        watchLocation(locationWatcherInterval, refreshGoalTracker);
-      }
-      emitter.emit(goalsEvent);
-    });
-  }
-
   function signalSuccessfulInit() {
     emitter.emit(readyEvent);
     emitter.emit(successEvent); // allows initPromise to distinguish between success and failure
@@ -565,13 +474,6 @@ export function initialize(env, user, specifiedOptions, platform) {
     });
   });
 
-  const goalsPromise = new Promise(resolve => {
-    const onGoals = emitter.on(goalsEvent, () => {
-      emitter.off(goalsEvent, onGoals);
-      resolve();
-    });
-  });
-
   const initPromise = new Promise((resolve, reject) => {
     const onSuccess = emitter.on(successEvent, () => {
       emitter.off(successEvent, onSuccess);
@@ -586,7 +488,6 @@ export function initialize(env, user, specifiedOptions, platform) {
   const client = {
     waitForInitialization: () => initPromise,
     waitUntilReady: () => readyPromise,
-    waitUntilGoalsReady: () => goalsPromise,
     identify: identify,
     variation: variation,
     variationDetail: variationDetail,
@@ -600,10 +501,15 @@ export function initialize(env, user, specifiedOptions, platform) {
   return {
     client: client, // The client object containing all public methods.
     options: options, // The validated configuration object, including all defaults.
-    start: start, // Platform-specific code should call this function to start the client.
-    stop: stop, // Platform-specific code should call this function to shut down the client.
+    emitter: emitter, // The event emitter which can be used to log errors or trigger events.
+    ident: ident, // The Identity object that manages the current user.
+    requestor: requestor, // The Requestor object.
+    start: start, // Starts the client once the environment is ready.
+    stop: stop, // Shuts down the client.
+    enqueueEvent: enqueueEvent, // Puts an analytics event in the queue, if event sending is enabled.
   };
 }
 
 export const version = VERSION;
+export { errors };
 export { messages };

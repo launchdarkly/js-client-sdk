@@ -2,8 +2,8 @@ import * as errors from './errors';
 import * as messages from './messages';
 import * as utils from './utils';
 
-export function validate(options, emitter) {
-  const defaults = {
+export function validate(options, emitter, extraDefaults) {
+  const baseDefaults = {
     baseUrl: 'https://app.launchdarkly.com',
     streamUrl: 'https://clientstream.launchdarkly.com',
     eventsUrl: 'https://events.launchdarkly.com',
@@ -21,6 +21,7 @@ export function validate(options, emitter) {
     allAttributesPrivate: false,
     privateAttributeNames: [],
   };
+  const defaults = utils.extend({}, baseDefaults, extraDefaults);
 
   const deprecatedOptions = {
     all_attributes_private: 'allAttributesPrivate',
