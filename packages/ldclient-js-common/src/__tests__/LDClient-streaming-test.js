@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import EventSource, { sources } from './EventSource-mock';
 
-import * as LDClient from '../index';
 import { btoa } from '../utils';
+import * as stubPlatform from './stubPlatform';
 
 describe('LDClient', () => {
   const envName = 'UNKNOWN_ENVIRONMENT_ID';
@@ -50,7 +50,7 @@ describe('LDClient', () => {
     }
 
     it('does not connect to the stream by default', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: {} });
 
       client.on('ready', () => {
         expect(sources).toMatchObject({});
@@ -59,7 +59,7 @@ describe('LDClient', () => {
     });
 
     it('connects to the stream when listening to global change events', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: {} });
 
       client.on('ready', () => {
         client.on('change', () => {});
@@ -69,7 +69,7 @@ describe('LDClient', () => {
     });
 
     it('connects to the stream when listening to change event for one flag', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: {} });
 
       client.on('ready', () => {
         client.on('change:flagkey', () => {});
@@ -79,7 +79,7 @@ describe('LDClient', () => {
     });
 
     it('passes the secure mode hash in the stream URL if provided', done => {
-      const client = LDClient.initialize(envName, user, { hash: hash, bootstrap: {} });
+      const client = stubPlatform.makeClient(envName, user, { hash: hash, bootstrap: {} });
 
       client.on('ready', () => {
         client.on('change:flagkey', () => {});
@@ -89,7 +89,7 @@ describe('LDClient', () => {
     });
 
     it('passes withReasons parameter if provided', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {}, evaluationReasons: true });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: {}, evaluationReasons: true });
 
       client.on('ready', () => {
         client.on('change', () => {});
@@ -101,7 +101,7 @@ describe('LDClient', () => {
     });
 
     it('passes secure mode hash and withReasons if provided', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {}, hash: hash, evaluationReasons: true });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: {}, hash: hash, evaluationReasons: true });
 
       client.on('ready', () => {
         client.on('change', () => {});
@@ -113,7 +113,7 @@ describe('LDClient', () => {
     });
 
     it('handles stream ping message by getting flags', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: {} });
 
       client.on('ready', () => {
         client.on('change', () => {});
@@ -129,7 +129,7 @@ describe('LDClient', () => {
     });
 
     it('handles stream put message by updating flags', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: {} });
 
       client.on('ready', () => {
         client.on('change', () => {});
@@ -145,7 +145,7 @@ describe('LDClient', () => {
 
     it('updates local storage for put message if using local storage', done => {
       window.localStorage.setItem(lsKey, '{"enable-foo":false}');
-      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: 'localstorage' });
 
       client.on('ready', () => {
         client.on('change', () => {});
@@ -164,7 +164,7 @@ describe('LDClient', () => {
     });
 
     it('fires global change event when flags are updated from put event', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: { 'enable-foo': false } });
 
       client.on('ready', () => {
         client.on('change', changes => {
@@ -182,7 +182,7 @@ describe('LDClient', () => {
     });
 
     it('fires individual change event when flags are updated from put event', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: { 'enable-foo': false } });
 
       client.on('ready', () => {
         client.on('change:enable-foo', (current, previous) => {
@@ -199,7 +199,7 @@ describe('LDClient', () => {
     });
 
     it('handles patch message by updating flag', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: { 'enable-foo': false } });
 
       client.on('ready', () => {
         client.on('change', () => {});
@@ -215,7 +215,7 @@ describe('LDClient', () => {
       const server = sinon.fakeServer.create();
       server.respondWith([200, { 'Content-Type': 'application/json' }, '{"enable-foo":{"value":"a","version":2}}']);
 
-      const client = LDClient.initialize(envName, user);
+      const client = stubPlatform.makeClient(envName, user);
       client.on('ready', () => {
         expect(client.variation('enable-foo')).toEqual('a');
 
@@ -234,7 +234,7 @@ describe('LDClient', () => {
       const server = sinon.fakeServer.create();
       server.respondWith([200, { 'Content-Type': 'application/json' }, '{"enable-foo":{"value":"a","version":2}}']);
 
-      const client = LDClient.initialize(envName, user);
+      const client = stubPlatform.makeClient(envName, user);
       client.on('ready', () => {
         expect(client.variation('enable-foo')).toEqual('a');
 
@@ -253,7 +253,7 @@ describe('LDClient', () => {
       const server = sinon.fakeServer.create();
       server.respondWith([200, { 'Content-Type': 'application/json' }, '{"enable-foo":{"value":"a"}}']);
 
-      const client = LDClient.initialize(envName, user);
+      const client = stubPlatform.makeClient(envName, user);
       client.on('ready', () => {
         expect(client.variation('enable-foo')).toEqual('a');
 
@@ -272,7 +272,7 @@ describe('LDClient', () => {
       const server = sinon.fakeServer.create();
       server.respondWith([200, { 'Content-Type': 'application/json' }, '{"enable-foo":{"value":"a","version":2}}']);
 
-      const client = LDClient.initialize(envName, user);
+      const client = stubPlatform.makeClient(envName, user);
       client.on('ready', () => {
         expect(client.variation('enable-foo')).toEqual('a');
 
@@ -289,7 +289,7 @@ describe('LDClient', () => {
 
     it('updates local storage for patch message if using local storage', done => {
       window.localStorage.setItem(lsKey, '{"enable-foo":false}');
-      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: 'localstorage' });
 
       client.on('ready', () => {
         client.on('change', () => {});
@@ -308,7 +308,7 @@ describe('LDClient', () => {
     });
 
     it('fires global change event when flag is updated from patch event', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: { 'enable-foo': false } });
 
       client.on('ready', () => {
         client.on('change', changes => {
@@ -326,7 +326,7 @@ describe('LDClient', () => {
     });
 
     it('fires individual change event when flag is updated from patch event', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: { 'enable-foo': false } });
 
       client.on('ready', () => {
         client.on('change:enable-foo', (current, previous) => {
@@ -343,7 +343,7 @@ describe('LDClient', () => {
     });
 
     it('fires global change event when flag is newly created from patch event', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: {} });
 
       client.on('ready', () => {
         client.on('change', changes => {
@@ -361,7 +361,7 @@ describe('LDClient', () => {
     });
 
     it('fires global change event when flag is newly created from patch event', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: {} });
 
       client.on('ready', () => {
         client.on('change:enable-foo', (current, previous) => {
@@ -378,7 +378,7 @@ describe('LDClient', () => {
     });
 
     it('handles delete message by deleting flag', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': false } });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: { 'enable-foo': false } });
 
       client.on('ready', () => {
         client.on('change', () => {});
@@ -393,7 +393,7 @@ describe('LDClient', () => {
     });
 
     it('fires global change event when flag is deleted', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': true } });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: { 'enable-foo': true } });
 
       client.on('ready', () => {
         client.on('change', changes => {
@@ -411,7 +411,7 @@ describe('LDClient', () => {
     });
 
     it('fires individual change event when flag is deleted', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: { 'enable-foo': true } });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: { 'enable-foo': true } });
 
       client.on('ready', () => {
         client.on('change:enable-foo', (current, previous) => {
@@ -429,7 +429,7 @@ describe('LDClient', () => {
 
     it('updates local storage for delete message if using local storage', done => {
       window.localStorage.setItem(lsKey, '{"enable-foo":false}');
-      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: 'localstorage' });
 
       client.on('ready', () => {
         client.on('change', () => {});
@@ -450,7 +450,7 @@ describe('LDClient', () => {
     it('reconnects to stream if the user changes', done => {
       const user2 = { key: 'user2' };
       const encodedUser2 = 'eyJrZXkiOiJ1c2VyMiJ9';
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+      const client = stubPlatform.makeClient(envName, user, { bootstrap: {} });
 
       client.on('ready', () => {
         client.on('change', () => {});
