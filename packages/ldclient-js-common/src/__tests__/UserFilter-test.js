@@ -1,8 +1,6 @@
 import UserFilter from '../UserFilter';
 
 describe('UserFilter', () => {
-  let warnSpy;
-
   // users to serialize
   const user = {
     key: 'abc',
@@ -58,14 +56,6 @@ describe('UserFilter', () => {
     privateAttrs: ['bizzle', 'dizzle'],
   };
 
-  beforeEach(() => {
-    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-  });
-
-  afterEach(() => {
-    warnSpy.mockRestore();
-  });
-
   it('includes all user attributes by default', () => {
     const uf = UserFilter({});
     expect(uf.filterUser(user)).toEqual(user);
@@ -76,21 +66,9 @@ describe('UserFilter', () => {
     expect(uf.filterUser(user)).toEqual(userWithAllAttrsHidden);
   });
 
-  it('allows all_attributes_private as deprecated synonym for allAttributesPrivate', () => {
-    const uf = UserFilter({ all_attributes_private: true });
-    expect(uf.filterUser(user)).toEqual(userWithAllAttrsHidden);
-    expect(warnSpy).toHaveBeenCalled();
-  });
-
   it('hides some attributes if privateAttributeNames is set', () => {
     const uf = UserFilter({ privateAttributeNames: ['firstName', 'bizzle'] });
     expect(uf.filterUser(user)).toEqual(userWithSomeAttrsHidden);
-  });
-
-  it('allows private_attribute_names as deprecated synonym for privateAttributeNames', () => {
-    const uf = UserFilter({ private_attribute_names: ['firstName', 'bizzle'] });
-    expect(uf.filterUser(user)).toEqual(userWithSomeAttrsHidden);
-    expect(warnSpy).toHaveBeenCalled();
   });
 
   it('hides attributes specified in per-user privateAttrs', () => {

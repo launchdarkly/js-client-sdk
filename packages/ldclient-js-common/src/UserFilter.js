@@ -1,4 +1,3 @@
-import * as messages from './messages';
 import * as utils from './utils';
 
 /**
@@ -9,10 +8,8 @@ import * as utils from './utils';
  **/
 export default function UserFilter(config) {
   const filter = {};
-  const allAttributesPrivate =
-    config.allAttributesPrivate !== undefined ? config.allAttributesPrivate : config.all_attributes_private;
-  const privateAttributeNames =
-    (config.privateAttributeNames !== undefined ? config.privateAttributeNames : config.private_attribute_names) || [];
+  const allAttributesPrivate = config.allAttributesPrivate;
+  const privateAttributeNames = config.privateAttributeNames || [];
   const ignoreAttrs = { key: true, custom: true, anonymous: true };
   const allowedTopLevelAttrs = {
     key: true,
@@ -27,13 +24,6 @@ export default function UserFilter(config) {
     anonymous: true,
     custom: true,
   };
-
-  if (config.all_attributes_private !== undefined) {
-    console && console.warn && console.warn(messages.deprecated('all_attributes_private', 'allAttributesPrivate'));
-  }
-  if (config.private_attribute_names !== undefined) {
-    console && console.warn && console.warn(messages.deprecated('private_attribute_names', 'privateAttributeNames'));
-  }
 
   filter.filterUser = function(user) {
     if (!user) {

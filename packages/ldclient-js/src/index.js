@@ -3,7 +3,8 @@ import browserPlatform from './browserPlatform';
 
 // Pass our platform object to the common code to create the browser version of the client
 export function initialize(env, user, options = {}) {
-  return common.initialize(env, user, options, browserPlatform());
+  const clientVars = common.initialize(env, user, options, browserPlatform());
+  return clientVars.client;
 }
 
 export const version = common.version;

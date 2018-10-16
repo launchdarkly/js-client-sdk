@@ -5,38 +5,18 @@ import * as errors from './errors';
 import * as messages from './messages';
 import * as utils from './utils';
 
-export default function EventProcessor(eventsUrl, environmentId, options = {}, emitter = null, sender = null) {
+export default function EventProcessor(options, environmentId, emitter = null, sender = null) {
   const processor = {};
-  const eventSender = sender || EventSender(eventsUrl, environmentId);
+  const eventSender = sender || EventSender(options.eventsUrl, environmentId);
   const summarizer = EventSummarizer();
   const userFilter = UserFilter(options);
-  const inlineUsers = !!options.inlineUsersInEvents;
+  const inlineUsers = options.inlineUsersInEvents;
+  const samplingInterval = options.samplingInterval;
+  const flushInterval = options.flushInterval;
   let queue = [];
-  let flushInterval;
-  let samplingInterval;
   let lastKnownPastTime = 0;
   let disabled = false;
   let flushTimer;
-
-  function reportArgumentError(message) {
-    utils.onNextTick(() => {
-      emitter && emitter.maybeReportError(new errors.LDInvalidArgumentError(message));
-    });
-  }
-
-  if (options.samplingInterval !== undefined && (isNaN(options.samplingInterval) || options.samplingInterval < 0)) {
-    samplingInterval = 0;
-    reportArgumentError('Invalid sampling interval configured. Sampling interval must be an integer >= 0.');
-  } else {
-    samplingInterval = options.samplingInterval || 0;
-  }
-
-  if (options.flushInterval !== undefined && (isNan(options.flushInterval) || options.flushInterval < 2000)) {
-    flushInterval = 2000;
-    reportArgumentError('Invalid flush interval configured. Must be an integer >= 2000 (milliseconds).');
-  } else {
-    flushInterval = options.flushInterval || 2000;
-  }
 
   function shouldSampleEvent() {
     return samplingInterval === 0 || Math.floor(Math.random() * samplingInterval) === 0;

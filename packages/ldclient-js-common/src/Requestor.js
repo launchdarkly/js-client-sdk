@@ -49,7 +49,11 @@ function getResponseError(xhr) {
   }
 }
 
-export default function Requestor(baseUrl, environment, useReport, withReasons, sendLDHeaders) {
+export default function Requestor(options, environment) {
+  const baseUrl = options.baseUrl;
+  const useReport = options.useReport;
+  const withReasons = options.evaluationReasons;
+  const sendLDHeaders = options.sendLDHeaders;
   let flagSettingsRequest;
   let lastFlagSettingsCallback;
 
