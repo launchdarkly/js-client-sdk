@@ -1,3 +1,5 @@
+import * as common from 'ldclient-js-common';
+
 import EventProcessor from './EventProcessor';
 import EventEmitter from './EventEmitter';
 import GoalTracker from './GoalTracker';
@@ -6,7 +8,6 @@ import Stream from './Stream';
 import Requestor from './Requestor';
 import Identity from './Identity';
 import * as utils from './utils';
-import * as messages from './messages';
 import * as errors from './errors';
 
 const readyEvent = 'ready';
@@ -52,10 +53,10 @@ export function initialize(env, user, options = {}) {
     const validKey = '$valid';
     const metadata = data[metadataKey];
     if (!metadata && keys.length) {
-      console.warn(messages.bootstrapOldFormat());
+      console.warn(common.messages.bootstrapOldFormat());
     }
     if (data[validKey] === false) {
-      console.warn(messages.bootstrapInvalid());
+      console.warn(common.messages.bootstrapInvalid());
     }
     const ret = {};
     keys.forEach(key => {
@@ -166,14 +167,16 @@ export function initialize(env, user, options = {}) {
     return utils.wrapPromiseCallback(
       new Promise((resolve, reject) => {
         if (!user || user.key === null || user.key === undefined) {
-          const err = new errors.LDInvalidUserError(user ? messages.invalidUser() : messages.userNotSpecified());
+          const err = new errors.LDInvalidUserError(
+            user ? common.messages.invalidUser() : common.messages.userNotSpecified()
+          );
           emitter.maybeReportError(err);
           reject(err);
         } else {
           ident.setUser(user);
           requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
             if (err) {
-              emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+              emitter.maybeReportError(new errors.LDFlagFetchError(common.messages.errorFetchingFlags(err)));
               return reject(err);
             }
             if (settings) {
@@ -279,13 +282,13 @@ export function initialize(env, user, options = {}) {
 
   function track(key, data) {
     if (typeof key !== 'string') {
-      emitter.maybeReportError(new errors.LDInvalidEventKeyError(messages.unknownCustomEventKey(key)));
+      emitter.maybeReportError(new errors.LDInvalidEventKeyError(common.messages.unknownCustomEventKey(key)));
       return;
     }
 
     // Validate key if we have goals
     if (!!goals && !customEventExists(key)) {
-      console.warn(messages.unknownCustomEventKey(key));
+      console.warn(common.messages.unknownCustomEventKey(key));
     }
 
     enqueueEvent({
@@ -306,7 +309,7 @@ export function initialize(env, user, options = {}) {
       ping: function() {
         requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
           if (err) {
-            emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+            emitter.maybeReportError(new errors.LDFlagFetchError(common.messages.errorFetchingFlags(err)));
           }
           updateSettings(settings);
         });
@@ -441,17 +444,17 @@ export function initialize(env, user, options = {}) {
 
   if (!env) {
     utils.onNextTick(() => {
-      emitter.maybeReportError(new errors.LDInvalidEnvironmentIdError(messages.environmentNotSpecified()));
+      emitter.maybeReportError(new errors.LDInvalidEnvironmentIdError(common.messages.environmentNotSpecified()));
     });
   }
 
   if (!user) {
     utils.onNextTick(() => {
-      emitter.maybeReportError(new errors.LDInvalidUserError(messages.userNotSpecified()));
+      emitter.maybeReportError(new errors.LDInvalidUserError(common.messages.userNotSpecified()));
     });
   } else if (!user.key) {
     utils.onNextTick(() => {
-      emitter.maybeReportError(new errors.LDInvalidUserError(messages.invalidUser()));
+      emitter.maybeReportError(new errors.LDInvalidUserError(common.messages.invalidUser()));
     });
   }
 
@@ -470,7 +473,7 @@ export function initialize(env, user, options = {}) {
       flags = {};
       requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
         if (err) {
-          const initErr = new errors.LDFlagFetchError(messages.errorFetchingFlags(err));
+          const initErr = new errors.LDFlagFetchError(common.messages.errorFetchingFlags(err));
           signalFailedInit(initErr);
         } else {
           if (settings) {
@@ -490,7 +493,7 @@ export function initialize(env, user, options = {}) {
 
       requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
         if (err) {
-          emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+          emitter.maybeReportError(new errors.LDFlagFetchError(common.messages.errorFetchingFlags(err)));
         }
         if (settings) {
           store.saveFlags(settings);
@@ -501,7 +504,7 @@ export function initialize(env, user, options = {}) {
     requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
       if (err) {
         flags = {};
-        const initErr = new errors.LDFlagFetchError(messages.errorFetchingFlags(err));
+        const initErr = new errors.LDFlagFetchError(common.messages.errorFetchingFlags(err));
         signalFailedInit(initErr);
       } else {
         flags = settings || {};
@@ -641,7 +644,7 @@ export function initialize(env, user, options = {}) {
 export const version = VERSION;
 
 function deprecatedInitialize(env, user, options = {}) {
-  console && console.warn && console.warn(messages.deprecated('default export', 'named LDClient export'));
+  console && console.warn && console.warn(common.messages.deprecated('default export', 'named LDClient export'));
   return initialize(env, user, options);
 }
 

@@ -1,6 +1,7 @@
+import * as common from 'ldclient-js-common';
+
 import * as utils from './utils';
 import * as errors from './errors';
-import * as messages from './messages';
 
 const json = 'application/json';
 
@@ -43,7 +44,7 @@ function fetchJSON(endpoint, body, callback, sendLDHeaders) {
 
 function getResponseError(xhr) {
   if (xhr.status === 404) {
-    return new errors.LDInvalidEnvironmentIdError(messages.environmentNotFound());
+    return new errors.LDInvalidEnvironmentIdError(common.messages.environmentNotFound());
   } else {
     return xhr.statusText;
   }

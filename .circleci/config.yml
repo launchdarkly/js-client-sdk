@@ -8,7 +8,7 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: $LERNA exec -- npm install
+      - run: $LERNA bootstrap
       - run: mkdir -p reports/junit
       - run: $LERNA run lint:all
       - run: $LERNA run build
