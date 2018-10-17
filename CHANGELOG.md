@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org).
 ### Fixed:
 - Disconnecting from the stream does not close the browser tab anymore. 
 (Thanks, [Sawtaytoes](https://github.com/launchdarkly/js-client/issues/119).)
+- Fixed config property name in our TypeScript defs
 
 ## [2.7.1] - 2018-09-27
 ### Fixed:
