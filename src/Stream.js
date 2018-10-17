@@ -20,7 +20,7 @@ export default function Stream(baseUrl, environment, hash, config) {
   stream.disconnect = function() {
     clearTimeout(reconnectTimeoutReference);
     reconnectTimeoutReference = null;
-    close();
+    closeConnection();
   };
 
   stream.isConnected = function() {
