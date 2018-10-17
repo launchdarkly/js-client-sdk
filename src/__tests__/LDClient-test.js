@@ -239,7 +239,7 @@ describe('LDClient', () => {
       // sandbox.restore(window.localStorage.__proto__, 'getItem');
       // sandbox.stub(window.localStorage.__proto__, 'getItem').throws();
 
-      localStorage.getItem.mockImplementationOnce(() => {
+      window.localStorage.getItem.mockImplementationOnce(() => {
         throw new Error();
       });
 
@@ -256,7 +256,7 @@ describe('LDClient', () => {
     });
 
     it('should handle localStorage setItem throwing an exception', done => {
-      localStorage.setItem.mockImplementationOnce(() => {
+      window.localStorage.setItem.mockImplementationOnce(() => {
         throw new Error();
       });
 

@@ -31,7 +31,7 @@ export default function EventProcessor(eventsUrl, environmentId, options = {}, e
     samplingInterval = options.samplingInterval || 0;
   }
 
-  if (options.flushInterval !== undefined && (isNan(options.flushInterval) || options.flushInterval < 2000)) {
+  if (options.flushInterval !== undefined && (isNaN(options.flushInterval) || options.flushInterval < 2000)) {
     flushInterval = 2000;
     reportArgumentError('Invalid flush interval configured. Must be an integer >= 2000 (milliseconds).');
   } else {

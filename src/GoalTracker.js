@@ -60,7 +60,7 @@ export default function GoalTracker(goals, onEvent) {
     const urls = goal.urls || [];
 
     for (let j = 0; j < urls.length; j++) {
-      if (doesUrlMatch(urls[j], location.href, location.search, location.hash)) {
+      if (doesUrlMatch(urls[j], window.location.href, window.location.search, window.location.hash)) {
         if (goal.kind === 'pageview') {
           onEvent('pageview', goal);
         } else {

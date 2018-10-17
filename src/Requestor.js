@@ -5,7 +5,7 @@ import * as messages from './messages';
 const json = 'application/json';
 
 function fetchJSON(endpoint, body, callback, sendLDHeaders) {
-  const xhr = new XMLHttpRequest();
+  const xhr = new window.XMLHttpRequest();
   let data = undefined;
 
   xhr.addEventListener('load', () => {

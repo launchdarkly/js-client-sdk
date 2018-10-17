@@ -237,10 +237,10 @@ export function initialize(env, user, options = {}) {
 
   function doNotTrack() {
     let flag;
-    if (navigator && navigator.doNotTrack !== undefined) {
-      flag = navigator.doNotTrack; // FF, Chrome
-    } else if (navigator && navigator.msDoNotTrack !== undefined) {
-      flag = navigator.msDoNotTrack; // IE 9/10
+    if (window.navigator && window.navigator.doNotTrack !== undefined) {
+      flag = window.navigator.doNotTrack; // FF, Chrome
+    } else if (window.navigator && window.navigator.msDoNotTrack !== undefined) {
+      flag = window.navigator.msDoNotTrack; // IE 9/10
     } else {
       flag = window.doNotTrack; // IE 11+, Safari
     }
@@ -460,7 +460,7 @@ export function initialize(env, user, options = {}) {
   } else if (
     typeof options.bootstrap === 'string' &&
     options.bootstrap.toUpperCase() === 'LOCALSTORAGE' &&
-    !!localStorage
+    !!window.localStorage
   ) {
     useLocalStorage = true;
 
@@ -520,11 +520,11 @@ export function initialize(env, user, options = {}) {
   }
 
   function watchLocation(interval, callback) {
-    let previousUrl = location.href;
+    let previousUrl = window.location.href;
     let currentUrl;
 
     function checkUrl() {
-      currentUrl = location.href;
+      currentUrl = window.location.href;
 
       if (currentUrl !== previousUrl) {
         previousUrl = currentUrl;
@@ -541,7 +541,7 @@ export function initialize(env, user, options = {}) {
 
     poll(checkUrl, interval);
 
-    if (!!(window.history && history.pushState)) {
+    if (!!(window.history && window.history.pushState)) {
       window.addEventListener('popstate', checkUrl);
     } else {
       window.addEventListener('hashchange', checkUrl);

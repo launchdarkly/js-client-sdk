@@ -17,7 +17,7 @@ export default function Store(environment, hash, ident) {
     const key = getFlagsKey();
     let dataStr, data;
     try {
-      dataStr = localStorage.getItem(key);
+      dataStr = window.localStorage.getItem(key);
     } catch (ex) {
       console.warn(messages.localStorageUnavailable());
       return null;
@@ -41,7 +41,7 @@ export default function Store(environment, hash, ident) {
     const key = getFlagsKey();
     const data = utils.extend({}, flags, { $schema: 1 });
     try {
-      localStorage.setItem(key, JSON.stringify(data));
+      window.localStorage.setItem(key, JSON.stringify(data));
     } catch (ex) {
       console.warn(messages.localStorageUnavailable());
     }
@@ -50,7 +50,7 @@ export default function Store(environment, hash, ident) {
   store.clearFlags = function() {
     const key = getFlagsKey();
     try {
-      localStorage.removeItem(key);
+      window.localStorage.removeItem(key);
     } catch (ex) {}
   };
 

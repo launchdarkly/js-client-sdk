@@ -10,7 +10,7 @@ export default function EventSender(eventsUrl, environmentId, forceHasCors, imag
   const sender = {};
 
   function loadUrlUsingImage(src, onDone) {
-    const img = new Image();
+    const img = new window.Image();
     if (onDone) {
       img.addEventListener('load', onDone);
     }
@@ -34,7 +34,7 @@ export default function EventSender(eventsUrl, environmentId, forceHasCors, imag
     const jsonBody = JSON.stringify(events);
     const send = onDone => {
       function createRequest(canRetry) {
-        const xhr = new XMLHttpRequest();
+        const xhr = new window.XMLHttpRequest();
         xhr.open('POST', postUrl, !sync);
         utils.addLDHeaders(xhr);
         xhr.setRequestHeader('Content-Type', 'application/json');
@@ -76,7 +76,7 @@ export default function EventSender(eventsUrl, environmentId, forceHasCors, imag
     // Detect browser support for CORS (can be overridden by tests)
     if (hasCors === undefined) {
       if (forceHasCors === undefined) {
-        hasCors = 'withCredentials' in new XMLHttpRequest();
+        hasCors = 'withCredentials' in new window.XMLHttpRequest();
       } else {
         hasCors = forceHasCors;
       }

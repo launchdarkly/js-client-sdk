@@ -7,7 +7,7 @@ describe('Store', () => {
 
   it('should handle localStorage getItem throwing an exception', () => {
     const store = Store('env', 'hash', ident);
-    const getItemSpy = jest.spyOn(localStorage, 'getItem').mockImplementation(() => {
+    const getItemSpy = jest.spyOn(window.localStorage, 'getItem').mockImplementation(() => {
       throw new Error('localstorage getitem error');
     });
 
@@ -22,7 +22,7 @@ describe('Store', () => {
 
   it('should handle localStorage setItem throwing an exception', () => {
     const store = Store('env', 'hash', ident);
-    const setItemSpy = jest.spyOn(localStorage, 'setItem').mockImplementation(() => {
+    const setItemSpy = jest.spyOn(window.localStorage, 'setItem').mockImplementation(() => {
       throw new Error('localstorage getitem error');
     });
 

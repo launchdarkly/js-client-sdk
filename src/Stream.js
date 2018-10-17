@@ -24,7 +24,7 @@ export default function Stream(baseUrl, environment, hash, config) {
   };
 
   stream.isConnected = function() {
-    return es && (es.readyState === EventSource.OPEN || es.readyState === EventSource.CONNECTING);
+    return es && (es.readyState === window.EventSource.OPEN || es.readyState === window.EventSource.CONNECTING);
   };
 
   function reconnect() {
@@ -45,7 +45,7 @@ export default function Stream(baseUrl, environment, hash, config) {
   function openConnection() {
     let url;
     let query = '';
-    if (typeof EventSource !== 'undefined') {
+    if (typeof window.EventSource !== 'undefined') {
       if (useReport) {
         // we don't yet have an EventSource implementation that supports REPORT, so
         // fall back to the old ping-based stream
