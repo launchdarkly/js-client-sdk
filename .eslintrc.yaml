@@ -6,51 +6,105 @@ extends:
 env:
   es6: true
   node: true
-  browser: true
 plugins:
   - babel
   - prettier
 globals:
   VERSION: true
+  describe: true
+  it: true
+  expect: true
+  jest: true
+  beforeEach: true
+  afterEach: true
+  window: true
+  document: true
 rules:
+  # https://github.com/prettier/eslint-plugin-prettier
   prettier/prettier:
     - error
+  
+  # https://github.com/babel/eslint-plugin-babel
+  babel/semi: error
+
+  # https://eslint.org/docs/rules/array-callback-return
   array-callback-return: error
+
+  # https://eslint.org/docs/rules/curly
   curly:
     - error
     - all
+
+  # https://eslint.org/docs/rules/no-implicit-coercion
   no-implicit-coercion:
     - 'off'
     - boolean: false
       number: true
       string: true
       allow: []
+
+  # https://eslint.org/docs/rules/no-eval
   no-eval: error
+
+  # https://eslint.org/docs/rules/no-implied-eval
   no-implied-eval: error
+
+  # https://eslint.org/docs/rules/no-param-reassign
   no-param-reassign:
     - error
     - props: true
+  
+  # https://eslint.org/docs/rules/no-return-assign
   no-return-assign: error
+
+  # https://eslint.org/docs/rules/no-self-compare
   no-self-compare: error
+
+  # https://eslint.org/docs/rules/radix
   radix: error
+
+  # https://eslint.org/docs/rules/no-array-constructor
   no-array-constructor: error
+
+  # https://eslint.org/docs/rules/no-new-wrappers
   no-new-wrappers: error
+
+  # https://eslint.org/docs/rules/no-cond-assign
   no-cond-assign: error
+
+  # https://eslint.org/docs/rules/no-use-before-define
   no-use-before-define:
     - error
     - functions: false
+
+  # https://eslint.org/docs/rules/eqeqeq
   eqeqeq: error
 
   # Deprecations are required to turn enforce this
   camelcase: warn
-  
+
+  # https://eslint.org/docs/rules/no-new-object
   no-new-object: error
+
+  # https://eslint.org/docs/rules/no-nested-ternary
   no-nested-ternary: error
+
+  # https://eslint.org/docs/rules/no-unused-vars
   no-unused-vars: error
+
+  # https://eslint.org/docs/rules/no-var
   no-var: error
+
+  # https://eslint.org/docs/rules/prefer-const
   prefer-const: error
+
+  # https://eslint.org/docs/rules/prefer-arrow-callback
   prefer-arrow-callback: error
+
+  # https://eslint.org/docs/rules/arrow-body-style
   arrow-body-style:
     - error
     - as-needed
-  babel/semi: error
+
+  # https://eslint.org/docs/rules/no-undef
+  no-undef: error

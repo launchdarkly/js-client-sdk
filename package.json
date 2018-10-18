@@ -1,4 +1,5 @@
 {
+  "version": "2.7.2",
   "name": "root",
   "private": true,
   "devDependencies": {

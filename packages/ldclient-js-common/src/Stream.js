@@ -28,11 +28,11 @@ export default function Stream(platform, config, environment, hash) {
   stream.disconnect = function() {
     clearTimeout(reconnectTimeoutReference);
     reconnectTimeoutReference = null;
-    close();
+    closeConnection();
   };
 
   stream.isConnected = function() {
-    return es && (es.readyState === EventSource.OPEN || es.readyState === EventSource.CONNECTING);
+    return es && (es.readyState === window.EventSource.OPEN || es.readyState === window.EventSource.CONNECTING);
   };
 
   function reconnect() {

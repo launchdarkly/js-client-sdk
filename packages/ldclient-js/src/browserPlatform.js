@@ -2,15 +2,15 @@ export default function makeBrowserPlatform() {
   const ret = {};
 
   // XMLHttpRequest may not exist if we're running in a server-side rendering context
-  if (XMLHttpRequest) {
-    ret.newHttpRequest = () => new XMLHttpRequest();
+  if (window.XMLHttpRequest) {
+    ret.newHttpRequest = () => new window.XMLHttpRequest();
   }
 
   let hasCors;
   ret.httpAllowsPost = () => {
     // We compute this lazily because calling XMLHttpRequest() at initialization time can disrupt tests
     if (hasCors === undefined) {
-      hasCors = XMLHttpRequest ? 'withCredentials' in new XMLHttpRequest() : false;
+      hasCors = window.XMLHttpRequest ? 'withCredentials' in new window.XMLHttpRequest() : false;
     }
     return hasCors;
   };
@@ -20,7 +20,7 @@ export default function makeBrowserPlatform() {
   ret.isDoNotTrack = () => {
     let flag;
     if (window.navigator && window.navigator.doNotTrack !== undefined) {
-      flag = navigator.doNotTrack; // FF, Chrome
+      flag = window.navigator.doNotTrack; // FF, Chrome
     } else if (window.navigator && window.navigator.msDoNotTrack !== undefined) {
       flag = window.navigator.msDoNotTrack; // IE 9/10
     } else {

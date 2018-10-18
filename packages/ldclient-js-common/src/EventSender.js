@@ -9,7 +9,7 @@ export default function EventSender(platform, eventsUrl, environmentId, imageCre
   const sender = {};
 
   function loadUrlUsingImage(src, onDone) {
-    const img = new Image();
+    const img = new window.Image();
     if (onDone) {
       img.addEventListener('load', onDone);
     }

@@ -393,7 +393,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   } else if (
     typeof options.bootstrap === 'string' &&
     options.bootstrap.toUpperCase() === 'LOCALSTORAGE' &&
-    !!localStorage
+    !!window.localStorage
   ) {
     useLocalStorage = true;
 
