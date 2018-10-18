@@ -48,11 +48,11 @@ export default function GoalManager(clientVars, readyCallback) {
   }
 
   function watchLocation(interval, callback) {
-    let previousUrl = location.href;
+    let previousUrl = window.location.href;
     let currentUrl;
 
     function checkUrl() {
-      currentUrl = location.href;
+      currentUrl = window.location.href;
 
       if (currentUrl !== previousUrl) {
         previousUrl = currentUrl;
@@ -69,7 +69,7 @@ export default function GoalManager(clientVars, readyCallback) {
 
     poll(checkUrl, interval);
 
-    if (!!(window.history && history.pushState)) {
+    if (!!(window.history && window.history.pushState)) {
       window.addEventListener('popstate', checkUrl);
     } else {
       window.addEventListener('hashchange', checkUrl);
