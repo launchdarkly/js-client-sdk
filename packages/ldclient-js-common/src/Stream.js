@@ -1,10 +1,12 @@
 import { base64URLEncode } from './utils';
 
 // The underlying event source implementation is abstracted via the platform object, which should
-// have these two properties:
+// have these three properties:
 // eventSourceFactory(): a function that takes a URL and optional request body and returns an object
 //   with the same methods as the regular HTML5 EventSource object. Passing a body parameter means
 //   that the request should use REPORT instead of GET.
+// eventSourceIsActive(): a function that takes an EventSource-compatible object and returns true if
+//   it is in an active state (connected or connecting).
 // eventSourceAllowsReport: true if REPORT is supported.
 
 export default function Stream(platform, config, environment, hash) {
@@ -32,7 +34,7 @@ export default function Stream(platform, config, environment, hash) {
   };
 
   stream.isConnected = function() {
-    return es && (es.readyState === window.EventSource.OPEN || es.readyState === window.EventSource.CONNECTING);
+    return es && platform.eventSourceIsActive && platform.eventSourceIsActive(es);
   };
 
   function reconnect() {

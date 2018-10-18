@@ -19,6 +19,8 @@ export function defaults() {
       es.requestBody = body;
       return es;
     },
+    eventSourceIsActive: es =>
+      es.readyState === EventSource.OPEN || es.readyState === EventSource.CONNECTING,
   };
 }
 
