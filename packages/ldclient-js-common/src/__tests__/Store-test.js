@@ -1,13 +1,15 @@
+import * as stubPlatform from './stubPlatform';
 import * as messages from '../messages';
 import Identity from '../Identity';
 import Store from '../Store';
 
 describe('Store', () => {
+  const platform = stubPlatform.defaults();
   const ident = Identity(null);
 
   it('should handle localStorage getItem throwing an exception', () => {
-    const store = Store('env', 'hash', ident);
-    const getItemSpy = jest.spyOn(window.localStorage, 'getItem').mockImplementation(() => {
+    const store = Store(platform, 'env', 'hash', ident);
+    const getItemSpy = jest.spyOn(platform.localStorage, 'getItem').mockImplementation(() => {
       throw new Error('localstorage getitem error');
     });
 
@@ -21,8 +23,8 @@ describe('Store', () => {
   });
 
   it('should handle localStorage setItem throwing an exception', () => {
-    const store = Store('env', 'hash', ident);
-    const setItemSpy = jest.spyOn(window.localStorage, 'setItem').mockImplementation(() => {
+    const store = Store(platform, 'env', 'hash', ident);
+    const setItemSpy = jest.spyOn(platform.localStorage, 'setItem').mockImplementation(() => {
       throw new Error('localstorage getitem error');
     });
 

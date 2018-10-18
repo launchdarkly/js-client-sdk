@@ -1,7 +1,7 @@
 import * as messages from './messages';
 import * as utils from './utils';
 
-export default function Store(environment, hash, ident) {
+export default function Store(localStorageProvider, environment, hash, ident) {
   const store = {};
 
   function getFlagsKey() {
@@ -17,7 +17,7 @@ export default function Store(environment, hash, ident) {
     const key = getFlagsKey();
     let dataStr, data;
     try {
-      dataStr = window.localStorage.getItem(key);
+      dataStr = localStorageProvider.getItem(key);
     } catch (ex) {
       console.warn(messages.localStorageUnavailable());
       return null;
@@ -41,7 +41,7 @@ export default function Store(environment, hash, ident) {
     const key = getFlagsKey();
     const data = utils.extend({}, flags, { $schema: 1 });
     try {
-      window.localStorage.setItem(key, JSON.stringify(data));
+      localStorageProvider.setItem(key, JSON.stringify(data));
     } catch (ex) {
       console.warn(messages.localStorageUnavailable());
     }
@@ -50,7 +50,7 @@ export default function Store(environment, hash, ident) {
   store.clearFlags = function() {
     const key = getFlagsKey();
     try {
-      window.localStorage.removeItem(key);
+      localStorageProvider.removeItem(key);
     } catch (ex) {}
   };
 

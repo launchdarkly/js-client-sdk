@@ -1,6 +1,7 @@
 import sinon from 'sinon';
 import EventSource, { sources } from './EventSource-mock';
 
+import * as LDClient from '../index';
 import { btoa } from '../utils';
 import * as stubPlatform from './stubPlatform';
 
@@ -144,8 +145,9 @@ describe('LDClient', () => {
     });
 
     it('updates local storage for put message if using local storage', done => {
-      window.localStorage.setItem(lsKey, '{"enable-foo":false}');
-      const client = stubPlatform.makeClient(envName, user, { bootstrap: 'localstorage' });
+      const platform = stubPlatform.defaults();
+      platform.localStorage.setItem(lsKey, '{"enable-foo":false}');
+      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' }, platform).client;
 
       client.on('ready', () => {
         client.on('change', () => {});
@@ -155,7 +157,7 @@ describe('LDClient', () => {
         });
 
         expect(client.variation('enable-foo')).toEqual(true);
-        expect(JSON.parse(window.localStorage.getItem(lsKey))).toEqual({
+        expect(JSON.parse(platform.localStorage.getItem(lsKey))).toEqual({
           $schema: 1,
           'enable-foo': { value: true, version: 1 },
         });
@@ -288,8 +290,9 @@ describe('LDClient', () => {
     });
 
     it('updates local storage for patch message if using local storage', done => {
-      window.localStorage.setItem(lsKey, '{"enable-foo":false}');
-      const client = stubPlatform.makeClient(envName, user, { bootstrap: 'localstorage' });
+      const platform = stubPlatform.defaults();
+      platform.localStorage.setItem(lsKey, '{"enable-foo":false}');
+      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' }, platform).client;
 
       client.on('ready', () => {
         client.on('change', () => {});
@@ -299,7 +302,7 @@ describe('LDClient', () => {
         });
 
         expect(client.variation('enable-foo')).toEqual(true);
-        expect(JSON.parse(window.localStorage.getItem(lsKey))).toEqual({
+        expect(JSON.parse(platform.localStorage.getItem(lsKey))).toEqual({
           $schema: 1,
           'enable-foo': { value: true, version: 1 },
         });
@@ -428,8 +431,9 @@ describe('LDClient', () => {
     });
 
     it('updates local storage for delete message if using local storage', done => {
-      window.localStorage.setItem(lsKey, '{"enable-foo":false}');
-      const client = stubPlatform.makeClient(envName, user, { bootstrap: 'localstorage' });
+      const platform = stubPlatform.defaults();
+      platform.localStorage.setItem(lsKey, '{"enable-foo":false}');
+      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' }, platform).client;
 
       client.on('ready', () => {
         client.on('change', () => {});
@@ -439,7 +443,7 @@ describe('LDClient', () => {
         });
 
         expect(client.variation('enable-foo')).toEqual(undefined);
-        expect(JSON.parse(window.localStorage.getItem(lsKey))).toEqual({
+        expect(JSON.parse(platform.localStorage.getItem(lsKey))).toEqual({
           $schema: 1,
           'enable-foo': { version: 1, deleted: true },
         });
