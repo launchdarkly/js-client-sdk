@@ -26,7 +26,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   const hash = options.hash;
   const sendEvents = options.sendEvents;
   const environment = env;
-  const stream = Stream(options, environment, hash);
+  const stream = Stream(platform, options, environment, hash);
   const events = options.eventProcessor || EventProcessor(options, environment, emitter);
   const requestor = Requestor(options, environment);
   const seenRequests = {};

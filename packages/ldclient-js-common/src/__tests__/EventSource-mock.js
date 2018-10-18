@@ -1,6 +1,10 @@
 import EventEmitter from 'events';
 
-export const sources = {};
+export let sources = {};
+
+export function resetSources() {
+  sources = {};
+}
 
 export default function EventSource(url) {
   sources[url] = this;

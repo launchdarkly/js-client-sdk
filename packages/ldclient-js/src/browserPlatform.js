@@ -12,5 +12,7 @@ export default function makeBrowserPlatform() {
     }
     return flag === 1 || flag === true || flag === '1' || flag === 'yes';
   };
+  ret.eventSourceFactory = url => new window.EventSource(url);
+  ret.eventSourceAllowsReport = false;
   return ret;
 }

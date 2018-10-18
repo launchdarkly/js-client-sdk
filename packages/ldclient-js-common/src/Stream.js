@@ -1,9 +1,16 @@
 import { base64URLEncode } from './utils';
 
-export default function Stream(config, environment, hash) {
+// The underlying event source implementation is abstracted via the platform object, which should
+// have these two properties:
+// eventSourceFactory(): a function that takes a URL and optional request body and returns an object
+//   with the same methods as the regular HTML5 EventSource object. Passing a body parameter means
+//   that the request should use REPORT instead of GET.
+// eventSourceAllowsReport: true if REPORT is supported.
+
+export default function Stream(platform, config, environment, hash) {
   const baseUrl = config.streamUrl;
   const stream = {};
-  const evalUrlPrefix = baseUrl + '/eval/' + environment + '/';
+  const evalUrlPrefix = baseUrl + '/eval/' + environment;
   const useReport = config.useReport;
   const withReasons = config.evaluationReasons;
   const streamReconnectDelay = config.streamReconnectDelay;
@@ -45,17 +52,23 @@ export default function Stream(config, environment, hash) {
 
   function openConnection() {
     let url;
+    let body;
     let query = '';
-    if (typeof EventSource !== 'undefined') {
+    if (platform.eventSourceFactory) {
+      if (hash !== null && hash !== undefined) {
+        query = 'h=' + hash;
+      }
       if (useReport) {
-        // we don't yet have an EventSource implementation that supports REPORT, so
-        // fall back to the old ping-based stream
-        url = baseUrl + '/ping/' + environment;
-      } else {
-        url = evalUrlPrefix + base64URLEncode(JSON.stringify(user));
-        if (hash !== null && hash !== undefined) {
-          query = 'h=' + hash;
+        if (platform.eventSourceAllowsReport) {
+          url = evalUrlPrefix;
+          body = JSON.stringify(user);
+        } else {
+          // if we can't do REPORT, fall back to the old ping-based stream
+          url = baseUrl + '/ping/' + environment;
+          query = '';
         }
+      } else {
+        url = evalUrlPrefix + '/' + base64URLEncode(JSON.stringify(user));
       }
       if (withReasons) {
         query = query + (query ? '&' : '') + 'withReasons=true';
@@ -63,7 +76,7 @@ export default function Stream(config, environment, hash) {
       url = url + (query ? '?' : '') + query;
 
       closeConnection();
-      es = new window.EventSource(url);
+      es = platform.eventSourceFactory(url, body);
       for (const key in handlers) {
         if (handlers.hasOwnProperty(key)) {
           es.addEventListener(key, handlers[key]);

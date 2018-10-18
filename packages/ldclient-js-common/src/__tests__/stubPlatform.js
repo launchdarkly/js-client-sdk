@@ -1,3 +1,4 @@
+import EventSource from './EventSource-mock';
 import * as LDClient from '../index';
 
 let currentUrl = null;
@@ -7,6 +8,11 @@ export function stubEnvironment() {
   return {
     getCurrentUrl: () => currentUrl,
     isDoNotTrack: () => doNotTrack,
+    eventSourceFactory: (url, body) => {
+      const es = new EventSource(url);
+      es.requestBody = body;
+      return es;
+    },
   };
 }
 
