@@ -64,3 +64,7 @@ export const httpErrorMessage = function(status, context, retryMessage) {
     (errors.isHttpErrorRecoverable(status) ? retryMessage : 'giving up permanently')
   );
 };
+
+export const httpUnavailable = function() {
+  return 'Cannot make HTTP requests in this environment.' + docLink;
+};

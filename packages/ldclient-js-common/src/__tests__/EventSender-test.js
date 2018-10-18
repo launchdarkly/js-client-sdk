@@ -1,10 +1,13 @@
 import Base64 from 'Base64';
 import sinon from 'sinon';
 
+import * as stubPlatform from './stubPlatform';
 import EventSender from '../EventSender';
 import * as utils from '../utils';
 
 describe('EventSender', () => {
+  const platform = stubPlatform.defaults();
+  const platformWithoutCors = Object.assign({}, platform, { httpAllowsPost: () => false });
   let sandbox;
   let xhr;
   let requests = [];
@@ -58,7 +61,7 @@ describe('EventSender', () => {
   describe('using image endpoint when CORS is not available', () => {
     it('should encode events in a single chunk if they fit', () => {
       const imageCreator = fakeImageCreator();
-      const sender = EventSender(eventsUrl, envId, false, imageCreator);
+      const sender = EventSender(platformWithoutCors, eventsUrl, envId, imageCreator);
       const event1 = { kind: 'identify', key: 'userKey1' };
       const event2 = { kind: 'identify', key: 'userKey2' };
       const events = [event1, event2];
@@ -72,7 +75,7 @@ describe('EventSender', () => {
 
     it('should send events in multiple chunks if necessary', () => {
       const imageCreator = fakeImageCreator();
-      const sender = EventSender(eventsUrl, envId, false, imageCreator);
+      const sender = EventSender(platformWithoutCors, eventsUrl, envId, imageCreator);
       const events = [];
       for (let i = 0; i < 80; i++) {
         events.push({ kind: 'identify', key: 'thisIsALongUserKey' + i });
@@ -89,7 +92,7 @@ describe('EventSender', () => {
 
     it('should set a completion handler', () => {
       const imageCreator = fakeImageCreator();
-      const sender = EventSender(eventsUrl, envId, false, imageCreator);
+      const sender = EventSender(platformWithoutCors, eventsUrl, envId, imageCreator);
       const event1 = { kind: 'identify', key: 'userKey1' };
 
       sender.sendEvents([event1], false);
@@ -100,7 +103,7 @@ describe('EventSender', () => {
 
   describe('using POST when CORS is available', () => {
     it('should send asynchronously', () => {
-      const sender = EventSender(eventsUrl, envId, true);
+      const sender = EventSender(platform, eventsUrl, envId);
       const event = { kind: 'identify', key: 'userKey' };
       sender.sendEvents([event], false);
       requests[0].respond();
@@ -110,7 +113,7 @@ describe('EventSender', () => {
     });
 
     it('should send synchronously', () => {
-      const sender = EventSender(eventsUrl, envId, true);
+      const sender = EventSender(platform, eventsUrl, envId);
       const event = { kind: 'identify', key: 'userKey' };
       sender.sendEvents([event], true);
       lastRequest().respond();
@@ -118,7 +121,7 @@ describe('EventSender', () => {
     });
 
     it('should send all events in request body', () => {
-      const sender = EventSender(eventsUrl, envId, true);
+      const sender = EventSender(platform, eventsUrl, envId);
       const events = [];
       for (let i = 0; i < 80; i++) {
         events.push({ kind: 'identify', key: 'thisIsALongUserKey' + i });
@@ -132,7 +135,7 @@ describe('EventSender', () => {
     });
 
     it('should send custom user-agent header', () => {
-      const sender = EventSender(eventsUrl, envId, true);
+      const sender = EventSender(platform, eventsUrl, envId);
       const event = { kind: 'identify', key: 'userKey' };
       sender.sendEvents([event], false);
       lastRequest().respond();
@@ -143,7 +146,7 @@ describe('EventSender', () => {
     for (const i in retryableStatuses) {
       const status = retryableStatuses[i];
       it('should retry on error ' + status, () => {
-        const sender = EventSender(eventsUrl, envId, true);
+        const sender = EventSender(platform, eventsUrl, envId);
         const event = { kind: 'false', key: 'userKey' };
         sender.sendEvents([event], false);
         requests[0].respond(status);
@@ -153,7 +156,7 @@ describe('EventSender', () => {
     }
 
     it('should not retry more than once', () => {
-      const sender = EventSender(eventsUrl, envId, true);
+      const sender = EventSender(platform, eventsUrl, envId);
       const event = { kind: 'false', key: 'userKey' };
       sender.sendEvents([event], false);
       requests[0].respond(503);
@@ -163,7 +166,7 @@ describe('EventSender', () => {
     });
 
     it('should not retry on error 401', () => {
-      const sender = EventSender(eventsUrl, envId, true);
+      const sender = EventSender(platform, eventsUrl, envId);
       const event = { kind: 'false', key: 'userKey' };
       sender.sendEvents([event], false);
       requests[0].respond(401);
@@ -171,12 +174,21 @@ describe('EventSender', () => {
     });
 
     it('should retry on I/O error', () => {
-      const sender = EventSender(eventsUrl, envId, true);
+      const sender = EventSender(platform, eventsUrl, envId);
       const event = { kind: 'false', key: 'userKey' };
       sender.sendEvents([event], false);
       requests[0].error();
       expect(requests.length).toEqual(2);
       expect(JSON.parse(requests[1].requestBody)).toEqual([event]);
+    });
+  });
+
+  describe('When HTTP requests are not available at all', () => {
+    it('should silently discard events', () => {
+      const sender = EventSender(stubPlatform.withoutHttp(), eventsUrl, envId);
+      const event = { kind: 'false', key: 'userKey' };
+      sender.sendEvents([event], false);
+      expect(requests.length).toEqual(0);
     });
   });
 });
