@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "strict": true,
+    "lib": [
+      "es6"
+    ]
+  },
+  "files": [
+    "typings.d.ts",
+    "test-types.ts"
+  ]
+}

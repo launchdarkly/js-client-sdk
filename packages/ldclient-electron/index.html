@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1" />
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+    <script src="https://unpkg.com/event-source-polyfill@0.0.12/src/eventsource.min.js"></script>
+    <script src="./dist/ldclient.js"></script>
+  </head>
+  <body>
+    <h1>Production Settings</h1>
+    <ul>
+      <li><code>client-side-flag</code>: <span class="prod-client-side-flag">initializing…</span></li>
+      <li><code>another-client-side-flag</code>: <span class="prod-another-client-side-flag">initializing…</span></li>
+    </ul>
+    
+    <button class="prod-switch-user">Change user</button>
+    <button class="prod-change-hash">Change hash fragment</button>
+    <button class="prod-change-url">Change url</button>
+
+    <h1>Test Settings</h1>
+    <ul>
+      <li><code>client-side-flag</code>: <span class="test-client-side-flag">initializing…</span></li>
+      <li><code>another-client-side-flag</code>: <span class="test-another-client-side-flag">initializing…</span></li>
+    </ul>
+    
+    <button class="test-switch-user">Change user</button>
+    <button class="test-change-hash">Change hash fragment</button>
+    <button class="test-change-url">Change url</button>
+    
+    <script>
+      var switched = false;
+      var user = {key: 'foobar.com'};
+      var clientProd = LDClient.initialize('569f514183f2164430000004', user);
+      var clientTest = LDClient.initialize('569f514183f2164430000005', user, {
+        bootstrap: {
+          'client-side-flag': false,
+          'another-client-side-flag': false
+        },
+        hash: 'c31e052b7b474e6e5f0c182144907e6fb6e55f20f5e7bc41b0b61624b16b5316',
+        baseUrl: 'http://localhost',
+        eventsUrl: 'http://localhost',
+        streamUrl: 'http://localhost:5050',
+        useReport: true
+      });
+
+      function main(env) {
+        render(env, 'client-side-flag', false);
+        render(env, 'another-client-side-flag', false);
+        // setTimeout(main, 2000);
+      }
+      
+      function render(env, key, defaultValue) {
+        var value = clientProd.variation(key, defaultValue);
+        var el = document.querySelector('.' + env + '-' + key);
+        el.innerHTML = value.toString();
+      }
+
+      //production
+      clientProd.on('ready', function() {
+        console.log('client is ready');
+        main('prod');
+      });
+      
+      clientProd.on('change', function(settings) {
+        console.log('flags changed:', settings);
+        main('prod');
+      });
+      
+      clientProd.on('change:another-client-side-flag', function(value, previous) {
+        console.log('another-client-side-flag changed:', value, '(' + previous + ')');
+        main('prod');
+      });
+    
+      
+      document.querySelector('.prod-switch-user').addEventListener('click', function(event) {
+        var key = switched ? 'foobar.com' : 'barfoo.com';
+        clientProd.identify({key: key}, null, function() {
+          switched = !switched;
+          console.log('switched to', key);
+          render('prod', 'another-client-side-flag', false);
+        });
+      });
+      document.querySelector('.prod-change-hash').addEventListener('click', function(event) {
+        location.hash = new Date().getTime().toString();
+      });
+      document.querySelector('.prod-change-url').addEventListener('click', function(event) {
+        history.pushState(null, null, new Date().getTime().toString());
+      });
+
+      //test
+      clientTest.on('ready', function() {
+        console.log('client is ready');
+        main('test');
+      });
+      
+      clientTest.on('change', function(settings) {
+        console.log('flags changed:', settings);
+        main('test');
+      });
+      
+      clientTest.on('change:another-client-side-flag', function(value, previous) {
+        console.log('another-client-side-flag changed:', value, '(' + previous + ')');
+        main('test');
+      });
+      
+      document.querySelector('.test-switch-user').addEventListener('click', function(event) {
+        var key = switched ? 'foobar.com' : 'barfoo.com';
+        clientTest.identify({key: key}, null, function() {
+          switched = !switched;
+          console.log('switched to', key);
+          render('test', 'another-client-side-flag', false);
+        });
+      });
+      document.querySelector('.test-change-hash').addEventListener('click', function(event) {
+        location.hash = new Date().getTime().toString();
+      });
+      document.querySelector('.test-change-url').addEventListener('click', function(event) {
+        history.pushState(null, null, new Date().getTime().toString());
+      });
+    </script>
+  </body>
+</html>

@@ -41,7 +41,5 @@ export default function makeBrowserPlatform() {
     ret.eventSourceAllowsReport = false;
   }
 
-  ret.eventSourceAllowsReport = false;
-
   return ret;
 }
