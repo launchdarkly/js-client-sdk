@@ -1,6 +1,13 @@
 {
-  "extends": "../../.babelrc",
+  "presets": [
+    [
+      "env",
+      {
+        "modules": false
+      }
+    ]
+  ],
   "ignore": [
-  	"node_modules"
+    "node_modules"
   ]
 }

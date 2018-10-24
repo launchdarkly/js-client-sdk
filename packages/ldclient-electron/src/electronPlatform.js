@@ -1,5 +1,5 @@
 import * as xmlhttprequest from 'xmlhttprequest';
-import EventSource from './eventsource';
+import EventSource from 'eventsource';
 
 export default function makeElectronPlatform() {
   const ret = {};
