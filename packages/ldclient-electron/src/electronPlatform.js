@@ -1,10 +1,10 @@
-const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
-const EventSource = require('./eventsource');
+import * as xmlhttprequest from 'xmlhttprequest';
+import EventSource from './eventsource';
 
-function makeElectronPlatform() {
+export default function makeElectronPlatform() {
   const ret = {};
 
-  ret.newHttpRequest = () => new XMLHttpRequest();
+  ret.newHttpRequest = () => new xmlhttprequest.XMLHttpRequest();
 
   ret.httpAllowsPost = () => true;
 
@@ -20,5 +20,3 @@ function makeElectronPlatform() {
 
   return ret;
 }
-
-module.exports = makeElectronPlatform;

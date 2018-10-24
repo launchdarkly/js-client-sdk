@@ -1,5 +1,5 @@
-const common = require('ldclient-js-common');
-const electronPlatform = require('./electronPlatform');
+import * as common from 'ldclient-js-common';
+import electronPlatform from './electronPlatform';
 
 // Pass our platform object to the common code to create the Electron version of the client
 export function initialize(env, user, options = {}) {
@@ -11,7 +11,4 @@ export function initialize(env, user, options = {}) {
   return clientVars.client;
 }
 
-module.exports = {
-  version: common.version,
-  initialize: initialize,
-};
+export const version = common.version;

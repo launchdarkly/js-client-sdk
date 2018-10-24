@@ -40,17 +40,14 @@ if (env === 'production') {
 const config = {
   plugins,
   input: 'src/index.js',
-  output: [
-    {
-      plugins,
-      name: 'LDClient',
-      file: './dist/ldclient-electron.js',
-      format: 'cjs',
-      sourcemap: true,
-    },
-    { file: pkg.main, format: 'cjs', sourcemap: true },
-    { file: pkg.module, format: 'es', sourcemap: true },
-  ],
+  output: {
+    plugins,
+    name: 'LDClient',
+    file: './dist/ldclient-electron.js',
+    format: 'cjs',
+    sourcemap: true,
+  },
+  external: Object.keys(pkg.dependencies),
 };
 
 module.exports = config;

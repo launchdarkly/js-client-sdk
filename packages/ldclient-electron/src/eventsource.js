@@ -1,10 +1,11 @@
 // taken from https://github.com/aslakhellesoy/eventsource-node/blob/v0.1.6/package.json
 
-const parse = require('url').parse,
-  events = require('events'),
-  https = require('https'),
-  http = require('http'),
-  util = require('util');
+import * as url from 'url';
+const parse = url.parse;
+import * as events from 'events';
+import * as https from 'https';
+import * as http from 'http';
+import * as util from 'util';
 
 function isPlainObject(obj) {
   return Object.getPrototypeOf(obj) === Object.prototype;
@@ -17,7 +18,7 @@ function isPlainObject(obj) {
  * @param {Object} eventSourceOptions extra init params. See README for details.
  * @api public
  **/
-function EventSource(url, eventSourceOptions) {
+export default function EventSource(url, eventSourceOptions) {
   let connectUrl = url;
   let readyState = EventSource.CONNECTING;
   const eventSourceInitDict = eventSourceOptions;
@@ -244,8 +245,6 @@ function EventSource(url, eventSourceOptions) {
     }
   }
 }
-
-module.exports = EventSource;
 
 util.inherits(EventSource, events.EventEmitter);
 EventSource.prototype.constructor = EventSource; // make stacktraces readable
