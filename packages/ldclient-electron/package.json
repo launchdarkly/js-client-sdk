@@ -10,8 +10,8 @@
     "client"
   ],
   "files": [
-    "ldclient-electron.cjs.js",
-    "ldclient-electron.cjs.js.map",
+    "ldclient-electron.js",
+    "ldclient-electron.js.map",
     "typings.d.ts"
   ],
   "types": "./typings.d.ts",
