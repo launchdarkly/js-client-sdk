@@ -15,7 +15,7 @@
     "typings.d.ts"
   ],
   "types": "./typings.d.ts",
-  "main": "lib/index.js",
+  "main": "dist/ldclient-electron.js",
   "scripts": {
     "lint": "eslint --format 'node_modules/eslint-formatter-pretty' --ignore-path ../../.eslintignore",
     "lint:all": "eslint --format 'node_modules/eslint-formatter-pretty' --ignore-path ../../.eslintignore src",
