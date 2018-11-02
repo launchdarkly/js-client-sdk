@@ -13,9 +13,17 @@ jobs:
       - run: $LERNA run lint:all
       - run: $LERNA run build
       - run:
+          command: cd ~/project/packages/ldclient-js-common && npm run test:junit
+          environment:
+            JEST_JUNIT_OUTPUT: "./reports/junit/js-common-test-results.xml"
+      - run:
           command: cd ~/project/packages/ldclient-js && npm run test:junit
           environment:
             JEST_JUNIT_OUTPUT: "./reports/junit/js-test-results.xml"
+      - run:
+          command: cd ~/project/packages/ldclient-electron && npm run test:junit
+          environment:
+            JEST_JUNIT_OUTPUT: "./reports/junit/electron-test-results.xml"
       - run: cd ~/project && $LERNA run check-typescript
       - store_test_results:
           path: reports/junit/
