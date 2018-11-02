@@ -28,8 +28,8 @@
     "build": "cross-env NODE_ENV=development rollup -c rollup.config.js",
     "build:min": "cross-env NODE_ENV=production rollup -c rollup.config.js",
     "build:watch": "cross-env npm run build -- -w",
-    "test": "NODE_ENV=test jest",
-    "test:junit": "NODE_ENV=test jest --testResultsProcessor jest-junit",
+    "test": "NODE_ENV=test ELECTRON_RUN_AS_NODE=true ./node_modules/.bin/electron ./node_modules/.bin/jest",
+    "test:junit": "NODE_ENV=test ELECTRON_RUN_AS_NODE=true ./node_modules/.bin/electron ./node_modules/.bin/jest --testResultsProcessor jest-junit",
     "check-typescript": "node_modules/typescript/bin/tsc",
     "clean": "rimraf dist/**",
     "prepublishOnly": "npm run build:min"
