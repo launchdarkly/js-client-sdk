@@ -3,6 +3,10 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.7.3] - 2018-11-09
+### Fixed:
+- The TypeScript definitions were incorrectly restricting the possible values for event types in `on()` and `off()`. Also, added documentation for event types which were not documented before. ([#122](https://github.com/launchdarkly/js-client/issues/122))
+
 ## [2.7.2] - 2018-10-17
 ### Fixed:
 - Disconnecting from the stream does not close the browser tab anymore. 
