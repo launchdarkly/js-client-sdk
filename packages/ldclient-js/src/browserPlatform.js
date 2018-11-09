@@ -32,6 +32,9 @@ export default function makeBrowserPlatform() {
   // If EventSource does not exist, the absence of eventSourceFactory will make us not try to open streams
   if (window.EventSource) {
     ret.eventSourceFactory = url => new window.EventSource(url);
+    ret.eventSourceIsActive = es =>
+      es.readyState === window.EventSource.OPEN || es.readyState === window.EventSource.CONNECTING;
+    ret.eventSourceAllowsReport = false;
   }
 
   ret.eventSourceAllowsReport = false;
