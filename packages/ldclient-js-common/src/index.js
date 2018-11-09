@@ -98,7 +98,10 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   }
 
   const ident = Identity(user, sendIdentifyEvent);
-  const store = Store(environment, hash, ident);
+  let store;
+  if (platform.localStorage) {
+    store = new Store(platform.localStorage, environment, hash, ident);
+  }
 
   function sendFlagEvent(key, detail, defaultValue) {
     const user = ident.getUser();
@@ -135,7 +138,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   }
 
   function identify(user, hash, onDone) {
-    if (useLocalStorage) {
+    if (useLocalStorage && store) {
       store.clearFlags();
     }
     return utils.wrapPromiseCallback(
@@ -326,7 +329,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   function postProcessSettingsUpdate(changes) {
     const keys = Object.keys(changes);
 
-    if (useLocalStorage) {
+    if (useLocalStorage && store) {
       store.saveFlags(flags);
     }
 
@@ -390,11 +393,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
 
   if (typeof options.bootstrap === 'object') {
     utils.onNextTick(signalSuccessfulInit);
-  } else if (
-    typeof options.bootstrap === 'string' &&
-    options.bootstrap.toUpperCase() === 'LOCALSTORAGE' &&
-    !!window.localStorage
-  ) {
+  } else if (typeof options.bootstrap === 'string' && options.bootstrap.toUpperCase() === 'LOCALSTORAGE' && store) {
     useLocalStorage = true;
 
     flags = store.loadFlags();
@@ -513,3 +512,4 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
 export const version = VERSION;
 export { errors };
 export { messages };
+export { utils };
