@@ -41,6 +41,7 @@ export function onNextTick(cb) {
 export function wrapPromiseCallback(promise, callback) {
   const ret = promise.then(
     value => {
+      console.log('******* value: ' + JSON.stringify(value));
       if (callback) {
         setTimeout(() => {
           callback(null, value);

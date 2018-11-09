@@ -2,12 +2,12 @@ import sinon from 'sinon';
 import EventSource, { sources } from './EventSource-mock';
 
 import * as LDClient from '../index';
-import { btoa } from '../utils';
+import * as utils from '../utils';
 import * as stubPlatform from './stubPlatform';
 
 describe('LDClient', () => {
   const envName = 'UNKNOWN_ENVIRONMENT_ID';
-  const lsKey = 'ld:UNKNOWN_ENVIRONMENT_ID:' + btoa('{"key":"user"}');
+  const lsKey = 'ld:UNKNOWN_ENVIRONMENT_ID:' + utils.btoa('{"key":"user"}');
   const user = { key: 'user' };
   const encodedUser = 'eyJrZXkiOiJ1c2VyIn0';
   const hash = '012345789abcde';
@@ -146,22 +146,25 @@ describe('LDClient', () => {
 
     it('updates local storage for put message if using local storage', done => {
       const platform = stubPlatform.defaults();
-      platform.localStorage.setItem(lsKey, '{"enable-foo":false}');
-      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' }, platform).client;
+      platform.localStorage.set(lsKey, '{"enable-foo":false}', () => {
+        const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' }, platform).client;
 
-      client.on('ready', () => {
-        client.on('change', () => {});
+        client.on('ready', () => {
+          client.on('change', () => {});
 
-        streamEvents().put({
-          data: '{"enable-foo":{"value":true,"version":1}}',
+          streamEvents().put({
+            data: '{"enable-foo":{"value":true,"version":1}}',
+          });
+
+          expect(client.variation('enable-foo')).toEqual(true);
+          platform.localStorage.get(lsKey, (err, value) => {
+            expect(JSON.parse(value)).toEqual({
+              $schema: 1,
+              'enable-foo': { value: true, version: 1 },
+            });
+            done();
+          });
         });
-
-        expect(client.variation('enable-foo')).toEqual(true);
-        expect(JSON.parse(platform.localStorage.getItem(lsKey))).toEqual({
-          $schema: 1,
-          'enable-foo': { value: true, version: 1 },
-        });
-        done();
       });
     });
 
@@ -291,22 +294,25 @@ describe('LDClient', () => {
 
     it('updates local storage for patch message if using local storage', done => {
       const platform = stubPlatform.defaults();
-      platform.localStorage.setItem(lsKey, '{"enable-foo":false}');
-      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' }, platform).client;
+      platform.localStorage.set(lsKey, '{"enable-foo":false}', () => {
+        const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' }, platform).client;
 
-      client.on('ready', () => {
-        client.on('change', () => {});
+        client.on('ready', () => {
+          client.on('change', () => {});
 
-        streamEvents().put({
-          data: '{"enable-foo":{"value":true,"version":1}}',
+          streamEvents().put({
+            data: '{"enable-foo":{"value":true,"version":1}}',
+          });
+
+          expect(client.variation('enable-foo')).toEqual(true);
+          platform.localStorage.get(lsKey, (err, value) => {
+            expect(JSON.parse(value)).toEqual({
+              $schema: 1,
+              'enable-foo': { value: true, version: 1 },
+            });
+            done();
+          });
         });
-
-        expect(client.variation('enable-foo')).toEqual(true);
-        expect(JSON.parse(platform.localStorage.getItem(lsKey))).toEqual({
-          $schema: 1,
-          'enable-foo': { value: true, version: 1 },
-        });
-        done();
       });
     });
 
@@ -432,22 +438,25 @@ describe('LDClient', () => {
 
     it('updates local storage for delete message if using local storage', done => {
       const platform = stubPlatform.defaults();
-      platform.localStorage.setItem(lsKey, '{"enable-foo":false}');
-      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' }, platform).client;
+      platform.localStorage.set(lsKey, '{"enable-foo":false}', () => {
+        const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' }, platform).client;
 
-      client.on('ready', () => {
-        client.on('change', () => {});
+        client.on('ready', () => {
+          client.on('change', () => {});
 
-        streamEvents().delete({
-          data: '{"key":"enable-foo","version":1}',
+          streamEvents().delete({
+            data: '{"key":"enable-foo","version":1}',
+          });
+
+          expect(client.variation('enable-foo')).toEqual(undefined);
+          platform.localStorage.get(lsKey, (err, value) => {
+            expect(JSON.parse(value)).toEqual({
+              $schema: 1,
+              'enable-foo': { version: 1, deleted: true },
+            });
+            done();
+          });
         });
-
-        expect(client.variation('enable-foo')).toEqual(undefined);
-        expect(JSON.parse(platform.localStorage.getItem(lsKey))).toEqual({
-          $schema: 1,
-          'enable-foo': { version: 1, deleted: true },
-        });
-        done();
       });
     });
 
@@ -466,7 +475,9 @@ describe('LDClient', () => {
           done();
         });
 
-        getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": {"value": true}}');
+        utils.onNextTick(() =>
+          getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": {"value": true}}')
+        );
       });
     });
   });

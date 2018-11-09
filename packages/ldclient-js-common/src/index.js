@@ -138,33 +138,38 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   }
 
   function identify(user, hash, onDone) {
-    if (useLocalStorage && store) {
-      store.clearFlags();
-    }
+    const clearFirst =
+      !useLocalStorage || !store ? Promise.resolve() : new Promise(resolve => store.clearFlags(resolve));
     return utils.wrapPromiseCallback(
-      new Promise((resolve, reject) => {
-        if (!user || user.key === null || user.key === undefined) {
-          const err = new errors.LDInvalidUserError(user ? messages.invalidUser() : messages.userNotSpecified());
-          emitter.maybeReportError(err);
-          reject(err);
-        } else {
-          ident.setUser(user);
-          requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
-            if (err) {
-              emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
-              return reject(err);
+      clearFirst.then(
+        () =>
+          new Promise((resolve, reject) => {
+            if (!user || user.key === null || user.key === undefined) {
+              const err = new errors.LDInvalidUserError(user ? messages.invalidUser() : messages.userNotSpecified());
+              emitter.maybeReportError(err);
+              reject(err);
+            } else {
+              ident.setUser(user);
+              requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
+                if (err) {
+                  emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+                  return reject(err);
+                }
+                const result = utils.transformVersionedValuesToValues(settings);
+                if (settings) {
+                  updateSettings(settings, () => {
+                    resolve(result);
+                  });
+                } else {
+                  resolve(result);
+                }
+                if (subscribedToChangeEvents) {
+                  connectStream();
+                }
+              });
             }
-            if (settings) {
-              updateSettings(settings);
-            }
-            resolve(utils.transformVersionedValuesToValues(settings));
-            if (subscribedToChangeEvents) {
-              connectStream();
-            }
-          });
-        }
-      }),
-      onDone
+        })),
+        onDone
     );
   }
 
@@ -300,7 +305,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     });
   }
 
-  function updateSettings(newFlags) {
+  function updateSettings(newFlags, callback) {
     const changes = {};
 
     if (!newFlags) {
@@ -323,15 +328,11 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     }
 
     flags = newFlags;
-    postProcessSettingsUpdate(changes);
+    postProcessSettingsUpdate(changes, callback);
   }
 
-  function postProcessSettingsUpdate(changes) {
+  function postProcessSettingsUpdate(changes, callback) {
     const keys = Object.keys(changes);
-
-    if (useLocalStorage && store) {
-      store.saveFlags(flags);
-    }
 
     if (keys.length > 0) {
       const changeEventParams = {};
@@ -350,6 +351,12 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
           sendFlagEvent(key, changes[key].current);
         });
       }
+    }
+
+    if (useLocalStorage && store) {
+      store.saveFlags(flags, callback);
+    } else {
+      callback && callback();
     }
   }
 
@@ -396,47 +403,48 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   } else if (typeof options.bootstrap === 'string' && options.bootstrap.toUpperCase() === 'LOCALSTORAGE' && store) {
     useLocalStorage = true;
 
-    flags = store.loadFlags();
-
-    if (flags === null) {
-      flags = {};
-      requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
-        if (err) {
-          const initErr = new errors.LDFlagFetchError(messages.errorFetchingFlags(err));
-          signalFailedInit(initErr);
-        } else {
-          if (settings) {
-            flags = settings;
-            store.saveFlags(flags);
+    store.loadFlags((err, storedFlags) => {
+      if (storedFlags === null || storedFlags === undefined) {
+        flags = {};
+        requestor.fetchFlagSettings(ident.getUser(), hash, (err, requestedFlags) => {
+          if (err) {
+            const initErr = new errors.LDFlagFetchError(messages.errorFetchingFlags(err));
+            signalFailedInit(initErr);
           } else {
-            flags = {};
+            if (requestedFlags) {
+              flags = requestedFlags;
+              store.saveFlags(flags); // Don't wait for this operation to complete
+            } else {
+              flags = {};
+            }
+            signalSuccessfulInit();
           }
-          signalSuccessfulInit();
-        }
-      });
-    } else {
-      // We're reading the flags from local storage. Signal that we're ready,
-      // then update localStorage for the next page load. We won't signal changes or update
-      // the in-memory flags unless you subscribe for changes
-      utils.onNextTick(signalSuccessfulInit);
+        });
+      } else {
+        // We're reading the flags from local storage. Signal that we're ready,
+        // then update localStorage for the next page load. We won't signal changes or update
+        // the in-memory flags unless you subscribe for changes
+        flags = storedFlags;
+        utils.onNextTick(signalSuccessfulInit);
 
-      requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
-        if (err) {
-          emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
-        }
-        if (settings) {
-          store.saveFlags(settings);
-        }
-      });
-    }
+        requestor.fetchFlagSettings(ident.getUser(), hash, (err, requestedFlags) => {
+          if (err) {
+            emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+          }
+          if (requestedFlags) {
+            store.saveFlags(requestedFlags, () => {}); // Don't wait for this operation to complete
+          }
+        });
+      }
+    });
   } else {
-    requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
+    requestor.fetchFlagSettings(ident.getUser(), hash, (err, requestedFlags) => {
       if (err) {
         flags = {};
         const initErr = new errors.LDFlagFetchError(messages.errorFetchingFlags(err));
         signalFailedInit(initErr);
       } else {
-        flags = settings || {};
+        flags = requestedFlags || {};
         signalSuccessfulInit();
       }
     });

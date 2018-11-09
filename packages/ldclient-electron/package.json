@@ -72,6 +72,7 @@
     "typescript": "3.0.1"
   },
   "dependencies": {
+    "electron-json-storage": "4.1.4",
     "eventsource": "1.0.7",
     "ldclient-js-common": "^2.7.1",
     "xmlhttprequest": "1.8.0"

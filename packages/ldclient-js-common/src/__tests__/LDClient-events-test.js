@@ -1,6 +1,7 @@
 import sinon from 'sinon';
 
 import * as stubPlatform from './stubPlatform';
+import * as utils from '../utils';
 
 describe('LDClient', () => {
   const envName = 'UNKNOWN_ENVIRONMENT_ID';
@@ -82,7 +83,7 @@ describe('LDClient', () => {
           expectIdentifyEvent(ep.events[1], user1);
           done();
         });
-        server.respond();
+        utils.onNextTick(() => server.respond());
       });
     });
 
@@ -99,7 +100,7 @@ describe('LDClient', () => {
           expect(ep.events.length).toEqual(0);
           done();
         });
-        server.respond();
+        utils.onNextTick(() => server.respond());
       });
     });
 

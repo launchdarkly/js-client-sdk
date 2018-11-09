@@ -4,36 +4,45 @@ import Identity from '../Identity';
 import Store from '../Store';
 
 describe('Store', () => {
-  const platform = stubPlatform.defaults();
   const ident = Identity(null);
 
-  it('should handle localStorage getItem throwing an exception', () => {
-    const store = Store(platform, 'env', 'hash', ident);
-    const getItemSpy = jest.spyOn(platform.localStorage, 'getItem').mockImplementation(() => {
-      throw new Error('localstorage getitem error');
-    });
+  let platform;
+  let warnSpy;
 
-    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-
-    store.loadFlags();
-    expect(consoleWarnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
-
-    consoleWarnSpy.mockRestore();
-    getItemSpy.mockRestore();
+  beforeEach(() => {
+    platform = stubPlatform.defaults();
+    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
   });
 
-  it('should handle localStorage setItem throwing an exception', () => {
-    const store = Store(platform, 'env', 'hash', ident);
-    const setItemSpy = jest.spyOn(platform.localStorage, 'setItem').mockImplementation(() => {
-      throw new Error('localstorage getitem error');
+  afterEach(() => {
+    warnSpy.mockRestore();
+  });
+
+  it('should handle localStorage.get returning an error', done => {
+    const store = Store(platform.localStorage, 'env', 'hash', ident);
+    const myError = new Error('localstorage getitem error');
+    const getSpy = jest.spyOn(platform.localStorage, 'get').mockImplementation((key, callback) => {
+      callback(myError);
     });
 
-    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    store.loadFlags((err, flags) => {
+      expect(err).toEqual(myError);
+      expect(warnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
+      done();
+    });
+  });
 
-    store.saveFlags({ foo: {} });
-    expect(consoleWarnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
+  it('should handle localStorage.set returning an error', done => {
+    const store = Store(platform.localStorage, 'env', 'hash', ident);
+    const myError = new Error('localstorage setitem error');
+    const setItemSpy = jest.spyOn(platform.localStorage, 'set').mockImplementation((key, value, callback) => {
+      callback(myError);
+    });
 
-    consoleWarnSpy.mockRestore();
-    setItemSpy.mockRestore();
+    store.saveFlags({ foo: {} }, err => {
+      expect(err).toEqual(myError);
+      expect(warnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
+      done();
+    });
   });
 });

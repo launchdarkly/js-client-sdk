@@ -443,7 +443,9 @@ describe('LDClient', () => {
           done();
         });
 
-        getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": {"value": true}}');
+        utils.onNextTick(() =>
+          getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": {"value": true}}')
+        );
       });
     });
 
@@ -452,12 +454,15 @@ describe('LDClient', () => {
       const client = stubPlatform.makeClient(envName, user, { bootstrap: {} });
 
       client.on('ready', () => {
+        console.log('*oog');
         client.identify(user2, null).then(flagMap => {
           expect(flagMap).toEqual({ 'enable-foo': true });
           done();
         });
 
-        getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": {"value": true}}');
+        utils.onNextTick(() =>
+          getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": {"value": true}}')
+        );
       });
     });
 

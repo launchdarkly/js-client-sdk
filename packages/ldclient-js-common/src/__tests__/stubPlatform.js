@@ -22,12 +22,20 @@ export function defaults() {
     },
     eventSourceIsActive: es => es.readyState === EventSource.OPEN || es.readyState === EventSource.CONNECTING,
     localStorage: {
-      getItem: key => localStore[key],
-      setItem: (key, value) => {
-        localStore[key] = value;
+      get: (key, callback) => {
+        console.log('*** get timeout');
+        setTimeout(() => {
+          console.log('*** calling back');
+          callback(null, localStore[key]);
+        }, 0);
       },
-      removeItem: key => {
+      set: (key, value, callback) => {
+        localStore[key] = value;
+        setTimeout(callback, 0);
+      },
+      clear: (key, callback) => {
         delete localStore[key];
+        setTimeout(callback, 0);
       },
     },
   };

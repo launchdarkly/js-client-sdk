@@ -29,42 +29,54 @@ describe('LDClient local storage', () => {
 
   function setupFlagsResponse(flags) {
     server.respondWith([200, { 'Content-Type': 'application/json' }, JSON.stringify(flags)]);
+    // Because the local storage operations make it hard to know how many levels of async deferral
+    // will be involved in the client initialization, we'll use sinon's autoRespond mode rather
+    // than trying to predict exactly when we should send the response.
+    server.autoRespond = true;
+    server.autoRespondAfter = 0;
   }
 
   describe('bootstrapping from local storage', () => {
     it('should clear cached settings if they are invalid JSON', done => {
-      localStorageProvider.setItem(lsKey, 'foo{bar}');
-      setupFlagsResponse({ 'enable-foo': { value: true } });
+      localStorageProvider.set(lsKey, 'foo{bar}', () => {
+        setupFlagsResponse({ 'enable-foo': { value: true } });
 
-      const client = stubPlatform.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
+        console.log('*** aasdfasdf');
+        const client = stubPlatform.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
 
-      expect(localStorageProvider.getItem(lsKey)).not.toEqual(expect.anything());
-
-      client.on('ready', () => {
-        done();
+        client.on('ready', () => {
+          console.log('*** bbbb');
+          utils.onNextTick(() => {
+            localStorageProvider.get(lsKey, (err, value) => {
+              console.log('>>> ' + JSON.stringify(value));
+              expect(value).not.toEqual(expect.anything());
+            });
+            done();
+          });
+        });
       });
-
-      server.respond();
     });
 
     it('should not clear cached settings if they are valid JSON', done => {
       const json = '{"enable-thing": true}';
 
-      localStorageProvider.setItem(lsKey, json);
+      localStorageProvider.set(lsKey, json, () => {
+        const client = stubPlatform.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
 
-      const client = stubPlatform.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
-
-      client
-        .waitForInitialization()
-        .then(() => {
-          expect(localStorageProvider.getItem(lsKey)).toEqual(json);
-          done();
-        })
-        .catch(() => {});
+        client
+          .waitForInitialization()
+          .then(() => {
+            localStorageProvider.get(lsKey, (err, value) => {
+              expect(value).toEqual(json);
+              done();
+            });
+          })
+          .catch(() => {});
+        // The client should not make an HTTP request in this case
+      });
     });
 
     it('should start with empty flags if we tried to use cached settings and there are none', done => {
-      localStorageProvider.removeItem(lsKey);
       setupFlagsResponse({ 'flag-key': { value: 1 } });
 
       const client = stubPlatform.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
@@ -77,14 +89,12 @@ describe('LDClient local storage', () => {
         expect(client.variation('flag-key')).toEqual(1);
         done();
       });
-
-      server.respond();
     });
 
-    it('should handle localStorage getItem throwing an exception', done => {
+    it('should handle localStorage.get returning an error', done => {
       const platform1 = Object.assign({}, stubPlatform.defaults());
-      platform1.localStorage.getItem = () => {
-        throw new Error();
+      platform1.localStorage.get = (_, callback) => {
+        utils.onNextTick(() => callback(new Error()));
       };
       setupFlagsResponse({ 'enable-foo': { value: true } });
 
@@ -95,14 +105,12 @@ describe('LDClient local storage', () => {
         expect(warnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
         done();
       });
-
-      server.respond();
     });
 
-    it('should handle localStorage setItem throwing an exception', done => {
+    it('should handle localStorage.set returning an error', done => {
       const platform1 = Object.assign({}, stubPlatform.defaults());
-      platform1.localStorage.setItem = () => {
-        throw new Error();
+      platform1.localStorage.set = (_1, _2, callback) => {
+        utils.onNextTick(() => callback(new Error()));
       };
       setupFlagsResponse({ 'enable-foo': { value: true } });
 
@@ -110,27 +118,29 @@ describe('LDClient local storage', () => {
         .client;
 
       client.on('ready', () => {
-        expect(warnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
-        done();
+        utils.onNextTick(() => {
+          expect(warnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
+          done();
+        });
       });
-
-      server.respond();
     });
 
     it('should not update cached settings if there was an error fetching flags', done => {
       const json = '{"enable-foo": true}';
       server.respondWith([503, {}, '']);
 
-      localStorageProvider.setItem(lsKey, json);
+      localStorageProvider.set(lsKey, json, () => {
+        const client = stubPlatform.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
 
-      const client = stubPlatform.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
-
-      client.on('ready', () => {
-        server.respond();
-        setTimeout(() => {
-          expect(localStorageProvider.getItem(lsKey)).toEqual(json);
-          done();
-        }, 1);
+        client.on('ready', () => {
+          server.respond();
+          utils.onNextTick(() => {
+            localStorageProvider.get(lsKey, (err, value) => {
+              expect(value).toEqual(json);
+              done();
+            });
+          });
+        });
       });
     });
 
@@ -144,14 +154,14 @@ describe('LDClient local storage', () => {
       });
 
       client.on('ready', () => {
-        expect(JSON.parse(localStorageProvider.getItem(lsKeyHash))).toEqual({
-          $schema: 1,
-          'enable-foo': { value: true },
+        localStorageProvider.get(lsKeyHash, (err, value) => {
+          expect(JSON.parse(value)).toEqual({
+            $schema: 1,
+            'enable-foo': { value: true },
+          });
+          done();
         });
-        done();
       });
-
-      server.respond();
     });
 
     it('should clear localStorage when user context is changed', done => {
@@ -165,17 +175,19 @@ describe('LDClient local storage', () => {
       client.on('ready', () => {
         utils.onNextTick(() => {
           client.identify(user2, null, () => {
-            expect(localStorageProvider.getItem(lsKey)).not.toEqual(expect.anything());
-            expect(JSON.parse(localStorageProvider.getItem(lsKey2))).toEqual({
-              $schema: 1,
-              'enable-foo': { value: true },
+            localStorageProvider.get(lsKey, (err, value) => {
+              expect(value).not.toEqual(expect.anything());
+              localStorageProvider.get(lsKey2, (err, value) => {
+                expect(JSON.parse(value)).toEqual({
+                  $schema: 1,
+                  'enable-foo': { value: true },
+                });
+                done();
+              });
             });
-            done();
           });
-          server.respond();
         });
       });
-      server.respond();
     });
   });
 });
