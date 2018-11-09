@@ -1,3 +1,5 @@
+import * as errors from './errors';
+
 const docLink =
   ' Please see https://docs.launchdarkly.com/docs/js-sdk-reference#section-initializing-the-client for instructions on SDK initialization.';
 

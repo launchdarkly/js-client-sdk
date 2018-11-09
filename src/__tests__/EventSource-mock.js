@@ -44,7 +44,7 @@ export default function EventSource(url) {
     }
   }
 
-  function mockOpen() {
+  function mockOpen(error) {
     if (this.readyState === EventSource.CONNECTING) {
       this.readyState = EventSource.OPEN;
       this.onopen && this.onopen(error);
