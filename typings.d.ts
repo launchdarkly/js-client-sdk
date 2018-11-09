@@ -56,8 +56,8 @@ declare module 'ldclient-js' {
    * data. This will always be accompanied by "ready".
    *
    * "failed": The client encountered an error that prevented it from connecting to
-   * LaunchDarkly, such as an invalid environment ID. This will always be accompanied
-   * by "ready".
+   * LaunchDarkly, such as an invalid environment ID. All flag evaluations will
+   * therefore receive default values. This will always be accompanied by "ready".
    *
    * "error": General event for any kind of error condition during client operation.
    * The callback parameter is an Error object. If you do not listen for "error"
