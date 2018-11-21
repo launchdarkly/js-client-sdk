@@ -69,7 +69,7 @@ export default function Stream(baseUrl, environment, hash, config) {
       // attempts and error logging. Yaffle allows us to override this with the "heartbeatTimeout"
       // property. This should be ignored by other implementations that don't have such an option.
       const options = {
-        heartbeatTimeout: 300000  // 5-minute timeout; LD stream sends heartbeats every 3 min
+        heartbeatTimeout: 300000, // 5-minute timeout; LD stream sends heartbeats every 3 min
       };
 
       es = new window.EventSource(url, options);
