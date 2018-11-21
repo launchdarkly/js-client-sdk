@@ -21,11 +21,11 @@ describe('Store', () => {
   it('should handle localStorage.get returning an error', done => {
     const store = Store(platform.localStorage, 'env', 'hash', ident);
     const myError = new Error('localstorage getitem error');
-    const getSpy = jest.spyOn(platform.localStorage, 'get').mockImplementation((key, callback) => {
+    jest.spyOn(platform.localStorage, 'get').mockImplementation((key, callback) => {
       callback(myError);
     });
 
-    store.loadFlags((err, flags) => {
+    store.loadFlags(err => {
       expect(err).toEqual(myError);
       expect(warnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
       done();
@@ -35,7 +35,7 @@ describe('Store', () => {
   it('should handle localStorage.set returning an error', done => {
     const store = Store(platform.localStorage, 'env', 'hash', ident);
     const myError = new Error('localstorage setitem error');
-    const setItemSpy = jest.spyOn(platform.localStorage, 'set').mockImplementation((key, value, callback) => {
+    jest.spyOn(platform.localStorage, 'set').mockImplementation((key, value, callback) => {
       callback(myError);
     });
 

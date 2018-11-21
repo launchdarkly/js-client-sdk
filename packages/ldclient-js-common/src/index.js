@@ -168,8 +168,9 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
                 }
               });
             }
-        })),
-        onDone
+          })
+      ),
+      onDone
     );
   }
 
