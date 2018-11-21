@@ -1,4 +1,4 @@
-import Base64 from 'Base64';
+import { Base64 } from 'js-base64';
 import sinon from 'sinon';
 
 import EventSender from '../EventSender';
@@ -44,7 +44,7 @@ describe('EventSender', () => {
       s = s + '=';
     }
     s = s.replace(/_/g, '/').replace(/-/g, '+');
-    return decodeURIComponent(escape(Base64.atob(s)));
+    return decodeURIComponent(escape(Base64.decode(s)));
   }
 
   function decodeOutputFromUrl(url) {

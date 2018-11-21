@@ -78,8 +78,8 @@
     "typescript": "3.0.1"
   },
   "dependencies": {
-    "Base64": "1.0.1",
-    "escape-string-regexp": "1.0.5"
+    "escape-string-regexp": "1.0.5",
+    "js-base64": "2.4.9"
   },
   "repository": {
     "type": "git",
