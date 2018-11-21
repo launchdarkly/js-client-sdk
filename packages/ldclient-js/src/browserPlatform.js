@@ -55,7 +55,6 @@ export default function makeBrowserPlatform() {
         }
       },
     };
-    window.localStorage;
   }
 
   // If EventSource does not exist, the absence of eventSourceFactory will make us not try to open streams
