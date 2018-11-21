@@ -4,7 +4,7 @@ module.exports = {
   automock: false,
   resetModules: true,
   rootDir: 'src',
-  setupFiles: ['jest-localstorage-mock', './jest.setup.js'],
+  setupFiles: ['./jest.setup.js'],
   testMatch: ['**/__tests__/**/*-test.js'],
   transform: {
     '^.+\\.js$': 'babel-jest',
@@ -13,4 +13,6 @@ module.exports = {
     window: true,
     VERSION: version,
   },
+  runner: '@jest-runner/electron',
+  testEnvironment: '@jest-runner/electron/environment',
 };
