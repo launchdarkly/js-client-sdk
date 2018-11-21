@@ -149,25 +149,25 @@ describe('LDClient', () => {
 
     it('updates local storage for put message if using local storage', done => {
       const platform = stubPlatform.defaults();
-      platform.localStorage.set(lsKey, '{"enable-foo":false}', () => {
-        const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' }, platform).client;
+      platform.testing.setLocalStorageImmediately(lsKey, '{"enable-foo":false}');
+      
+      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' }, platform).client;
 
-        client.on('ready', () => {
-          client.on('change', () => {});
+      client.on('ready', () => {
+        client.on('change', () => {});
 
-          streamEvents().put({
-            data: '{"enable-foo":{"value":true,"version":1}}',
-          });
-
-          expect(client.variation('enable-foo')).toEqual(true);
-          platform.localStorage.get(lsKey, (err, value) => {
-            expect(JSON.parse(value)).toEqual({
-              $schema: 1,
-              'enable-foo': { value: true, version: 1 },
-            });
-            done();
-          });
+        streamEvents().put({
+          data: '{"enable-foo":{"value":true,"version":1}}',
         });
+
+        expect(client.variation('enable-foo')).toEqual(true);
+        const value = platform.testing.getLocalStorageImmediately(lsKey);
+        expect(JSON.parse(value)).toEqual({
+          $schema: 1,
+          'enable-foo': { value: true, version: 1 },
+        });
+
+        done();
       });
     });
 
@@ -297,25 +297,25 @@ describe('LDClient', () => {
 
     it('updates local storage for patch message if using local storage', done => {
       const platform = stubPlatform.defaults();
-      platform.localStorage.set(lsKey, '{"enable-foo":false}', () => {
-        const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' }, platform).client;
+      platform.testing.setLocalStorageImmediately(lsKey, '{"enable-foo":false}');
 
-        client.on('ready', () => {
-          client.on('change', () => {});
+      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' }, platform).client;
 
-          streamEvents().put({
-            data: '{"enable-foo":{"value":true,"version":1}}',
-          });
+      client.on('ready', () => {
+        client.on('change', () => {});
 
-          expect(client.variation('enable-foo')).toEqual(true);
-          platform.localStorage.get(lsKey, (err, value) => {
-            expect(JSON.parse(value)).toEqual({
-              $schema: 1,
-              'enable-foo': { value: true, version: 1 },
-            });
-            done();
-          });
+        streamEvents().put({
+          data: '{"enable-foo":{"value":true,"version":1}}',
         });
+
+        expect(client.variation('enable-foo')).toEqual(true);
+        const value = platform.testing.getLocalStorageImmediately(lsKey);
+        expect(JSON.parse(value)).toEqual({
+          $schema: 1,
+          'enable-foo': { value: true, version: 1 },
+        });
+
+        done();
       });
     });
 
@@ -441,25 +441,25 @@ describe('LDClient', () => {
 
     it('updates local storage for delete message if using local storage', done => {
       const platform = stubPlatform.defaults();
-      platform.localStorage.set(lsKey, '{"enable-foo":false}', () => {
-        const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' }, platform).client;
+      platform.testing.setLocalStorageImmediately(lsKey, '{"enable-foo":false}');
 
-        client.on('ready', () => {
-          client.on('change', () => {});
+      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' }, platform).client;
 
-          streamEvents().delete({
-            data: '{"key":"enable-foo","version":1}',
-          });
+      client.on('ready', () => {
+        client.on('change', () => {});
 
-          expect(client.variation('enable-foo')).toEqual(undefined);
-          platform.localStorage.get(lsKey, (err, value) => {
-            expect(JSON.parse(value)).toEqual({
-              $schema: 1,
-              'enable-foo': { version: 1, deleted: true },
-            });
-            done();
-          });
+        streamEvents().delete({
+          data: '{"key":"enable-foo","version":1}',
         });
+
+        expect(client.variation('enable-foo')).toEqual(undefined);
+        const value = platform.testing.getLocalStorageImmediately(lsKey);
+        expect(JSON.parse(value)).toEqual({
+          $schema: 1,
+          'enable-foo': { version: 1, deleted: true },
+        });
+
+        done();
       });
     });
 
