@@ -7,6 +7,7 @@ describe('LDClient', () => {
   const envName = 'UNKNOWN_ENVIRONMENT_ID';
   const user = { key: 'user' };
   const fakeUrl = 'http://fake';
+  let platform;
   let warnSpy;
   let xhr;
   let requests = [];
@@ -19,8 +20,8 @@ describe('LDClient', () => {
 
     warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
-    stubPlatform.setCurrentUrl(fakeUrl);
-    stubPlatform.setDoNotTrack(false);
+    platform = stubPlatform.defaults();
+    platform.testing.setCurrentUrl(fakeUrl);
   });
 
   afterEach(() => {
@@ -59,7 +60,7 @@ describe('LDClient', () => {
 
     it('sends an identify event at startup', done => {
       const ep = stubEventProcessor();
-      const client = stubPlatform.makeClient(envName, user, { eventProcessor: ep, bootstrap: {} });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: {} });
 
       client.on('ready', () => {
         expect(ep.events.length).toEqual(1);
@@ -73,7 +74,7 @@ describe('LDClient', () => {
       const ep = stubEventProcessor();
       const server = sinon.fakeServer.create();
       server.respondWith([200, { 'Content-Type': 'application/json' }, '{}']);
-      const client = stubPlatform.makeClient(envName, user, { eventProcessor: ep, bootstrap: {} });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: {} });
       const user1 = { key: 'user1' };
 
       client.on('ready', () => {
@@ -88,11 +89,15 @@ describe('LDClient', () => {
     });
 
     it('does not send an identify event if doNotTrack is set', done => {
-      stubPlatform.setDoNotTrack(true);
+      platform.testing.setDoNotTrack(true);
       const server = sinon.fakeServer.create();
       server.respondWith([200, { 'Content-Type': 'application/json' }, '{}']);
       const ep = stubEventProcessor();
-      const client = stubPlatform.makeClient(envName, user, { eventProcessor: ep, bootstrap: {}, fetchGoals: false });
+      const client = platform.testing.makeClient(envName, user, {
+        eventProcessor: ep,
+        bootstrap: {},
+        fetchGoals: false,
+      });
       const user1 = { key: 'user1' };
 
       client.on('ready', () => {
@@ -112,7 +117,7 @@ describe('LDClient', () => {
         { 'Content-Type': 'application/json' },
         '{"foo":{"value":"a","variation":1,"version":2,"flagVersion":2000}}',
       ]);
-      const client = stubPlatform.makeClient(envName, user, { eventProcessor: ep });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
 
       client.on('ready', () => {
         client.variation('foo', 'x');
@@ -135,7 +140,7 @@ describe('LDClient', () => {
         { 'Content-Type': 'application/json' },
         '{"foo":{"value":"a","variation":1,"version":2,"flagVersion":2000,"reason":{"kind":"OFF"}}}',
       ]);
-      const client = stubPlatform.makeClient(envName, user, { eventProcessor: ep });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
 
       client.on('ready', () => {
         client.variationDetail('foo', 'x');
@@ -159,7 +164,7 @@ describe('LDClient', () => {
         { 'Content-Type': 'application/json' },
         '{"foo":{"value":"a","variation":1,"version":2}}',
       ]);
-      const client = stubPlatform.makeClient(envName, user, { eventProcessor: ep });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
 
       client.on('ready', () => {
         client.variation('foo', 'x');
@@ -178,7 +183,7 @@ describe('LDClient', () => {
       const ep = stubEventProcessor();
       const server = sinon.fakeServer.create();
       server.respondWith([200, { 'Content-Type': 'application/json' }, '{}']);
-      const client = stubPlatform.makeClient(envName, user, { eventProcessor: ep });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
 
       client.on('ready', () => {
         client.variation('foo', 'x');
@@ -206,7 +211,7 @@ describe('LDClient', () => {
           },
         },
       };
-      const client = stubPlatform.makeClient(envName, user, { eventProcessor: ep, bootstrap: bootstrapData });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: bootstrapData });
 
       client.on('ready', () => {
         client.variation('foo', 'x');
@@ -221,7 +226,7 @@ describe('LDClient', () => {
 
     it('sends an event for track()', done => {
       const ep = stubEventProcessor();
-      const client = stubPlatform.makeClient(envName, user, { eventProcessor: ep, bootstrap: {} });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: {} });
       const data = { thing: 'stuff' };
       client.on('ready', () => {
         client.track('eventkey', data);
@@ -239,9 +244,9 @@ describe('LDClient', () => {
     });
 
     it('does not send an event for track() if doNotTrack is set', done => {
-      stubPlatform.setDoNotTrack(true);
+      platform.testing.setDoNotTrack(true);
       const ep = stubEventProcessor();
-      const client = stubPlatform.makeClient(envName, user, { eventProcessor: ep, bootstrap: {} });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: {} });
       const data = { thing: 'stuff' };
       client.on('ready', () => {
         client.track('eventkey', data);

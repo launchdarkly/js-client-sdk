@@ -20,10 +20,9 @@ export default function Store(localStorageProvider, environment, hash, ident) {
 
   store.loadFlags = function(callback) {
     localStorageProvider.get(getFlagsKey(), (err, dataStr) => {
-      console.log('*** flaggos: ' + err + ', ' + dataStr);
       if (err) {
         console.warn(messages.localStorageUnavailable());
-        callback && callback(err);
+        callback && callback(err, null);
       } else {
         if (dataStr === null || dataStr === undefined) {
           callback && callback(null, null);
@@ -35,15 +34,14 @@ export default function Store(localStorageProvider, environment, hash, ident) {
             const schema = data.$schema;
             if (schema === undefined || schema < 1) {
               data = utils.transformValuesToVersionedValues(data);
+            } else {
+              delete data['$schema'];
             }
           }
-          console.log('*** flagback');
           callback && callback(null, data);
         } catch (ex) {
-          console.log('*** ex: ' + ex);
           store.clearFlags(() => {
-            console.log('*** errback');
-            callback && callback(ex);
+            callback && callback(ex, null);
           });
         }
       }
@@ -53,7 +51,6 @@ export default function Store(localStorageProvider, environment, hash, ident) {
   store.saveFlags = function(flags, callback) {
     const data = utils.extend({}, flags, { $schema: 1 });
     localStorageProvider.set(getFlagsKey(), JSON.stringify(data), err => {
-      console.log('*** setted: ' + err);
       if (err) {
         console.warn(messages.localStorageUnavailable());
       }

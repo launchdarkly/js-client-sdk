@@ -138,8 +138,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   }
 
   function identify(user, hash, onDone) {
-    const clearFirst =
-      !useLocalStorage || !store ? Promise.resolve() : new Promise(resolve => store.clearFlags(resolve));
+    const clearFirst = new Promise(resolve => (useLocalStorage && store ? store.clearFlags(resolve) : resolve()));
     return utils.wrapPromiseCallback(
       clearFirst.then(
         () =>
