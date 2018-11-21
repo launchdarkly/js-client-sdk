@@ -48,7 +48,7 @@ describe('browserPlatform', () => {
     // Since we're not currently running these tests in an actual browser, this is really using a
     // mock implementation of window.localStorage, but these tests still verify that our async
     // wrapper code in browserPlatform.js is passing the parameters through correctly.
-    
+
     it('returns null or undefined for missing value', done => {
       platform.localStorage.get(lsKeyPrefix + 'unused-key', (err, value) => {
         expect(err).not.toBe(expect.anything());
