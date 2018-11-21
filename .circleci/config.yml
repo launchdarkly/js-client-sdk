@@ -5,7 +5,14 @@ jobs:
       - image: circleci/node:latest
     environment:
       LERNA: ./node_modules/.bin/lerna
+      DISPLAY: ":99.0"  # so Electron will use xvfb
     steps:
+      - run:
+          name: install packages required by Electron
+          command: sudo apt-get install libgtk-3-0 libxss1 libgconf2-4 libnss3 libasound2
+      - run:
+          name: start display server so Electron can run headless
+          command: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
       - checkout
       - run: npm install
       - run: $LERNA bootstrap
