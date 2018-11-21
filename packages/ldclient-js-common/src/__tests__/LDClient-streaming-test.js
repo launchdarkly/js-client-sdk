@@ -150,7 +150,7 @@ describe('LDClient', () => {
     it('updates local storage for put message if using local storage', done => {
       const platform = stubPlatform.defaults();
       platform.testing.setLocalStorageImmediately(lsKey, '{"enable-foo":false}');
-      
+
       const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage' }, platform).client;
 
       client.on('ready', () => {
