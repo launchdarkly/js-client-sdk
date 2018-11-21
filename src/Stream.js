@@ -62,7 +62,17 @@ export default function Stream(baseUrl, environment, hash, config) {
       url = url + (query ? '?' : '') + query;
 
       closeConnection();
-      es = new window.EventSource(url);
+
+      // The standard EventSource constructor doesn't take any options, just a URL. However, there's
+      // a known issue with one of the EventSource polyfills, Yaffle, which has a fairly short
+      // default timeout - much shorter than our heartbeat interval - causing unnecessary reconnect
+      // attempts and error logging. Yaffle allows us to override this with the "heartbeatTimeout"
+      // property. This should be ignored by other implementations that don't have such an option.
+      const options = {
+        heartbeatTimeout: 300000  // 5-minute timeout; LD stream sends heartbeats every 3 min
+      };
+
+      es = new window.EventSource(url, options);
       for (const key in handlers) {
         if (handlers.hasOwnProperty(key)) {
           es.addEventListener(key, handlers[key]);
