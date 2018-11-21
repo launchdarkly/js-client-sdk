@@ -1,8 +1,17 @@
-import { Base64 } from 'js-base64';
+import * as base64 from 'base64-js';
 
 // See http://ecmanaut.blogspot.com/2006/07/encoding-decoding-utf8-in-javascript.html
 export function btoa(s) {
-  return Base64.encode(unescape(encodeURIComponent(s)));
+  const escaped = unescape(encodeURIComponent(s));
+  return base64.fromByteArray(stringToBytes(escaped));
+}
+
+function stringToBytes(s) {
+  var b = [];
+  for (var i = 0; i < s.length; i++) {
+    b.push(s.charCodeAt(i));
+  }
+  return b;
 }
 
 export function base64URLEncode(s) {
