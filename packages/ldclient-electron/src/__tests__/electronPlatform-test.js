@@ -17,10 +17,10 @@ describe('electronPlatform', () => {
   });
 
   describe('local storage', () => {
-    it('returns null for missing value', done => {
+    it('returns null or undefined for missing value', done => {
       platform.localStorage.get(lsKeyPrefix + 'unused-key', (err, value) => {
-        expect(err).toBe(null);
-        expect(value).toBe(null);
+        expect(err).not.toBe(expect.anything());
+        expect(value).not.toBe(expect.anything());
         done();
       });
     });
@@ -28,24 +28,24 @@ describe('electronPlatform', () => {
     it('can get and set value', done => {
       const key = lsKeyPrefix + 'get-set-key';
       platform.localStorage.set(key, 'hello', err => {
-        expect(err).toBe(null);
+        expect(err).not.toBe(expect.anything());
         platform.localStorage.get(key, (err, value) => {
-          expect(err).toBe(null);
+          expect(err).not.toBe(expect.anything());
           expect(value).toEqual('hello');
           done();
         });
-      })
+      });
     });
 
     it('can delete value', done => {
       const key = lsKeyPrefix + 'delete-key';
       platform.localStorage.set(key, 'hello', err => {
-        expect(err).toBe(null);
+        expect(err).not.toBe(expect.anything());
         platform.localStorage.clear(key, err => {
-          expect(err).toBe(null);
+          expect(err).not.toBe(expect.anything());
           platform.localStorage.get(key, (err, value) => {
-            expect(err).toBe(null);
-            expect(value).toBe(null);
+            expect(err).not.toBe(expect.anything());
+            expect(value).not.toBe(expect.anything());
             done();
           });
         });
