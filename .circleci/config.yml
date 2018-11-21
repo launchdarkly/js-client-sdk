@@ -20,8 +20,7 @@ jobs:
       - run: $LERNA run lint:all
       - run: $LERNA run build
       - run:
-          command: |
-            cd ~/project/packages/ldclient-js-common && npm run test:junit
+          command: cd ~/project/packages/ldclient-js-common && npm run test:junit
           environment:
             JEST_JUNIT_OUTPUT: "./reports/junit/js-common-test-results.xml"
       - run:
