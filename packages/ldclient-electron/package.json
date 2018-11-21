@@ -1,7 +1,7 @@
 {
-  "name": "ldclient-js",
+  "name": "ldclient-electron",
   "version": "2.7.2",
-  "description": "LaunchDarkly SDK for JavaScript",
+  "description": "LaunchDarkly SDK for Electron",
   "author": "LaunchDarkly <team@launchdarkly.com>",
   "license": "Apache-2.0",
   "keywords": [
@@ -10,17 +10,12 @@
     "client"
   ],
   "files": [
-    "ldclient.cjs.js",
-    "ldclient.cjs.js.map",
-    "ldclient.es.js",
-    "ldclient.es.js.map",
-    "ldclient.min.js",
-    "ldclient.min.js.map",
+    "ldclient-electron.js",
+    "ldclient-electron.js.map",
     "typings.d.ts"
   ],
   "types": "./typings.d.ts",
-  "main": "dist/ldclient.cjs.js",
-  "module": "dist/ldclient.es.js",
+  "main": "dist/ldclient-electron.js",
   "scripts": {
     "lint": "eslint --format 'node_modules/eslint-formatter-pretty' --ignore-path ../../.eslintignore",
     "lint:all": "eslint --format 'node_modules/eslint-formatter-pretty' --ignore-path ../../.eslintignore src",
@@ -32,19 +27,20 @@
     "format:test:js": "prettier --ignore-path ../../.prettierignore --list-different 'src/**/*.js'",
     "build": "cross-env NODE_ENV=development rollup -c rollup.config.js",
     "build:min": "cross-env NODE_ENV=production rollup -c rollup.config.js",
-    "test": "NODE_ENV=test jest",
-    "test:junit": "NODE_ENV=test jest --testResultsProcessor jest-junit",
+    "test": "NODE_ENV=test ELECTRON_RUN_AS_NODE=true ./node_modules/.bin/electron ./node_modules/.bin/jest",
+    "test:junit": "NODE_ENV=test ELECTRON_RUN_AS_NODE=true ./node_modules/.bin/electron ./node_modules/.bin/jest --testResultsProcessor jest-junit",
     "check-typescript": "node_modules/typescript/bin/tsc",
     "clean": "rimraf dist/**",
     "prepublishOnly": "npm run build:min"
   },
   "devDependencies": {
-    "babel-core": "6.26.0",
+    "babel-core": "6.26.3",
     "babel-eslint": "8.2.2",
     "babel-jest": "22.4.3",
     "babel-polyfill": "6.26.0",
     "chai": "4.1.2",
     "cross-env": "5.1.4",
+    "electron": "^2.0.4",
     "eslint": "4.19.1",
     "eslint-config-prettier": "2.9.0",
     "eslint-config-xo": "0.20.1",
@@ -58,16 +54,16 @@
     "prettier": "1.11.1",
     "readline-sync": "1.4.9",
     "rimraf": "2.6.2",
-    "rollup": "0.57.1",
+    "rollup": "0.66.6",
     "semver": "5.5.0",
     "semver-compare": "1.0.0",
     "sinon": "4.5.0",
     "typescript": "3.0.1"
   },
   "dependencies": {
+    "eventsource": "1.0.7",
     "ldclient-js-common": "^2.7.1",
-    "Base64": "1.0.1",
-    "escape-string-regexp": "1.0.5"
+    "xmlhttprequest": "1.8.0"
   },
   "repository": {
     "type": "git",
