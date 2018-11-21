@@ -7,8 +7,8 @@ export function btoa(s) {
 }
 
 function stringToBytes(s) {
-  var b = [];
-  for (var i = 0; i < s.length; i++) {
+  const b = [];
+  for (let i = 0; i < s.length; i++) {
     b.push(s.charCodeAt(i));
   }
   return b;
