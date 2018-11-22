@@ -17,5 +17,9 @@
     "rollup-plugin-node-resolve": "3.3.0",
     "rollup-plugin-replace": "2.0.0",
     "rollup-plugin-uglify": "3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/launchdarkly/js-client.git"
   }
 }

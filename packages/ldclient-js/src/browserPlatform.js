@@ -59,9 +59,24 @@ export default function makeBrowserPlatform() {
 
   // If EventSource does not exist, the absence of eventSourceFactory will make us not try to open streams
   if (window.EventSource) {
-    ret.eventSourceFactory = url => new window.EventSource(url);
+    const timeoutMillis = 300000; // this is only used by polyfills - see below
+
+    ret.eventSourceFactory = url => {
+      // The standard EventSource constructor doesn't take any options, just a URL. However, some
+      // EventSource polyfills allow us to specify a timeout interval, and in some cases they will
+      // default to a too-short timeout if we don't specify one. So, here, we are setting the
+      // timeout properties that are used by several popular polyfills.
+      const options = {
+        heartbeatTimeout: timeoutMillis, // used by "event-source-polyfill" package
+        silentTimeout: timeoutMillis, // used by "eventsource-polyfill" package
+      };
+
+      return new window.EventSource(url, options);
+    };
+
     ret.eventSourceIsActive = es =>
       es.readyState === window.EventSource.OPEN || es.readyState === window.EventSource.CONNECTING;
+
     ret.eventSourceAllowsReport = false;
   }
 
