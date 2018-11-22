@@ -6,6 +6,7 @@ export default function Stream(baseUrl, environment, hash, config) {
   const useReport = (config && config.useReport) || false;
   const withReasons = (config && config.evaluationReasons) || false;
   const streamReconnectDelay = (config && config.streamReconnectDelay) || 1000;
+  const timeoutMillis = 300000; // 5 minutes (same as other SDKs) - note, this only has an effect on polyfills
   let es = null;
   let reconnectTimeoutReference = null;
   let user = null;
@@ -62,7 +63,17 @@ export default function Stream(baseUrl, environment, hash, config) {
       url = url + (query ? '?' : '') + query;
 
       closeConnection();
-      es = new window.EventSource(url);
+
+      // The standard EventSource constructor doesn't take any options, just a URL. However, some
+      // EventSource polyfills allow us to specify a timeout interval, and in some cases they will
+      // default to a too-short timeout if we don't specify one. So, here, we are setting the
+      // timeout properties that are used by several popular polyfills.
+      const options = {
+        heartbeatTimeout: timeoutMillis, // used by "event-source-polyfill" package
+        silentTimeout: timeoutMillis, // used by "eventsource-polyfill" package
+      };
+
+      es = new window.EventSource(url, options);
       for (const key in handlers) {
         if (handlers.hasOwnProperty(key)) {
           es.addEventListener(key, handlers[key]);
