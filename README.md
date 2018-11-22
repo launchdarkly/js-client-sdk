@@ -29,7 +29,7 @@ when `client.on('change')` is called.
 
 If you need streaming support, and you wish to support browsers that do not
 support `EventSource` natively, you can install a polyfill such as
-[EventSource](https://github.com/Yaffle/EventSource).
+[event-source-polyfill](https://github.com/Yaffle/EventSource).
 
 #### CDN
 
