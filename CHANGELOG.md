@@ -3,10 +3,13 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org).
 
-## [2.7.4] - 2018-11-21
+## [2.7.5] - 2018-11-21
 ### Fixed:
 - When using the [`event-source-polyfill`](https://github.com/Yaffle/EventSource) package to allow streaming mode in browsers with no native EventSource support, the polyfill was using a default read timeout of 45 seconds, so if no updates arrived within 45 seconds it would log an error and reconnect the stream. The SDK now sets its own timeout (5 minutes) which will be used if this particular polyfill is active. LaunchDarkly normally sends a heartbeat every 3 minutes, so you should not see a timeout happen unless the connection has been lost.
 - The SDK's use of the "Base64" package caused problems for build tools that strictly enforce the lowercase package name rule. It now uses the "base64-js" package instead. ([#124](https://github.com/launchdarkly/js-client/issues/124))
+
+## [2.7.4] - 2018-11-21
+(This version was skipped due to a release problem.)
 
 ## [2.7.3] - 2018-11-09
 ### Fixed:
