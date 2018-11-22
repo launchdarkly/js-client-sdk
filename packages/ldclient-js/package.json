@@ -1,6 +1,6 @@
 {
   "name": "ldclient-js",
-  "version": "2.7.2",
+  "version": "2.7.5",
   "description": "LaunchDarkly SDK for JavaScript",
   "author": "LaunchDarkly <team@launchdarkly.com>",
   "license": "Apache-2.0",
@@ -65,9 +65,8 @@
     "typescript": "3.0.1"
   },
   "dependencies": {
-    "ldclient-js-common": "^2.7.1",
-    "Base64": "1.0.1",
-    "escape-string-regexp": "1.0.5"
+    "escape-string-regexp": "1.0.5",
+    "ldclient-js-common": "^2.7.1"
   },
   "repository": {
     "type": "git",
