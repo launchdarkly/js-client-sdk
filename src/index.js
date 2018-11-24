@@ -352,6 +352,13 @@ export function initialize(env, user, options = {}) {
     });
   }
 
+  function disconnectStream() {
+    if (streamActive) {
+      stream.disconnect();
+      streamActive = false;
+    }
+  }
+
   function updateSettings(newFlags) {
     const changes = {};
 
@@ -429,8 +436,7 @@ export function initialize(env, user, options = {}) {
       if (!haveListeners) {
         subscribedToChangeEvents = false;
         if (streamActive && streamForcedState === undefined) {
-          streamActive = false;
-          stream.disconnect();
+          disconnectStream();
         }
       }
     }
@@ -440,12 +446,11 @@ export function initialize(env, user, options = {}) {
     const newState = state === null ? undefined : state;
     if (newState !== streamForcedState) {
       streamForcedState = newState;
-      let shouldBeStreaming = streamForcedState || (subscribedToChangeEvents && streamForcedState === undefined);
+      const shouldBeStreaming = streamForcedState || (subscribedToChangeEvents && streamForcedState === undefined);
       if (shouldBeStreaming && !streamActive) {
         connectStream();
       } else if (!shouldBeStreaming && streamActive) {
-        streamActive = false;
-        stream.disconnect();
+        disconnectStream();
       }
     }
   }
