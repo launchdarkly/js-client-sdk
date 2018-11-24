@@ -73,9 +73,10 @@ declare module 'ldclient-js' {
    * flag value, and the previous value. This is always accompanied by a general
    * "change" event as described above; you can listen for either or both.
    *
-   * The "change" and "change:FLAG-KEY" events have special behavior: the client
-   * will open a streaming connection to receive live changes if and only if you
-   * are listening for one of these events.
+   * The "change" and "change:FLAG-KEY" events have special behavior: by default, the
+   * client will open a streaming connection to receive live changes if and only if
+   * you are listening for one of these events. This behavior can be overridden by
+   * setting LDOptions.streaming or calling LDClient.setStreaming().
    */
   type LDEventSignature = (
     key: string,
@@ -127,6 +128,17 @@ declare module 'ldclient-js' {
      *
      */
     streamUrl?: string;
+
+    /**
+     * Whether or not to open a streaming connection to LaunchDarkly for live flag updates.
+     *
+     * If this is true, the client will always attempt to maintain a streaming connection; if false,
+     * it never will. If you leave the value undefined (the default), the client will open a streaming
+     * connection if you subscribe to "change" or "change:flag-key" events (see LDClient.on()).
+     *
+     * This is equivalent to calling client.setStreaming() with the same value.
+     */
+    streaming?: boolean;
 
     /**
      * Whether or not to use the REPORT verb to fetch flag settings.
@@ -423,6 +435,17 @@ declare module 'ldclient-js' {
      * @returns LDEvaluationDetail object containing the value and explanation.
      */
     variationDetail: (key: string, defaultValue?: LDFlagValue) => LDEvaluationDetail;
+
+    /**
+     * Specifies whether or not to open a streaming connection to LaunchDarkly for live flag updates.
+     *
+     * If this is true, the client will always attempt to maintain a streaming connection; if false,
+     * it never will. If you leave the value undefined (the default), the client will open a streaming
+     * connection if you subscribe to "change" or "change:flag-key" events (see LDClient.on()).
+     *
+     * This can also be set as the "streaming" property of the client options.
+     */
+    setStreaming: (value?: boolean) => void;
 
     /**
      * Registers an event listener. See LDEventSignature for the available event types

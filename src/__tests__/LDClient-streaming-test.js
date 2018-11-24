@@ -44,37 +44,157 @@ describe('LDClient', () => {
 
   describe('streaming/event listening', () => {
     const streamUrl = 'https://clientstream.launchdarkly.com';
+    const fullStreamUrlWithUser = streamUrl + '/eval/' + envName + '/' + encodedUser;
 
     function streamEvents() {
-      return sources[`${streamUrl}/eval/${envName}/${encodedUser}`].__emitter._events;
+      return sources[fullStreamUrlWithUser].__emitter._events;
+    }
+
+    function expectStreamUrlIsOpen(url) {
+      expect(Object.keys(sources)).toEqual([url]);
+    }
+
+    function expectNoStreamIsOpen() {
+      expect(sources).toMatchObject({});
     }
 
     it('does not connect to the stream by default', done => {
       const client = LDClient.initialize(envName, user, { bootstrap: {} });
 
       client.on('ready', () => {
-        expect(sources).toMatchObject({});
+        expectNoStreamIsOpen();
         done();
       });
     });
 
-    it('connects to the stream when listening to global change events', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+    it('connects to the stream if options.streaming is true', done => {
+      const client = LDClient.initialize(envName, user, { bootstrap: {}, streaming: true });
 
       client.on('ready', () => {
-        client.on('change', () => {});
-        expect(Object.keys(sources)).toEqual([streamUrl + '/eval/' + envName + '/' + encodedUser]);
+        expectStreamUrlIsOpen(fullStreamUrlWithUser);
         done();
       });
     });
 
-    it('connects to the stream when listening to change event for one flag', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+    describe('setStreaming()', () => {
+      it('can connect to the stream', done => {
+        const client = LDClient.initialize(envName, user, { bootstrap: {} });
 
-      client.on('ready', () => {
-        client.on('change:flagkey', () => {});
-        expect(Object.keys(sources)).toEqual([streamUrl + '/eval/' + envName + '/' + encodedUser]);
-        done();
+        client.on('ready', () => {
+          client.setStreaming(true);
+          expectStreamUrlIsOpen(fullStreamUrlWithUser);
+          done();
+        });
+      });
+
+      it('can disconnect from the stream', done => {
+        const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+        client.on('ready', () => {
+          client.setStreaming(true);
+          expectStreamUrlIsOpen(fullStreamUrlWithUser);
+          client.setStreaming(false);
+          expectNoStreamIsOpen();
+          done();
+        });
+      });
+    });
+
+    describe('on("change")', () => {
+      it('connects to the stream if not otherwise overridden', done => {
+        const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+        client.on('ready', () => {
+          client.on('change', () => {});
+          expectStreamUrlIsOpen(fullStreamUrlWithUser);
+          done();
+        });
+      });
+
+      it('also connects if listening for a specific flag', done => {
+        const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+        client.on('ready', () => {
+          client.on('change:flagkey', () => {});
+          expectStreamUrlIsOpen(fullStreamUrlWithUser);
+          done();
+        });
+      });
+
+      it('does not connect if some other kind of event was specified', done => {
+        const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+        client.on('ready', () => {
+          client.on('error', () => {});
+          expectNoStreamIsOpen();
+          done();
+        });
+      });
+
+      it('does not connect if options.streaming is explicitly set to false', done => {
+        const client = LDClient.initialize(envName, user, { bootstrap: {}, streaming: false });
+
+        client.on('ready', () => {
+          client.on('change', () => {});
+          expectNoStreamIsOpen();
+          done();
+        });
+      });
+
+      it('does not connect if setStreaming(false) was called', done => {
+        const client = LDClient.initialize(envName, user, { bootstrap: {} });
+
+        client.on('ready', () => {
+          client.setStreaming(false);
+          client.on('change', () => {});
+          expectNoStreamIsOpen();
+          done();
+        });
+      });
+    });
+
+    describe('off("change")', () => {
+      it('disconnects from the stream if all event listeners are removed', done => {
+        const client = LDClient.initialize(envName, user, { bootstrap: {} });
+        const listener1 = () => {};
+        const listener2 = () => {};
+
+        client.on('ready', () => {
+          client.on('change', listener1);
+          client.on('change:flagkey', listener2);
+          client.on('error', () => {});
+          expectStreamUrlIsOpen(fullStreamUrlWithUser);
+
+          client.off('change', listener1);
+          expectStreamUrlIsOpen(fullStreamUrlWithUser);
+
+          client.off('change:flagkey', listener2);
+          expectNoStreamIsOpen();
+
+          done();
+        });
+      });
+
+      it('does not disconnect if setStreaming(true) was called', done => {
+        const client = LDClient.initialize(envName, user, { bootstrap: {} });
+        const listener1 = () => {};
+        const listener2 = () => {};
+
+        client.on('ready', () => {
+          client.setStreaming(true);
+
+          client.on('change', listener1);
+          client.on('change:flagkey', listener2);
+          expectStreamUrlIsOpen(fullStreamUrlWithUser);
+
+          client.off('change', listener1);
+          expectStreamUrlIsOpen(fullStreamUrlWithUser);
+
+          client.off('change:flagkey', listener2);
+          expectStreamUrlIsOpen(fullStreamUrlWithUser);
+
+          done();
+        });
       });
     });
 
@@ -83,7 +203,7 @@ describe('LDClient', () => {
 
       client.on('ready', () => {
         client.on('change:flagkey', () => {});
-        expect(Object.keys(sources)).toEqual([streamUrl + '/eval/' + envName + '/' + encodedUser + '?h=' + hash]);
+        expectStreamUrlIsOpen(fullStreamUrlWithUser + '?h=' + hash);
         done();
       });
     });
@@ -93,9 +213,7 @@ describe('LDClient', () => {
 
       client.on('ready', () => {
         client.on('change', () => {});
-        expect(Object.keys(sources)).toEqual([
-          streamUrl + '/eval/' + envName + '/' + encodedUser + '?withReasons=true',
-        ]);
+        expectStreamUrlIsOpen(fullStreamUrlWithUser + '?withReasons=true');
         done();
       });
     });
@@ -105,9 +223,7 @@ describe('LDClient', () => {
 
       client.on('ready', () => {
         client.on('change', () => {});
-        expect(Object.keys(sources)).toEqual([
-          streamUrl + '/eval/' + envName + '/' + encodedUser + '?h=' + hash + '&withReasons=true',
-        ]);
+        expectStreamUrlIsOpen(fullStreamUrlWithUser + '?h=' + hash + '&withReasons=true');
         done();
       });
     });

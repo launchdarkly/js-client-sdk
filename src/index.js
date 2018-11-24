@@ -36,6 +36,8 @@ export function initialize(env, user, options = {}) {
   let goalTracker;
   let useLocalStorage;
   let goals;
+  let streamActive;
+  let streamForcedState;
   let subscribedToChangeEvents;
   let firstEvent = true;
 
@@ -180,7 +182,7 @@ export function initialize(env, user, options = {}) {
               updateSettings(settings);
             }
             resolve(utils.transformVersionedValuesToValues(settings));
-            if (subscribedToChangeEvents) {
+            if (streamActive) {
               connectStream();
             }
           });
@@ -299,6 +301,7 @@ export function initialize(env, user, options = {}) {
   }
 
   function connectStream() {
+    streamActive = true;
     if (!ident.getUser()) {
       return;
     }
@@ -403,9 +406,9 @@ export function initialize(env, user, options = {}) {
   }
 
   function on(event, handler, context) {
-    if (event.substr(0, changeEvent.length) === changeEvent) {
+    if (isChangeEventKey(event)) {
       subscribedToChangeEvents = true;
-      if (!stream.isConnected()) {
+      if (!streamActive && streamForcedState === undefined) {
         connectStream();
       }
       emitter.on.apply(emitter, [event, handler, context]);
@@ -415,13 +418,40 @@ export function initialize(env, user, options = {}) {
   }
 
   function off(event) {
-    if (event === changeEvent) {
-      if ((subscribedToChangeEvents = true)) {
+    emitter.off.apply(emitter, Array.prototype.slice.call(arguments));
+    if (isChangeEventKey(event)) {
+      let haveListeners = false;
+      emitter.getEvents().forEach(key => {
+        if (isChangeEventKey(key) && emitter.getEventListenerCount(key) > 0) {
+          haveListeners = true;
+        }
+      });
+      if (!haveListeners) {
         subscribedToChangeEvents = false;
+        if (streamActive && streamForcedState === undefined) {
+          streamActive = false;
+          stream.disconnect();
+        }
+      }
+    }
+  }
+
+  function setStreaming(state) {
+    const newState = state === null ? undefined : state;
+    if (newState !== streamForcedState) {
+      streamForcedState = newState;
+      let shouldBeStreaming = streamForcedState || (subscribedToChangeEvents && streamForcedState === undefined);
+      if (shouldBeStreaming && !streamActive) {
+        connectStream();
+      } else if (!shouldBeStreaming && streamActive) {
+        streamActive = false;
         stream.disconnect();
       }
     }
-    emitter.off.apply(emitter, Array.prototype.slice.call(arguments));
+  }
+
+  function isChangeEventKey(event) {
+    return event === changeEvent || event.substr(0, changeEvent.length + 1) === changeEvent + ':';
   }
 
   function handleMessage(event) {
@@ -565,6 +595,9 @@ export function initialize(env, user, options = {}) {
   }
 
   function signalSuccessfulInit() {
+    if (options.streaming !== undefined) {
+      setStreaming(options.streaming);
+    }
     emitter.emit(readyEvent);
     emitter.emit(successEvent); // allows initPromise to distinguish between success and failure
   }
@@ -631,6 +664,7 @@ export function initialize(env, user, options = {}) {
     track: track,
     on: on,
     off: off,
+    setStreaming: setStreaming,
     flush: flush,
     allFlags: allFlags,
   };
