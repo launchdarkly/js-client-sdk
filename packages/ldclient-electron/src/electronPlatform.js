@@ -1,6 +1,6 @@
 import * as xmlhttprequest from 'xmlhttprequest';
-import EventSource from 'eventsource';
 import * as storage from 'electron-json-storage';
+import { EventSource } from './eventsource';
 
 export default function makeElectronPlatform() {
   const ret = {};
@@ -19,9 +19,9 @@ export default function makeElectronPlatform() {
     clear: storage.remove,
   };
 
-  ret.eventSourceFactory = url => new EventSource(url); // TODO: allow REPORT
+  ret.eventSourceFactory = (url, options) => new EventSource(url, options);
   ret.eventSourceIsActive = es => es.readyState === EventSource.OPEN || es.readyState === EventSource.CONNECTING;
-  ret.eventSourceAllowsReport = false;
+  ret.eventSourceAllowsReport = true;
 
   return ret;
 }
