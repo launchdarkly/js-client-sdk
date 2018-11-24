@@ -55,7 +55,7 @@ export default function Stream(platform, config, environment, hash) {
   function openConnection() {
     let url;
     let query = '';
-    let options = {};
+    const options = {};
     if (platform.eventSourceFactory) {
       if (hash !== null && hash !== undefined) {
         query = 'h=' + hash;
