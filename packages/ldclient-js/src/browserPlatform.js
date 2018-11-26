@@ -77,8 +77,9 @@ export default function makeBrowserPlatform() {
     ret.eventSourceIsActive = es =>
       es.readyState === window.EventSource.OPEN || es.readyState === window.EventSource.CONNECTING;
 
-    ret.eventSourceAllowsReport = false;
   }
+
+  ret.eventSourceAllowsReport = false;
 
   return ret;
 }
