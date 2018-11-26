@@ -1,6 +1,8 @@
 import * as xmlhttprequest from 'xmlhttprequest';
 import * as storage from 'electron-json-storage';
-import { EventSource } from './eventsource';
+
+// eventsource code is in CommonJS
+const EventSource = require('./eventsource');
 
 export default function makeElectronPlatform() {
   const ret = {};

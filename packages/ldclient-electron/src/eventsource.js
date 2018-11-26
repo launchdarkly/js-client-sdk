@@ -309,11 +309,7 @@ function EventSource (url, eventSourceInitDict) {
   }
 }
 
-// **begin LaunchDarkly changes**
-module.exports = {
-  EventSource: EventSource
-};
-// **end LaunchDarkly changes**
+module.exports = EventSource;
 
 util.inherits(EventSource, events.EventEmitter)
 EventSource.prototype.constructor = EventSource; // make stacktraces readable
