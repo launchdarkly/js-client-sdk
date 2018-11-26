@@ -34,7 +34,7 @@ describe('LDClient', () => {
   describe('initialization', () => {
     it('should trigger the ready event', done => {
       const handleReady = jest.fn();
-      const client = LDClient.initialize(envName, user, { bootstrap: {}, sendEvents: false });
+      const client = LDClient.initializeMain(envName, user, { bootstrap: {}, sendEvents: false });
 
       client.on('ready', handleReady);
 
@@ -47,7 +47,7 @@ describe('LDClient', () => {
 
   describe('track()', () => {
     it('should not warn when tracking an arbitrary custom event', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {}, sendEvents: false });
+      const client = LDClient.initializeMain(envName, user, { bootstrap: {}, sendEvents: false });
 
       client.on('ready', () => {
         client.track('whatever');
