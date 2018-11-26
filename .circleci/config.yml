@@ -15,7 +15,6 @@ jobs:
           background: true
       - checkout
       - run: npm install
-      - run: free -m
       - run: $LERNA bootstrap
       - run: mkdir -p reports/junit
       - run: $LERNA run lint:all
