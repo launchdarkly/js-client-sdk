@@ -1,6 +1,5 @@
 // Adapted from https://github.com/EventSource/eventsource/tree/v1.0.7
 // and modified as follows:
-// - uses a named export, for better coexistence with ES6 code
 // - new properties "method" and "body" allow HTTP methods other than GET
 
 var original = require('original')
