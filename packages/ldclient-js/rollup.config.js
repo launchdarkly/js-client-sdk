@@ -14,6 +14,6 @@ const config = Object.assign({}, common, {
     { file: pkg.main, format: 'cjs', sourcemap: true },
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
-};
+});
 
 module.exports = config;
