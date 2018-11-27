@@ -418,14 +418,14 @@ export function initialize(env, user, options = {}) {
       if (!streamActive && streamForcedState === undefined) {
         connectStream();
       }
-      emitter.on.apply(emitter, [event, handler, context]);
+      emitter.on(event, handler, context);
     } else {
-      emitter.on.apply(emitter, Array.prototype.slice.call(arguments));
+      emitter.on(...arguments);
     }
   }
 
   function off(event) {
-    emitter.off.apply(emitter, Array.prototype.slice.call(arguments));
+    emitter.off(...arguments);
     if (isChangeEventKey(event)) {
       let haveListeners = false;
       emitter.getEvents().forEach(key => {
