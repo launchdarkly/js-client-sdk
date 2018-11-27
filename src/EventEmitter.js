@@ -32,6 +32,14 @@ export default function EventEmitter() {
     }
   };
 
+  emitter.getEvents = function() {
+    return Object.keys(events);
+  };
+
+  emitter.getEventListenerCount = function(event) {
+    return events[event] ? events[event].length : 0;
+  };
+
   emitter.maybeReportError = function(error) {
     if (!error) {
       return;
