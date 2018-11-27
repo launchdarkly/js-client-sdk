@@ -509,8 +509,7 @@ export function initialize(env, user, options = {}) {
           signalFailedInit(initErr);
         } else {
           if (settings) {
-            flags = settings;
-            store.saveFlags(flags);
+            updateSettings(settings); // this includes saving to local storage and sending change events
           } else {
             flags = {};
           }
@@ -518,9 +517,9 @@ export function initialize(env, user, options = {}) {
         }
       });
     } else {
-      // We're reading the flags from local storage. Signal that we're ready,
-      // then update localStorage for the next page load. We won't signal changes or update
-      // the in-memory flags unless you subscribe for changes
+      // We're reading the flags from local storage. Signal that we're ready immediately, but also
+      // start a request in the background to get newer flags. When we receive those, we will update
+      // localStorage, and will also send change events if the values have changed.
       utils.onNextTick(signalSuccessfulInit);
 
       requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
@@ -528,7 +527,7 @@ export function initialize(env, user, options = {}) {
           emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
         }
         if (settings) {
-          store.saveFlags(settings);
+           updateSettings(settings); // this includes saving to local storage and sending change events
         }
       });
     }
