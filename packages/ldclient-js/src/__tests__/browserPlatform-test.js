@@ -2,6 +2,7 @@ import browserPlatform from '../browserPlatform';
 
 describe('browserPlatform', () => {
   const platform = browserPlatform();
+  const lsKeyPrefix = 'ldclient-js-test:';
 
   describe('getCurrentUrl()', () => {
     it('returns value of window.location.href', () => {
@@ -40,6 +41,47 @@ describe('browserPlatform', () => {
     it('returns true if navigator.msDoNotTrack is "1"', () => {
       window.navigator.msDoNotTrack = '1';
       expect(platform.isDoNotTrack()).toEqual(true);
+    });
+  });
+
+  describe('localStorage', () => {
+    // Since we're not currently running these tests in an actual browser, this is really using a
+    // mock implementation of window.localStorage, but these tests still verify that our async
+    // wrapper code in browserPlatform.js is passing the parameters through correctly.
+
+    it('returns null or undefined for missing value', done => {
+      platform.localStorage.get(lsKeyPrefix + 'unused-key', (err, value) => {
+        expect(err).not.toBe(expect.anything());
+        expect(value).not.toBe(expect.anything());
+        done();
+      });
+    });
+
+    it('can get and set value', done => {
+      const key = lsKeyPrefix + 'get-set-key';
+      platform.localStorage.set(key, 'hello', err => {
+        expect(err).not.toBe(expect.anything());
+        platform.localStorage.get(key, (err, value) => {
+          expect(err).not.toBe(expect.anything());
+          expect(value).toEqual('hello');
+          done();
+        });
+      });
+    });
+
+    it('can delete value', done => {
+      const key = lsKeyPrefix + 'delete-key';
+      platform.localStorage.set(key, 'hello', err => {
+        expect(err).not.toBe(expect.anything());
+        platform.localStorage.clear(key, err => {
+          expect(err).not.toBe(expect.anything());
+          platform.localStorage.get(key, (err, value) => {
+            expect(err).not.toBe(expect.anything());
+            expect(value).not.toBe(expect.anything());
+            done();
+          });
+        });
+      });
     });
   });
 });

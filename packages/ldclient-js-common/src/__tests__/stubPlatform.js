@@ -2,15 +2,15 @@ import sinon from 'sinon';
 import EventSource from './EventSource-mock';
 import * as LDClient from '../index';
 
-let currentUrl = null;
-let doNotTrack = false;
-let localStore = {};
-
 const sinonXhr = sinon.useFakeXMLHttpRequest();
 sinonXhr.restore();
 
 export function defaults() {
-  return {
+  const localStore = {};
+  let currentUrl = null;
+  let doNotTrack = false;
+
+  const p = {
     newHttpRequest: () => new sinonXhr(),
     httpAllowsPost: () => true,
     getCurrentUrl: () => currentUrl,
@@ -22,35 +22,45 @@ export function defaults() {
     },
     eventSourceIsActive: es => es.readyState === EventSource.OPEN || es.readyState === EventSource.CONNECTING,
     localStorage: {
-      getItem: key => localStore[key],
-      setItem: (key, value) => {
-        localStore[key] = value;
+      get: (key, callback) => {
+        setTimeout(() => {
+          callback(null, localStore[key]);
+        }, 0);
       },
-      removeItem: key => {
+      set: (key, value, callback) => {
+        localStore[key] = value;
+        setTimeout(() => callback(null), 0);
+      },
+      clear: (key, callback) => {
         delete localStore[key];
+        setTimeout(() => callback(null), 0);
+      },
+    },
+
+    // extra methods used for testing
+    testing: {
+      makeClient: (env, user, options = {}) => LDClient.initialize(env, user, options, p).client,
+
+      setCurrentUrl: url => {
+        currentUrl = url;
+      },
+
+      setDoNotTrack: value => {
+        doNotTrack = value;
+      },
+
+      getLocalStorageImmediately: key => localStore[key],
+
+      setLocalStorageImmediately: (key, value) => {
+        localStore[key] = value;
       },
     },
   };
+  return p;
 }
 
 export function withoutHttp() {
   const e = defaults();
   delete e.newHttpRequest;
   return e;
-}
-
-export function setCurrentUrl(url) {
-  currentUrl = url;
-}
-
-export function setDoNotTrack(value) {
-  doNotTrack = value;
-}
-
-export function resetLocalStorage() {
-  localStore = {};
-}
-
-export function makeClient(env, user, options = {}) {
-  return LDClient.initialize(env, user, options, defaults()).client;
 }

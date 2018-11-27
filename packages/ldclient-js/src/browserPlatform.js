@@ -30,7 +30,31 @@ export default function makeBrowserPlatform() {
   };
 
   if (window.localStorage) {
-    ret.localStorage = window.localStorage;
+    ret.localStorage = {
+      get: (key, callback) => {
+        try {
+          callback(null, window.localStorage.getItem(key));
+        } catch (ex) {
+          callback(ex);
+        }
+      },
+      set: (key, value, callback) => {
+        try {
+          window.localStorage.setItem(key, value);
+          callback(null);
+        } catch (ex) {
+          callback(ex);
+        }
+      },
+      clear: (key, callback) => {
+        try {
+          window.localStorage.removeItem(key);
+          callback(null);
+        } catch (ex) {
+          callback(ex);
+        }
+      },
+    };
   }
 
   // If EventSource does not exist, the absence of eventSourceFactory will make us not try to open streams

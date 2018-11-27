@@ -2,10 +2,17 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:6-browsers
+      - image: circleci/node:latest
     environment:
       LERNA: ./node_modules/.bin/lerna
     steps:
+      - run:
+          name: install packages required by Electron
+          command: sudo apt-get install libgtk-3-0 libxss1 libgconf2-4 libnss3 libasound2
+      - run:
+          name: start display server so Electron can run headless
+          command: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1
+          background: true
       - checkout
       - run: npm install
       - run: $LERNA bootstrap
@@ -24,6 +31,7 @@ jobs:
           command: cd ~/project/packages/ldclient-electron && npm run test:junit
           environment:
             JEST_JUNIT_OUTPUT: "./reports/junit/electron-test-results.xml"
+            DISPLAY: ":99.0"  # so Electron will use xvfb
       - run: cd ~/project && $LERNA run check-typescript
       - store_test_results:
           path: reports/junit/

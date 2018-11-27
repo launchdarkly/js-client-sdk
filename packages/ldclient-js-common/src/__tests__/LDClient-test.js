@@ -13,6 +13,7 @@ describe('LDClient', () => {
   let errorSpy;
   let xhr;
   let requests = [];
+  let platform;
 
   beforeEach(() => {
     xhr = sinon.useFakeXMLHttpRequest();
@@ -22,6 +23,8 @@ describe('LDClient', () => {
 
     warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    platform = stubPlatform.defaults();
   });
 
   afterEach(() => {
@@ -42,7 +45,7 @@ describe('LDClient', () => {
   describe('initialization', () => {
     it('should trigger the ready event', done => {
       const handleReady = jest.fn();
-      const client = stubPlatform.makeClient(envName, user, {
+      const client = platform.testing.makeClient(envName, user, {
         bootstrap: {},
       });
 
@@ -56,7 +59,7 @@ describe('LDClient', () => {
 
     it('should trigger the initialized event', done => {
       const handleReady = jest.fn();
-      const client = stubPlatform.makeClient(envName, user, {
+      const client = platform.testing.makeClient(envName, user, {
         bootstrap: {},
       });
 
@@ -69,7 +72,7 @@ describe('LDClient', () => {
     });
 
     it('should emit an error when an invalid samplingInterval is specified', done => {
-      const client = stubPlatform.makeClient(envName, user, {
+      const client = platform.testing.makeClient(envName, user, {
         bootstrap: {},
         samplingInterval: 'totally not a number',
       });
@@ -81,7 +84,7 @@ describe('LDClient', () => {
     });
 
     it('should emit an error when initialize is called without an environment key', done => {
-      const client = stubPlatform.makeClient('', user, {
+      const client = platform.testing.makeClient('', user, {
         bootstrap: {},
       });
       client.on('error', err => {
@@ -91,7 +94,7 @@ describe('LDClient', () => {
     });
 
     it('should emit an error when an invalid environment key is specified', done => {
-      const client = stubPlatform.makeClient('abc', user);
+      const client = platform.testing.makeClient('abc', user);
       client.on('error', err => {
         expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
         done();
@@ -101,7 +104,7 @@ describe('LDClient', () => {
     });
 
     it('should emit a failure event when an invalid environment key is specified', done => {
-      const client = stubPlatform.makeClient('abc', user);
+      const client = platform.testing.makeClient('abc', user);
       client.on('failed', err => {
         expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
         done();
@@ -111,7 +114,7 @@ describe('LDClient', () => {
     });
 
     it('returns default values when an invalid environment key is specified', done => {
-      const client = stubPlatform.makeClient('abc', user);
+      const client = platform.testing.makeClient('abc', user);
       client.on('error', () => {
         expect(client.variation('flag-key', 1)).toEqual(1);
         done();
@@ -121,26 +124,26 @@ describe('LDClient', () => {
     });
 
     it('fetches flag settings if bootstrap is not provided (without reasons)', () => {
-      stubPlatform.makeClient(envName, user, {});
+      platform.testing.makeClient(envName, user, {});
       expect(/sdk\/eval/.test(requests[0].url)).toEqual(true);
       expect(/withReasons=true/.test(requests[0].url)).toEqual(false);
     });
 
     it('fetches flag settings if bootstrap is not provided (with reasons)', () => {
-      stubPlatform.makeClient(envName, user, { evaluationReasons: true });
+      platform.testing.makeClient(envName, user, { evaluationReasons: true });
       expect(/sdk\/eval/.test(requests[0].url)).toEqual(true);
       expect(/withReasons=true/.test(requests[0].url)).toEqual(true);
     });
 
     it('should not fetch flag settings if bootstrap is provided', () => {
-      stubPlatform.makeClient(envName, user, {
+      platform.testing.makeClient(envName, user, {
         bootstrap: {},
       });
       expect(requests.length).toEqual(0);
     });
 
     it('logs warning when bootstrap object uses old format', () => {
-      stubPlatform.makeClient(envName, user, {
+      platform.testing.makeClient(envName, user, {
         bootstrap: { foo: 'bar' },
       });
 
@@ -148,7 +151,7 @@ describe('LDClient', () => {
     });
 
     it('does not log warning when bootstrap object uses new format', () => {
-      stubPlatform.makeClient(envName, user, {
+      platform.testing.makeClient(envName, user, {
         bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1 } } },
       });
 
@@ -168,7 +171,7 @@ describe('LDClient', () => {
     });
 
     it('should not warn when tracking a custom event', done => {
-      const client = stubPlatform.makeClient(envName, user, { bootstrap: {} });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
 
       client.on('ready', () => {
         client.track('known');
@@ -179,7 +182,7 @@ describe('LDClient', () => {
     });
 
     it('should emit an error when tracking a non-string custom event', done => {
-      const client = stubPlatform.makeClient(envName, user, { bootstrap: {} });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
       client.on('ready', () => {
         const badCustomEventKeys = [123, [], {}, null, undefined];
         badCustomEventKeys.forEach(key => {
@@ -196,7 +199,7 @@ describe('LDClient', () => {
         req.respond(503);
       });
 
-      const client = stubPlatform.makeClient(envName, user, {});
+      const client = platform.testing.makeClient(envName, user, {});
 
       const handleError = jest.fn();
       client.on('error', handleError);
@@ -213,7 +216,7 @@ describe('LDClient', () => {
     it('should warn about missing user on first event', () => {
       const sandbox = sinon.sandbox.create();
       const warnSpy = sandbox.spy(console, 'warn');
-      const client = stubPlatform.makeClient(envName, null, {});
+      const client = platform.testing.makeClient(envName, null, {});
       client.track('eventkey', null);
       warnSpy.restore();
       sandbox.restore();
@@ -221,7 +224,7 @@ describe('LDClient', () => {
     });
 
     function verifyCustomHeader(sendLDHeaders, shouldGetHeaders) {
-      stubPlatform.makeClient(envName, user, { sendLDHeaders: sendLDHeaders });
+      platform.testing.makeClient(envName, user, { sendLDHeaders: sendLDHeaders });
       const request = requests[0];
       expect(request.requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(
         shouldGetHeaders ? utils.getLDUserAgentString() : undefined
@@ -244,7 +247,7 @@ describe('LDClient', () => {
   describe('waitUntilReady', () => {
     it('should resolve waitUntilReady promise when ready', done => {
       const handleReady = jest.fn();
-      const client = stubPlatform.makeClient(envName, user, {
+      const client = platform.testing.makeClient(envName, user, {
         bootstrap: {},
       });
 
@@ -261,7 +264,7 @@ describe('LDClient', () => {
     it('should resolve waitUntilReady promise after ready event was already emitted', done => {
       const handleInitialReady = jest.fn();
       const handleReady = jest.fn();
-      const client = stubPlatform.makeClient(envName, user, {
+      const client = platform.testing.makeClient(envName, user, {
         bootstrap: {},
       });
 
@@ -282,7 +285,7 @@ describe('LDClient', () => {
   describe('waitForInitialization', () => {
     it('resolves promise on successful init', done => {
       const handleReady = jest.fn();
-      const client = stubPlatform.makeClient(envName, user, {
+      const client = platform.testing.makeClient(envName, user, {
         bootstrap: {},
       });
 
@@ -297,7 +300,7 @@ describe('LDClient', () => {
     });
 
     it('rejects promise if flags request fails', done => {
-      const client = stubPlatform.makeClient('abc', user, {});
+      const client = platform.testing.makeClient('abc', user, {});
       client.waitForInitialization().catch(err => {
         expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
         done();
@@ -308,7 +311,7 @@ describe('LDClient', () => {
 
   describe('variation', () => {
     it('returns value for an existing flag - from bootstrap', () => {
-      const client = stubPlatform.makeClient(envName, user, {
+      const client = platform.testing.makeClient(envName, user, {
         bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1 } } },
       });
 
@@ -316,7 +319,7 @@ describe('LDClient', () => {
     });
 
     it('returns value for an existing flag - from bootstrap with old format', () => {
-      const client = stubPlatform.makeClient(envName, user, {
+      const client = platform.testing.makeClient(envName, user, {
         bootstrap: { foo: 'bar' },
       });
 
@@ -324,7 +327,7 @@ describe('LDClient', () => {
     });
 
     it('returns value for an existing flag - from polling', done => {
-      const client = stubPlatform.makeClient(envName, user, {});
+      const client = platform.testing.makeClient(envName, user, {});
       client.on('ready', () => {
         expect(client.variation('enable-foo', 1)).toEqual(true);
         done();
@@ -337,7 +340,7 @@ describe('LDClient', () => {
     });
 
     it('returns default value for flag that had null value', done => {
-      const client = stubPlatform.makeClient(envName, user, {});
+      const client = platform.testing.makeClient(envName, user, {});
       client.on('ready', () => {
         expect(client.variation('foo', 'default')).toEqual('default');
         done();
@@ -346,7 +349,7 @@ describe('LDClient', () => {
     });
 
     it('returns default value for unknown flag', () => {
-      const client = stubPlatform.makeClient(envName, user, {
+      const client = platform.testing.makeClient(envName, user, {
         bootstrap: { $flagsState: {} },
       });
 
@@ -357,7 +360,7 @@ describe('LDClient', () => {
   describe('variationDetail', () => {
     const reason = { kind: 'FALLTHROUGH' };
     it('returns details for an existing flag - from bootstrap', () => {
-      const client = stubPlatform.makeClient(envName, user, {
+      const client = platform.testing.makeClient(envName, user, {
         bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1, variation: 2, reason: reason } } },
       });
 
@@ -365,7 +368,7 @@ describe('LDClient', () => {
     });
 
     it('returns details for an existing flag - from bootstrap with old format', () => {
-      const client = stubPlatform.makeClient(envName, user, {
+      const client = platform.testing.makeClient(envName, user, {
         bootstrap: { foo: 'bar' },
       });
 
@@ -373,7 +376,7 @@ describe('LDClient', () => {
     });
 
     it('returns details for an existing flag - from polling', done => {
-      const client = stubPlatform.makeClient(envName, user, {});
+      const client = platform.testing.makeClient(envName, user, {});
       client.on('ready', () => {
         expect(client.variationDetail('foo', 'default')).toEqual({ value: 'bar', variationIndex: 2, reason: reason });
         done();
@@ -386,7 +389,7 @@ describe('LDClient', () => {
     });
 
     it('returns default value for flag that had null value', done => {
-      const client = stubPlatform.makeClient(envName, user, {});
+      const client = platform.testing.makeClient(envName, user, {});
       client.on('ready', () => {
         expect(client.variationDetail('foo', 'default')).toEqual({
           value: 'default',
@@ -399,7 +402,7 @@ describe('LDClient', () => {
     });
 
     it('returns default value and error for unknown flag', () => {
-      const client = stubPlatform.makeClient(envName, user, {
+      const client = platform.testing.makeClient(envName, user, {
         bootstrap: { $flagsState: {} },
       });
 
@@ -413,7 +416,7 @@ describe('LDClient', () => {
 
   describe('allFlags', () => {
     it('returns flag values', done => {
-      const client = stubPlatform.makeClient(envName, user, {});
+      const client = platform.testing.makeClient(envName, user, {});
       client.on('ready', () => {
         expect(client.allFlags()).toEqual({ key1: 'value1', key2: 'value2' });
         done();
@@ -427,7 +430,7 @@ describe('LDClient', () => {
     });
 
     it('returns empty map if client is not initialized', () => {
-      const client = stubPlatform.makeClient(envName, user);
+      const client = platform.testing.makeClient(envName, user);
       expect(client.allFlags()).toEqual({});
     });
   });
@@ -435,7 +438,7 @@ describe('LDClient', () => {
   describe('identify', () => {
     it('updates flag values when the user changes', done => {
       const user2 = { key: 'user2' };
-      const client = stubPlatform.makeClient(envName, user, { bootstrap: {} });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
 
       client.on('ready', () => {
         client.identify(user2, null, () => {
@@ -443,13 +446,15 @@ describe('LDClient', () => {
           done();
         });
 
-        getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": {"value": true}}');
+        utils.onNextTick(() =>
+          getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": {"value": true}}')
+        );
       });
     });
 
     it('yields map of flag values as the result of identify()', done => {
       const user2 = { key: 'user2' };
-      const client = stubPlatform.makeClient(envName, user, { bootstrap: {} });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
 
       client.on('ready', () => {
         client.identify(user2, null).then(flagMap => {
@@ -457,12 +462,14 @@ describe('LDClient', () => {
           done();
         });
 
-        getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": {"value": true}}');
+        utils.onNextTick(() =>
+          getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": {"value": true}}')
+        );
       });
     });
 
     it('returns an error when identify is called with null user', done => {
-      const client = stubPlatform.makeClient(envName, user, { bootstrap: {} });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
 
       client.on('ready', () => {
         client.identify(null).then(
@@ -477,7 +484,7 @@ describe('LDClient', () => {
     });
 
     it('returns an error when identify is called with user with no key', done => {
-      const client = stubPlatform.makeClient(envName, user, { bootstrap: {} });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
 
       client.on('ready', () => {
         client.identify({ country: 'US' }).then(
@@ -493,7 +500,7 @@ describe('LDClient', () => {
 
     it('does not change flag values after identify is called with null user', done => {
       const data = { foo: 'bar' };
-      const client = stubPlatform.makeClient(envName, user, { bootstrap: data });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: data });
 
       client.on('ready', () => {
         expect(client.variation('foo', 'x')).toEqual('bar');
@@ -511,7 +518,7 @@ describe('LDClient', () => {
 
     it('does not change flag values after identify is called with invalid user', done => {
       const data = { foo: 'bar' };
-      const client = stubPlatform.makeClient(envName, user, { bootstrap: data });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: data });
 
       client.on('ready', () => {
         expect(client.variation('foo', 'x')).toEqual('bar');

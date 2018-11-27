@@ -27,13 +27,14 @@
     "format:test:js": "prettier --ignore-path ../../.prettierignore --list-different 'src/**/*.js'",
     "build": "cross-env NODE_ENV=development rollup -c rollup.config.js",
     "build:min": "cross-env NODE_ENV=production rollup -c rollup.config.js",
-    "test": "NODE_ENV=test ELECTRON_RUN_AS_NODE=true ./node_modules/.bin/electron ./node_modules/.bin/jest",
-    "test:junit": "NODE_ENV=test ELECTRON_RUN_AS_NODE=true ./node_modules/.bin/electron ./node_modules/.bin/jest --testResultsProcessor jest-junit",
+    "test": "NODE_ENV=test jest",
+    "test:junit": "NODE_ENV=test jest --testResultsProcessor jest-junit",
     "check-typescript": "node_modules/typescript/bin/tsc",
     "clean": "rimraf dist/**",
     "prepublishOnly": "npm run build:min"
   },
   "devDependencies": {
+    "@jest-runner/electron": "0.1.0",
     "babel-core": "6.26.3",
     "babel-eslint": "8.2.2",
     "babel-jest": "22.4.3",
@@ -61,6 +62,7 @@
     "typescript": "3.0.1"
   },
   "dependencies": {
+    "electron-json-storage": "4.1.4",
     "eventsource": "1.0.7",
     "ldclient-js-common": "^2.7.1",
     "xmlhttprequest": "1.8.0"
