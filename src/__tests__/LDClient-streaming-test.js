@@ -175,27 +175,53 @@ describe('LDClient', () => {
         });
       });
 
-      it('does not disconnect if setStreaming(true) was called', done => {
+      it('does not disconnect if setStreaming(true) was called, but still removes event listener', done => {
+        const changes1 = [];
+        const changes2 = [];
+
         const client = LDClient.initialize(envName, user, { bootstrap: {} });
-        const listener1 = () => {};
-        const listener2 = () => {};
+        const listener1 = allValues => changes1.push(allValues);
+        const listener2 = newValue => changes2.push(newValue);
 
         client.on('ready', () => {
           client.setStreaming(true);
 
           client.on('change', listener1);
-          client.on('change:flagkey', listener2);
+          client.on('change:flag', listener2);
           expectStreamUrlIsOpen(fullStreamUrlWithUser);
+
+          streamEvents().put({
+            data: '{"flag":{"value":"a","version":1}}',
+          });
+
+          expect(changes1).toEqual([{flag: {current: "a", previous:undefined}}]);
+          expect(changes2).toEqual(["a"]);
 
           client.off('change', listener1);
           expectStreamUrlIsOpen(fullStreamUrlWithUser);
 
-          client.off('change:flagkey', listener2);
+          streamEvents().put({
+            data: '{"flag":{"value":"b","version":1}}',
+          });
+
+          expect(changes1).toEqual([{flag: {current: "a", previous:undefined}}]);
+          expect(changes2).toEqual(["a", "b"]);
+
+          client.off('change:flag', listener2);
           expectStreamUrlIsOpen(fullStreamUrlWithUser);
+
+          streamEvents().put({
+            data: '{"flag":{"value":"c","version":1}}',
+          });
+
+          expect(changes1).toEqual([{flag: {current: "a", previous:undefined}}]);
+          expect(changes2).toEqual(["a", "b"]);
 
           done();
         });
       });
+
+
     });
 
     it('passes the secure mode hash in the stream URL if provided', done => {
