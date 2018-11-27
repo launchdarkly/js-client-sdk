@@ -527,7 +527,7 @@ export function initialize(env, user, options = {}) {
           emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
         }
         if (settings) {
-           updateSettings(settings); // this includes saving to local storage and sending change events
+          updateSettings(settings); // this includes saving to local storage and sending change events
         }
       });
     }
