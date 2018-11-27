@@ -52,4 +52,10 @@ describe('electronPlatform', () => {
       });
     });
   });
+
+  describe('EventSource', () => {
+    it('supports REPORT mode', () => {
+      expect(platform.eventSourceAllowsReport).toBe(true);
+    });
+  });
 });

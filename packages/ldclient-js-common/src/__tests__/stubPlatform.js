@@ -15,9 +15,9 @@ export function defaults() {
     httpAllowsPost: () => true,
     getCurrentUrl: () => currentUrl,
     isDoNotTrack: () => doNotTrack,
-    eventSourceFactory: (url, body) => {
+    eventSourceFactory: (url, options) => {
       const es = new EventSource(url);
-      es.requestBody = body;
+      es.options = options;
       return es;
     },
     eventSourceIsActive: es => es.readyState === EventSource.OPEN || es.readyState === EventSource.CONNECTING,

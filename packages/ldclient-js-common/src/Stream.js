@@ -54,8 +54,8 @@ export default function Stream(platform, config, environment, hash) {
 
   function openConnection() {
     let url;
-    let body;
     let query = '';
+    const options = {};
     if (platform.eventSourceFactory) {
       if (hash !== null && hash !== undefined) {
         query = 'h=' + hash;
@@ -63,7 +63,9 @@ export default function Stream(platform, config, environment, hash) {
       if (useReport) {
         if (platform.eventSourceAllowsReport) {
           url = evalUrlPrefix;
-          body = JSON.stringify(user);
+          options.method = 'REPORT';
+          options.headers = { 'Content-Type': 'application/json' };
+          options.body = JSON.stringify(user);
         } else {
           // if we can't do REPORT, fall back to the old ping-based stream
           url = baseUrl + '/ping/' + environment;
@@ -78,7 +80,7 @@ export default function Stream(platform, config, environment, hash) {
       url = url + (query ? '?' : '') + query;
 
       closeConnection();
-      es = platform.eventSourceFactory(url, body);
+      es = platform.eventSourceFactory(url, options);
       for (const key in handlers) {
         if (handlers.hasOwnProperty(key)) {
           es.addEventListener(key, handlers[key]);

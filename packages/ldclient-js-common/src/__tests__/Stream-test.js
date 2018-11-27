@@ -51,7 +51,8 @@ describe('Stream', () => {
     const stream = new Stream(platform, defaultConfig, envName);
     stream.connect(user, {});
 
-    expectStream(baseUrl + '/eval/' + envName + '/' + encodedUser);
+    const es = expectStream(baseUrl + '/eval/' + envName + '/' + encodedUser);
+    expect(es.options).toEqual({});
   });
 
   it('adds secure mode hash to URL if provided', () => {
@@ -76,7 +77,8 @@ describe('Stream', () => {
     stream.connect(user, {});
 
     const es = expectStream(baseUrl + '/eval/' + envName);
-    expect(JSON.parse(es.requestBody)).toEqual(user);
+    expect(es.options.method).toEqual('REPORT');
+    expect(JSON.parse(es.options.body)).toEqual(user);
   });
 
   it('sets event listeners', () => {
