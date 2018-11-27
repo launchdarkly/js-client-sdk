@@ -3,6 +3,7 @@ import semverCompare from 'semver-compare';
 
 import * as stubPlatform from './stubPlatform';
 import * as LDClient from '../index';
+import EventEmitter from '../EventEmitter';
 import * as messages from '../messages';
 import * as utils from '../utils';
 
@@ -531,6 +532,86 @@ describe('LDClient', () => {
             done();
           }
         );
+      });
+    });
+  });
+
+  describe('initializing with stateProvider', () => {
+    const makeProvider = initialState => {
+      const sp = EventEmitter();
+      sp.getInitialState = () => initialState;
+      return sp;
+    };
+
+    it('immediately uses initial state if available, and does not make an HTTP request', done => {
+      const user = { key: 'user' };
+      const state = {
+        environment: 'env',
+        user: user,
+        flags: { flagkey: { value: 'value' } },
+      };
+      const sp = makeProvider(state);
+
+      const client = platform.testing.makeClient(null, null, { stateProvider: sp });
+      expect(client.variation('flagkey')).toEqual('value');
+      expect(requests.length).toEqual(0);
+
+      client.waitForInitialization().then(done);
+    });
+
+    it('defers initialization if initial state not available, and does not make an HTTP request', () => {
+      const sp = makeProvider(null);
+
+      platform.testing.makeClient(null, null, { stateProvider: sp });
+      expect(requests.length).toEqual(0);
+    });
+
+    it('finishes initialization on receiving init event', done => {
+      const user = { key: 'user' };
+      const state = {
+        environment: 'env',
+        user: user,
+        flags: { flagkey: { value: 'value' } },
+      };
+      const sp = makeProvider(null);
+
+      const client = platform.testing.makeClient(null, null, { stateProvider: sp });
+
+      sp.emit('init', state);
+
+      client.waitForInitialization().then(() => {
+        expect(client.variation('flagkey')).toEqual('value');
+        done();
+      });
+    });
+
+    it('updates flags on receiving update event', done => {
+      const user = { key: 'user' };
+      const state0 = {
+        environment: 'env',
+        user: user,
+        flags: { flagkey: { value: 'value0' } },
+      };
+      const sp = makeProvider(state0);
+
+      const client = platform.testing.makeClient(null, null, { stateProvider: sp });
+
+      client.waitForInitialization().then(() => {
+        expect(client.variation('flagkey')).toEqual('value0');
+
+        const state1 = {
+          flags: { flagkey: { value: 'value1' } },
+        };
+
+        client.on('change:flagkey', (newValue, oldValue) => {
+          expect(newValue).toEqual('value1');
+          expect(oldValue).toEqual('value0');
+          expect(client.variation('flagkey')).toEqual('value1');
+
+          done();
+        });
+
+        sp.emit('update', state1);
       });
     });
   });

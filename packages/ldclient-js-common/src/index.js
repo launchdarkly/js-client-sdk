@@ -13,6 +13,7 @@ const readyEvent = 'ready';
 const successEvent = 'initialized';
 const failedEvent = 'failed';
 const changeEvent = 'change';
+const internalChangeEvent = 'internal-change';
 
 // This is called by the per-platform initialize functions to create the base client object that we
 // may also extend with additional behavior. It returns an object with these properties:
@@ -23,9 +24,10 @@ const changeEvent = 'change';
 export function initialize(env, user, specifiedOptions, platform, extraDefaults) {
   const emitter = EventEmitter();
   const options = configuration.validate(specifiedOptions, emitter, extraDefaults);
+  const stateProvider = options.stateProvider;
   const hash = options.hash;
   const sendEvents = options.sendEvents;
-  const environment = env;
+  let environment = env;
   const stream = Stream(platform, options, environment, hash);
   const events = options.eventProcessor || EventProcessor(platform, options, environment, emitter);
   const requestor = Requestor(platform, options, environment);
@@ -69,6 +71,10 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   }
 
   function enqueueEvent(event) {
+    if (!environment) {
+      // We're in paired mode and haven't been initialized with an environment or user yet
+      return;
+    }
     if (!event.user) {
       if (firstEvent) {
         if (console && console.warn) {
@@ -87,6 +93,10 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   }
 
   function sendIdentifyEvent(user) {
+    if (stateProvider) {
+      // In paired mode, the other client is responsible for sending identify events
+      return;
+    }
     if (user) {
       enqueueEvent({
         kind: 'identify',
@@ -345,6 +355,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
       });
 
       emitter.emit(changeEvent, changeEventParams);
+      emitter.emit(internalChangeEvent, flags);
 
       if (!options.sendEventsOnlyForVariation) {
         keys.forEach(key => {
@@ -382,20 +393,52 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     emitter.off.apply(emitter, Array.prototype.slice.call(arguments));
   }
 
-  if (!env) {
-    utils.onNextTick(() => {
-      emitter.maybeReportError(new errors.LDInvalidEnvironmentIdError(messages.environmentNotSpecified()));
+  const readyPromise = new Promise(resolve => {
+    const onReady = emitter.on(readyEvent, () => {
+      emitter.off(readyEvent, onReady);
+      resolve();
     });
-  }
+  });
 
-  if (!user) {
-    utils.onNextTick(() => {
-      emitter.maybeReportError(new errors.LDInvalidUserError(messages.userNotSpecified()));
+  const initPromise = new Promise((resolve, reject) => {
+    const onSuccess = emitter.on(successEvent, () => {
+      emitter.off(successEvent, onSuccess);
+      resolve();
     });
-  } else if (!user.key) {
-    utils.onNextTick(() => {
-      emitter.maybeReportError(new errors.LDInvalidUserError(messages.invalidUser()));
+    const onFailure = emitter.on(failedEvent, err => {
+      emitter.off(failedEvent, onFailure);
+      reject(err);
     });
+  });
+
+  if (stateProvider) {
+    // The stateProvider option is used in the Electron SDK, to allow a client instance in the main process
+    // to control another client instance (i.e. this one) in the renderer process. We can't predict which
+    // one will start up first, so the initial state may already be available for us or we may have to wait
+    // to receive it.
+    const state = stateProvider.getInitialState();
+    if (state) {
+      initFromStateProvider(state);
+    } else {
+      stateProvider.on('init', initFromStateProvider);
+    }
+    stateProvider.on('update', updateFromStateProvider);
+  } else {
+    if (!env) {
+      utils.onNextTick(() => {
+        emitter.maybeReportError(new errors.LDInvalidEnvironmentIdError(messages.environmentNotSpecified()));
+      });
+    }
+
+    if (!user) {
+      utils.onNextTick(() => {
+        emitter.maybeReportError(new errors.LDInvalidUserError(messages.userNotSpecified()));
+      });
+    } else if (!user.key) {
+      utils.onNextTick(() => {
+        emitter.maybeReportError(new errors.LDInvalidUserError(messages.invalidUser()));
+      });
+    }
   }
 
   if (typeof options.bootstrap === 'object') {
@@ -437,7 +480,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
         });
       }
     });
-  } else {
+  } else if (!stateProvider) {
     requestor.fetchFlagSettings(ident.getUser(), hash, (err, requestedFlags) => {
       if (err) {
         flags = {};
@@ -448,6 +491,22 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
         signalSuccessfulInit();
       }
     });
+  }
+
+  function initFromStateProvider(state) {
+    environment = state.environment;
+    ident.setUser(state.user);
+    flags = state.flags;
+    utils.onNextTick(signalSuccessfulInit);
+  }
+
+  function updateFromStateProvider(state) {
+    if (state.user) {
+      ident.setUser(state.user);
+    }
+    if (state.flags) {
+      updateSettings(state.flags);
+    }
   }
 
   function signalSuccessfulInit() {
@@ -474,23 +533,10 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     }
   }
 
-  const readyPromise = new Promise(resolve => {
-    const onReady = emitter.on(readyEvent, () => {
-      emitter.off(readyEvent, onReady);
-      resolve();
-    });
-  });
-
-  const initPromise = new Promise((resolve, reject) => {
-    const onSuccess = emitter.on(successEvent, () => {
-      emitter.off(successEvent, onSuccess);
-      resolve();
-    });
-    const onFailure = emitter.on(failedEvent, err => {
-      emitter.off(failedEvent, onFailure);
-      reject(err);
-    });
-  });
+  function getFlagsInternal() {
+    // used by Electron integration
+    return flags;
+  }
 
   const client = {
     waitForInitialization: () => initPromise,
@@ -514,6 +560,8 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     start: start, // Starts the client once the environment is ready.
     stop: stop, // Shuts down the client.
     enqueueEvent: enqueueEvent, // Puts an analytics event in the queue, if event sending is enabled.
+    getFlagsInternal: getFlagsInternal, // Returns flag data structure with all details.
+    internalChangeEventName: internalChangeEvent, // This event is triggered whenever we have new flag state.
   };
 }
 

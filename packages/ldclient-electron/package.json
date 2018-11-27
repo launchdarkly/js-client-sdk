@@ -63,6 +63,7 @@
   },
   "dependencies": {
     "electron-json-storage": "4.1.4",
+    "ldclient-js": "^2.7.1",
     "ldclient-js-common": "^2.7.1",
     "original": "^1.0.0",
     "xmlhttprequest": "1.8.0"
