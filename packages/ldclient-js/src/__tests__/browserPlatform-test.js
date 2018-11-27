@@ -84,4 +84,10 @@ describe('browserPlatform', () => {
       });
     });
   });
+
+  describe('EventSource', () => {
+    it('does not support REPORT mode', () => {
+      expect(platform.eventSourceAllowsReport).toBe(false);
+    });
+  });
 });
