@@ -217,6 +217,25 @@ describe('LDClient', () => {
         .catch(() => {});
     });
 
+    it('should load flags from local storage and then request newer ones', done => {
+      const json = '{"flag": "a"}';
+
+      window.localStorage.setItem(lsKey, json);
+
+      const client = LDClient.initialize(envName, user, { bootstrap: 'localstorage', streaming: false });
+
+      client.waitForInitialization().then(() => {
+        expect(client.variation('flag')).toEqual('a');
+
+        client.on('change:flag', newValue => {
+          expect(newValue).toEqual('b');
+          done();
+        });
+
+        requests[0].respond(200, { 'Content-Type': 'application/json' }, '{"flag": {"value": "b", "version": 2}}');
+      });
+    });
+
     it('should start with empty flags if we tried to use cached settings and there are none', done => {
       window.localStorage.removeItem(lsKey);
 
