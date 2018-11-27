@@ -194,8 +194,8 @@ describe('LDClient', () => {
             data: '{"flag":{"value":"a","version":1}}',
           });
 
-          expect(changes1).toEqual([{flag: {current: "a", previous:undefined}}]);
-          expect(changes2).toEqual(["a"]);
+          expect(changes1).toEqual([{ flag: { current: 'a', previous: undefined } }]);
+          expect(changes2).toEqual(['a']);
 
           client.off('change', listener1);
           expectStreamUrlIsOpen(fullStreamUrlWithUser);
@@ -204,8 +204,8 @@ describe('LDClient', () => {
             data: '{"flag":{"value":"b","version":1}}',
           });
 
-          expect(changes1).toEqual([{flag: {current: "a", previous:undefined}}]);
-          expect(changes2).toEqual(["a", "b"]);
+          expect(changes1).toEqual([{ flag: { current: 'a', previous: undefined } }]);
+          expect(changes2).toEqual(['a', 'b']);
 
           client.off('change:flag', listener2);
           expectStreamUrlIsOpen(fullStreamUrlWithUser);
@@ -214,14 +214,12 @@ describe('LDClient', () => {
             data: '{"flag":{"value":"c","version":1}}',
           });
 
-          expect(changes1).toEqual([{flag: {current: "a", previous:undefined}}]);
-          expect(changes2).toEqual(["a", "b"]);
+          expect(changes1).toEqual([{ flag: { current: 'a', previous: undefined } }]);
+          expect(changes2).toEqual(['a', 'b']);
 
           done();
         });
       });
-
-
     });
 
     it('passes the secure mode hash in the stream URL if provided', done => {
