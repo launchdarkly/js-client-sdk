@@ -24,7 +24,6 @@ const internalChangeEvent = 'internal-change';
 export function initialize(env, user, specifiedOptions, platform, extraDefaults) {
   const emitter = EventEmitter();
   const options = configuration.validate(specifiedOptions, emitter, extraDefaults);
-  const stateProvider = options.stateProvider;
   const hash = options.hash;
   const sendEvents = options.sendEvents;
   let environment = env;
@@ -38,6 +37,18 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   let streamForcedState;
   let subscribedToChangeEvents;
   let firstEvent = true;
+
+  // The "stateProvider" object is used in the Electron SDK, to allow one client instance to take partial
+  // control of another. If present, it has the following contract:
+  // - getInitialState() returns the initial client state if it is already available. The state is an
+  //   object whose properties are "environment", "user", and "flags".
+  // - on("init", listener) triggers an event when the initial client state becomes available, passing
+  //   the state object to the listener.
+  // - on("update", listener) triggers an event when flag values change and/or the current user changes.
+  //   The parameter is an object that *may* contain "user" and/or "flags".
+  // - enqueueEvent(event) accepts an analytics event object and returns true if the stateProvider will
+  //   be responsible for delivering it, or false if we still should deliver it ourselves.
+  const stateProvider = options.stateProvider;
 
   function readFlagsFromBootstrap(data) {
     // If the bootstrap data came from an older server-side SDK, we'll have just a map of keys to values.
@@ -76,6 +87,9 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     if (!environment) {
       // We're in paired mode and haven't been initialized with an environment or user yet
       return;
+    }
+    if (stateProvider && stateProvider.enqueueEvent && stateProvider.enqueueEvent(event)) {
+      return; // it'll be handled elsewhere
     }
     if (!event.user) {
       if (firstEvent) {

@@ -1,6 +1,7 @@
 import sinon from 'sinon';
 import EventSource from './EventSource-mock';
 import * as LDClient from '../index';
+import EventEmitter from '../EventEmitter';
 
 const sinonXhr = sinon.useFakeXMLHttpRequest();
 sinonXhr.restore();
@@ -63,4 +64,10 @@ export function withoutHttp() {
   const e = defaults();
   delete e.newHttpRequest;
   return e;
+}
+
+export function mockStateProvider(initialState) {
+  const sp = EventEmitter();
+  sp.getInitialState = () => initialState;
+  return sp;
 }

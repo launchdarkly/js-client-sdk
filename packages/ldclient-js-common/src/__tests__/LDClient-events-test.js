@@ -254,5 +254,23 @@ describe('LDClient', () => {
         done();
       });
     });
+
+    it('allows stateProvider to take over sending an event', done => {
+      const ep = stubEventProcessor();
+
+      const sp = stubPlatform.mockStateProvider({ environment: envName, user: user, flags: {} });
+      const divertedEvents = [];
+      sp.enqueueEvent = event => divertedEvents.push(event);
+
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, stateProvider: sp });
+
+      client.on('ready', () => {
+        client.track('eventkey');
+        expect(ep.events.length).toEqual(0);
+        expect(divertedEvents.length).toEqual(1);
+        expect(divertedEvents[0].kind).toEqual('custom');
+        done();
+      });
+    });
   });
 });
