@@ -10,8 +10,10 @@ const ipcEventInitClient = 'ld-init';
 const ipcEventUpdateFlagsOrUser = 'ld-update';
 const ipcEventAnalyticsEvent = 'ld-event';
 
+const anyEnvironment = '*';
+
 function eventName(name, env) {
-  return name + ':' + (env || '*');
+  return name + ':' + env;
 }
 
 export function createMainProcessClientStateTracker(env, user) {
@@ -35,7 +37,7 @@ export function createMainProcessClientStateTracker(env, user) {
 
   t.initialized = flags => {
     state.flags = flags;
-    broadcastEventToRenderers(eventName(ipcEventInitClient), state);
+    broadcastEventToRenderers(eventName(ipcEventInitClient, anyEnvironment), state);
     broadcastEventToRenderers(eventName(ipcEventInitClient, env), state);
   };
 
@@ -92,7 +94,7 @@ export function createStateProviderForRendererClient(initialEnv) {
     electron.ipcRenderer.once(eventName(ipcEventInitClient, currentEnv), (event, state) => fireInit(state));
     listenForUpdates();
   } else {
-    electron.ipcRenderer.once(eventName(ipcEventInitClient), (event, state) => {
+    electron.ipcRenderer.once(eventName(ipcEventInitClient, anyEnvironment), (event, state) => {
       initialState = state;
       currentEnv = state.environment;
       listenForUpdates();
