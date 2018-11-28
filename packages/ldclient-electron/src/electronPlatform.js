@@ -1,8 +1,6 @@
 import * as xmlhttprequest from 'xmlhttprequest';
 import * as storage from 'electron-json-storage';
-
-// eventsource code is in CommonJS
-const EventSource = require('./eventsource');
+import { EventSource } from 'launchdarkly-eventsource';
 
 export default function makeElectronPlatform() {
   const ret = {};
