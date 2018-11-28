@@ -63,6 +63,7 @@
   },
   "dependencies": {
     "electron-json-storage": "4.1.4",
+    "launchdarkly-eventsource": "1.0.7-rc.1",
     "ldclient-js": "^2.7.1",
     "ldclient-js-common": "^2.7.1",
     "original": "^1.0.0",
