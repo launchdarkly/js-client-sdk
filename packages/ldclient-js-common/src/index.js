@@ -34,6 +34,8 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   const seenRequests = {};
   let flags = typeof options.bootstrap === 'object' ? readFlagsFromBootstrap(options.bootstrap) : {};
   let useLocalStorage;
+  let streamActive;
+  let streamForcedState;
   let subscribedToChangeEvents;
   let firstEvent = true;
 
@@ -172,7 +174,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
                 } else {
                   resolve(result);
                 }
-                if (subscribedToChangeEvents) {
+                if (streamActive) {
                   connectStream();
                 }
               });
@@ -265,6 +267,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   }
 
   function connectStream() {
+    streamActive = true;
     if (!ident.getUser()) {
       return;
     }
@@ -313,6 +316,13 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
         }
       },
     });
+  }
+
+  function disconnectStream() {
+    if (streamActive) {
+      stream.disconnect();
+      streamActive = false;
+    }
   }
 
   function updateSettings(newFlags, callback) {
@@ -372,25 +382,50 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   }
 
   function on(event, handler, context) {
-    if (event.substr(0, changeEvent.length) === changeEvent) {
+    if (isChangeEventKey(event)) {
       subscribedToChangeEvents = true;
-      if (!stream.isConnected()) {
+      if (!streamActive && streamForcedState === undefined) {
         connectStream();
       }
-      emitter.on.apply(emitter, [event, handler, context]);
+      emitter.on(event, handler, context);
     } else {
-      emitter.on.apply(emitter, Array.prototype.slice.call(arguments));
+      emitter.on(...arguments);
     }
   }
 
   function off(event) {
-    if (event === changeEvent) {
-      if ((subscribedToChangeEvents = true)) {
+    emitter.off(...arguments);
+    if (isChangeEventKey(event)) {
+      let haveListeners = false;
+      emitter.getEvents().forEach(key => {
+        if (isChangeEventKey(key) && emitter.getEventListenerCount(key) > 0) {
+          haveListeners = true;
+        }
+      });
+      if (!haveListeners) {
         subscribedToChangeEvents = false;
-        stream.disconnect();
+        if (streamActive && streamForcedState === undefined) {
+          disconnectStream();
+        }
       }
     }
-    emitter.off.apply(emitter, Array.prototype.slice.call(arguments));
+  }
+
+  function setStreaming(state) {
+    const newState = state === null ? undefined : state;
+    if (newState !== streamForcedState) {
+      streamForcedState = newState;
+      const shouldBeStreaming = streamForcedState || (subscribedToChangeEvents && streamForcedState === undefined);
+      if (shouldBeStreaming && !streamActive) {
+        connectStream();
+      } else if (!shouldBeStreaming && streamActive) {
+        disconnectStream();
+      }
+    }
+  }
+
+  function isChangeEventKey(event) {
+    return event === changeEvent || event.substr(0, changeEvent.length + 1) === changeEvent + ':';
   }
 
   const readyPromise = new Promise(resolve => {
@@ -455,8 +490,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
             signalFailedInit(initErr);
           } else {
             if (requestedFlags) {
-              flags = requestedFlags;
-              store.saveFlags(flags); // Don't wait for this operation to complete
+              updateSettings(requestedFlags, () => {}); // this includes saving to local storage and sending change events
             } else {
               flags = {};
             }
@@ -475,7 +509,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
             emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
           }
           if (requestedFlags) {
-            store.saveFlags(requestedFlags, () => {}); // Don't wait for this operation to complete
+            updateSettings(requestedFlags, () => {}); // this includes saving to local storage and sending change events
           }
         });
       }
@@ -510,6 +544,9 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   }
 
   function signalSuccessfulInit() {
+    if (options.streaming !== undefined) {
+      setStreaming(options.streaming);
+    }
     emitter.emit(readyEvent);
     emitter.emit(successEvent); // allows initPromise to distinguish between success and failure
   }
@@ -547,6 +584,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     track: track,
     on: on,
     off: off,
+    setStreaming: setStreaming,
     flush: flush,
     allFlags: allFlags,
   };
