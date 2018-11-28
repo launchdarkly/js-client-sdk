@@ -1,6 +1,6 @@
 import * as xmlhttprequest from 'xmlhttprequest';
 import * as storage from 'electron-json-storage';
-import * as EventSource from 'launchdarkly-eventsource';
+import { EventSource } from 'launchdarkly-eventsource';
 
 export default function makeElectronPlatform() {
   const ret = {};
