@@ -150,6 +150,12 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   }
 
   function identify(user, hash, onDone) {
+    if (stateProvider) {
+      // We're being controlled by another client instance, so only that instance is allowed to change the user
+      console.warn(messages.identifyDisabled());
+      utils.onNextTick(() => onDone && onDone(utils.transformVersionedValuesToValues(flags)));
+      return;
+    }
     const clearFirst = new Promise(resolve => (useLocalStorage && store ? store.clearFlags(resolve) : resolve()));
     return utils.wrapPromiseCallback(
       clearFirst.then(
