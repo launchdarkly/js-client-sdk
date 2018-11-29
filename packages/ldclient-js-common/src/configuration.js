@@ -2,7 +2,7 @@ import * as errors from './errors';
 import * as messages from './messages';
 import * as utils from './utils';
 
-export function validate(options, emitter, extraDefaults) {
+export function validate(options, emitter, extraDefaults, logger) {
   const baseDefaults = {
     baseUrl: 'https://app.launchdarkly.com',
     streamUrl: 'https://clientstream.launchdarkly.com',
@@ -35,7 +35,7 @@ export function validate(options, emitter, extraDefaults) {
     Object.keys(deprecatedOptions).forEach(oldName => {
       if (opts[oldName] !== undefined) {
         const newName = deprecatedOptions[oldName];
-        console.warn(messages.deprecated(oldName, newName));
+        logger.warn(messages.deprecated(oldName, newName));
         if (opts[newName] === undefined) {
           opts[newName] = opts[oldName];
         }

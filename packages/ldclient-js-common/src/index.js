@@ -5,6 +5,7 @@ import Stream from './Stream';
 import Requestor from './Requestor';
 import Identity from './Identity';
 import * as configuration from './configuration';
+import ConsoleLogger from './ConsoleLogger';
 import * as utils from './utils';
 import * as errors from './errors';
 import * as messages from './messages';
@@ -22,8 +23,9 @@ const internalChangeEvent = 'internal-change';
 // If we need to give the platform-specific clients access to any internals here, we should add those
 // as properties of the return object, not public properties of the client.
 export function initialize(env, user, specifiedOptions, platform, extraDefaults) {
-  const emitter = EventEmitter();
-  const options = configuration.validate(specifiedOptions, emitter, extraDefaults);
+  const logger = createLogger();
+  const emitter = EventEmitter(logger);
+  const options = configuration.validate(specifiedOptions, emitter, extraDefaults, logger);
   const stateProvider = options.stateProvider;
   const hash = options.hash;
   const sendEvents = options.sendEvents;
@@ -39,6 +41,13 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   let subscribedToChangeEvents;
   let firstEvent = true;
 
+  function createLogger() {
+    if (specifiedOptions && specifiedOptions.logger) {
+      return specifiedOptions.logger;
+    }
+    return (extraDefaults && extraDefaults.logger) || ConsoleLogger('warn');
+  }
+
   function readFlagsFromBootstrap(data) {
     // If the bootstrap data came from an older server-side SDK, we'll have just a map of keys to values.
     // Newer SDKs that have an allFlagsState method will provide an extra "$flagsState" key that contains
@@ -48,10 +57,10 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     const validKey = '$valid';
     const metadata = data[metadataKey];
     if (!metadata && keys.length) {
-      console.warn(messages.bootstrapOldFormat());
+      logger.warn(messages.bootstrapOldFormat());
     }
     if (data[validKey] === false) {
-      console.warn(messages.bootstrapInvalid());
+      logger.warn(messages.bootstrapInvalid());
     }
     const ret = {};
     keys.forEach(key => {
@@ -79,11 +88,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     }
     if (!event.user) {
       if (firstEvent) {
-        if (console && console.warn) {
-          console.warn(
-            'Be sure to call `identify` in the LaunchDarkly client: http://docs.launchdarkly.com/docs/running-an-ab-test#include-the-client-side-snippet'
-          );
-        }
+        logger.warn(messages.eventWithoutUser());
         firstEvent = false;
       }
       return;
@@ -112,7 +117,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   const ident = Identity(user, sendIdentifyEvent);
   let store;
   if (platform.localStorage) {
-    store = new Store(platform.localStorage, environment, hash, ident);
+    store = new Store(platform.localStorage, environment, hash, ident, logger);
   }
 
   function sendFlagEvent(key, detail, defaultValue) {
@@ -152,7 +157,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   function identify(user, hash, onDone) {
     if (stateProvider) {
       // We're being controlled by another client instance, so only that instance is allowed to change the user
-      console.warn(messages.identifyDisabled());
+      logger.warn(messages.identifyDisabled());
       utils.onNextTick(() => onDone && onDone(utils.transformVersionedValuesToValues(flags)));
       return;
     }
@@ -259,7 +264,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     }
 
     if (platform.customEventFilter && !platform.customEventFilter(key)) {
-      console.warn(messages.unknownCustomEventKey(key));
+      logger.warn(messages.unknownCustomEventKey(key));
     }
 
     enqueueEvent({
@@ -550,6 +555,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   }
 
   function signalSuccessfulInit() {
+    logger.info(messages.clientInitialized());
     if (options.streaming !== undefined) {
       setStreaming(options.streaming);
     }
@@ -610,6 +616,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
 }
 
 export const version = VERSION;
+export { ConsoleLogger };
 export { errors };
 export { messages };
 export { utils };

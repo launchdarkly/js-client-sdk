@@ -8,7 +8,6 @@ describe('LDClient', () => {
   const user = { key: 'user' };
   const fakeUrl = 'http://fake';
   let platform;
-  let warnSpy;
   let xhr;
   let requests = [];
 
@@ -18,8 +17,6 @@ describe('LDClient', () => {
       requests.push(req);
     };
 
-    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-
     platform = stubPlatform.defaults();
     platform.testing.setCurrentUrl(fakeUrl);
   });
@@ -27,7 +24,6 @@ describe('LDClient', () => {
   afterEach(() => {
     requests = [];
     xhr.restore();
-    warnSpy.mockRestore();
   });
 
   describe('event generation', () => {
