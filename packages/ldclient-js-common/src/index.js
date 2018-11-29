@@ -606,6 +606,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     options: options, // The validated configuration object, including all defaults.
     emitter: emitter, // The event emitter which can be used to log errors or trigger events.
     ident: ident, // The Identity object that manages the current user.
+    logger: logger, // The logging abstraction.
     requestor: requestor, // The Requestor object.
     start: start, // Starts the client once the environment is ready.
     stop: stop, // Shuts down the client.
