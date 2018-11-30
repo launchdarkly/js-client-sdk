@@ -9,7 +9,6 @@ export function validate(options, emitter, extraDefaults, logger) {
     eventsUrl: 'https://events.launchdarkly.com',
     sendEvents: true,
     sendLDHeaders: true,
-    fetchGoals: true,
     inlineUsersInEvents: false,
     allowFrequentDuplicateEvents: false,
     sendEventsOnlyForVariation: false,
