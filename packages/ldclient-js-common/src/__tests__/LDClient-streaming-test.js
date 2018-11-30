@@ -325,7 +325,7 @@ describe('LDClient', () => {
     });
 
     it('does not fire change event if new and old values are equivalent JSON objects', done => {
-      const client = LDClient.initialize(envName, user, {
+      const client = platform.testing.makeClient(envName, user, {
         bootstrap: {
           'will-change': 3,
           'wont-change': { a: 1, b: 2 },
