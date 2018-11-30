@@ -1,4 +1,5 @@
 import * as base64 from 'base64-js';
+import fastDeepEqual from 'fast-deep-equal';
 
 // See http://ecmanaut.blogspot.com/2006/07/encoding-decoding-utf8-in-javascript.html
 export function btoa(s) {
@@ -26,6 +27,10 @@ export function base64URLEncode(s) {
 
 export function clone(obj) {
   return JSON.parse(JSON.stringify(obj));
+}
+
+export function deepEquals(a, b) {
+  return fastDeepEqual(a, b);
 }
 
 // Events emitted in LDClient's initialize method will happen before the consumer
