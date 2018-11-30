@@ -6,7 +6,7 @@ import * as utils from './utils';
 // - get(key, callback): Gets the string value, if any, for the given key; calls callback(error, value)
 // - set(key, value, callback): Stores a string value for the given key; calls callback(error)
 // - remove(key, callback): Removes the given key; calls callback(error)
-export default function Store(localStorageProvider, environment, hash, ident) {
+export default function Store(localStorageProvider, environment, hash, ident, logger) {
   const store = {};
 
   function getFlagsKey() {
@@ -21,7 +21,7 @@ export default function Store(localStorageProvider, environment, hash, ident) {
   store.loadFlags = function(callback) {
     localStorageProvider.get(getFlagsKey(), (err, dataStr) => {
       if (err) {
-        console.warn(messages.localStorageUnavailable());
+        logger.warn(messages.localStorageUnavailable());
         callback && callback(err, null);
       } else {
         if (dataStr === null || dataStr === undefined) {
@@ -52,7 +52,7 @@ export default function Store(localStorageProvider, environment, hash, ident) {
     const data = utils.extend({}, flags, { $schema: 1 });
     localStorageProvider.set(getFlagsKey(), JSON.stringify(data), err => {
       if (err) {
-        console.warn(messages.localStorageUnavailable());
+        logger.warn(messages.localStorageUnavailable());
       }
       callback && callback(err);
     });
@@ -61,7 +61,7 @@ export default function Store(localStorageProvider, environment, hash, ident) {
   store.clearFlags = function(callback) {
     localStorageProvider.clear(getFlagsKey(), err => {
       if (err) {
-        console.warn(messages.localStorageUnavailable());
+        logger.warn(messages.localStorageUnavailable());
       }
       callback && callback(err);
     });

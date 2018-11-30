@@ -5,7 +5,6 @@ import * as stubPlatform from './stubPlatform';
 
 describe('EventProcessor', () => {
   let sandbox;
-  let warnSpy;
   const mockEventSender = {};
   const user = { key: 'userKey', name: 'Red' };
   const filteredUser = { key: 'userKey', privateAttrs: ['name'] };
@@ -24,14 +23,12 @@ describe('EventProcessor', () => {
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     mockEventSender.calls = [];
     mockEventSender.serverTime = null;
   });
 
   afterEach(() => {
     sandbox.restore();
-    warnSpy.mockRestore();
   });
 
   function checkFeatureEvent(e, source, debug, inlineUser) {

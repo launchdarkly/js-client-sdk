@@ -1,5 +1,6 @@
 import * as browserClient from 'ldclient-js';
 import * as common from 'ldclient-js-common';
+import * as winston from 'winston';
 import electronPlatform from './electronPlatform';
 import * as interprocessSync from './interprocessSync';
 import makeNodeSdkClientWrapper from './nodeSdkEmulation';
@@ -10,7 +11,11 @@ import makeNodeSdkClientWrapper from './nodeSdkEmulation';
 export function initializeMain(env, user, options = {}) {
   // Pass our platform object to the common code to create the Electron version of the client
   const platform = electronPlatform(options);
-  const clientVars = common.initialize(env, user, options, platform);
+  const extraDefaults = {};
+  if (!options.logger) {
+    extraDefaults.logger = createDefaultLogger();
+  }
+  const clientVars = common.initialize(env, user, options, platform, extraDefaults);
   const client = clientVars.client;
 
   // This tracker object communicates with any client instances in the renderer process that
@@ -78,4 +83,17 @@ export function getInternalClientState(optionalEnv) {
   return t && t.state;
 }
 
+export const ConsoleLogger = common.ConsoleLogger;
+
 export const version = common.version;
+
+function createDefaultLogger() {
+  return new winston.Logger({
+    level: 'warn',
+    transports: [
+      new winston.transports.Console({
+        formatter: options => '[LaunchDarkly] ' + (options.message || ''),
+      }),
+    ],
+  });
+}

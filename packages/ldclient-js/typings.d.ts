@@ -19,6 +19,21 @@ declare module 'ldclient-js' {
   export default LaunchDarkly;
 
   /**
+   * Configures and returns an implementation of logging that uses the global "console" object.
+   *
+   * The minimumLevel parameter, if specified, must be "debug", "info", "warn", or "error",
+   * specifying the lowest level that will be logged (e.g. if it is "warn", then "debug" and
+   * "info" messages will not be logged). The default is "info". If you set it to "none", all
+   * logging will be disabled.
+   *
+   * Messages of "debug", "info", "warn", or "error" level will be sent to console.log(),
+   * console.info(), console.warn(), and console.error() respectively.
+   *
+   * To make LDClient use this logger, put it in the "logger" property of LDOptions.
+   */
+  export const ConsoleLogger: (minimumLevel: string) => LDLogger;
+
+  /**
    * The names of events to which users of the client can subscribe.
    */
   export type LDEventName = 'ready' | 'change';
@@ -57,6 +72,19 @@ declare module 'ldclient-js' {
     callback: (current?: LDFlagValue | LDFlagChangeset, previous?: LDFlagValue) => void,
     context?: any
   ) => void;
+
+  /**
+   * The minimal interface for any object that LDClient can use for logging. The client uses
+   * four log levels, with "error" being the most severe. Each corresponding logger method
+   * takes a single string parameter. The logger implementation is responsible for deciding
+   * whether to produce output or not based on the level.
+   */
+  export interface LDLogger {
+    debug: (message: string) => void;
+    info: (message: string) => void;
+    warn: (message: string) => void;
+    error: (message: string) => void;
+  }
 
   /**
    * LaunchDarkly initialization options.
@@ -174,6 +202,13 @@ declare module 'ldclient-js' {
      * call allFlags (false). This defaults to false (events will be sent in both cases).
      */
     sendEventsOnlyForVariation?: boolean;
+
+    /**
+     * Specifies a custom implementation of logging. If you do not set this, the default is to use
+     * ConsoleLogger when running in a browser, or the winston package when running in Electron--
+     * both with a minimum log level of "warn".
+     */
+    logger?: LDLogger;
   }
 
   /**

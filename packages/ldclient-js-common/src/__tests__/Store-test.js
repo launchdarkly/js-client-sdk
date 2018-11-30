@@ -9,19 +9,10 @@ describe('Store', () => {
   const ident = Identity(user);
   const env = 'ENVIRONMENT';
   const lsKey = 'ld:' + env + ':' + utils.btoa(JSON.stringify(user));
-  let warnSpy;
-
-  beforeEach(() => {
-    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-  });
-
-  afterEach(() => {
-    warnSpy.mockRestore();
-  });
 
   it('stores flags', done => {
     const platform = stubPlatform.defaults();
-    const store = Store(platform.localStorage, env, '', ident);
+    const store = Store(platform.localStorage, env, '', ident, platform.testing.logger);
 
     const flags = { flagKey: { value: 'x' } };
 
@@ -36,7 +27,7 @@ describe('Store', () => {
 
   it('retrieves and parses flags', done => {
     const platform = stubPlatform.defaults();
-    const store = Store(platform.localStorage, env, '', ident);
+    const store = Store(platform.localStorage, env, '', ident, platform.testing.logger);
 
     const expected = { flagKey: { value: 'x' } };
     const stored = Object.assign({ $schema: 1 }, expected);
@@ -51,7 +42,7 @@ describe('Store', () => {
 
   it('converts flags from old format if schema property is missing', done => {
     const platform = stubPlatform.defaults();
-    const store = Store(platform.localStorage, env, '', ident);
+    const store = Store(platform.localStorage, env, '', ident, platform.testing.logger);
 
     const oldFlags = { flagKey: 'x' };
     const newFlags = { flagKey: { value: 'x', version: 0 } };
@@ -66,7 +57,7 @@ describe('Store', () => {
 
   it('returns null if storage is empty', done => {
     const platform = stubPlatform.defaults();
-    const store = Store(platform.localStorage, env, '', ident);
+    const store = Store(platform.localStorage, env, '', ident, platform.testing.logger);
 
     store.loadFlags((err, values) => {
       expect(err).toBe(null);
@@ -77,7 +68,7 @@ describe('Store', () => {
 
   it('clears storage and returns null if value is not valid JSON', done => {
     const platform = stubPlatform.defaults();
-    const store = Store(platform.localStorage, env, '', ident);
+    const store = Store(platform.localStorage, env, '', ident, platform.testing.logger);
 
     platform.testing.setLocalStorageImmediately(lsKey, '{bad');
 
@@ -93,7 +84,7 @@ describe('Store', () => {
     const platform = stubPlatform.defaults();
     const hash = '12345';
     const keyWithHash = 'ld:' + env + ':' + hash;
-    const store = Store(platform.localStorage, env, hash, ident);
+    const store = Store(platform.localStorage, env, hash, ident, platform.testing.logger);
 
     const flags = { flagKey: { value: 'x' } };
     store.saveFlags(flags, err => {
@@ -106,7 +97,7 @@ describe('Store', () => {
 
   it('should handle localStorage.get returning an error', done => {
     const platform = stubPlatform.defaults();
-    const store = Store(platform.localStorage, env, '', ident);
+    const store = Store(platform.localStorage, env, '', ident, platform.testing.logger);
     const myError = new Error('localstorage getitem error');
     jest.spyOn(platform.localStorage, 'get').mockImplementation((key, callback) => {
       callback(myError);
@@ -114,14 +105,14 @@ describe('Store', () => {
 
     store.loadFlags(err => {
       expect(err).toEqual(myError);
-      expect(warnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
+      expect(platform.testing.logger.output.warn).toEqual([messages.localStorageUnavailable()]);
       done();
     });
   });
 
   it('should handle localStorage.set returning an error', done => {
     const platform = stubPlatform.defaults();
-    const store = Store(platform.localStorage, env, '', ident);
+    const store = Store(platform.localStorage, env, '', ident, platform.testing.logger);
     const myError = new Error('localstorage setitem error');
     jest.spyOn(platform.localStorage, 'set').mockImplementation((key, value, callback) => {
       callback(myError);
@@ -129,7 +120,7 @@ describe('Store', () => {
 
     store.saveFlags({ foo: {} }, err => {
       expect(err).toEqual(myError);
-      expect(warnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
+      expect(platform.testing.logger.output.warn).toEqual([messages.localStorageUnavailable()]);
       done();
     });
   });

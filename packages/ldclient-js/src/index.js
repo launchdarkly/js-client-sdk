@@ -63,6 +63,8 @@ function enableClickEventUIHandshake(baseUrl) {
   }
 }
 
+export const ConsoleLogger = common.ConsoleLogger;
+
 export const version = common.version;
 
 function deprecatedInitialize(env, user, options = {}) {

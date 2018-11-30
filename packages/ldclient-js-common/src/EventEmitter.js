@@ -1,4 +1,4 @@
-export default function EventEmitter() {
+export default function EventEmitter(logger) {
   const emitter = {};
   const events = {};
 
@@ -47,7 +47,7 @@ export default function EventEmitter() {
     if (listeningTo('error')) {
       this.emit('error', error);
     } else {
-      console.error(error.message);
+      (logger || console).error(error.message);
     }
   };
   return emitter;
