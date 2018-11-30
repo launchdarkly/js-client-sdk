@@ -344,7 +344,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
 
     for (const key in flags) {
       if (flags.hasOwnProperty(key) && flags[key]) {
-        if (newFlags[key] && newFlags[key].value !== flags[key].value) {
+        if (newFlags[key] && !utils.deepEquals(newFlags[key].value, flags[key].value)) {
           changes[key] = { previous: flags[key].value, current: getFlagDetail(newFlags[key]) };
         } else if (!newFlags[key] || newFlags[key].deleted) {
           changes[key] = { previous: flags[key].value };
