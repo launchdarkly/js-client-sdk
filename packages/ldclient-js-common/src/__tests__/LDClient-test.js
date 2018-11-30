@@ -612,7 +612,7 @@ describe('LDClient', () => {
       const user = { key: 'user' };
       const user1 = { key: 'user1' };
       const state = { environment: 'env', user: user, flags: { flagkey: { value: 'value' } } };
-      const sp = makeProvider(state);
+      const sp = stubPlatform.mockStateProvider(state);
 
       const client = platform.testing.makeClient(null, null, { stateProvider: sp });
 
