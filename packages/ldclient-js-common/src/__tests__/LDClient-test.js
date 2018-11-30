@@ -616,7 +616,8 @@ describe('LDClient', () => {
       sp.emit('init', state);
 
       client.waitForInitialization().then(() => {
-        client.identify(user1, null, newFlags => {
+        client.identify(user1, null, (err, newFlags) => {
+          expect(err).toEqual(null);
           expect(newFlags).toEqual({ flagkey: 'value' });
           expect(requests.length).toEqual(0);
           expect(platform.testing.logger.output.warn).toEqual([messages.identifyDisabled()]);
