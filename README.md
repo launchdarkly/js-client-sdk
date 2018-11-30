@@ -17,7 +17,7 @@ The LaunchDarkly client-side JavaScript SDK supports the following browsers:
 
 * Chrome (any recent)
 * Firefox (any recent)
-* Safari (any recent)\*
+* Safari (any recent)
 * Internet Explorer (IE10+)\*
 * Edge (any recent)\*
 * Opera (any recent)\*
@@ -67,7 +67,7 @@ Then import it before the module that initializes the LaunchDarkly client:
 
 ### Promise polyfill
 
-The newer versions of the use `Promise`. If you need to support older browsers, you will
+Newer versions of the SDK use `Promise`. If you need to support older browsers, you will
 need to install a polyfill for it, such as [es6-promise](https://github.com/stefanpenner/es6-promise).
 
 #### CDN
