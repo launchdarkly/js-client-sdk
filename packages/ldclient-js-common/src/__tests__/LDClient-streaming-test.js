@@ -328,6 +328,31 @@ describe('LDClient', () => {
       });
     });
 
+    it('does not fire change event if new and old values are equivalent JSON objects', done => {
+      const client = LDClient.initialize(envName, user, {
+        bootstrap: {
+          'will-change': 3,
+          'wont-change': { a: 1, b: 2 },
+        },
+      });
+
+      client.on('ready', () => {
+        client.on('change', changes => {
+          expect(changes).toEqual({
+            'will-change': { current: 4, previous: 3 },
+          });
+
+          done();
+        });
+
+        const putData = {
+          'will-change': { value: 4, version: 2 },
+          'wont-change': { value: { b: 2, a: 1 }, version: 2 },
+        };
+        streamEvents().put({ data: JSON.stringify(putData) });
+      });
+    });
+
     it('fires individual change event when flags are updated from put event', done => {
       const client = platform.testing.makeClient(envName, user, { bootstrap: { 'enable-foo': false } });
 
