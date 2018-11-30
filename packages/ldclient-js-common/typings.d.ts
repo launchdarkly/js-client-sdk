@@ -95,16 +95,6 @@ declare module 'ldclient-js-common' {
    */
   export const ConsoleLogger: (minimumLevel: string) => LDLogger;
 
-//  export const ConsoleLogger: {
-    /**
-     * Creates a new ConsoleLogger.
-     *
-     * @param minimumLevel The lowest level that will be logged ("debug", "info", "warn", or
-     *   "error") - or "none" to disable all logging.
-     */
-//    new: (minimumLevel: string) => LDLogger;
-//  }
-
   /**
    * LaunchDarkly initialization options that are supported by all variants of the JS client.
    * The browser SDK and Electron SDK may support additional options.
