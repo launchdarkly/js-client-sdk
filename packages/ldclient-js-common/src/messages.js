@@ -70,3 +70,7 @@ export const httpErrorMessage = function(status, context, retryMessage) {
 export const httpUnavailable = function() {
   return 'Cannot make HTTP requests in this environment.' + docLink;
 };
+
+export const identifyDisabled = function() {
+  return 'identify() has no effect here; it must be called on the main client instance';
+};

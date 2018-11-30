@@ -164,6 +164,11 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   }
 
   function identify(user, hash, onDone) {
+    if (stateProvider) {
+      // We're being controlled by another client instance, so only that instance is allowed to change the user
+      console.warn(messages.identifyDisabled());
+      return utils.wrapPromiseCallback(Promise.resolve(utils.transformVersionedValuesToValues(flags)), onDone);
+    }
     const clearFirst = new Promise(resolve => (useLocalStorage && store ? store.clearFlags(resolve) : resolve()));
     return utils.wrapPromiseCallback(
       clearFirst.then(
@@ -348,7 +353,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
 
     for (const key in flags) {
       if (flags.hasOwnProperty(key) && flags[key]) {
-        if (newFlags[key] && newFlags[key].value !== flags[key].value) {
+        if (newFlags[key] && !utils.deepEquals(newFlags[key].value, flags[key].value)) {
           changes[key] = { previous: flags[key].value, current: getFlagDetail(newFlags[key]) };
         } else if (!newFlags[key] || newFlags[key].deleted) {
           changes[key] = { previous: flags[key].value };
