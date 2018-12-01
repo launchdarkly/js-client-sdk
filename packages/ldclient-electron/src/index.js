@@ -83,7 +83,7 @@ export function getInternalClientState(optionalEnv) {
   return t && t.state;
 }
 
-export const ConsoleLogger = common.ConsoleLogger;
+export const createConsoleLogger = common.createConsoleLogger;
 
 export const version = common.version;
 

@@ -25,7 +25,6 @@ describe('configuration', () => {
 
   checkDefault('sendEvents', true, false);
   checkDefault('sendLDHeaders', true, false);
-  checkDefault('fetchGoals', true, false);
   checkDefault('inlineUsersInEvents', false, true);
   checkDefault('allowFrequentDuplicateEvents', false, true);
   checkDefault('sendEventsOnlyForVariation', false, true);

@@ -5,7 +5,7 @@ import Stream from './Stream';
 import Requestor from './Requestor';
 import Identity from './Identity';
 import * as configuration from './configuration';
-import ConsoleLogger from './ConsoleLogger';
+import createConsoleLogger from './consoleLogger';
 import * as utils from './utils';
 import * as errors from './errors';
 import * as messages from './messages';
@@ -45,7 +45,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     if (specifiedOptions && specifiedOptions.logger) {
       return specifiedOptions.logger;
     }
-    return (extraDefaults && extraDefaults.logger) || ConsoleLogger('warn');
+    return (extraDefaults && extraDefaults.logger) || createConsoleLogger('warn');
   }
 
   function readFlagsFromBootstrap(data) {
@@ -616,7 +616,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
 }
 
 export const version = VERSION;
-export { ConsoleLogger };
+export { createConsoleLogger };
 export { errors };
 export { messages };
 export { utils };

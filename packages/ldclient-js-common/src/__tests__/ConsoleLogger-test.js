@@ -1,6 +1,6 @@
-import ConsoleLogger from '../ConsoleLogger';
+import createConsoleLogger from '../consoleLogger';
 
-describe('ConsoleLogger', () => {
+describe('createConsoleLogger', () => {
   let logSpy;
   let infoSpy;
   let warnSpy;
@@ -22,7 +22,7 @@ describe('ConsoleLogger', () => {
 
   [undefined, 'debug', 'info', 'warn', 'error', 'none'].forEach(configuredLevel => {
     describe('when logger level is set to "' + configuredLevel + '"', () => {
-      const logger = ConsoleLogger(configuredLevel);
+      const logger = createConsoleLogger(configuredLevel);
 
       it('debug message', () => {
         logger.debug('a');

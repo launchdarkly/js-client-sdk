@@ -21,5 +21,12 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/launchdarkly/js-client.git"
+  },
+  "scripts": {
+    "prepare": "lerna bootstrap",
+    "build": "lerna run build",
+    "test": "lerna run test",
+    "check-typescript": "lerna run check-typescript",
+    "lint": "lerna run lint:all"
   }
 }
