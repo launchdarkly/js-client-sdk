@@ -6,6 +6,16 @@ This document describes how to set up the LaunchDarkly client-side JavaScript SD
 
 This SDK can be used in either the main process or a renderer process, or both. Its API closely resembles the LaunchDarkly [browser SDK](../ldclient-js/README.md).
 
+## Why use this instead of the Node SDK?
+
+Since Electron is based on Node.js, it is possible to run the LaunchDarkly Node SDK in it. This is strongly discouraged, as the Node SDK is meant for server-side use, not for applications that are distributed to users. There are two main reasons why this distinction matters:
+
+1. Since the server-side SDKs have to be able to quickly evaluate any flag for any user, they download the entire definition of every one of your feature flags from LaunchDarkly-- rules, user targeting lists, etc. This can be quite a large amount of data. The client-side and mobile SDKs, which normally evaluate flags for just one user at a time, use a much more efficient protocol where they request only the active variation for each flag for that specific user.
+
+2. The ability to download all the flags is provided by the SDK key credential that the server-side SDKs use. If you embed this SDK key in an application, any user who looks inside the application can then access all of your feature flag definitions-- which may include sensitive data such as other users' email addresses. The client-side and mobile SDKs use different credentials that do not allow this.
+
+Besides the above, the Electron SDK also includes features that are specific to Electron, such as the ability to access main-process flags from the front end as described below.
+
 ## Installation
 
 Install the `ldclient-electron` package in your project with `npm`:
@@ -43,3 +53,11 @@ Both types of client are initialized asynchronously, so if you want to determine
 When you create a client instance for use in a renderer process with `initializeInRenderer()`, other than having the special "synchronizing to the main client" behavior described above, it is really just an instance of the browser SDK client. This means that the click event and pageview event functionality described in [ldclient-js](../ldclient-js/README.md) is available in Electron windows.
 
 However, whether you can use URL matching rules depends on what the URLs are within your application windows. Often, these are based on an internal file path within the application.
+
+## Node SDK compatibility mode
+
+For developers who are porting LaunchDarkly-enabled Node.js code to Electron, there are differences between the APIs that can be inconvenient. For instance, in the LaunchDarkly Node SDK, `variation()` is an asynchronous call that takes a callback, whereas in the client-side SDKs it is synchronous.
+
+To make this transition easier, the LaunchDarkly Electron SDK provides an optional wrapper that emulates the Node SDK. When creating the main-process client, instead of calling `initializeMain`, call `initializeMainWithNodeApi` with the same parameters. The resulting client object will then use the Node-style API.
+
+Keep in mind that the underlying implementation is still the client-side SDK, which has a single-current-user model. Therefore, when you call `client.variation(flagKey, user, defaultValue)` it is really calling `client.identify(user)` first, obtaining flag values for that user, and then evaluating the flag. This will perform poorly if you attempt to evaluate flags for a variety of different users in rapid succession.
