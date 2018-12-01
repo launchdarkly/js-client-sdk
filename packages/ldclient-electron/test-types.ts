@@ -3,7 +3,7 @@
 // to validate our typings.d.ts file.
 
 import {
-	ConsoleLogger,
+	createConsoleLogger,
 	LDElectronMainClient,
 	LDElectronNodeWrapperClient,
 	LDElectronRendererClient,
@@ -16,7 +16,7 @@ import {
 } from 'ldclient-electron';
 
 var emptyOptions: LDOptions = {};
-var logger: LDLogger = ConsoleLogger("info");
+var logger: LDLogger = createConsoleLogger("info");
 var allOptions: LDOptions = {
   bootstrap: { },
   baseUrl: '',

@@ -93,7 +93,7 @@ declare module 'ldclient-js-common' {
    *
    * To make LDClient use this logger, put it in the "logger" property of LDOptions.
    */
-  export const ConsoleLogger: (minimumLevel: string) => LDLogger;
+  export const createConsoleLogger: (minimumLevel: string) => LDLogger;
 
   /**
    * LaunchDarkly initialization options that are supported by all variants of the JS client.
@@ -102,7 +102,7 @@ declare module 'ldclient-js-common' {
   export interface LDOptionsBase {
     /**
      * An object that will perform logging for the client. If not specified, the default is
-     * a ConsoleLogger in the browser SDK, or a logger from the winston package in Electron.
+     * createConsoleLogger() in the browser SDK, or a logger from the winston package in Electron.
      */
     logger?: LDLogger;
 

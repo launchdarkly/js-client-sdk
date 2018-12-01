@@ -2,10 +2,10 @@
 // This file exists only so that we can run the TypeScript compiler in the CI build
 // to validate our typings.d.ts file.
 
-import { ConsoleLogger, LDClient, LDLogger, LDOptions, LDUser, initialize } from 'ldclient-js';
+import { createConsoleLogger, LDClient, LDLogger, LDOptions, LDUser, initialize } from 'ldclient-js';
 
 var emptyOptions: LDOptions = {};
-var logger: LDLogger = ConsoleLogger("info");
+var logger: LDLogger = createConsoleLogger("info");
 var allOptions: LDOptions = {
   bootstrap: { },
   hash: '',
