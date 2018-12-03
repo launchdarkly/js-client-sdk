@@ -2,10 +2,12 @@ import * as xmlhttprequest from 'xmlhttprequest';
 import * as storage from 'electron-json-storage';
 import { EventSource } from 'launchdarkly-eventsource';
 
-export default function makeElectronPlatform() {
+export default function makeElectronPlatform(options) {
+  const mockHttp = options && options.mockHttp; // used for unit tests
+
   const ret = {};
 
-  ret.newHttpRequest = () => new xmlhttprequest.XMLHttpRequest();
+  ret.newHttpRequest = () => (mockHttp ? new window.XMLHttpRequest() : new xmlhttprequest.XMLHttpRequest());
 
   ret.httpAllowsPost = () => true;
 

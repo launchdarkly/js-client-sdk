@@ -209,6 +209,10 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     );
   }
 
+  function getUser() {
+    return ident.getUser();
+  }
+
   function flush(onDone) {
     return utils.wrapPromiseCallback(
       new Promise(resolve => (sendEvents ? resolve(events.flush()) : resolve()), onDone)
@@ -604,6 +608,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     waitForInitialization: () => initPromise,
     waitUntilReady: () => readyPromise,
     identify: identify,
+    getUser: getUser,
     variation: variation,
     variationDetail: variationDetail,
     track: track,
