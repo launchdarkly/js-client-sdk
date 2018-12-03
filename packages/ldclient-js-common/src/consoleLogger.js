@@ -2,7 +2,7 @@
 // If no minimum level is specified, all messages will be logged. Setting the level to "none"
 // disables all logging.
 
-export default function ConsoleLogger(level) {
+export default function createConsoleLogger(level) {
   const allLevels = ['debug', 'info', 'warn', 'error'];
   let minLevelIndex = 0;
   if (level) {

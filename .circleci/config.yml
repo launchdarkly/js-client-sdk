@@ -3,8 +3,6 @@ jobs:
   build:
     docker:
       - image: circleci/node:latest
-    environment:
-      LERNA: ./node_modules/.bin/lerna
     steps:
       - run:
           name: install packages required by Electron
@@ -14,11 +12,15 @@ jobs:
           command: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1
           background: true
       - checkout
+
       - run: npm install
-      - run: $LERNA bootstrap
+      - run: npm run prepare
+      - run: npm run lint
+      - run: npm run build
+
+      # We could do "npm run test" here to run tests for all 3 packages, but then we would not be
+      # able to produce separate output files.
       - run: mkdir -p reports/junit
-      - run: $LERNA run lint:all
-      - run: $LERNA run build
       - run:
           command: cd ~/project/packages/ldclient-js-common && npm run test:junit
           environment:
@@ -32,7 +34,8 @@ jobs:
           environment:
             JEST_JUNIT_OUTPUT: "./reports/junit/electron-test-results.xml"
             DISPLAY: ":99.0"  # so Electron will use xvfb
-      - run: cd ~/project && $LERNA run check-typescript
+
+      - run: cd ~/project && npm run check-typescript
       - store_test_results:
           path: reports/junit/
       - store_artifacts:

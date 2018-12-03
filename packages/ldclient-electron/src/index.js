@@ -74,7 +74,7 @@ export function initializeInRenderer(optionalEnv, options = {}) {
 
 export const createNodeSdkAdapter = nodeSdkEmulation.createNodeSdkAdapter;
 
-export const ConsoleLogger = common.ConsoleLogger;
+export const createConsoleLogger = common.createConsoleLogger;
 
 export const version = common.version;
 
