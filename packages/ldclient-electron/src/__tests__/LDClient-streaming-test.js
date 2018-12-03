@@ -43,7 +43,7 @@ describe('LDClient streaming', () => {
       });
 
       const config = { bootstrap: {}, streaming: true, streamUrl: server.url };
-      const client = LDClient.initializeMain(envName, user, config);
+      const client = LDClient.initializeInMain(envName, user, config);
       client.on('change:flag', value => {
         expect(value).toEqual('yes');
         server.close(done);
@@ -66,7 +66,7 @@ describe('LDClient streaming', () => {
       });
 
       const config = { bootstrap: {}, streaming: true, streamUrl: server.url, useReport: true };
-      const client = LDClient.initializeMain(envName, user, config);
+      const client = LDClient.initializeInMain(envName, user, config);
       client.on('change:flag', value => {
         expect(value).toEqual('yes');
         server.close(done);

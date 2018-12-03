@@ -8,7 +8,7 @@ import * as nodeSdkEmulation from './nodeSdkEmulation';
 // This creates an SDK instance to be used in the main process of Electron. It can be used
 // either by itself or in combination with SDK instances in renderer windows (created with
 // initializeRenderer).
-export function initializeMain(env, user, options = {}) {
+export function initializeInMain(env, user, options = {}) {
   // Pass our platform object to the common code to create the Electron version of the client
   const platform = electronPlatform(options);
   const extraDefaults = {};
