@@ -11,14 +11,16 @@ These are the official LaunchDarkly client-side JavaScript SDKs. There are two: 
 
 These are _client-side_ SDKs in that they are meant to be used with code that is deployed to an end user, either in a web browser or in a desktop application. They do not use the SDK key that the server-side SDKs use, since an end user who acquired that key could use it to access the details of your LaunchDarkly environment; instead, they use the "client-side ID" associated with your environment.
 
+If you are developing server-side code in Node.js, the [LaunchDarkly SDK for Node.js](https://github.com/launchdarkly/node-client) is more appropriate.
+
 Note that in order for LaunchDarkly to make your feature flags available to these SDKs, you must check the "Make this flag available to client-side SDKs" box on the Settings page for each flag. This is so that if you have a web application with a large number of flags used on the server side and a smaller number used on the front end, the client-side SDK can save bandwidth by only getting the subset of flags that it will use.
 
 ## Setup and compatibility
 
 The setup processes and requirements for the SDKs are described in more detail here:
 
-* [Browser SDK (ldclient-js)](packages/ldclient-js/README.md)
-* [Electron SDK (ldclient-electron)](packages/ldclient-electron/README.md)
+* [for browsers (ldclient-js)](packages/ldclient-js/README.md)
+* [for Electron (ldclient-electron)](packages/ldclient-electron/README.md)
 
 ## Basic usage
 
@@ -145,7 +147,7 @@ Subscribing to `change` events will automatically turn on streaming mode too, un
 
 ## Development information
 
-This project is now a monorepo containing three packages: `ldclient-js` (the browser SDK), `ldclient-electron` (the Electron SDK), and `ldclient-js-common` (the basic client logic that is used by both of those). These are all published to NPM for each release.
+This project is now a monorepo containing three packages: `ldclient-js` (the SDK for browsers), `ldclient-electron` (the SDK for Electron), and `ldclient-js-common` (the basic client logic that is used by both of those). These are all published to NPM for each release.
 
 To build and test the entire project, from the project root directory:
 * `npm install`
