@@ -425,6 +425,13 @@ declare module 'ldclient-js-common' {
     identify: (user: LDUser, hash?: string, onDone?: (err: Error | null, flags: LDFlagSet | null) => void) => Promise<void>;
 
     /**
+     * Returns the client's current user. This is the user that was most recently
+     * passed to identify(), or, if identify() has never been called, the initial
+     * user specified when the client was created.
+     */
+    getUser: () => LDUser;
+
+    /**
      * Flushes pending events asynchronously.
      *
      * @param onDone
