@@ -3,6 +3,14 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.8.0] - 2018-12-03
+### Added:
+- The use of a streaming connection to LaunchDarkly for receiving live updates can now be controlled with the new `client.setStreaming()` method, or the equivalent boolean `streaming` property in the client configuration. If you set this to `false`, the client will not open a streaming connection even if you subscribe to change events (you might want to do this if, for instance, you just want to be notified when the client gets new flag values due to having switched users). If you set it to `true`, the client will open a streaming connection regardless of whether you subscribe to change events or not (the flag values will simply be updated in the background). If you don't set it either way then the default behavior still applies, i.e. the client opens a streaming connection if and only if you subscribe to change events.
+
+### Fixed:
+- If the client opened a streaming connection because you called `on('change', ...)` one or more times, it will not close the connection until you call `off()` for _all_ of your event listeners. Previously, it was closing the connection whenever `off('change')` was called, even if you still had a listener for `'change:specific-flag-key'`.
+- The client's logic for signaling a `change` event was using a regular Javascript `===` comparison, so it could incorrectly decide that a flag had changed if its value was a JSON object or an array. This has been fixed to use deep equality checking for object and array values.
+
 ## [2.7.5] - 2018-11-21
 ### Fixed:
 - When using the [`event-source-polyfill`](https://github.com/Yaffle/EventSource) package to allow streaming mode in browsers with no native EventSource support, the polyfill was using a default read timeout of 45 seconds, so if no updates arrived within 45 seconds it would log an error and reconnect the stream. The SDK now sets its own timeout (5 minutes) which will be used if this particular polyfill is active. LaunchDarkly normally sends a heartbeat every 3 minutes, so you should not see a timeout happen unless the connection has been lost.
