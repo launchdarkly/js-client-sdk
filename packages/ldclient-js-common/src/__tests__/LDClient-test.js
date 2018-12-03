@@ -3,7 +3,6 @@ import semverCompare from 'semver-compare';
 
 import * as stubPlatform from './stubPlatform';
 import * as LDClient from '../index';
-import EventEmitter from '../EventEmitter';
 import * as messages from '../messages';
 import * as utils from '../utils';
 
@@ -537,12 +536,6 @@ describe('LDClient', () => {
   });
 
   describe('initializing with stateProvider', () => {
-    const makeProvider = initialState => {
-      const sp = EventEmitter();
-      sp.getInitialState = () => initialState;
-      return sp;
-    };
-
     it('immediately uses initial state if available, and does not make an HTTP request', done => {
       const user = { key: 'user' };
       const state = {
@@ -550,7 +543,7 @@ describe('LDClient', () => {
         user: user,
         flags: { flagkey: { value: 'value' } },
       };
-      const sp = makeProvider(state);
+      const sp = stubPlatform.mockStateProvider(state);
 
       const client = platform.testing.makeClient(null, null, { stateProvider: sp });
       expect(client.variation('flagkey')).toEqual('value');
@@ -560,7 +553,7 @@ describe('LDClient', () => {
     });
 
     it('defers initialization if initial state not available, and does not make an HTTP request', () => {
-      const sp = makeProvider(null);
+      const sp = stubPlatform.mockStateProvider(null);
 
       platform.testing.makeClient(null, null, { stateProvider: sp });
       expect(requests.length).toEqual(0);
@@ -573,7 +566,7 @@ describe('LDClient', () => {
         user: user,
         flags: { flagkey: { value: 'value' } },
       };
-      const sp = makeProvider(null);
+      const sp = stubPlatform.mockStateProvider(null);
 
       const client = platform.testing.makeClient(null, null, { stateProvider: sp });
 
@@ -592,7 +585,7 @@ describe('LDClient', () => {
         user: user,
         flags: { flagkey: { value: 'value0' } },
       };
-      const sp = makeProvider(state0);
+      const sp = stubPlatform.mockStateProvider(state0);
 
       const client = platform.testing.makeClient(null, null, { stateProvider: sp });
 
@@ -619,7 +612,7 @@ describe('LDClient', () => {
       const user = { key: 'user' };
       const user1 = { key: 'user1' };
       const state = { environment: 'env', user: user, flags: { flagkey: { value: 'value' } } };
-      const sp = makeProvider(state);
+      const sp = stubPlatform.mockStateProvider(state);
 
       const client = platform.testing.makeClient(null, null, { stateProvider: sp });
 
