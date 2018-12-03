@@ -36,6 +36,8 @@ export function initialize(env, user, options = {}) {
   let goalTracker;
   let useLocalStorage;
   let goals;
+  let streamActive;
+  let streamForcedState;
   let subscribedToChangeEvents;
   let firstEvent = true;
 
@@ -180,7 +182,7 @@ export function initialize(env, user, options = {}) {
               updateSettings(settings);
             }
             resolve(utils.transformVersionedValuesToValues(settings));
-            if (subscribedToChangeEvents) {
+            if (streamActive) {
               connectStream();
             }
           });
@@ -299,6 +301,7 @@ export function initialize(env, user, options = {}) {
   }
 
   function connectStream() {
+    streamActive = true;
     if (!ident.getUser()) {
       return;
     }
@@ -349,6 +352,13 @@ export function initialize(env, user, options = {}) {
     });
   }
 
+  function disconnectStream() {
+    if (streamActive) {
+      stream.disconnect();
+      streamActive = false;
+    }
+  }
+
   function updateSettings(newFlags) {
     const changes = {};
 
@@ -358,7 +368,7 @@ export function initialize(env, user, options = {}) {
 
     for (const key in flags) {
       if (flags.hasOwnProperty(key) && flags[key]) {
-        if (newFlags[key] && newFlags[key].value !== flags[key].value) {
+        if (newFlags[key] && !utils.deepEquals(newFlags[key].value, flags[key].value)) {
           changes[key] = { previous: flags[key].value, current: getFlagDetail(newFlags[key]) };
         } else if (!newFlags[key] || newFlags[key].deleted) {
           changes[key] = { previous: flags[key].value };
@@ -403,25 +413,50 @@ export function initialize(env, user, options = {}) {
   }
 
   function on(event, handler, context) {
-    if (event.substr(0, changeEvent.length) === changeEvent) {
+    if (isChangeEventKey(event)) {
       subscribedToChangeEvents = true;
-      if (!stream.isConnected()) {
+      if (!streamActive && streamForcedState === undefined) {
         connectStream();
       }
-      emitter.on.apply(emitter, [event, handler, context]);
+      emitter.on(event, handler, context);
     } else {
-      emitter.on.apply(emitter, Array.prototype.slice.call(arguments));
+      emitter.on(...arguments);
     }
   }
 
   function off(event) {
-    if (event === changeEvent) {
-      if ((subscribedToChangeEvents = true)) {
+    emitter.off(...arguments);
+    if (isChangeEventKey(event)) {
+      let haveListeners = false;
+      emitter.getEvents().forEach(key => {
+        if (isChangeEventKey(key) && emitter.getEventListenerCount(key) > 0) {
+          haveListeners = true;
+        }
+      });
+      if (!haveListeners) {
         subscribedToChangeEvents = false;
-        stream.disconnect();
+        if (streamActive && streamForcedState === undefined) {
+          disconnectStream();
+        }
       }
     }
-    emitter.off.apply(emitter, Array.prototype.slice.call(arguments));
+  }
+
+  function setStreaming(state) {
+    const newState = state === null ? undefined : state;
+    if (newState !== streamForcedState) {
+      streamForcedState = newState;
+      const shouldBeStreaming = streamForcedState || (subscribedToChangeEvents && streamForcedState === undefined);
+      if (shouldBeStreaming && !streamActive) {
+        connectStream();
+      } else if (!shouldBeStreaming && streamActive) {
+        disconnectStream();
+      }
+    }
+  }
+
+  function isChangeEventKey(event) {
+    return event === changeEvent || event.substr(0, changeEvent.length + 1) === changeEvent + ':';
   }
 
   function handleMessage(event) {
@@ -474,8 +509,7 @@ export function initialize(env, user, options = {}) {
           signalFailedInit(initErr);
         } else {
           if (settings) {
-            flags = settings;
-            store.saveFlags(flags);
+            updateSettings(settings); // this includes saving to local storage and sending change events
           } else {
             flags = {};
           }
@@ -483,9 +517,9 @@ export function initialize(env, user, options = {}) {
         }
       });
     } else {
-      // We're reading the flags from local storage. Signal that we're ready,
-      // then update localStorage for the next page load. We won't signal changes or update
-      // the in-memory flags unless you subscribe for changes
+      // We're reading the flags from local storage. Signal that we're ready immediately, but also
+      // start a request in the background to get newer flags. When we receive those, we will update
+      // localStorage, and will also send change events if the values have changed.
       utils.onNextTick(signalSuccessfulInit);
 
       requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
@@ -493,7 +527,7 @@ export function initialize(env, user, options = {}) {
           emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
         }
         if (settings) {
-          store.saveFlags(settings);
+          updateSettings(settings); // this includes saving to local storage and sending change events
         }
       });
     }
@@ -565,6 +599,9 @@ export function initialize(env, user, options = {}) {
   }
 
   function signalSuccessfulInit() {
+    if (options.streaming !== undefined) {
+      setStreaming(options.streaming);
+    }
     emitter.emit(readyEvent);
     emitter.emit(successEvent); // allows initPromise to distinguish between success and failure
   }
@@ -631,6 +668,7 @@ export function initialize(env, user, options = {}) {
     track: track,
     on: on,
     off: off,
+    setStreaming: setStreaming,
     flush: flush,
     allFlags: allFlags,
   };
