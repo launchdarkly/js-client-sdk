@@ -9,8 +9,6 @@ import * as utils from '../utils';
 describe('LDClient', () => {
   const envName = 'UNKNOWN_ENVIRONMENT_ID';
   const user = { key: 'user' };
-  let warnSpy;
-  let errorSpy;
   let xhr;
   let requests = [];
   let platform;
@@ -21,17 +19,12 @@ describe('LDClient', () => {
       requests.push(req);
     };
 
-    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-    errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
     platform = stubPlatform.defaults();
   });
 
   afterEach(() => {
     requests = [];
     xhr.restore();
-    warnSpy.mockRestore();
-    errorSpy.mockRestore();
   });
 
   function getLastRequest() {
@@ -53,6 +46,7 @@ describe('LDClient', () => {
 
       setTimeout(() => {
         expect(handleReady).toHaveBeenCalled();
+        expect(platform.testing.logger.output.info).toEqual([messages.clientInitialized()]);
         done();
       }, 0);
     });
@@ -143,11 +137,9 @@ describe('LDClient', () => {
     });
 
     it('logs warning when bootstrap object uses old format', () => {
-      platform.testing.makeClient(envName, user, {
-        bootstrap: { foo: 'bar' },
-      });
+      platform.testing.makeClient(envName, user, { bootstrap: { foo: 'bar' } });
 
-      expect(warnSpy).toHaveBeenCalledWith(messages.bootstrapOldFormat());
+      expect(platform.testing.logger.output.warn).toEqual([messages.bootstrapOldFormat()]);
     });
 
     it('does not log warning when bootstrap object uses new format', () => {
@@ -155,7 +147,7 @@ describe('LDClient', () => {
         bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1 } } },
       });
 
-      expect(warnSpy).not.toHaveBeenCalled();
+      expect(platform.testing.logger.output.warn).toEqual([]);
     });
 
     it('should contain package version', () => {
@@ -175,8 +167,7 @@ describe('LDClient', () => {
 
       client.on('ready', () => {
         client.track('known');
-        expect(warnSpy).not.toHaveBeenCalled();
-        expect(errorSpy).not.toHaveBeenCalled();
+        expect(platform.testing.logger.output.warn).toEqual([]);
         done();
       });
     });
@@ -186,8 +177,9 @@ describe('LDClient', () => {
       client.on('ready', () => {
         const badCustomEventKeys = [123, [], {}, null, undefined];
         badCustomEventKeys.forEach(key => {
+          platform.testing.logger.reset();
           client.track(key);
-          expect(errorSpy).toHaveBeenCalledWith(messages.unknownCustomEventKey(key));
+          expect(platform.testing.logger.output.error).toEqual([messages.unknownCustomEventKey(key)]);
         });
         done();
       });
@@ -215,12 +207,10 @@ describe('LDClient', () => {
 
     it('should warn about missing user on first event', () => {
       const sandbox = sinon.sandbox.create();
-      const warnSpy = sandbox.spy(console, 'warn');
-      const client = platform.testing.makeClient(envName, null, {});
+      const client = platform.testing.makeClient(envName, null);
       client.track('eventkey', null);
-      warnSpy.restore();
       sandbox.restore();
-      expect(warnSpy.called).toEqual(true);
+      expect(platform.testing.logger.output.warn).toEqual([messages.eventWithoutUser()]);
     });
 
     function verifyCustomHeader(sendLDHeaders, shouldGetHeaders) {
@@ -623,7 +613,7 @@ describe('LDClient', () => {
           expect(err).toEqual(null);
           expect(newFlags).toEqual({ flagkey: 'value' });
           expect(requests.length).toEqual(0);
-          expect(warnSpy).toHaveBeenCalledWith(messages.identifyDisabled());
+          expect(platform.testing.logger.output.warn).toEqual([messages.identifyDisabled()]);
           done();
         });
       });

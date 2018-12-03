@@ -1,15 +1,13 @@
+import * as stubPlatform from './stubPlatform';
 import * as configuration from '../configuration';
+import * as messages from '../messages';
 import EventEmitter from '../EventEmitter';
 
 describe('configuration', () => {
-  let warnSpy;
+  let logger;
 
   beforeEach(() => {
-    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-  });
-
-  afterEach(() => {
-    warnSpy.mockRestore();
+    logger = stubPlatform.logger();
   });
 
   function checkDefault(name, defaultValue, specificValue) {
@@ -41,10 +39,11 @@ describe('configuration', () => {
     it('allows "' + oldName + '" as a deprecated equivalent to "' + newName + '"', () => {
       const config0 = {};
       config0[oldName] = value;
-      const config1 = configuration.validate(config0);
+      logger.reset();
+      const config1 = configuration.validate(config0, null, null, logger);
       expect(config1[newName]).toBe(value);
       expect(config1[oldName]).toBeUndefined();
-      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(logger.output.warn).toEqual([messages.deprecated(oldName, newName)]);
     });
   }
 

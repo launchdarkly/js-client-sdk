@@ -10,7 +10,6 @@ describe('LDClient', () => {
   const user = { key: 'user' };
   const encodedUser = 'eyJrZXkiOiJ1c2VyIn0';
   const hash = '012345789abcde';
-  let warnSpy;
   let xhr;
   let requests = [];
   let platform;
@@ -26,8 +25,6 @@ describe('LDClient', () => {
       requests.push(req);
     };
 
-    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-
     for (const key in sources) {
       delete sources[key];
     }
@@ -38,7 +35,6 @@ describe('LDClient', () => {
   afterEach(() => {
     requests = [];
     xhr.restore();
-    warnSpy.mockRestore();
   });
 
   function getLastRequest() {

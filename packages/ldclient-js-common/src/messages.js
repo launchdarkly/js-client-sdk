@@ -1,10 +1,18 @@
 import * as errors from './errors';
 
+export const clientInitialized = function() {
+  return 'LaunchDarkly client initialized';
+};
+
 const docLink =
   ' Please see https://docs.launchdarkly.com/docs/js-sdk-reference#section-initializing-the-client for instructions on SDK initialization.';
 
 export const clientNotReady = function() {
   return 'LaunchDarkly client is not ready';
+};
+
+export const eventWithoutUser = function() {
+  return 'Be sure to call `identify` in the LaunchDarkly client: http://docs.launchdarkly.com/docs/running-an-ab-test#include-the-client-side-snippet';
 };
 
 export const invalidKey = function() {

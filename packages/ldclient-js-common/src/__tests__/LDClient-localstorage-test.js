@@ -8,20 +8,14 @@ describe('LDClient local storage', () => {
   const envName = 'UNKNOWN_ENVIRONMENT_ID';
   const user = { key: 'user' };
   const lsKey = 'ld:' + envName + ':' + utils.btoa(JSON.stringify(user));
-  let warnSpy;
-  let errorSpy;
   let server;
 
   beforeEach(() => {
     server = sinon.fakeServer.create();
-    warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-    errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
     server.restore();
-    warnSpy.mockRestore();
-    errorSpy.mockRestore();
   });
 
   function setupFlagsResponse(flags) {
@@ -74,7 +68,7 @@ describe('LDClient local storage', () => {
       const client = platform.testing.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
 
       client.waitForInitialization().then(() => {
-        expect(warnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
+        expect(platform.testing.logger.output.warn).toEqual([messages.localStorageUnavailable()]);
         done();
       });
     });
@@ -90,7 +84,7 @@ describe('LDClient local storage', () => {
 
       client.waitForInitialization().then(() => {
         utils.onNextTick(() => {
-          expect(warnSpy).toHaveBeenCalledWith(messages.localStorageUnavailable());
+          expect(platform.testing.logger.output.warn).toEqual([messages.localStorageUnavailable()]);
           done();
         });
       });

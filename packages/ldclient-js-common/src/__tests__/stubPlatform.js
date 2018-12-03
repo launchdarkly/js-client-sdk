@@ -40,7 +40,12 @@ export function defaults() {
 
     // extra methods used for testing
     testing: {
-      makeClient: (env, user, options = {}) => LDClient.initialize(env, user, options, p).client,
+      logger: logger(),
+
+      makeClient: (env, user, options = {}) => {
+        const config = Object.assign({ logger: p.testing.logger }, options);
+        return LDClient.initialize(env, user, config, p).client;
+      },
 
       setCurrentUrl: url => {
         currentUrl = url;
@@ -64,6 +69,18 @@ export function withoutHttp() {
   const e = defaults();
   delete e.newHttpRequest;
   return e;
+}
+
+export function logger() {
+  const logger = {};
+  ['debug', 'info', 'warn', 'error'].forEach(level => {
+    logger[level] = msg => logger.output[level].push(typeof msg === 'function' ? msg() : msg);
+  });
+  logger.reset = () => {
+    logger.output = { debug: [], info: [], warn: [], error: [] };
+  };
+  logger.reset();
+  return logger;
 }
 
 export function mockStateProvider(initialState) {
