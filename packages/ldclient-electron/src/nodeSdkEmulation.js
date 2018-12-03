@@ -7,27 +7,17 @@ import * as common from 'ldclient-js-common';
 // have to call identify() prior to every flag evaluation. Therefore, this will perform very poorly
 // if for some reason you try to evaluate flags for a bunch of different users.
 
-export default function makeNodeSdkClientWrapper(realClient, initialUser) {
+export function createNodeSdkAdapter(realClient) {
   let initComplete = false;
 
   realClient.on('ready', () => {
     initComplete = true;
   });
 
-  let currentUser;
-
-  function setCurrentUser(user) {
-    currentUser = Object.assign({}, user);
-  }
-
-  setCurrentUser(initialUser);
-
   function maybeChangeUser(user) {
-    // TODO: this should be a deep equality check - eventually that will be done within identify()
-    if (user && currentUser && user.key === currentUser.key) {
+    if (user && realClient.getUser() && common.utils.deepEquals(user, realClient.getUser())) {
       return Promise.resolve();
     }
-    setCurrentUser(user);
     return realClient.identify(user);
   }
 
@@ -61,7 +51,6 @@ export default function makeNodeSdkClientWrapper(realClient, initialUser) {
       }).catch(() => {}), // suppress errors because the Promise will not normally be used
 
     identify: user => {
-      setCurrentUser(user);
       realClient.identify(user).catch(() => {});
     },
 

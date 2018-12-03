@@ -45,12 +45,14 @@ describe('Node-style API wrapper', () => {
     });
   }
 
+  function createWrappedClient(options) {
+    const client = LDClient.initializeMain(envName, user, Object.assign({}, options, { mockHttp: true }));
+    return LDClient.createNodeSdkAdapter(client);
+  }
+
   function asyncTestWithIdentify(testFn) {
     function doTest(changeUser, bootstrap, done) {
-      const wrappedClient = LDClient.initializeMainWithNodeApi(envName, user, {
-        bootstrap: bootstrap,
-        mockHttp: true,
-      });
+      const wrappedClient = createWrappedClient({ bootstrap: bootstrap });
       wrappedClient.waitForInitialization().then(() => {
         testFn(wrappedClient, changeUser ? otherUser : user, done);
         if (changeUser) {
@@ -69,7 +71,7 @@ describe('Node-style API wrapper', () => {
   }
 
   it('supports initialized()', done => {
-    const wrappedClient = LDClient.initializeMainWithNodeApi(envName, user, { mockHttp: true });
+    const wrappedClient = createWrappedClient();
 
     expect(wrappedClient.initialized()).toBe(false);
 
@@ -83,13 +85,13 @@ describe('Node-style API wrapper', () => {
 
   describe('waitUntilReady()', () => {
     it('resolves on success', done => {
-      const wrappedClient = LDClient.initializeMainWithNodeApi(envName, user, { mockHttp: true });
+      const wrappedClient = createWrappedClient();
       wrappedClient.waitUntilReady().then(done);
       respondWithFlags();
     });
 
     it('resolves on failure', done => {
-      const wrappedClient = LDClient.initializeMainWithNodeApi(envName, user, { mockHttp: true });
+      const wrappedClient = createWrappedClient();
       wrappedClient.waitUntilReady().then(done);
       respondWithError();
     });
@@ -97,13 +99,13 @@ describe('Node-style API wrapper', () => {
 
   describe('waitForInitialization()', () => {
     it('resolves on success', done => {
-      const wrappedClient = LDClient.initializeMainWithNodeApi(envName, user, { mockHttp: true });
+      const wrappedClient = createWrappedClient();
       wrappedClient.waitForInitialization().then(done);
       respondWithFlags();
     });
 
     it('rejects on failure', done => {
-      const wrappedClient = LDClient.initializeMainWithNodeApi(envName, user, { mockHttp: true });
+      const wrappedClient = createWrappedClient();
       wrappedClient.waitForInitialization().catch(() => done());
       respondWithError();
     });
@@ -173,7 +175,7 @@ describe('Node-style API wrapper', () => {
 
   describe('identify()', () => {
     it('makes a flags request when switching users', done => {
-      const wrappedClient = LDClient.initializeMainWithNodeApi(envName, user, { bootstrap: {}, mockHttp: true });
+      const wrappedClient = createWrappedClient({ bootstrap: {} });
 
       wrappedClient.waitForInitialization().then(() => {
         wrappedClient.identify(otherUser);
@@ -190,7 +192,7 @@ describe('Node-style API wrapper', () => {
       // because the contract for identify() is that it always generates an identify event. In the future, the
       // client will be changed so that if you call identify() with the same user, it sends an event but does
       // not re-request the flags.
-      const wrappedClient = LDClient.initializeMainWithNodeApi(envName, user, { bootstrap: {}, mockHttp: true });
+      const wrappedClient = createWrappedClient({ bootstrap: {} });
 
       wrappedClient.waitForInitialization().then(() => {
         wrappedClient.identify(user);
@@ -204,7 +206,7 @@ describe('Node-style API wrapper', () => {
   });
 
   it('returns empty string from secureModeHash() and logs a warning', done => {
-    const wrappedClient = LDClient.initializeMainWithNodeApi(envName, user, { bootstrap: {}, mockHttp: true });
+    const wrappedClient = createWrappedClient({ bootstrap: {} });
 
     wrappedClient.waitForInitialization().then(() => {
       const hash = wrappedClient.secureModeHash(user);
@@ -215,7 +217,7 @@ describe('Node-style API wrapper', () => {
   });
 
   it('supports on()', done => {
-    const wrappedClient = LDClient.initializeMainWithNodeApi(envName, user, { bootstrap: {}, mockHttp: true });
+    const wrappedClient = createWrappedClient({ bootstrap: {} });
     wrappedClient.on('ready', () => done());
   });
 
@@ -223,7 +225,7 @@ describe('Node-style API wrapper', () => {
     const listener1 = jest.fn();
     const listener2 = jest.fn();
 
-    const wrappedClient = LDClient.initializeMainWithNodeApi(envName, user, { mockHttp: true });
+    const wrappedClient = createWrappedClient();
     wrappedClient.on('ready', listener1);
     wrappedClient.on('ready', listener2);
     wrappedClient.off('ready', listener1);
