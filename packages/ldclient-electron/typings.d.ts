@@ -22,13 +22,6 @@ declare module 'ldclient-electron' {
   export const initializeMain: (envKey: string, user: LDUser, options?: LDOptions) => LDElectronMainClient;
 
   /**
-   * Creates an instance of the LaunchDarkly Electron client to be used in the main process, with an
-   * alternate interface that is the same as the LaunchDarkly Node SDK. This is intended to make it
-   * easier to port LaunchDarkly-enabled Node.js code to Electron.
-   */
-  export const initializeMainWithNodeApi: (envKey: string, user: LDUser, options?: LDOptions) => LDElectronNodeWrapperClient;
-
-  /**
    * Creates an instance of the LaunchDarkly Electron client to be used in a renderer process, which
    * will receive all of its state from a client in the main process.
    */
@@ -121,9 +114,22 @@ declare module 'ldclient-electron' {
   }
 
   /**
-   * Interface for the Node SDK compatibility wrapper returned by initializeMainWithNodeApi().
+   * Wraps an instance of the LaunchDarkly Electron main-process client with an alternate interface
+   * that is the same as the LaunchDarkly Node SDK. This is intended to make it easier to port
+   * LaunchDarkly-enabled Node.js code to Electron.
    */
-  export interface LDElectronNodeWrapperClient {
+  export const createNodeSdkAdapter: (client: LDElectronMainClient) => LDElectronNodeAdapterClient;
+
+  /**
+   * Interface for the Node SDK compatibility wrapper returned by createNodeSdkAdapter().
+   *
+   * Keep in mind that the underlying implementation is still the client-side SDK, which has a
+   * single-current-user model. Therefore, when you call variation(flagKey, user, defaultValue),
+   * it is really calling identify(user) first, obtaining flag values for that user, and then
+   * evaluating the flag. This will perform poorly if you attempt to evaluate flags for a variety
+   * of different users in rapid succession.
+   */
+  export interface LDElectronNodeAdapterClient {
     /**
      * @returns Whether the client library has completed initialization.
      */
@@ -149,7 +155,7 @@ declare module 'ldclient-electron' {
      * @returns a Promise containing the initialization state of the client; if successful, the resolved
      * value is the same client object
      */
-    waitForInitialization: () => Promise<LDElectronNodeWrapperClient>;
+    waitForInitialization: () => Promise<LDElectronNodeAdapterClient>;
 
     /**
      * Retrieves a flag's value.

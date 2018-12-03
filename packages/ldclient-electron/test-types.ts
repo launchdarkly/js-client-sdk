@@ -4,15 +4,15 @@
 
 import {
 	createConsoleLogger,
+	createNodeSdkAdapter,
 	LDElectronMainClient,
-	LDElectronNodeWrapperClient,
+	LDElectronNodeAdapterClient,
 	LDElectronRendererClient,
 	LDLogger,
 	LDOptions,
 	LDUser,
 	initializeInRenderer,
-	initializeMain,
-	initializeMainWithNodeApi
+	initializeMain
 } from 'ldclient-electron';
 
 var emptyOptions: LDOptions = {};
@@ -40,4 +40,4 @@ var user: LDUser = { key: 'user' };
 var client1: LDElectronMainClient = initializeMain('env', user, allOptions);
 var client2: LDElectronRendererClient = initializeInRenderer('env', allOptions);
 var client2WithDefaults: LDElectronRendererClient = initializeInRenderer();
-var client3: LDElectronNodeWrapperClient = initializeMainWithNodeApi('env', user, allOptions);
+var client3: LDElectronNodeAdapterClient = createNodeSdkAdapter(client1);

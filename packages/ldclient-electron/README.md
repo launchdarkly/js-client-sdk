@@ -58,6 +58,6 @@ However, whether you can use URL matching rules depends on what the URLs are wit
 
 For developers who are porting LaunchDarkly-enabled Node.js code to Electron, there are differences between the APIs that can be inconvenient. For instance, in the LaunchDarkly Node SDK, `variation()` is an asynchronous call that takes a callback, whereas in the client-side SDKs it is synchronous.
 
-To make this transition easier, the LaunchDarkly Electron SDK provides an optional wrapper that emulates the Node SDK. When creating the main-process client, instead of calling `initializeMain`, call `initializeMainWithNodeApi` with the same parameters. The resulting client object will then use the Node-style API.
+To make this transition easier, the LaunchDarkly Electron SDK provides an optional wrapper that emulates the Node SDK. When creating the main-process client, after calling `initializeMain`, pass the client object to `createNodeSdkAdapter`. The resulting object will use the Node-style API.
 
 Keep in mind that the underlying implementation is still the client-side SDK, which has a single-current-user model. Therefore, when you call `client.variation(flagKey, user, defaultValue)` it is really calling `client.identify(user)` first, obtaining flag values for that user, and then evaluating the flag. This will perform poorly if you attempt to evaluate flags for a variety of different users in rapid succession.

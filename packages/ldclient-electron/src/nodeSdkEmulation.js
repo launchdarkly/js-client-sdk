@@ -32,7 +32,7 @@ export function createNodeSdkAdapter(realClient) {
     // initialization succeeds *or fails*.
     waitUntilReady: () => realClient.waitForInitialization().catch(() => Promise.resolve()),
 
-    waitForInitialization: () => realClient.waitForInitialization(),
+    waitForInitialization: () => realClient.waitForInitialization().then(() => wrapper),
 
     variation: (key, user, defaultVal, callback) =>
       withUserAsync(user, callback, () => realClient.variation(key, defaultVal)),
