@@ -175,3 +175,7 @@ The SDK automatically handles URL changes (made via the HTML5 history API or by 
 ### Custom events
 
 Custom events sent with the `track` method are treated slightly differently by the browser SDK: the client normally expects that the event key you pass to `track` corresponds to one of your custom goals. You can still send custom events whose keys do not correspond to a goal, but the client will log a warning if you do.
+
+### Do Not Track
+
+In browsers that have a "do not track" option, the LaunchDarkly SDK will not attempt to send any analytics events if this option is set.
