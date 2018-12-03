@@ -100,7 +100,10 @@ describe('Node-style API wrapper', () => {
   describe('waitForInitialization()', () => {
     it('resolves on success', done => {
       const wrappedClient = createWrappedClient();
-      wrappedClient.waitForInitialization().then(done);
+      wrappedClient.waitForInitialization().then(result => {
+        expect(result).toBe(wrappedClient);
+        done();
+      });
       respondWithFlags();
     });
 
