@@ -3,7 +3,7 @@ import * as common from 'ldclient-js-common';
 import * as winston from 'winston';
 import electronPlatform from './electronPlatform';
 import * as interprocessSync from './interprocessSync';
-import makeNodeSdkClientWrapper from './nodeSdkEmulation';
+import * as nodeSdkEmulation from './nodeSdkEmulation';
 
 // This creates an SDK instance to be used in the main process of Electron. It can be used
 // either by itself or in combination with SDK instances in renderer windows (created with
@@ -55,12 +55,6 @@ export function initializeMain(env, user, options = {}) {
   return clientVars.client;
 }
 
-// See nodeSdkEmulation.js
-export function initializeMainWithNodeApi(env, user, options = {}) {
-  const client = initializeMain(env, user, options);
-  return makeNodeSdkClientWrapper(client, user);
-}
-
 export function initializeInRenderer(optionalEnv, options = {}) {
   let env;
   let config;
@@ -77,15 +71,17 @@ export function initializeInRenderer(optionalEnv, options = {}) {
   return browserClient.initialize(env, null, config);
 }
 
+export const createNodeSdkAdapter = nodeSdkEmulation.createNodeSdkAdapter;
+
+export const ConsoleLogger = common.ConsoleLogger;
+
+export const version = common.version;
+
 // This is called remotely by stateProvider.getInitialState()
 export function getInternalClientState(optionalEnv) {
   const t = interprocessSync.getMainProcessClientStateTracker(optionalEnv);
   return t && t.state;
 }
-
-export const ConsoleLogger = common.ConsoleLogger;
-
-export const version = common.version;
 
 function createDefaultLogger() {
   return new winston.Logger({
