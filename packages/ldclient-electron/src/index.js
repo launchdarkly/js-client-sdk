@@ -23,6 +23,7 @@ export function initializeMain(env, user, options = {}) {
   const tracker = interprocessSync.createMainProcessClientStateTracker(env, user);
   client.on('ready', () => tracker.initialized(clientVars.getFlagsInternal()));
   client.on(clientVars.internalChangeEventName, tracker.updatedFlags);
+  tracker.on('event', event => clientVars.enqueueEvent(event));
 
   const realIdentify = client.identify;
   client.identify = (user, cb) => {
