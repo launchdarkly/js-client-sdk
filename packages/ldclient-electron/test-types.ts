@@ -11,8 +11,8 @@ import {
 	LDLogger,
 	LDOptions,
 	LDUser,
-	initializeInRenderer,
-	initializeMain
+  initializeInMain,
+	initializeInRenderer
 } from 'ldclient-electron';
 
 var emptyOptions: LDOptions = {};
@@ -37,7 +37,7 @@ var allOptions: LDOptions = {
   logger: logger
 };
 var user: LDUser = { key: 'user' };
-var client1: LDElectronMainClient = initializeMain('env', user, allOptions);
+var client1: LDElectronMainClient = initializeInMain('env', user, allOptions);
 var client2: LDElectronRendererClient = initializeInRenderer('env', allOptions);
 var client2WithDefaults: LDElectronRendererClient = initializeInRenderer();
 var client3: LDElectronNodeAdapterClient = createNodeSdkAdapter(client1);

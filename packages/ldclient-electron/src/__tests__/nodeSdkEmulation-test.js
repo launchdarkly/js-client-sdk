@@ -46,7 +46,7 @@ describe('Node-style API wrapper', () => {
   }
 
   function createWrappedClient(options) {
-    const client = LDClient.initializeMain(envName, user, Object.assign({}, options, { mockHttp: true }));
+    const client = LDClient.initializeInMain(envName, user, Object.assign({}, options, { mockHttp: true }));
     return LDClient.createNodeSdkAdapter(client);
   }
 

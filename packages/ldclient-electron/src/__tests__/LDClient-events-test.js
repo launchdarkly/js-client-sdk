@@ -23,7 +23,7 @@ describe('LDClient', () => {
     // This tests that the client calls our platform's getCurrentUrl() and isDoNotTrack() methods.
     it('sends an event for track()', done => {
       const ep = stubEventProcessor();
-      const client = LDClient.initializeMain(envName, user, { eventProcessor: ep, bootstrap: {} });
+      const client = LDClient.initializeInMain(envName, user, { eventProcessor: ep, bootstrap: {} });
       const data = { thing: 'stuff' };
       client.on('ready', () => {
         client.track('eventkey', data);

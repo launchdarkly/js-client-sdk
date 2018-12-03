@@ -19,7 +19,7 @@ declare module 'ldclient-electron' {
   /**
    * Creates an instance of the LaunchDarkly Electron client to be used in the main process.
    */
-  export const initializeMain: (envKey: string, user: LDUser, options?: LDOptions) => LDElectronMainClient;
+  export const initializeInMain: (envKey: string, user: LDUser, options?: LDOptions) => LDElectronMainClient;
 
   /**
    * Creates an instance of the LaunchDarkly Electron client to be used in a renderer process, which
