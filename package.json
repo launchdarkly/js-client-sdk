@@ -23,7 +23,7 @@
     "url": "git://github.com/launchdarkly/js-client.git"
   },
   "scripts": {
-    "prepare": "lerna bootstrap",
+    "prepare": "lerna bootstrap --concurrency=2",
     "build": "lerna run build",
     "test": "lerna run test",
     "check-typescript": "lerna run check-typescript",

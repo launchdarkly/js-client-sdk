@@ -13,9 +13,8 @@ jobs:
           background: true
       - checkout
 
-      - run: npm install
+      - run: npm install # this automatically runs "npm prepare" too
       - run: free -h # temporary diagnostic output because we're seeing OOM errors in CI
-      - run: npm run prepare
       - run:
           command: free -h # see above
           when: on_fail
