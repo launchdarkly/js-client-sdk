@@ -14,10 +14,8 @@ jobs:
       - checkout
 
       - run: npm install # this automatically runs "npm prepare" too
-      - run: free -h # temporary diagnostic output because we're seeing OOM errors in CI
-      - run:
-          command: free -h # see above
-          when: on_fail
+        # Note that for CI to work properly, our lerna command for "npm prepare" in package.json needs to 
+        # have "--concurrency=2", otherwise we may run out of memory. This is a known issue with Lerna.
       - run: npm run lint
       - run: npm run build
 
