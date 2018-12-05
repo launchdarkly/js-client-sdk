@@ -24,6 +24,7 @@ export function createMainProcessClientStateTracker(env, user) {
 
   const t = new EventEmitter();
   t.state = state;
+  t.ready = false;
 
   function broadcastEventToRenderers(name, data) {
     ((electron.webContents && electron.webContents.getAllWebContents()) || []).forEach(wc => {
@@ -37,6 +38,7 @@ export function createMainProcessClientStateTracker(env, user) {
 
   t.initialized = flags => {
     state.flags = flags;
+    t.ready = true;
     broadcastEventToRenderers(eventName(ipcEventInitClient, anyEnvironment), state);
     broadcastEventToRenderers(eventName(ipcEventInitClient, env), state);
   };

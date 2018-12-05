@@ -47,7 +47,11 @@ describe('LDClient', () => {
 
   describe('track()', () => {
     it('should not warn when tracking an arbitrary custom event', done => {
-      const client = LDClient.initializeInMain(envName, user, { bootstrap: {}, sendEvents: false });
+      const client = LDClient.initializeInMain(envName, user, {
+        bootstrap: {},
+        sendEvents: false,
+        logger: LDClient.createConsoleLogger('warn'),
+      });
 
       client.on('ready', () => {
         client.track('whatever');
