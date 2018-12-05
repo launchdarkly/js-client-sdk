@@ -1,6 +1,6 @@
 {
   "name": "ldclient-electron",
-  "version": "2.9.0-alpha.1",
+  "version": "2.9.0-alpha.2",
   "description": "LaunchDarkly SDK for Electron",
   "author": "LaunchDarkly <team@launchdarkly.com>",
   "license": "Apache-2.0",
@@ -64,8 +64,8 @@
   "dependencies": {
     "electron-json-storage": "4.1.4",
     "launchdarkly-eventsource": "1.0.7-rc.2",
-    "ldclient-js": "^2.9.0-alpha.1",
-    "ldclient-js-common": "^2.9.0-alpha.1",
+    "ldclient-js": "^2.9.0-alpha.2",
+    "ldclient-js-common": "^2.9.0-alpha.2",
     "original": "^1.0.0",
     "winston": "2.4.1",
     "xmlhttprequest": "1.8.0"
