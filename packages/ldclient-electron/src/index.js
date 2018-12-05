@@ -81,7 +81,7 @@ export const version = common.version;
 // This is called remotely by stateProvider.getInitialState()
 export function getInternalClientState(optionalEnv) {
   const t = interprocessSync.getMainProcessClientStateTracker(optionalEnv);
-  return (t && t.ready) ? t.state : null;
+  return t && t.ready ? t.state : null;
 }
 
 function createDefaultLogger() {

@@ -5,46 +5,29 @@ import * as LDClient from '../index';
 describe('interprocess sync', () => {
   const envName = 'UNKNOWN_ENVIRONMENT_ID';
   const user = { key: 'user' };
-  const flagKey = "flagKey";
-  const flagValue = "flagValue";
+  const flagValue = 'flagValue';
   const flags = {
-    flagKey: { "value": flagValue, "version": 1, "variation": 1 }
+    flagKey: { value: flagValue, version: 1, variation: 1 },
   };
   const bootstrap = {
     flagKey: flagValue,
     $flagsState: {
-      flagKey: { "version": 1, "variation": 1 }
-    }
+      flagKey: { version: 1, variation: 1 },
+    },
   };
   const expectedState = { environment: envName, user: user, flags: flags };
 
   let xhr;
-  let requests = [];
 
   beforeEach(() => {
     xhr = sinon.useFakeXMLHttpRequest();
-    xhr.onCreate = function(req) {
-      requests.push(req);
-    };
   });
 
   afterEach(() => {
-    requests = [];
     xhr.restore();
   });
 
-  function sendFlags() {
-    setImmediate(() => {
-      expect(requests.length).toEqual(1);
-      requests[0].respond(
-        200,
-        { 'Content-Type': 'application/json' },
-        JSON.stringify(flags),
-      );
-    });
-  }
-
-	describe('getInternalClientState', () => {
+  describe('getInternalClientState', () => {
     it('returns null if no main client exists yet', () => {
       expect(LDClient.getInternalClientState(envName)).toBe(null);
     });
