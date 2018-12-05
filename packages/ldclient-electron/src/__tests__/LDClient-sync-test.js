@@ -2,6 +2,11 @@ import sinon from 'sinon';
 
 import * as LDClient from '../index';
 
+// These tests cover the mechanisms by which the main-process client and renderer-process clients are
+// kept in sync. However, in the current test framework it's not possible to actually create any
+// renderer processes, so the tests are just verifying that particular methods that are used in the
+// synchronization logic behave correctly.
+
 describe('interprocess sync', () => {
   const envName = 'UNKNOWN_ENVIRONMENT_ID';
   const user = { key: 'user' };
