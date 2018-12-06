@@ -157,13 +157,13 @@ describe('LDClient', () => {
       const server = sinon.fakeServer.create();
       const oldFlags = { foo: { value: 'a', variation: 1, version: 2, flagVersion: 2000 } };
       const newFlags = { foo: { value: 'b', variation: 2, version: 3, flagVersion: 2001 } };
-      
-      server.respondWith([ 200, { 'Content-Type': 'application/json' }, JSON.stringify(oldFlags) ]);
+
+      server.respondWith([200, { 'Content-Type': 'application/json' }, JSON.stringify(oldFlags)]);
 
       const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
       client.on('ready', () => {
         const user1 = { key: 'user1' };
-        server.respondWith([ 200, { 'Content-Type': 'application/json' }, JSON.stringify(newFlags) ]);
+        server.respondWith([200, { 'Content-Type': 'application/json' }, JSON.stringify(newFlags)]);
 
         client.identify(user1, null, () => {
           expect(ep.events.length).toEqual(3);
@@ -185,16 +185,16 @@ describe('LDClient', () => {
       const server = sinon.fakeServer.create();
       const oldFlags = { foo: { value: 'a', variation: 1, version: 2, flagVersion: 2000 } };
       const newFlags = { foo: { value: 'b', variation: 2, version: 3, flagVersion: 2001 } };
-      
-      server.respondWith([ 200, { 'Content-Type': 'application/json' }, JSON.stringify(oldFlags) ]);
+
+      server.respondWith([200, { 'Content-Type': 'application/json' }, JSON.stringify(oldFlags)]);
 
       const client = platform.testing.makeClient(envName, user, {
         eventProcessor: ep,
-        sendEventsOnlyForVariation: true
+        sendEventsOnlyForVariation: true,
       });
       client.on('ready', () => {
         const user1 = { key: 'user1' };
-        server.respondWith([ 200, { 'Content-Type': 'application/json' }, JSON.stringify(newFlags) ]);
+        server.respondWith([200, { 'Content-Type': 'application/json' }, JSON.stringify(newFlags)]);
 
         client.identify(user1, null, () => {
           expect(ep.events.length).toEqual(2);
@@ -228,6 +228,56 @@ describe('LDClient', () => {
 
         expect(client.variation('foo')).toEqual('b');
         expect(ep.events.length).toEqual(1);
+
+        done();
+      });
+    });
+
+    it('sends feature events for allFlags()', done => {
+      const ep = stubEventProcessor();
+      const boots = {
+        foo: 'a',
+        bar: 'b',
+        $flagsState: {
+          foo: { variation: 1, version: 2 },
+          bar: { variation: 1, version: 3 },
+        },
+      };
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: boots });
+
+      client.on('ready', () => {
+        client.allFlags();
+
+        expect(ep.events.length).toEqual(3);
+        expectIdentifyEvent(ep.events[0], user);
+        expectFeatureEvent(ep.events[1], 'foo', 'a', 1, 2, null);
+        expectFeatureEvent(ep.events[2], 'bar', 'b', 1, 3, null);
+
+        done();
+      });
+    });
+
+    it('does not send feature events for allFlags() if sendEventsOnlyForVariation is set', done => {
+      const ep = stubEventProcessor();
+      const boots = {
+        foo: 'a',
+        bar: 'b',
+        $flagsState: {
+          foo: { variation: 1, version: 2 },
+          bar: { variation: 1, version: 3 },
+        },
+      };
+      const client = platform.testing.makeClient(envName, user, {
+        eventProcessor: ep,
+        bootstrap: boots,
+        sendEventsOnlyForVariation: true,
+      });
+
+      client.on('ready', () => {
+        client.allFlags();
+
+        expect(ep.events.length).toEqual(1);
+        expectIdentifyEvent(ep.events[0], user);
 
         done();
       });
