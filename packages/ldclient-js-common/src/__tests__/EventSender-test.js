@@ -141,7 +141,7 @@ describe('EventSender', () => {
       const event = { kind: 'identify', key: 'userKey' };
       sender.sendEvents([event], false);
       lastRequest().respond();
-      expect(lastRequest().requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
+      expect(lastRequest().requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString(platform));
     });
 
     const retryableStatuses = [400, 408, 429, 500, 503];

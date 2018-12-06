@@ -217,7 +217,7 @@ describe('LDClient', () => {
       platform.testing.makeClient(envName, user, { sendLDHeaders: sendLDHeaders });
       const request = requests[0];
       expect(request.requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(
-        shouldGetHeaders ? utils.getLDUserAgentString() : undefined
+        shouldGetHeaders ? utils.getLDUserAgentString(platform) : undefined
       );
     }
 

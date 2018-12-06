@@ -143,12 +143,12 @@ export function chunkUserEventsForUrl(maxLength, events) {
   return allChunks;
 }
 
-export function getLDUserAgentString() {
-  return 'JSClient/' + VERSION;
+export function getLDUserAgentString(platform) {
+  return platform.userAgent + '/' + VERSION;
 }
 
-export function addLDHeaders(xhr) {
-  xhr.setRequestHeader('X-LaunchDarkly-User-Agent', getLDUserAgentString());
+export function addLDHeaders(xhr, platform) {
+  xhr.setRequestHeader('X-LaunchDarkly-User-Agent', getLDUserAgentString(platform));
 }
 
 export function extend(...objects) {
