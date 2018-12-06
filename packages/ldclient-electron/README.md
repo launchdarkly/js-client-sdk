@@ -8,13 +8,13 @@ This SDK can be used in either the main process or a renderer process, or both. 
 
 ## Why use this instead of the Node SDK?
 
-Since Electron is based on Node.js, it is possible to run the LaunchDarkly Node SDK in it. This is strongly discouraged, as the Node SDK is meant for server-side use, not for applications that are distributed to users. There are two main reasons why this distinction matters:
+Since Electron is based on Node.js, it is possible to run the LaunchDarkly Node SDK in it. This is strongly discouraged, as the Node SDK is meant for server-side use, not for applications that are distributed to users. There are several reasons why this distinction matters:
 
-1. Since the server-side SDKs have to be able to quickly evaluate any flag for any user, they download the entire definition of every one of your feature flags from LaunchDarkly-- rules, user targeting lists, etc. This can be quite a large amount of data. The client-side and mobile SDKs, which normally evaluate flags for just one user at a time, use a much more efficient protocol where they request only the active variation for each flag for that specific user.
+- The server-side SDKs include an SDK key that can download the entire definition (including rollout rules and individual user targets) of all of your feature flags. If you embed this SDK key in an application, any user who looks inside the application can then access all of your feature flag definitions—which may include sensitive data such as other users' email addresses. The client-side and mobile SDKs use different credentials that do not allow this.
 
-2. The ability to download all the flags is provided by the SDK key credential that the server-side SDKs use. If you embed this SDK key in an application, any user who looks inside the application can then access all of your feature flag definitions-- which may include sensitive data such as other users' email addresses. The client-side and mobile SDKs use different credentials that do not allow this.
+- The server-side SDKs do in fact download your entire flag data using this key, since they have to be able to evaluate flags quickly for any user. That can be quite a large amount of data. The client-side and mobile SDKs, which normally evaluate flags for just one user at a time, use a much more efficient protocol where they request only the active variation for each flag for that specific user.
 
-Besides the above, the Electron SDK also includes features that are specific to Electron, such as the ability to access main-process flags from the front end as described below.
+- The Electron SDK also includes features that are specific to Electron, such as the ability to access main-process flags from the front end as described below.
 
 ## Installation
 
