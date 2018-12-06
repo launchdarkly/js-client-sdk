@@ -30,8 +30,8 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   const sendEvents = options.sendEvents;
   let environment = env;
   const stream = Stream(platform, options, environment, hash);
-  const events = options.eventProcessor || EventProcessor(platform, options, environment, emitter);
-  const requestor = Requestor(platform, options, environment);
+  const events = options.eventProcessor || EventProcessor(platform, options, environment, logger, emitter);
+  const requestor = Requestor(platform, options, environment, logger);
   const seenRequests = {};
   let flags = typeof options.bootstrap === 'object' ? readFlagsFromBootstrap(options.bootstrap) : {};
   let useLocalStorage;
