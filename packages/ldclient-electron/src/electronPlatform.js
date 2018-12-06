@@ -25,5 +25,7 @@ export default function makeElectronPlatform(options) {
   ret.eventSourceIsActive = es => es.readyState === EventSource.OPEN || es.readyState === EventSource.CONNECTING;
   ret.eventSourceAllowsReport = true;
 
+  ret.userAgent = 'ElectronClient';
+
   return ret;
 }

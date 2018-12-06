@@ -80,5 +80,7 @@ export default function makeBrowserPlatform() {
 
   ret.eventSourceAllowsReport = false;
 
+  ret.userAgent = 'JSClient';
+
   return ret;
 }

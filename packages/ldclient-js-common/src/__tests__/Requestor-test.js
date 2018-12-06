@@ -178,7 +178,9 @@ describe('Requestor', () => {
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
     expect(server.requests.length).toEqual(1);
-    expect(server.requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
+    expect(server.requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(
+      utils.getLDUserAgentString(platform)
+    );
   });
 
   it('should send custom user-agent header in REPORT mode when sendLDHeaders is true', () => {
@@ -187,7 +189,9 @@ describe('Requestor', () => {
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
     expect(server.requests.length).toEqual(1);
-    expect(server.requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString());
+    expect(server.requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(
+      utils.getLDUserAgentString(platform)
+    );
   });
 
   it('should NOT send custom user-agent header when sendLDHeaders is false', () => {

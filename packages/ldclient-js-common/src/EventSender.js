@@ -35,7 +35,7 @@ export default function EventSender(platform, eventsUrl, environmentId, imageCre
       function createRequest(canRetry) {
         const xhr = platform.newHttpRequest();
         xhr.open('POST', postUrl, !sync);
-        utils.addLDHeaders(xhr);
+        utils.addLDHeaders(xhr, platform);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.setRequestHeader('X-LaunchDarkly-Event-Schema', '3');
         if (!sync) {

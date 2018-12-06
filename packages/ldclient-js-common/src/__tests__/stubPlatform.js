@@ -37,6 +37,7 @@ export function defaults() {
         setTimeout(() => callback(null), 0);
       },
     },
+    userAgent: 'stubClient',
 
     // extra methods used for testing
     testing: {
