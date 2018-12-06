@@ -52,6 +52,16 @@ describe('LDClient', () => {
       expect(requests.length).toEqual(1);
       expect(/sdk\/eval/.test(requests[0].url)).toEqual(false); // it's the goals request
     });
+
+    it('sends correct User-Agent in request', done => {
+      LDClient.initialize(envName, user, { fetchGoals: false });
+
+      setTimeout(() => {
+        expect(requests.length).toEqual(1);
+        expect(requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toMatch(/^JSClient\//);
+        done();
+      }, 0);
+    });
   });
 
   describe('goals', () => {

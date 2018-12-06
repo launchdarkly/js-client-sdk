@@ -58,7 +58,7 @@ export default function Requestor(platform, options, environment) {
     }
 
     if (sendLDHeaders) {
-      utils.addLDHeaders(xhr);
+      utils.addLDHeaders(xhr, platform);
     }
 
     xhr.send(data);

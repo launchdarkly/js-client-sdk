@@ -34,12 +34,22 @@ describe('LDClient', () => {
   describe('initialization', () => {
     it('should trigger the ready event', done => {
       const handleReady = jest.fn();
-      const client = LDClient.initializeInMain(envName, user, { bootstrap: {}, sendEvents: false });
+      const client = LDClient.initializeInMain(envName, user, { bootstrap: {}, mockHttp: true, sendEvents: false });
 
       client.on('ready', handleReady);
 
       setTimeout(() => {
         expect(handleReady).toHaveBeenCalled();
+        done();
+      }, 0);
+    });
+
+    it('sends correct User-Agent in request', done => {
+      LDClient.initializeInMain(envName, user, { mockHttp: true });
+
+      setTimeout(() => {
+        expect(requests.length).toEqual(1);
+        expect(requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toMatch(/^ElectronClient\//);
         done();
       }, 0);
     });
@@ -49,6 +59,7 @@ describe('LDClient', () => {
     it('should not warn when tracking an arbitrary custom event', done => {
       const client = LDClient.initializeInMain(envName, user, {
         bootstrap: {},
+        mockHttp: true,
         sendEvents: false,
         logger: LDClient.createConsoleLogger('warn'),
       });
