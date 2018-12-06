@@ -109,6 +109,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     }
     firstEvent = false;
     if (shouldEnqueueEvent()) {
+      logger.debug(messages.debugEnqueueingEvent(event.kind));
       events.enqueue(event);
     }
   }
@@ -301,6 +302,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     }
     stream.connect(ident.getUser(), {
       ping: function() {
+        logger.debug(messages.debugStreamPing());
         requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
           if (err) {
             emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
@@ -310,6 +312,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
       },
       put: function(e) {
         const data = JSON.parse(e.data);
+        logger.debug(messages.debugStreamPut());
         updateSettings(data);
       },
       patch: function(e) {
@@ -319,6 +322,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
         // then the patch always succeeds.
         const oldFlag = flags[data.key];
         if (!oldFlag || !oldFlag.version || !data.version || oldFlag.version < data.version) {
+          logger.debug(messages.debugStreamPatch(data.key));
           const mods = {};
           const newFlag = utils.extend({}, data);
           delete newFlag['key'];
@@ -330,17 +334,22 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
             mods[data.key] = { current: newDetail };
           }
           postProcessSettingsUpdate(mods);
+        } else {
+          logger.debug(messages.debugStreamPatchIgnored(data.key));
         }
       },
       delete: function(e) {
         const data = JSON.parse(e.data);
         if (!flags[data.key] || flags[data.key].version < data.version) {
+          logger.debug(messages.debugStreamDelete(data.key));
           const mods = {};
           if (flags[data.key] && !flags[data.key].deleted) {
             mods[data.key] = { previous: flags[data.key].value };
           }
           flags[data.key] = { version: data.version, deleted: true };
           postProcessSettingsUpdate(mods);
+        } else {
+          logger.debug(messages.debugStreamDeleteIgnored(data.key));
         }
       },
     });

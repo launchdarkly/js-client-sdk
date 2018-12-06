@@ -82,3 +82,39 @@ export const httpUnavailable = function() {
 export const identifyDisabled = function() {
   return 'identify() has no effect here; it must be called on the main client instance';
 };
+
+export const debugPolling = function(url) {
+  return 'polling for feature flags at ' + url;
+};
+
+export const debugStreamPing = function() {
+  return 'received ping message from stream';
+};
+
+export const debugStreamPut = function() {
+  return 'received streaming update for all flags';
+};
+
+export const debugStreamPatch = function(key) {
+  return 'received streaming update for flag "' + key + '"';
+};
+
+export const debugStreamPatchIgnored = function(key) {
+  return 'received streaming update for flag "' + key + '" but ignored due to version check';
+};
+
+export const debugStreamDelete = function(key) {
+  return 'received streaming deletion for flag "' + key + '"';
+};
+
+export const debugStreamingDeleteIgnored = function(key) {
+  return 'received streaming deletion for flag "' + key + '" but ignored due to version check';
+};
+
+export const debugEnqueueingEvent = function(kind) {
+  return 'enqueueing "' + kind + '" event';
+};
+
+export const debugPostingEvents = function(count) {
+  return 'sending ' + count + ' events';
+};

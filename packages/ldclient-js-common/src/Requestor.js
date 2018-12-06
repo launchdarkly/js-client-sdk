@@ -17,6 +17,7 @@ export default function Requestor(platform, options, environment) {
   const useReport = options.useReport;
   const withReasons = options.evaluationReasons;
   const sendLDHeaders = options.sendLDHeaders;
+  const logger = options.logger;
   let flagSettingsRequest;
   let lastFlagSettingsCallback;
 
@@ -87,6 +88,7 @@ export default function Requestor(platform, options, environment) {
       query = query + (query ? '&' : '') + 'withReasons=true';
     }
     endpoint = endpoint + (query ? '?' : '') + query;
+    logger.debug(messages.debugPolling(endpoint));
 
     const wrappedCallback = (function(currentCallback) {
       return function(error, result) {

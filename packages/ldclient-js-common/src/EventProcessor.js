@@ -13,6 +13,7 @@ export default function EventProcessor(platform, options, environmentId, emitter
   const inlineUsers = options.inlineUsersInEvents;
   const samplingInterval = options.samplingInterval;
   const flushInterval = options.flushInterval;
+  const logger = options.logger;
   let queue = [];
   let lastKnownPastTime = 0;
   let disabled = false;
@@ -98,6 +99,7 @@ export default function EventProcessor(platform, options, environmentId, emitter
       return Promise.resolve();
     }
     queue = [];
+    logger.debug(messages.debugPostingEvents(eventsToSend.length));
     return eventSender.sendEvents(eventsToSend, sync).then(responseInfo => {
       if (responseInfo) {
         if (responseInfo.serverTime) {

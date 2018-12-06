@@ -6,7 +6,7 @@ import * as utils from '../utils';
 
 describe('Requestor', () => {
   const baseUrl = 'http://requestee';
-  const defaultConfig = { baseUrl: baseUrl };
+  const defaultConfig = { baseUrl: baseUrl, logger: stubPlatform.logger() };
   const user = { key: 'foo' };
   const encodedUser = 'eyJrZXkiOiJmb28ifQ';
   const env = 'FAKE_ENV';
