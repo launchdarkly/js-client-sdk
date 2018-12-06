@@ -395,7 +395,12 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
       emitter.emit(changeEvent, changeEventParams);
       emitter.emit(internalChangeEvent, flags);
 
-      if (!options.sendEventsOnlyForVariation) {
+      // By default, we send feature evaluation events whenever we have received new flag values -
+      // the client has in effect evaluated these flags just by receiving them. This can be suppressed
+      // by setting "sendEventsOnlyForVariation". Also, if we have a stateProvider, we don't send these
+      // events because we assume they have already been sent by the other client that gave us the flags
+      // (when it received them in the first place).
+      if (!options.sendEventsOnlyForVariation && !stateProvider) {
         keys.forEach(key => {
           sendFlagEvent(key, changes[key].current);
         });
