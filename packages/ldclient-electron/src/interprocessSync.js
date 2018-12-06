@@ -24,11 +24,11 @@ export function createMainProcessClientStateTracker(env, user, logger) {
 
   const t = new EventEmitter();
   t.state = state;
-  
+
   let ready = false;
 
   function broadcastEventToRenderers(name, data) {
-    logger.debug('broadcasting IPC event "' + name +'" to renderers');
+    logger.debug('broadcasting IPC event "' + name + '" to renderers');
     ((electron.webContents && electron.webContents.getAllWebContents()) || []).forEach(wc => {
       wc.send(name, data);
     });

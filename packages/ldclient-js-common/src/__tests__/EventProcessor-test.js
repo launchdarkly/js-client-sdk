@@ -10,7 +10,12 @@ describe('EventProcessor', () => {
   const filteredUser = { key: 'userKey', privateAttrs: ['name'] };
   const eventsUrl = '/fake-url';
   const envId = 'env';
-  const defaultConfig = { eventsUrl: eventsUrl, flushInterval: 2000, samplingInterval: 0, logger: stubPlatform.logger() };
+  const defaultConfig = {
+    eventsUrl: eventsUrl,
+    flushInterval: 2000,
+    samplingInterval: 0,
+    logger: stubPlatform.logger(),
+  };
   const platform = stubPlatform.defaults();
 
   mockEventSender.sendEvents = function(events, sync) {
