@@ -1,4 +1,8 @@
-# LaunchDarkly Javascript SDK for Browsers
+# LaunchDarkly JavaScript SDK for Browsers
+
+# This is a beta release
+
+This version of the client-side SDKs includes the initial beta version of the Electron SDK, and also includes changes to the JavaScript SDK for browsers. The beta version should not be used in production environments. The source code for this version is on the ["`electron`" branch](https://github.com/launchdarkly/js-client/tree/electron) of the public repository.
 
 ## Introduction
 
