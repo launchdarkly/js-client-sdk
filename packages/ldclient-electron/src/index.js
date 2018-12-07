@@ -21,7 +21,7 @@ export function initializeInMain(env, user, options = {}) {
   // This tracker object communicates with any client instances in the renderer process that
   // were created with initializeInRenderer(), to keep them in sync with our state. If there
   // are no such clients, it has no effect.
-  const tracker = interprocessSync.createMainProcessClientStateTracker(env, user);
+  const tracker = interprocessSync.createMainProcessClientStateTracker(env, user, clientVars.logger);
   client.on('ready', () => tracker.initialized(clientVars.getFlagsInternal()));
   client.on(clientVars.internalChangeEventName, tracker.updatedFlags);
   tracker.on('event', event => clientVars.enqueueEvent(event));
@@ -81,7 +81,7 @@ export const version = common.version;
 // This is called remotely by stateProvider.getInitialState()
 export function getInternalClientState(optionalEnv) {
   const t = interprocessSync.getMainProcessClientStateTracker(optionalEnv);
-  return t && t.ready ? t.state : null;
+  return t ? t.getInitedState() : null;
 }
 
 function createDefaultLogger() {

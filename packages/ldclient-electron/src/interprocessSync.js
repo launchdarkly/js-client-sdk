@@ -16,7 +16,7 @@ function eventName(name, env) {
   return name + ':' + env;
 }
 
-export function createMainProcessClientStateTracker(env, user) {
+export function createMainProcessClientStateTracker(env, user, logger) {
   const state = {
     environment: env,
     user: user,
@@ -24,9 +24,11 @@ export function createMainProcessClientStateTracker(env, user) {
 
   const t = new EventEmitter();
   t.state = state;
-  t.ready = false;
+
+  let ready = false;
 
   function broadcastEventToRenderers(name, data) {
+    logger.debug('broadcasting IPC event "' + name + '" to renderers');
     ((electron.webContents && electron.webContents.getAllWebContents()) || []).forEach(wc => {
       wc.send(name, data);
     });
@@ -36,9 +38,18 @@ export function createMainProcessClientStateTracker(env, user) {
     electron.ipcMain && electron.ipcMain.on(name, listener);
   }
 
+  t.getInitedState = () => {
+    if (ready) {
+      logger.debug('renderer requested initial state, returning it');
+      return t.state;
+    }
+    logger.debug('renderer requested initial state, not ready yet');
+    return null;
+  };
+
   t.initialized = flags => {
     state.flags = flags;
-    t.ready = true;
+    ready = true;
     broadcastEventToRenderers(eventName(ipcEventInitClient, anyEnvironment), state);
     broadcastEventToRenderers(eventName(ipcEventInitClient, env), state);
   };
@@ -54,6 +65,7 @@ export function createMainProcessClientStateTracker(env, user) {
   };
 
   listenForEventFromRenderers(eventName(ipcEventAnalyticsEvent, env), (event, eventData) => {
+    logger.debug('received analytics event "' + eventData.kind + '" from renderer');
     t.emit('event', eventData);
   });
 

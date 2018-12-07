@@ -12,7 +12,7 @@ function getResponseError(xhr) {
   }
 }
 
-export default function Requestor(platform, options, environment) {
+export default function Requestor(platform, options, environment, logger) {
   const baseUrl = options.baseUrl;
   const useReport = options.useReport;
   const withReasons = options.evaluationReasons;
@@ -87,6 +87,7 @@ export default function Requestor(platform, options, environment) {
       query = query + (query ? '&' : '') + 'withReasons=true';
     }
     endpoint = endpoint + (query ? '?' : '') + query;
+    logger.debug(messages.debugPolling(endpoint));
 
     const wrappedCallback = (function(currentCallback) {
       return function(error, result) {

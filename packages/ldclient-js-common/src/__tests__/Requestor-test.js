@@ -11,6 +11,7 @@ describe('Requestor', () => {
   const encodedUser = 'eyJrZXkiOiJmb28ifQ';
   const env = 'FAKE_ENV';
   const platform = stubPlatform.defaults();
+  const logger = stubPlatform.logger();
   let server;
   let seq = 0;
 
@@ -26,7 +27,7 @@ describe('Requestor', () => {
     const handleOne = sinon.spy();
     const handleTwo = sinon.spy();
 
-    const requestor = Requestor(platform, defaultConfig, 'FAKE_ENV');
+    const requestor = Requestor(platform, defaultConfig, 'FAKE_ENV', logger);
     requestor.fetchFlagSettings({ key: 'user1' }, 'hash1', handleOne);
     requestor.fetchFlagSettings({ key: 'user2' }, 'hash2', handleTwo);
 
@@ -43,7 +44,7 @@ describe('Requestor', () => {
 
   it('should make requests with the GET verb if useReport is disabled', () => {
     const config = Object.assign({}, defaultConfig, { useReport: false });
-    const requestor = Requestor(platform, config, env);
+    const requestor = Requestor(platform, config, env, logger);
 
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
@@ -53,7 +54,7 @@ describe('Requestor', () => {
 
   it('should make requests with the REPORT verb with a payload if useReport is enabled', () => {
     const config = Object.assign({}, defaultConfig, { useReport: true });
-    const requestor = Requestor(platform, config, env);
+    const requestor = Requestor(platform, config, env, logger);
 
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
@@ -63,7 +64,7 @@ describe('Requestor', () => {
   });
 
   it('should include environment and user in GET URL', () => {
-    const requestor = Requestor(platform, defaultConfig, env);
+    const requestor = Requestor(platform, defaultConfig, env, logger);
 
     requestor.fetchFlagSettings(user, null, sinon.spy());
 
@@ -72,7 +73,7 @@ describe('Requestor', () => {
   });
 
   it('should include environment, user, and hash in GET URL', () => {
-    const requestor = Requestor(platform, defaultConfig, env);
+    const requestor = Requestor(platform, defaultConfig, env, logger);
 
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
@@ -82,7 +83,7 @@ describe('Requestor', () => {
 
   it('should include environment, user, and withReasons in GET URL', () => {
     const config = Object.assign({}, defaultConfig, { evaluationReasons: true });
-    const requestor = Requestor(platform, config, env);
+    const requestor = Requestor(platform, config, env, logger);
 
     requestor.fetchFlagSettings(user, null, sinon.spy());
 
@@ -92,7 +93,7 @@ describe('Requestor', () => {
 
   it('should include environment, user, hash, and withReasons in GET URL', () => {
     const config = Object.assign({}, defaultConfig, { evaluationReasons: true });
-    const requestor = Requestor(platform, config, env);
+    const requestor = Requestor(platform, config, env, logger);
 
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
@@ -102,7 +103,7 @@ describe('Requestor', () => {
 
   it('should include environment in REPORT URL', () => {
     const config = Object.assign({}, defaultConfig, { useReport: true });
-    const requestor = Requestor(platform, config, env);
+    const requestor = Requestor(platform, config, env, logger);
 
     requestor.fetchFlagSettings(user, null, sinon.spy());
 
@@ -112,7 +113,7 @@ describe('Requestor', () => {
 
   it('should include environment and hash in REPORT URL', () => {
     const config = Object.assign({}, defaultConfig, { useReport: true });
-    const requestor = Requestor(platform, config, env);
+    const requestor = Requestor(platform, config, env, logger);
 
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
@@ -122,7 +123,7 @@ describe('Requestor', () => {
 
   it('should include environment and withReasons in REPORT URL', () => {
     const config = Object.assign({}, defaultConfig, { useReport: true, evaluationReasons: true });
-    const requestor = Requestor(platform, config, env);
+    const requestor = Requestor(platform, config, env, logger);
 
     requestor.fetchFlagSettings(user, null, sinon.spy());
 
@@ -132,7 +133,7 @@ describe('Requestor', () => {
 
   it('should include environment, hash, and withReasons in REPORT URL', () => {
     const config = Object.assign({}, defaultConfig, { useReport: true, evaluationReasons: true });
-    const requestor = Requestor(platform, config, env);
+    const requestor = Requestor(platform, config, env, logger);
 
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
@@ -152,7 +153,7 @@ describe('Requestor', () => {
       req.respond(200, { 'Content-type': 'application/json' }, JSON.stringify({ tag: seq }));
     });
 
-    const requestor = Requestor(platform, defaultConfig, env);
+    const requestor = Requestor(platform, defaultConfig, env, logger);
     requestor.fetchFlagSettings({ key: 'user1' }, 'hash1', handleOne);
     server.respond();
     requestor.fetchFlagSettings({ key: 'user2' }, 'hash2', handleTwo);
@@ -174,7 +175,7 @@ describe('Requestor', () => {
 
   it('should send custom user-agent header in GET mode when sendLDHeaders is true', () => {
     const config = Object.assign({}, defaultConfig, { sendLDHeaders: true });
-    const requestor = Requestor(platform, config, env);
+    const requestor = Requestor(platform, config, env, logger);
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
     expect(server.requests.length).toEqual(1);
@@ -185,7 +186,7 @@ describe('Requestor', () => {
 
   it('should send custom user-agent header in REPORT mode when sendLDHeaders is true', () => {
     const config = Object.assign({}, defaultConfig, { useReport: true, sendLDHeaders: true });
-    const requestor = Requestor(platform, config, env);
+    const requestor = Requestor(platform, config, env, logger);
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
     expect(server.requests.length).toEqual(1);
@@ -196,7 +197,7 @@ describe('Requestor', () => {
 
   it('should NOT send custom user-agent header when sendLDHeaders is false', () => {
     const config = Object.assign({}, defaultConfig, { useReport: true, sendLDHeaders: false });
-    const requestor = Requestor(platform, config, env);
+    const requestor = Requestor(platform, config, env, logger);
 
     requestor.fetchFlagSettings(user, 'hash1', sinon.spy());
 
@@ -206,7 +207,7 @@ describe('Requestor', () => {
 
   describe('When HTTP requests are not available at all', () => {
     it('should fail on fetchFlagSettings', done => {
-      const requestor = Requestor(stubPlatform.withoutHttp(), defaultConfig, env);
+      const requestor = Requestor(stubPlatform.withoutHttp(), defaultConfig, env, logger);
       requestor.fetchFlagSettings(user, null, err => {
         expect(err.message).toEqual(messages.httpUnavailable());
         done();

@@ -5,7 +5,7 @@ import * as errors from './errors';
 import * as messages from './messages';
 import * as utils from './utils';
 
-export default function EventProcessor(platform, options, environmentId, emitter = null, sender = null) {
+export default function EventProcessor(platform, options, environmentId, logger, emitter = null, sender = null) {
   const processor = {};
   const eventSender = sender || EventSender(platform, options.eventsUrl, environmentId);
   const summarizer = EventSummarizer();
@@ -98,6 +98,7 @@ export default function EventProcessor(platform, options, environmentId, emitter
       return Promise.resolve();
     }
     queue = [];
+    logger.debug(messages.debugPostingEvents(eventsToSend.length));
     return eventSender.sendEvents(eventsToSend, sync).then(responseInfo => {
       if (responseInfo) {
         if (responseInfo.serverTime) {
