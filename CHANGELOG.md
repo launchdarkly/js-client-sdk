@@ -3,7 +3,7 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org).
 
-## [2.9.0-alpha.1] - 2018-12-03
+## [2.9.0-beta.1] - 2018-12-06
 ### Added:
 - There is now a LaunchDarkly client-side SDK for [Electron](https://electronjs.org/). See the [main project readme](README.md) and the [Electron readme](packages/ldclient-electron/README.md) for more details. Both the Electron SDK and the previously existing JavaScript SDK are contained in this project, since they share much of the same code; this changelog will describe changes to both.
 - Both of the SDKs now have a `getUser()` method that returns the current user object.

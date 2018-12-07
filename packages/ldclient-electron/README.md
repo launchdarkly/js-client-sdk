@@ -1,10 +1,16 @@
-# LaunchDarkly Javascript SDK for Electron
+# LaunchDarkly JavaScript SDK for Electron
+
+# This is a beta release
+
+This version of the client-side SDKs includes the initial beta version of the Electron SDK. The Electron SDK should not be used in production environments until a final version is released. The source code for this version is on the ["`electron`" branch](https://github.com/launchdarkly/js-client/tree/electron) of the public repository.
 
 ## Introduction
 
 This document describes how to set up the LaunchDarkly client-side JavaScript SDK in an [Electron](https://electronjs.org/) application. Please see the [main readme](../../README.md) for a more general description of the client-side SDKs.
 
 This SDK can be used in either the main process or a renderer process, or both. Its API closely resembles the LaunchDarkly [browser SDK](../ldclient-js/README.md).
+
+For an example of using the SDK in a simple Electron application, see [`hello-electron`](https://github.com/launchdarkly/hello-electron).
 
 ## Why use this instead of the Node SDK?
 

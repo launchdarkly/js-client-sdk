@@ -1,10 +1,16 @@
 # LaunchDarkly SDKs for Client-Side JavaScript
 
-[![Circle CI](https://circleci.com/gh/launchdarkly/js-client/tree/master.svg?style=svg)](https://circleci.com/gh/launchdarkly/js-client/tree/master)
+[![Circle CI](https://circleci.com/gh/launchdarkly/js-client/tree/electron.svg?style=svg)](https://circleci.com/gh/launchdarkly/js-client/tree/electron)
+
+# This is a beta release
+
+This version of the client-side SDKs includes the initial beta version of the Electron SDK. The Electron SDK should not be used in production environments until a final version is released. The source code for this version is on the ["`electron`" branch](https://github.com/launchdarkly/js-client/tree/electron) of the public repository.
+
+If you are using the JavaScript SDK in a browser rather than Electron, please use the latest full release of `ldclient-js`, version 2.8.0.
 
 ## Introduction
 
-These are the official LaunchDarkly client-side JavaScript SDKs. There are two: `ldclient-js`, which is meant to used from within a web page, and `ldclient-electron`, which is for [Electron](https://electronjs.org/) applications. Both of them provide basically the same functionality:
+These are the official LaunchDarkly client-side JavaScript SDKs. There are two: `ldclient-js`, which is meant to be used from within a web page, and `ldclient-electron`, which is for [Electron](https://electronjs.org/) applications. Both of them provide basically the same functionality:
 
 * Making feature flags available to your JavaScript code.
 * Sending events to LaunchDarkly for analytics and/or A/B testing.
@@ -145,6 +151,10 @@ client.on('change', function(allFlagChanges)) {
 
 Subscribing to `change` events will automatically turn on streaming mode too, unless you have explicitly set `streaming` to `false`.
 
+### Logging
+
+The SDKs have a simple logging mechanism that can be customized. The browser SDK normally uses the `console` object for logging, and the Electron SDK normally uses the `winston` package. There are four logging levels: `debug`, `info`, `warn`, and `error`; by default, `debug` and `info` messages are hidden. See the [TypeScript definitions](packages/ldclient-js-common/typings.d.ts) for `LDLogger`, `LDOptions`, and `createConsoleLogger` for more details.
+
 ## Development information
 
 This project is now a monorepo containing three packages: `ldclient-js` (the SDK for browsers), `ldclient-electron` (the SDK for Electron), and `ldclient-js-common` (the basic client logic that is used by both of those). These are all published to NPM for each release.
@@ -177,6 +187,7 @@ Here are resources from our awesome community:
   * [Python](http://docs.launchdarkly.com/docs/python-sdk-reference 'LaunchDarkly Python SDK')
   * [Go](http://docs.launchdarkly.com/docs/go-sdk-reference 'LaunchDarkly Go SDK')
   * [Node.JS](http://docs.launchdarkly.com/docs/node-sdk-reference 'LaunchDarkly Node SDK')
+  * [Electron](http://docs.launchdarkly.com/docs/electron-sdk-reference 'LaunchDarkly Electron SDK')
   * [.NET](http://docs.launchdarkly.com/docs/dotnet-sdk-reference 'LaunchDarkly .Net SDK')
   * [Ruby](http://docs.launchdarkly.com/docs/ruby-sdk-reference 'LaunchDarkly Ruby SDK')
   * [iOS](http://docs.launchdarkly.com/docs/ios-sdk-reference 'LaunchDarkly iOS SDK')
