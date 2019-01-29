@@ -1,47 +1,123 @@
 # LaunchDarkly SDKs for Client-Side JavaScript
 
-[![Circle CI](https://circleci.com/gh/launchdarkly/js-client/tree/electron.svg?style=svg)](https://circleci.com/gh/launchdarkly/js-client/tree/electron)
-
-# This is a beta release
-
-This version of the client-side SDKs includes the initial beta version of the Electron SDK. The Electron SDK should not be used in production environments until a final version is released. The source code for this version is on the ["`electron`" branch](https://github.com/launchdarkly/js-client/tree/electron) of the public repository.
-
-If you are using the JavaScript SDK in a browser rather than Electron, please use the latest full release of `ldclient-js`, version 2.8.0.
+[![Circle CI](https://circleci.com/gh/launchdarkly/js-client/tree/master.svg?style=svg)](https://circleci.com/gh/launchdarkly/js-client/tree/master)
 
 ## Introduction
 
-These are the official LaunchDarkly client-side JavaScript SDKs. There are two: `ldclient-js`, which is meant to be used from within a web page, and `ldclient-electron`, which is for [Electron](https://electronjs.org/) applications. Both of them provide basically the same functionality:
+This is the official LaunchDarkly client-side JavaScript SDK for web browser applications. It provides the same functionality as all of the LaunchDarkly SDKs:
 
 * Making feature flags available to your JavaScript code.
 * Sending events to LaunchDarkly for analytics and/or A/B testing.
 
-These are _client-side_ SDKs in that they are meant to be used with code that is deployed to an end user, either in a web browser or in a desktop application. They do not use the SDK key that the server-side SDKs use, since an end user who acquired that key could use it to access the details of your LaunchDarkly environment; instead, they use the "client-side ID" associated with your environment.
+For examples of using the SDK in a simple JavaScript application, see [`hello-js`](https://github.com/launchdarkly/hello-js) and [`hello-bootstrap`](https://github.com/launchdarkly/hello-bootstrap).
 
-If you are developing server-side code in Node.js, the [LaunchDarkly SDK for Node.js](https://github.com/launchdarkly/node-client) is more appropriate.
+The JavaScript SDK does not use the SDK key that the server-side SDKs use, since an end user who acquired that key could use it to access the details of your LaunchDarkly environment; instead, it uses the "client-side ID" associated with your environment.
 
 Note that in order for LaunchDarkly to make your feature flags available to these SDKs, you must check the "Make this flag available to client-side SDKs" box on the Settings page for each flag. This is so that if you have a web application with a large number of flags used on the server side and a smaller number used on the front end, the client-side SDK can save bandwidth by only getting the subset of flags that it will use.
 
-## Setup and compatibility
+If you are using JavaScript in a non-browser environment, see our [Node.js SDK](https://github.com/launchdarkly/node-client) and [Electron SDK](https://github.com/launchdarkly/electron-client).
 
-The setup processes and requirements for the SDKs are described in more detail here:
+## Browser compatibility
 
-* [for browsers (ldclient-js)](packages/ldclient-js/README.md)
-* [for Electron (ldclient-electron)](packages/ldclient-electron/README.md)
+The SDK supports the following browsers:
 
-## Basic usage
+* Chrome (any recent)
+* Firefox (any recent)
+* Safari (any recent)
+* Internet Explorer (IE10+)\*
+* Edge (any recent)\*
+* Opera (any recent)\*
 
-The following SDK features work the same regardless of which of the two SDK variants you're using.
+\* These browsers do not support streaming new flags to connected clients, even when `client.on('change')` is called.
 
-### Initializing
+## Installation
 
-The function for creating a client instance is different in each execution environment, but it normally takes three parameters: your client-side environment ID, a set of user properties, and an object containing optional settings.
+It can be installed in two ways:
 
-The client-side ID uniquely identifies a specific project and environment within your LaunchDarkly account (available
-on your [account settings page](https://app.launchdarkly.com/settings#/projects)). This stays the same throughout the lifetime of the client object.
+1. Via the `npm` package: `npm install --save ldclient-js`
+
+2. A minimized version of the script is also hosted on our CDN, and can be included via a `script` tag:
+
+```
+<script src="https://app.launchdarkly.com/snippet/ldclient.min.js">
+```
+
+## Browser feature support
+
+Web browsers vary widely in their support of specific features and standards. Three features that are used by the LaunchDarkly SDK that may not be available on every browser are `EventSource`, `document.querySelectorAll()`, and `Promise`. See below for more about how to ensure that these will work.
+
+### EventSource
+
+The SDK uses [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) to provide a live streaming connection to LaunchDarkly, if you have enabled streaming (by using the `streaming` property or the `setStreaming` method, or by subscribing to `change` events). If you never enable streaming, `EventSource` is not used.
+
+It is widely available in browsers, [except for Internet Explorer and Microsoft Edge](https://caniuse.com/#search=EventSource). If you wish to support these, and you need streaming support, you can install a polyfill such as [event-source-polyfill](https://github.com/Yaffle/EventSource).
+
+#### CDN
+
+You can load the polyfill via a script tag in the `<head>` before the script where you initialize `LDClient`:
+
+    <script src="https://unpkg.com/event-source-polyfill@0.0.12/src/eventsource.min.js"></script>
+
+#### NPM or Yarn
+
+    npm install event-source-polyfill@0.0.12
+
+Then import it before the module that initializes the LaunchDarkly client:
+
+    require('event-source-polyfill');
+
+### Document.querySelectorAll() polyfill
+
+The SDK uses `querySelectorAll` to support click events for A/B testing.
+
+It is widely available in browser, [except in old versions of Internet Explorer](https://caniuse.com/#feat=queryselector). If you wish to support these, and you need A/B testing support, you can install a polyfill such as [polyfill-queryselector](https://github.com/cobbdb/polyfill-queryselector).
+
+#### CDN
+
+You can load the polyfill via a script tag in the `<head>` before the script where you initialize `LDClient`:
+
+    <script src="https://unpkg.com/polyfill-queryselector@1.0.2/querySelector.js"></script>
+
+#### NPM or Yarn
+
+    npm install polyfill-queryselector@1.0.2
+
+Then import it before the module that initializes the LaunchDarkly client:
+
+    require('polyfill-queryselector');
+
+### Promise polyfill
+
+The SDK relies heavily on JavaScript `Promise`s. [Browsers that do not support `Promise`](https://caniuse.com/#search=Promise) include Internet Explorer and older versions of Microsoft Edge. If you need to support these, you will need to install a polyfill for `Promise`, such as [es6-promise](https://github.com/stefanpenner/es6-promise).
+
+#### CDN
+
+You can load the polyfill via a script tag in the `<head>` before the script where you initialize `LDClient`:
+
+    <script src="https://unpkg.com/es6-promise@4.2.4/dist/es6-promise.auto.min.js"></script>
+
+#### NPM or Yarn
+
+    npm install es6-promise@4.2.4
+
+Then import it before the module that initializes the LaunchDarkly client:
+
+    require('es6-promise/auto');
+
+## Usage
+
+### Initializing the client
+
+To create a client instance, pass your environment's client-side ID (available on your [account settings page](https://app.launchdarkly.com/settings#/projects)) and user context to the `LDClient.initialize` function:
+
+```js
+var user = { key: 'user.example.com' };
+var client = LDClient.initialize('YOUR_CLIENT_SIDE_ID', user);
+```
 
 The user object can contain any of the properties described [here](https://docs.launchdarkly.com/docs/targeting-users). The SDK always has a single current user; you can change it after initialization (see "Changing users").
 
-When the client is first created, it normally has to perform an asynchronous task to obtain the feature flag values for the user (although you can short-circuit this; see "Bootstrapping"). To determine when this has finished, you can listen for the `ready` event, or use the equivalent Promise-based method `waitForInitialization()`:
+The client is initialized asynchronously, so if you want to determine when the client is ready to evaluate feature flags, use the `ready` event, or the Promise-based method `waitForInitialization()`:
 
 ```js
 client.on('ready', function() {
@@ -56,13 +132,34 @@ client.waitForInitialization().then(function() {
 
 If you try to evaluate feature flags before the client is ready, it will behave as it would if no flags existed (i.e. `variation` will return a default value).
 
-### Bootstrapping
+Out of the box, initializing the client will make a remote request to LaunchDarkly, so it may take approximately 100 milliseconds before the ready event is emitted. If you require feature flag values before rendering the page, we recommend bootstrapping the client-- see below.
 
-The `bootstrap` property in the client options allows you to speed up the startup process by providing an initial set of flag values.
+### Bootstrapping from the server side
 
-If you set `bootstrap` to an object, the client will treat it as a map of flag keys to flag values. These values can be whatever you want (although in the browser environment, there is a [special mechanism](packages/ldclient-js/README.md#Bootstrapping%20from%20the%20server%20side) that is commonly used). The client will immediately start out in a ready state using these values. It will still make an initial request to LaunchDarkly to get the actual latest values, but that will happen in the background.
+The [bootstrapping](../../README.md#Bootstrapping) mechanism lets you provide initial feature flag values at startup time. In a web application, a common approach is for your back-end application code to obtain flag values from its own server-side SDK and then pass them to the front end.
 
-If you set `bootstrap` to the string `"localstorage"`, the client will try to get flag values from persistent storage, using a unique key that is based on the user properties. In a browser, this is the `window.localStorage` mechanism; in Electron, it uses files in the [`userData`](https://electronjs.org/docs/all?query=getpath#appgetpathname) directory. If the client finds flag values stored for this user, it uses them and starts up immediately in a ready state-- but also makes a background request to LaunchDarkly to get the latest values, and stores them as soon as it receives them.
+LaunchDarkly's server-side SDKs have a function called `allFlagsState`, which returns a snapshot of the feature flags for a particular user. This data structure can be passed directly to the `bootstrap` property of the front-end client; you will also want to pass the user properties. Here's an example of how this might be done if you are using Node.js, Express, and Mustache templates on the back end.
+
+```js
+// in the back-end code:
+app.get('/page', function(req, res) {
+  var user = { key: 'example-user' };
+  client.allFlagsState(user, function(flagsData) {
+    templateVars = {
+      user: user,
+      allFlags: flagsData
+    };
+    res.render('myPage', templateVars);
+  });
+});
+
+// in a script within the page template:
+var user = {{ user }};
+var clientOptions = {
+  bootstrap: {{ allFlags }}
+};
+var client = ldclient.initialize('YOUR_CLIENT_SIDE_ID', user, clientOptions);
+```
 
 ### Feature flags
 
@@ -123,7 +220,11 @@ You can also explicitly send an event with any data you like using the `track` f
 client.track('my-custom-event-key', { customProperty: someValue });
 ```
 
+If you've defined [click or pageview goals](https://docs.launchdarkly.com/docs/running-ab-tests) in LaunchDarkly, they'll be sent automatically once the client has been initialized. You do not have to do anything else with the client to send click or pageview goals. The SDK will generate pageview events correctly regardless of how the URL is changed (via the HTML5 history API, by changing the URL hash fragment, etc.).
+
 You can completely disable event sending by setting `sendEvents` to `false` in the client options, but be aware that this means you will not have user data on your LaunchDarkly dashboard.
+
+In browsers that have a "do not track" option, the SDK will not attempt to send any analytics events if this option is set.
 
 ### Receiving live updates
 
@@ -153,17 +254,57 @@ Subscribing to `change` events will automatically turn on streaming mode too, un
 
 ### Logging
 
-The SDKs have a simple logging mechanism that can be customized. The browser SDK normally uses the `console` object for logging, and the Electron SDK normally uses the `winston` package. There are four logging levels: `debug`, `info`, `warn`, and `error`; by default, `debug` and `info` messages are hidden. See the [TypeScript definitions](packages/ldclient-js-common/typings.d.ts) for `LDLogger`, `LDOptions`, and `createConsoleLogger` for more details.
+By default, the SDK uses the `winston` package. There are four logging levels: `debug`, `info`, `warn`, and `error`; by default, `debug` and `info` messages are hidden. See the [TypeScript definitions](https://github.com/launchdarkly/js-client/tree/master/packages/ldclient-js-common/typings.d.ts) for `LDLogger`, `LDOptions`, and `createConsoleLogger` for more details.
+
+### Secure mode
+
+Secure mode ensures that feature flag settings for a user are kept private, and that one user cannot inspect the settings for another user. Secure mode works by having you include a server-generated HMAC SHA256 hash of your user key, signed with the SDK key for your environment.
+
+You can enable secure mode for each environment on your [account settings page](https://app.launchdarkly.com/settings#/projects). You should send the computed hash for your user in the `options` array during client initialization:
+
+```js
+var user = { key: 'user.example.com' };
+var client = LDClient.initialize(
+  'YOUR_CLIENT_SIDE_ID',
+  user,
+  (options = {
+    hash: 'SERVER_GENERATED_HASH',
+  })
+);
+```
+
+Each of our server-side SDKs includes a method to compute the secure mode hash for a user. You can pass this to your front-end code in a template. For example:
+
+```js
+var client = LDClient.initialize('YOUR_CLIENT_SIDE_ID', user, options = {
+       hash: {{ ldclient.secure_mode_hash(user) }} // this is a template directive, and the ldclient instance here is your server-side SDK client
+  });
+```
+
+To compute the hash yourself, locate the SDK key for your environment on your account settings page. Then, compute an HMAC SHA256 hash of your user key, using your SDK key as a secret. Here's what this would look like in Node.js:
+
+```js
+var crypto = require('crypto');
+var hmac = crypto.createHmac('sha256', 'YOUR_SDK_KEY');
+hmac.update('YOUR_USER_KEY');
+hash = hmac.digest('hex');
+```
+
+If you change the user context dynamically with `identify()`, you can provide a new secure mode hash at the same time:
+
+```js
+client.identify(newUser, hash, function() {
+  console.log("New user's flags available");
+});
+```
 
 ## Development information
 
-This project is now a monorepo containing three packages: `ldclient-js` (the SDK for browsers), `ldclient-electron` (the SDK for Electron), and `ldclient-js-common` (the basic client logic that is used by both of those). These are all published to NPM for each release.
+The basic client logic that is shared by the Electron SDK and the browser SDK is in the `ldclient-js-common` package within [js-client](https://github.com/launchdarkly/js-client), which is published separately to NPM.
 
-To build and test the entire project, from the project root directory:
+To build and test the project, from the project root directory:
 * `npm install`
-* `npm run prepare` (this takes the place of `npm install` for the individual packages)
-* `npm run build` (runs `npm run build` in each individual package)
-* `npm run test` (runs `npm test`  in each individual package)
+* `npm test`
 
 ## Community
 
@@ -172,6 +313,10 @@ Here are resources from our awesome community:
 * [TrueCar/react-launch-darkly](https://github.com/TrueCar/react-launch-darkly/): A set of component helpers to add support for LaunchDarkly to your React.js app
 * [yusinto/ld-redux](https://github.com/yusinto/ld-redux/): A library to integrate LaunchDarkly with React and Redux
 * [tdeekens/flopflip](https://github.com/tdeekens/flopflip): A flexible feature-toggling library that integrates with LaunchDarkly
+
+## Contributing
+
+We encourage pull-requests and other contributions from the community. We've also published an [SDK contributor's guide](http://docs.launchdarkly.com/docs/sdk-contributors-guide) that provides a detailed explanation of how our SDKs work. See [CONTRIBUTING](CONTRIBUTING.md) for more developer information about this project.
 
 ## About LaunchDarkly
 
