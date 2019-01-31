@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`withLDConsumer flags are passed down through context api 1`] = `
+<div>
+  testFlag detected
+</div>
+`;
+
+exports[`withLDConsumer ldClient is passed down through context api 1`] = `
+<div>
+  ldClient detected
+</div>
+`;
+
+exports[`withLDConsumer only ldClient is passed down through context api 1`] = `
+<div>
+  Negative, no flag
+  ldClient detected
+</div>
+`;

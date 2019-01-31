@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`withLDProvider render app 1`] = `
+<Provider
+  value={
+    Object {
+      "flags": Object {},
+      "ldClient": undefined,
+    }
+  }
+>
+  <div>
+    My App
+  </div>
+</Provider>
+`;
