@@ -8,7 +8,7 @@ This is the official LaunchDarkly React SDK. It provides a subset of LaunchDarkl
 * Feature flags as camelCased props through the Context API.
 * Subscription to flag changes out of the box.
 
-Under the hood, this SDK uses the [main LaunchDarkly JavaScript SDK](../ldclient-js/README.md), but with an interface that uses React features such as the Context API, props and HOCs.
+Under the hood, this SDK uses the [main LaunchDarkly JavaScript SDK](../ldclient-js/README.md), but with an interface that uses React's Context API.
 
 For a general overview of JavaScript SDK characteristics, see the [main README](../../README.md). Also see the online [React SDK Reference](https://docs.launchdarkly.com/docs/react-sdk-reference).
 
