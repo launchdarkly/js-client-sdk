@@ -20,7 +20,11 @@ The SDK can be installed in two ways:
 
 The hosted copy of `ldclient.min.js` is updated after every release, so be aware that if you use the `script` tag approach, the SDK may change without warning.
 
-## Usage
+## Usage and API
+
+The sections below describe the most common actions and options supported by the SDK. Some other options are also described in the online [JavaScript SDK Reference](https://docs.launchdarkly.com/docs/js-sdk-reference).
+
+The authoritative full description of all properties and methods is in the TypeScript declaration files [here](typings.d.ts) and [here](../ldclient-js-common/typings.d.ts).
 
 ### Initializing the client
 
