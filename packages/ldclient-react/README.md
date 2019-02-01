@@ -2,13 +2,11 @@
 
 ## Introduction
 
-This is the official LaunchDarkly React SDK. It provides a subset of LaunchDarkly feature flag functionality, including:
+This is the official LaunchDarkly React SDK. It builds upon the [main LaunchDarkly JavaScript SDK](../ldclient-js/README.md), supporting all of the same functionality, but using React's Context API to provide additional conveniences:
 
 * Easy initialization and usage with React.
-* Feature flags as camelCased props through the Context API.
+* Feature flags as camelCased props.
 * Subscription to flag changes out of the box.
-
-Under the hood, this SDK uses the [main LaunchDarkly JavaScript SDK](../ldclient-js/README.md), but with an interface that uses React's Context API.
 
 For a general overview of JavaScript SDK characteristics, see the [main README](../../README.md). Also see the online [React SDK Reference](https://docs.launchdarkly.com/docs/react-sdk-reference).
 
