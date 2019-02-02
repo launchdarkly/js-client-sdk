@@ -1,0 +1,70 @@
+{
+  "name": "ldclient-js-common",
+  "version": "2.9.0-beta.1",
+  "description": "LaunchDarkly SDK for JavaScript - common code",
+  "author": "LaunchDarkly <team@launchdarkly.com>",
+  "license": "Apache-2.0",
+  "files": [
+    "ldclient-common.cjs.js",
+    "ldclient-common.cjs.js.map",
+    "ldclient-common.es.js",
+    "ldclient-common.es.js.map",
+    "ldclient-common.min.js",
+    "ldclient-common.min.js.map",
+    "typings.d.ts"
+  ],
+  "types": "./typings.d.ts",
+  "main": "dist/ldclient-common.cjs.js",
+  "module": "dist/ldclient-common.es.js",
+  "scripts": {
+    "lint": "eslint --format 'node_modules/eslint-formatter-pretty' --ignore-path ../../.eslintignore",
+    "lint:all": "eslint --format 'node_modules/eslint-formatter-pretty' --ignore-path ../../.eslintignore src",
+    "format": "npm run format:md && npm run format:js",
+    "format:md": "prettier --parser markdown --ignore-path ../../.prettierignore --write '*.md'",
+    "format:js": "prettier --ignore-path ../../.prettierignore --write 'src/**/*.js'",
+    "format:test": "npm run format:test:md && npm run format:test:js",
+    "format:test:md": "prettier --parser markdown --ignore-path ../../.prettierignore --list-different '*.md'",
+    "format:test:js": "prettier --ignore-path ../../.prettierignore --list-different 'src/**/*.js'",
+    "build": "cross-env NODE_ENV=development rollup -c rollup.config.js",
+    "build:min": "cross-env NODE_ENV=production rollup -c rollup.config.js",
+    "test": "NODE_ENV=test jest",
+    "test:junit": "NODE_ENV=test jest --testResultsProcessor jest-junit",
+    "check-typescript": "node_modules/typescript/bin/tsc",
+    "clean": "rimraf dist/**",
+    "prepublishOnly": "npm run build:min"
+  },
+  "devDependencies": {
+    "babel-core": "6.26.0",
+    "babel-eslint": "8.2.2",
+    "babel-jest": "22.4.3",
+    "babel-polyfill": "6.26.0",
+    "chai": "4.1.2",
+    "cross-env": "5.1.4",
+    "eslint": "4.19.1",
+    "eslint-config-prettier": "2.9.0",
+    "eslint-config-xo": "0.20.1",
+    "eslint-formatter-pretty": "1.3.0",
+    "eslint-plugin-babel": "5.0.0",
+    "eslint-plugin-prettier": "2.6.0",
+    "jest": "22.4.3",
+    "jest-junit": "3.6.0",
+    "jest-localstorage-mock": "2.2.0",
+    "jsdom": "11.11.0",
+    "prettier": "1.11.1",
+    "readline-sync": "1.4.9",
+    "rimraf": "2.6.2",
+    "rollup": "0.57.1",
+    "semver": "5.5.0",
+    "semver-compare": "1.0.0",
+    "sinon": "4.5.0",
+    "typescript": "3.0.1"
+  },
+  "dependencies": {
+    "base64-js": "1.3.0",
+    "fast-deep-equal": "2.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/launchdarkly/js-client.git"
+  }
+}

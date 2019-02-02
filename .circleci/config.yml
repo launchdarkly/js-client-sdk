@@ -2,18 +2,33 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:6-browsers
+      - image: circleci/node:latest
     steps:
       - checkout
-      - run: npm install
-      - run: mkdir -p reports/junit
-      - run: npm run lint:all
+
+      - run: npm install # this automatically runs "npm prepare" too
+        # Note that for CI to work properly, our lerna command for "npm prepare" in package.json needs to 
+        # have "--concurrency=2", otherwise we may run out of memory. This is a known issue with Lerna.
+      - run: npm run lint
       - run: npm run build
+
+      # We could do "npm run test" here to run tests for all the packages, but then we would not be
+      # able to produce separate output files.
+      - run: mkdir -p reports/junit
       - run:
-          command: npm run test:junit
+          command: cd ~/project/packages/ldclient-js-common && npm run test:junit
+          environment:
+            JEST_JUNIT_OUTPUT: "./reports/junit/js-common-test-results.xml"
+      - run:
+          command: cd ~/project/packages/ldclient-js && npm run test:junit
           environment:
             JEST_JUNIT_OUTPUT: "./reports/junit/js-test-results.xml"
-      - run: npm run check-typescript
+      - run:
+          command: cd ~/project/packages/ldclient-react && npm run test:junit
+          environment:
+            JEST_JUNIT_OUTPUT: "./reports/junit/react-test-results.xml"
+
+      - run: cd ~/project && npm run check-typescript
       - store_test_results:
           path: reports/junit/
       - store_artifacts:

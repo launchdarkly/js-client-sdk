@@ -1,7 +1,16 @@
 # Change log
 
-All notable changes to the LaunchDarkly client-side JavaScript SDK will be documented in this file.
+All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org).
+
+## [2.9.0-beta.1] - 2018-12-06
+### Added:
+- There is now a LaunchDarkly client-side SDK for [Electron](https://electronjs.org/). See the [main project readme](README.md) and the [Electron readme](packages/ldclient-electron/README.md) for more details. Both the Electron SDK and the previously existing JavaScript SDK are contained in this project, since they share much of the same code; this changelog will describe changes to both.
+- Both of the SDKs now have a `getUser()` method that returns the current user object.
+- In both SDKs, the client options can now have a `logger` property that defines a custom logging mechanism, using the `LDLogger` interface that is described in the [TypeScript definitions](packages/ldclient-js-common/typings.d.ts). In a web browser, the default is still to use `console.warn` and `console.error`; you could override this to send log messages to another destination or to suppress them.
+
+### Changed:
+- Due to the addition of the Electron SDK, the code has been reorganized. There are now three modules: `ldclient-js` (the browser SDK), `ldclient-electron` (the Electron SDK), and `ldclient-js-common` (code that is used by both). Existing projects that use `ldclient-js` should not need to make any changes; if you are using a package manager, the `ldclient-js-common` dependency will be brought in automatically, and if you are using the pre-built `ldclient.min.js`, it includes all of the necessary code.
 
 ## [2.8.0] - 2018-12-03
 ### Added:

@@ -4,5 +4,7 @@ npm-debug.log
 yarn-error.log
 node_modules
 dist
+lib
 .idea
 .vscode/
+test-types.js

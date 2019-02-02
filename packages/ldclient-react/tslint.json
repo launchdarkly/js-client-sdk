@@ -1,0 +1,36 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:all",
+        "tslint-config-prettier",
+        "tslint-plugin-prettier"
+    ],
+    "jsRules": {},
+    "rules": {
+        "max-line-length": {
+            "options": [120]
+        },
+        "prettier": true,
+        "quotemark": [true, "single", "jsx-double"],
+        "ordered-imports": false,
+        "object-literal-sort-keys": false,
+        "arrow-parens": false,
+        "forin": false,
+        "no-default-export": false,
+        "no-default-import": false,
+        "typedef": false,
+        "arrow-call-signature": false,
+        "no-magic-numbers": false,
+        "variable-name": false,
+        "interface-name": false,
+        "completed-docs": false,
+        "only-arrow-functions": false,
+        "strict-boolean-expressions": false,
+        "no-implicit-dependencies": [true, "dev"],
+        "member-ordering": false,
+        "member-access": false,
+        "prefer-function-over-method": false,
+        "no-unbound-method": false
+    },
+    "rulesDirectory": []
+}
