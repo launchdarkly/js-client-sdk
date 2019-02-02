@@ -1,8 +1,8 @@
-# LaunchDarkly SDK for Browser JavaScript - React Interface
+# LaunchDarkly SDK for Browser JavaScript - React Wrapper
 
 ## Introduction
 
-This is the official LaunchDarkly React SDK. It builds upon the [main LaunchDarkly JavaScript SDK](../ldclient-js/README.md), supporting all of the same functionality, but using React's Context API to provide additional conveniences:
+This is an optional React wrapper for the LaunchDarkly SDK for browser JavaScript SDK. It builds upon the [JavaScript SDK](../ldclient-js/README.md), supporting all of the same functionality, but using React's Context API to provide additional conveniences:
 
 * Easy initialization and usage with React.
 * Feature flags as camelCased props.
