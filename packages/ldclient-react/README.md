@@ -1,20 +1,14 @@
-# LaunchDarkly React SDK
-
-[![Circle CI](https://circleci.com/gh/launchdarkly/js-client/tree/master.svg?style=svg)](https://circleci.com/gh/launchdarkly/js-client/tree/master)
+# LaunchDarkly SDK for Browser JavaScript - React Wrapper
 
 ## Introduction
 
-This is the official LaunchDarkly React SDK. With the React SDK, you get:
+This is an optional React wrapper for the LaunchDarkly SDK for browser JavaScript SDK. It builds upon the [JavaScript SDK](../ldclient-js/README.md), supporting all of the same functionality, but using React's Context API to provide additional conveniences:
 
 * Easy initialization and usage with React.
-
-* Feature flags as camelCased props through the Context API.
-
+* Feature flags as camelCased props.
 * Subscription to flag changes out of the box.
 
-Under the hood, this SDK uses the official LaunchDarkly [ldclient-js package](https://github.com/launchdarkly/js-client).
-The difference is this SDK is optimised for React, harnessing React features such as the Context API, props and HOCs
-to provide better integration for React apps.
+For a general overview of JavaScript SDK characteristics, see the [main README](../../README.md). Also see the online [React SDK Reference](https://docs.launchdarkly.com/docs/react-sdk-reference).
 
 ## Dependency
 
@@ -22,7 +16,9 @@ This SDK needs React >= 16.3.0 because it uses the Context API.
 
 ## Installation
 
+```
 yarn add ldclient-react
+```
 
 ## Quickstart
 
@@ -184,6 +180,13 @@ export default withLDConsumer()(Home);
 ```
 
 ## Example
-Check the [example](https://github.com/launchdarkly/js-client-private/tree/react/packages/ldclient-react/example) for a fully working spa with
-react and react-router. Remember to enter your clientSideID in the client [root app file](https://github.com/launchdarkly/js-client-private/tree/react/packages/ldclient-react/example/src/universal/app.js)
-and create a flag called `dev-test-flag` in your dashboard before running the example.
+
+Check the [example](example) for a fully working spa with react and react-router. Remember to enter your clientSideID in the client [root app file](example/src/universal/app.js) and create a flag called `dev-test-flag` in your dashboard before running the example.
+
+## Alternatives from the community
+
+Third-party developers have created their own React interfaces for the LaunchDarkly JavaScript SDK:
+
+* [TrueCar/react-launch-darkly](https://github.com/TrueCar/react-launch-darkly/): A basic React wrapper with similar functionality
+* [yusinto/ld-redux](https://github.com/yusinto/ld-redux/): An implementation specifically for Redux
+* [tdeekens/flopflip](https://github.com/tdeekens/flopflip): A flexible feature-toggling library that integrates with LaunchDarkly

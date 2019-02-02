@@ -1,21 +1,20 @@
-# LaunchDarkly SDKs for Client-Side JavaScript
+# LaunchDarkly SDK for Browser JavaScript
 
 [![Circle CI](https://circleci.com/gh/launchdarkly/js-client/tree/master.svg?style=svg)](https://circleci.com/gh/launchdarkly/js-client/tree/master)
 
 ## Introduction
 
-This is the official LaunchDarkly client-side JavaScript SDK for web browser applications. It provides the same functionality as all of the LaunchDarkly SDKs:
+This is the official LaunchDarkly JavaScript SDK for web browser applications. It provides the same functionality as all of the LaunchDarkly SDKs:
 
 * Making feature flags available to your JavaScript code.
 * Sending events to LaunchDarkly for analytics and/or A/B testing.
+* Optionally maintaining a streaming connection to LaunchDarkly for immediate notification of any feature flag changes.
 
-For examples of using the SDK in a simple JavaScript application, see [`hello-js`](https://github.com/launchdarkly/hello-js) and [`hello-bootstrap`](https://github.com/launchdarkly/hello-bootstrap).
+The JavaScript SDK has two special requirements in terms of your LaunchDarkly environment. First, in terms of the credentials for your environment that appear on your [Account Settings](https://app.launchdarkly.com/settings/projects) dashboard, the JavaScript SDK uses the "Client-side ID"-- not the "SDK key" or the "Mobile key". Second, for any feature flag that you will be using in JavaScript code, you must check the "Make this flag available to client-side SDKs" box on that flag's Settings page.
 
-The JavaScript SDK does not use the SDK key that the server-side SDKs use, since an end user who acquired that key could use it to access the details of your LaunchDarkly environment; instead, it uses the "client-side ID" associated with your environment.
+## React
 
-Note that in order for LaunchDarkly to make your feature flags available to these SDKs, you must check the "Make this flag available to client-side SDKs" box on the Settings page for each flag. This is so that if you have a web application with a large number of flags used on the server side and a smaller number used on the front end, the client-side SDK can save bandwidth by only getting the subset of flags that it will use.
-
-If you are using JavaScript in a non-browser environment, see our [Node.js SDK](https://github.com/launchdarkly/node-client) and [Electron SDK](https://github.com/launchdarkly/electron-client).
+The SDK does not require any particular JavaScript framework. However, if you are using React, there is an add-on to simplify use of the SDK. See the [`ldclient-react` documentation](packages/ldclient-react/README.md).
 
 ## Browser compatibility
 
@@ -28,11 +27,13 @@ The SDK supports the following browsers:
 * Edge (any recent)\*
 * Opera (any recent)\*
 
-\* These browsers do not support streaming new flags to connected clients, even when `client.on('change')` is called.
+\* These browsers do not have built-in support for streaming; see [#EventSource]("EventSource") below.
+
+_If you are using JavaScript in a non-browser environment,_ please see our [Node.js SDK](https://github.com/launchdarkly/node-client) and [Electron SDK](https://github.com/launchdarkly/electron-client).
 
 ## Installation
 
-It can be installed in two ways:
+The SDK can be installed in two ways:
 
 1. Via the `npm` package: `npm install --save ldclient-js`
 
@@ -41,6 +42,8 @@ It can be installed in two ways:
 ```
 <script src="https://app.launchdarkly.com/snippet/ldclient.min.js">
 ```
+
+The hosted copy of `ldclient.min.js` is updated after every release, so be aware that if you use the `script` tag approach, the SDK may change without warning.
 
 ## Browser feature support
 
@@ -136,7 +139,7 @@ Out of the box, initializing the client will make a remote request to LaunchDark
 
 ### Bootstrapping from the server side
 
-The [bootstrapping](../../README.md#Bootstrapping) mechanism lets you provide initial feature flag values at startup time. In a web application, a common approach is for your back-end application code to obtain flag values from its own server-side SDK and then pass them to the front end.
+The bootstrapping mechanism lets you provide initial feature flag values at startup time. In a web application, a common approach is for your back-end application code to obtain flag values from its own server-side SDK and then pass them to the front end.
 
 LaunchDarkly's server-side SDKs have a function called `allFlagsState`, which returns a snapshot of the feature flags for a particular user. This data structure can be passed directly to the `bootstrap` property of the front-end client; you will also want to pass the user properties. Here's an example of how this might be done if you are using Node.js, Express, and Mustache templates on the back end.
 
@@ -298,21 +301,13 @@ client.identify(newUser, hash, function() {
 });
 ```
 
-## Development information
+## Learn more
 
-The basic client logic that is shared by the Electron SDK and the browser SDK is in the `ldclient-js-common` package within [js-client](https://github.com/launchdarkly/js-client), which is published separately to NPM.
+For an additional overview with code samples, see the online [JavaScript SDK Reference](https://docs.launchdarkly.com/docs/js-sdk-reference).
 
-To build and test the project, from the project root directory:
-* `npm install`
-* `npm test`
+The authoritative full description of all properties and methods is in the TypeScript declaration files [here](typings.d.ts) and [here](../ldclient-js-common/typings.d.ts).
 
-## Community
-
-Here are resources from our awesome community:
-
-* [TrueCar/react-launch-darkly](https://github.com/TrueCar/react-launch-darkly/): A set of component helpers to add support for LaunchDarkly to your React.js app
-* [yusinto/ld-redux](https://github.com/yusinto/ld-redux/): A library to integrate LaunchDarkly with React and Redux
-* [tdeekens/flopflip](https://github.com/tdeekens/flopflip): A flexible feature-toggling library that integrates with LaunchDarkly
+For examples of using the SDK in a simple JavaScript application, see [`hello-js`](https://github.com/launchdarkly/hello-js) and [`hello-bootstrap`](https://github.com/launchdarkly/hello-bootstrap).
 
 ## Contributing
 
