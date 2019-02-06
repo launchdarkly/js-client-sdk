@@ -1,6 +1,6 @@
 {
   "name": "ldclient-js-common",
-  "version": "2.9.0-beta.1",
+  "version": "2.9.0",
   "description": "LaunchDarkly SDK for JavaScript - common code",
   "author": "LaunchDarkly <team@launchdarkly.com>",
   "license": "Apache-2.0",
