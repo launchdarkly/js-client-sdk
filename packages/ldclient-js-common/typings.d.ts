@@ -507,7 +507,7 @@ declare module 'ldclient-js-common' {
      * @param context
      *   The `this` context to use for the callback.
      */
-    on(key: string, callback: function, context?: any): void;
+    on(key: string, callback: (...args: any[]) => void, context?: any): void;
 
     /**
      * Deregisters an event listener. See [[on]] for the available event types.
@@ -519,7 +519,7 @@ declare module 'ldclient-js-common' {
      * @param context
      *   The `this` context for the callback, if one was specified for [[on]].
      */
-    off(key: string, callback: function, context?: any): void;
+    off(key: string, callback: (...args: any[]) => void, context?: any): void;
 
     /**
      * Track page events to use in goals or A/B tests.
