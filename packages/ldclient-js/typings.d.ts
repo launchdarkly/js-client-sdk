@@ -18,6 +18,17 @@ declare module 'ldclient-js' {
    * determine when it is ready to use, call [[LDClient.waitForInitialization]], or register an
    * event listener for the `"ready"` event using [[LDClient.on]].
    *
+   * Note that you can either import this as a named export or as part of the default exports,
+   * although the latter is deprecated:
+   *
+   *     // Preferred usage:
+   *     import { initialize } from 'ldclient-js';
+   *     const client = initialize(envKey, user, options);
+   *
+   *     // Deprecated usage:
+   *     import LaunchDarkly from 'ldclient-js';
+   *     const client = LaunchDarkly.initialize(envKey, user, options);
+   *
    * @param envKey
    *   The environment ID.
    * @param user
