@@ -18,7 +18,8 @@ html: prepare
 	../node_modules/.bin/typedoc --options typedoc.js
 
 prepare:
-	rm -rf build/*
+	rm -rf build
+	mkdir build
 	sed -n '/DOCBUILD-START-EXCERPT/,/DOCBUILD-END-EXCERPT/p' ../packages/ldclient-js-common/typings.d.ts >build/common-excerpt
 	sed -e '/DOCBUILD-END-REPLACE/r build/common-excerpt' ../packages/ldclient-js/typings.d.ts | \
 		sed -e '/DOCBUILD-START-REPLACE/,/DOCBUILD-END-REPLACE/d' >build/typings.d.ts
