@@ -3,14 +3,8 @@
 // the properties are equivalent to the command-line options described here:
 // https://typedoc.org/api/
 
-// Also note, typedoc is actually being run from packages/ldclient-js, so file paths are relative to that
-
 module.exports = {
-  out: '../../docs/build/html',
-  exclude: [
-    '**/node_modules/**',
-    'test-types.ts'
-  ],
+  out: './build/html',
   name: 'LaunchDarkly JavaScript SDK',
   readme: 'none',                // don't add a home page with a copy of README.md
   mode: 'file',                  // don't treat "typings.d.ts" itself as a parent module
