@@ -213,7 +213,7 @@ declare module 'ldclient-js-common' {
   /**
    * A LaunchDarkly user object.
    */
-  export interface LDUser {
+  export type LDUser = {
     /**
      * A unique string identifying a user.
      */
