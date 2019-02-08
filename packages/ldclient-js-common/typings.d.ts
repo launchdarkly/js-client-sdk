@@ -5,6 +5,9 @@ declare module 'ldclient-js-common' {
 
 //// DOCBUILD-START-EXCERPT  (see docs/Makefile for an explanation of these "excerpt" markers)
 
+  /**
+   * The current version string of the SDK.
+   */
   export const version: string;
 
   /**
