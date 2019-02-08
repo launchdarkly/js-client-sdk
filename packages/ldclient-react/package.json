@@ -21,7 +21,7 @@
     "lint": "tslint -p tsconfig.json 'src/**/*.ts*'",
     "lint:all": "npm run lint",
     "check-typescript": "tsc",
-    "build-publish": "npm run build && npm version patch -m 'Upgrade to %s' && npm publish && git push"
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
