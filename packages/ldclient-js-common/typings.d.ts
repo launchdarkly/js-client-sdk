@@ -422,7 +422,7 @@ declare module 'ldclient-js-common' {
      * @param onDone
      *   A callback to invoke after the user is identified.
      */
-    identify: (user: LDUser, hash?: string, onDone?: (err: Error | null, flags: LDFlagSet | null) => void) => Promise<void>;
+    identify: (user: LDUser, hash?: string, onDone?: (err: Error | null, flags: LDFlagSet | null) => void) => Promise<LDFlagSet>;
 
     /**
      * Returns the client's current user. This is the user that was most recently
