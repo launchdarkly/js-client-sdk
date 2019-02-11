@@ -2,6 +2,10 @@
  * Basic LaunchDarkly JavaScript client interfaces, shared between the browser SDK and the Electron SDK.
  */
 declare module 'ldclient-js-common' {
+
+  /**
+   * The current version string of the SDK.
+   */
   export const version: string;
 
   /**
@@ -29,10 +33,11 @@ declare module 'ldclient-js-common' {
   };
 
   /**
-   * The minimal interface for any object that LDClient can use for logging. The client uses
-   * four log levels, with "error" being the most severe. Each corresponding logger method
-   * takes a single string parameter. The logger implementation is responsible for deciding
-   * whether to produce output or not based on the level.
+   * The minimal interface for any object that LDClient can use for logging.
+   *
+   * The client uses four log levels, with "error" being the most severe. Each corresponding
+   * logger method takes a single string parameter. The logger implementation is responsible
+   * for deciding whether to produce output or not based on the level.
    */
   export interface LDLogger {
     debug: (message: string) => void;
@@ -42,18 +47,20 @@ declare module 'ldclient-js-common' {
   }
 
   /**
-   * A basic implementation of logging that uses the global "console" object. This is used by
+   * A basic implementation of logging that uses the global `console` object. This is used by
    * default in the browser SDK. It sends messages of "debug", "info", "warn", or "error"
-   * level (if enable) to console.log(), console.info(), console.warn(), and console.error()
+   * level (if enable) to `console.log()`, `console.info()`, `console.warn()`, and `console.error()`
    * respectively.
    *
-   * To make LDClient use this logger, put it in the "logger" property of LDOptions.
+   * To make LDClient use this logger, put it in the `logger` property of [[LDOptions]].
    */
   export function createConsoleLogger(minimumLevel: string): LDLogger;
 
   /**
    * LaunchDarkly initialization options that are supported by all variants of the JS client.
    * The browser SDK and Electron SDK may support additional options.
+   *
+   * @ignore (don't need to show this separately in TypeDoc output; all properties will be shown in LDOptions)
    */
   export interface LDOptionsBase {
     /**
@@ -204,7 +211,7 @@ declare module 'ldclient-js-common' {
   /**
    * A LaunchDarkly user object.
    */
-  export interface LDUser {
+  export type LDUser = {
     /**
      * A unique string identifying a user.
      */
@@ -335,6 +342,8 @@ declare module 'ldclient-js-common' {
    * use this, but may add some methods of their own.
    *
    * @see http://docs.launchdarkly.com/docs/js-sdk-reference
+   *
+   * @ignore (don't need to show this separately in TypeDoc output; all methods will be shown in LDClient)
    */
   export interface LDClientBase {
     /**
@@ -545,4 +554,5 @@ declare module 'ldclient-js-common' {
      */
     allFlags(): LDFlagSet;
   }
+
 }

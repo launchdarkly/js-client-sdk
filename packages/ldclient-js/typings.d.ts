@@ -7,9 +7,11 @@
  * For more information, see the [SDK reference guide](http://docs.launchdarkly.com/docs/js-sdk-reference).
  */
 declare module 'ldclient-js' {
-  export * from 'ldclient-js-common';
 
+//// DOCBUILD-START-REPLACE  (see docs/Makefile)
+  export * from 'ldclient-js-common';
   import { LDClientBase, LDOptionsBase, LDUser } from 'ldclient-js-common';
+//// DOCBUILD-END-REPLACE
 
   /**
    * Creates an instance of the LaunchDarkly client.
