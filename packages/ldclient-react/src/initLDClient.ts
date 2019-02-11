@@ -1,5 +1,5 @@
 import { initialize as ldClientInitialize, LDClient, LDFlagSet, LDOptions, LDUser } from 'ldclient-js';
-import { camelCase } from 'lodash';
+import camelCase from 'lodash.camelcase';
 import { v4 as uuid } from 'uuid';
 
 interface AllFlagsLDClient {

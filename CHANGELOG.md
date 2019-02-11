@@ -3,6 +3,10 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.9.1] - 2019-02-08
+### Fixed:
+- The previous release of `ldclient-react` was broken: the package did not contain the actual files. The packaging script has been fixed. There are no other changes.
+
 ## [2.9.0] - 2019-02-01
 ### Added:
 - The new [`ldclient-react`](packages/ldclient-react/README.md) package provides a convenient mechanism for using the LaunchDarkly SDK within the React framework.
