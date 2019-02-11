@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { camelCase } from 'lodash';
+import camelCase from 'lodash.camelcase';
 import { LDClient, LDFlagSet, LDOptions, LDUser, LDFlagChangeset } from 'ldclient-js';
 import { Provider, LDContext as HocState } from './context';
 import initLDClient from './initLDClient';
