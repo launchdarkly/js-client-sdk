@@ -1,6 +1,6 @@
 {
   "name": "ldclient-react",
-  "version": "2.9.0",
+  "version": "2.9.1",
   "description": "LaunchDarkly SDK for React",
   "author": "LaunchDarkly <team@launchdarkly.com>",
   "license": "Apache-2.0",
@@ -21,7 +21,7 @@
     "lint": "tslint -p tsconfig.json 'src/**/*.ts*'",
     "lint:all": "npm run lint",
     "check-typescript": "tsc",
-    "build-publish": "npm run build && npm version patch -m 'Upgrade to %s' && npm publish && git push"
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
   "homepage": "https://github.com/launchdarkly/js-client-private/packages/ldclient-react",
   "devDependencies": {
     "@types/jest": "^23.3.12",
-    "@types/lodash": "^4.14.119",
+    "@types/lodash.camelcase": "^4.3.4",
     "@types/prop-types": "^15.5.8",
     "@types/react": "^16.7.18",
     "@types/react-test-renderer": "^16.0.3",
@@ -39,6 +39,7 @@
     "jest-junit": "^5.2.0",
     "prettier": "^1.15.3",
     "prop-types": "^15.6.2",
+    "react": "^16.6.3",
     "react-test-renderer": "^16.6.3",
     "rimraf": "^2.6.2",
     "ts-jest": "^23.10.5",
@@ -49,8 +50,10 @@
   },
   "dependencies": {
     "ldclient-js": "2.8.0",
-    "lodash": "^4.17.11",
-    "react": "^16.6.3",
+    "lodash.camelcase": "^4.3.0",
     "uuid": "^3.3.2"
+  },
+  "peerDependencies": {
+    "react": "^16.6.3"
   }
 }
