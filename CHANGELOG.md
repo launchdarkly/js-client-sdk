@@ -3,6 +3,15 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.9.3] - 2019-02-12
+### Fixed:
+- The React SDK was pulling in the entire `lodash` package. This has been improved to only require the much smaller `camelcase` tool from `lodash`.
+- The React SDK now lists React itself as a peer dependency rather than a regular dependency, so it will not included twice in an application that already requires React.
+- Corrected the TypeScript declaration for the `identify` method to indicate that its asynchronous result type is `LDFlagSet`, not `void`. (Thanks, [impressiver](https://github.com/launchdarkly/js-client/pull/135)!)
+- Corrected and expanded many documentation comments in the TypeScript declarations.
+
+(The 2.9.2 release was broken and has been removed.)
+
 ## [2.9.1] - 2019-02-08
 ### Fixed:
 - The previous release of `ldclient-react` was broken: the package did not contain the actual files. The packaging script has been fixed. There are no other changes.
