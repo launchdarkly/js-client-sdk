@@ -44,9 +44,7 @@ describe('initLDClient', () => {
   test('initialise with clientSideID only', async () => {
     await initLDClient(clientSideID);
 
-    expect(ldClientInitialize.mock.calls[0][0]).toBe(clientSideID);
-    expect(ldClientInitialize.mock.calls[0][1]).toEqual(defaulUser);
-    expect(ldClientInitialize.mock.calls[0][2]).toBeUndefined();
+    expect(ldClientInitialize.mock.calls[0]).toEqual([clientSideID, defaulUser, undefined]);
     expect(mockLDClient.variation).toHaveBeenCalledTimes(0);
   });
 
@@ -54,9 +52,7 @@ describe('initLDClient', () => {
     const customUser = { key: 'yus@reactjunkie.com' };
     await initLDClient(clientSideID, customUser, options);
 
-    expect(ldClientInitialize.mock.calls[0][0]).toBe(clientSideID);
-    expect(ldClientInitialize.mock.calls[0][1]).toEqual(customUser);
-    expect(ldClientInitialize.mock.calls[0][2]).toEqual(options);
+    expect(ldClientInitialize.mock.calls[0]).toEqual([clientSideID, customUser, options]);
     expect(mockLDClient.variation).toHaveBeenCalledTimes(0);
   });
 

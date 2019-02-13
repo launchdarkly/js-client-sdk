@@ -8,3 +8,4 @@ lib
 .idea
 .vscode/
 test-types.js
+docs/build/
