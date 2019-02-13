@@ -19,7 +19,11 @@ PROJECT_DIR=`pwd`
 
 npm install
 
-# Update version in all packages.
+# Update version in all packages. Explanation of options:
+#    --no-git-tag-version: lerna creates tags in the wrong format ("v2.0.0" instead of "2.0.0"). The
+#        release job that calls this script will create a tag anyway.
+#    --no-push: The release job takes care of committing and pushing.
+#    -y: Suppresses interactive prompts.
 
 ./node_modules/.bin/lerna version $VERSION --no-git-tag-version --no-push -y
 
