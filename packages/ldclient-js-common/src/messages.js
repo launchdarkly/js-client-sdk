@@ -107,7 +107,7 @@ export const debugStreamDelete = function(key) {
   return 'received streaming deletion for flag "' + key + '"';
 };
 
-export const debugStreamingDeleteIgnored = function(key) {
+export const debugStreamDeleteIgnored = function(key) {
   return 'received streaming deletion for flag "' + key + '" but ignored due to version check';
 };
 
