@@ -565,7 +565,7 @@ describe('LDClient', () => {
     });
 
     it('handles delete message for unknown flag by storing placeholder', done => {
-      const client = platform.testing.makeClient(envName, user, { bootstrap: { } });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
 
       client.on('ready', () => {
         client.on('change', () => {});
@@ -576,7 +576,7 @@ describe('LDClient', () => {
 
         // The following patch message should be ignored because it has a lower version than the deleted placeholder
         streamEvents().patch({
-          data: '{"key":"mystery","value":"yes","version":2}'
+          data: '{"key":"mystery","value":"yes","version":2}',
         });
 
         expect(client.variation('mystery')).toBeUndefined();
