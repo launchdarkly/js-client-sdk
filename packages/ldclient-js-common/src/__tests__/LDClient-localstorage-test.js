@@ -28,6 +28,18 @@ describe('LDClient local storage', () => {
   }
 
   describe('bootstrapping from local storage', () => {
+    it('does not try to use local storage if the platform says it is unavailable', () => {
+      const platform = stubPlatform.defaults();
+      platform.localStorage = null;
+
+      platform.testing.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
+
+      // should see a flag request to the server right away, as if bootstrap was not specified
+      expect(server.requests.length).toEqual(1);
+
+      expect(platform.testing.logger.output.warn).toEqual([messages.localStorageUnavailable()]);
+    });
+
     it('uses cached flags if available and requests flags from server after ready', done => {
       const platform = stubPlatform.defaults();
       const json = '{"flag-key": 1}';
