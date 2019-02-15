@@ -103,7 +103,7 @@ describe('browserPlatform', () => {
           configurable: true,
           get: () => {
             throw new Error('should not see this error');
-          }
+          },
         });
         const testPlatform = browserPlatform();
         expect(testPlatform.localStorage).not.toBe(expect.anything());
