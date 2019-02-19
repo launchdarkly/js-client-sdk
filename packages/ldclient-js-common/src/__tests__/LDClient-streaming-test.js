@@ -564,6 +564,42 @@ describe('LDClient', () => {
       });
     });
 
+    it('handles delete message for unknown flag by storing placeholder', done => {
+      const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
+
+      client.on('ready', () => {
+        client.on('change', () => {});
+
+        streamEvents().delete({
+          data: '{"key":"mystery","version":3}',
+        });
+
+        // The following patch message should be ignored because it has a lower version than the deleted placeholder
+        streamEvents().patch({
+          data: '{"key":"mystery","value":"yes","version":2}',
+        });
+
+        expect(client.variation('mystery')).toBeUndefined();
+        done();
+      });
+    });
+
+    it('ignores delete message with lower version', done => {
+      const bootstrapData = { flag: 'yes', $flagsState: { flag: { version: 3 } } };
+      const client = platform.testing.makeClient(envName, user, { bootstrap: bootstrapData });
+
+      client.on('ready', () => {
+        client.on('change', () => {});
+
+        streamEvents().delete({
+          data: '{"key":"flag","version":2}',
+        });
+
+        expect(client.variation('flag')).toEqual('yes');
+        done();
+      });
+    });
+
     it('fires global change event when flag is deleted', done => {
       const client = platform.testing.makeClient(envName, user, { bootstrap: { 'enable-foo': true } });
 
