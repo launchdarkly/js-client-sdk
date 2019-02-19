@@ -83,6 +83,35 @@ describe('browserPlatform', () => {
         });
       });
     });
+
+    it('reports local storage as being unavailable if window.localStorage is missing', () => {
+      const oldLocalStorage = window.localStorage;
+      try {
+        delete window.localStorage;
+        const testPlatform = browserPlatform();
+        expect(testPlatform.localStorage).not.toBe(expect.anything());
+      } finally {
+        window.localStorage = oldLocalStorage;
+      }
+    });
+
+    it('reports local storage as being unavailable if accessing window.localStorage throws an exception', () => {
+      const oldLocalStorage = window.localStorage;
+      try {
+        delete window.localStorage;
+        Object.defineProperty(window, 'localStorage', {
+          configurable: true,
+          get: () => {
+            throw new Error('should not see this error');
+          },
+        });
+        const testPlatform = browserPlatform();
+        expect(testPlatform.localStorage).not.toBe(expect.anything());
+      } finally {
+        delete window.localStorage;
+        window.localStorage = oldLocalStorage;
+      }
+    });
   });
 
   describe('EventSource', () => {

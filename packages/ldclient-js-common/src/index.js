@@ -518,11 +518,17 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     }
   }
 
+  if (typeof options.bootstrap === 'string' && options.bootstrap.toUpperCase() === 'LOCALSTORAGE') {
+    if (store) {
+      useLocalStorage = true;
+    } else {
+      logger.warn(messages.localStorageUnavailable());
+    }
+  }
+
   if (typeof options.bootstrap === 'object') {
     utils.onNextTick(signalSuccessfulInit);
-  } else if (typeof options.bootstrap === 'string' && options.bootstrap.toUpperCase() === 'LOCALSTORAGE' && store) {
-    useLocalStorage = true;
-
+  } else if (useLocalStorage) {
     store.loadFlags((err, storedFlags) => {
       if (storedFlags === null || storedFlags === undefined) {
         flags = {};

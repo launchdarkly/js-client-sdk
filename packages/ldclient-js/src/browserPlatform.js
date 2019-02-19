@@ -29,32 +29,38 @@ export default function makeBrowserPlatform() {
     return flag === 1 || flag === true || flag === '1' || flag === 'yes';
   };
 
-  if (window.localStorage) {
-    ret.localStorage = {
-      get: (key, callback) => {
-        try {
-          callback(null, window.localStorage.getItem(key));
-        } catch (ex) {
-          callback(ex);
-        }
-      },
-      set: (key, value, callback) => {
-        try {
-          window.localStorage.setItem(key, value);
-          callback(null);
-        } catch (ex) {
-          callback(ex);
-        }
-      },
-      clear: (key, callback) => {
-        try {
-          window.localStorage.removeItem(key);
-          callback(null);
-        } catch (ex) {
-          callback(ex);
-        }
-      },
-    };
+  try {
+    if (window.localStorage) {
+      ret.localStorage = {
+        get: (key, callback) => {
+          try {
+            callback(null, window.localStorage.getItem(key));
+          } catch (ex) {
+            callback(ex);
+          }
+        },
+        set: (key, value, callback) => {
+          try {
+            window.localStorage.setItem(key, value);
+            callback(null);
+          } catch (ex) {
+            callback(ex);
+          }
+        },
+        clear: (key, callback) => {
+          try {
+            window.localStorage.removeItem(key);
+            callback(null);
+          } catch (ex) {
+            callback(ex);
+          }
+        },
+      };
+    }
+  } catch (e) {
+    // In some browsers (such as Chrome), even looking at window.localStorage at all will cause a
+    // security error if the feature is disabled.
+    ret.localStorage = null;
   }
 
   // If EventSource does not exist, the absence of eventSourceFactory will make us not try to open streams
