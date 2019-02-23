@@ -3,6 +3,14 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.9.4] - 2019-02-22
+### Fixed:
+- Running inside an iframe on Chrome with third-party cookies disabled-- which also disables HTML5 local storage-- would cause a security exception (due to the SDK attempting to check whether `window.localStorage` exists). This was a long-standing problem, but became worse in the 2.9.0 release since the SDK now checks for browser capabilities like this regardless of whether you've attempted to use them yet. It should now simply log a warning if you try to use `bootstrap: "localstorage"` when local storage is disabled. ([#138](https://github.com/launchdarkly/js-client/issues/138))
+- If the SDK received streaming updates out of order (rare, but possible) such that it received "flag X was deleted" prior to "flag X was created", an uncaught exception would be logged in the browser console (but would not otherwise affect anything).
+- A supported user property, `privateAttributeNames`, was not usable from TypeScript because it was omitted from the TypeScript declarations.
+- Several TypeScript declarations had been changed from `interface` to `type`. They all now use `interface`, except for `LDFlagValue` which is a type alias. This should not affect regular usage of the SDK in TypeScript, but it is easier to extend an `interface` than a `type` if desired.
+- Removed a window message listener that was previously used for integration with the LaunchDarkly dashboard, but is no longer used.
+
 ## [2.9.3] - 2019-02-12
 ### Fixed:
 - The React SDK was pulling in the entire `lodash` package. This has been improved to only require the much smaller `camelcase` tool from `lodash`.
