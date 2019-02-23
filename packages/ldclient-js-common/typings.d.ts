@@ -18,19 +18,19 @@ declare module 'ldclient-js-common' {
   /**
    * A map of feature flags from their keys to their values.
    */
-  export type LDFlagSet = {
+  export interface LDFlagSet {
     [key: string]: LDFlagValue;
-  };
+  }
 
   /**
    * A map of feature flag keys to objects holding changes in their values.
    */
-  export type LDFlagChangeset = {
+  export interface LDFlagChangeset {
     [key: string]: {
       current: LDFlagValue;
       previous: LDFlagValue;
     };
-  };
+  }
 
   /**
    * The minimal interface for any object that LDClient can use for logging.
@@ -154,7 +154,7 @@ declare module 'ldclient-js-common' {
     
     /**
      * Whether all user attributes (except the user key) should be marked as private, and
-     * not sent to LaunchDarkly.
+     * not sent to LaunchDarkly in analytics events.
      *
      * By default, this is false.
      */
@@ -162,7 +162,8 @@ declare module 'ldclient-js-common' {
 
     /**
      * The names of user attributes that should be marked as private, and not sent
-     * to LaunchDarkly.
+     * to LaunchDarkly in analytics events. You can also specify this on a per-user basis
+     * with [[LDUser.privateAttributeNames]].
      */
     privateAttributeNames?: Array<string>;
 
@@ -211,7 +212,7 @@ declare module 'ldclient-js-common' {
   /**
    * A LaunchDarkly user object.
    */
-  export type LDUser = {
+  export interface LDUser {
     /**
      * A unique string identifying a user.
      */
@@ -268,13 +269,21 @@ declare module 'ldclient-js-common' {
     custom?: {
       [key: string]: string | boolean | number | Array<string | boolean | number>;
     };
+
+    /**
+     * Specifies a list of attribute names (either built-in or custom) which should be
+     * marked as private, and not sent to LaunchDarkly in analytics events. This is in
+     * addition to any private attributes designated in the global configuration
+     * with [[LDOptions.privateAttributeNames]] or [[LDOptions.allAttributesPrivate]].
+     */
+    privateAttributeNames?: Array<string>;
   }
 
   /**
    * Describes the reason that a flag evaluation produced a particular value. This is
    * part of the [[LDEvaluationDetail]] object returned by [[LDClient.variationDetail]].
    */
-  export type LDEvaluationReason = {
+  export interface LDEvaluationReason {
     /**
      * The general category of the reason:
      *
@@ -308,7 +317,7 @@ declare module 'ldclient-js-common' {
      * The key of the failed prerequisite flag, if the kind was `'PREREQUISITE_FAILED'`.
      */
     prerequisiteKey?: string;
-  };
+  }
 
   /**
    * An object that combines the result of a feature flag evaluation with information about
@@ -318,7 +327,7 @@ declare module 'ldclient-js-common' {
    *
    * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/docs/evaluation-reasons).
    */
-  export type LDEvaluationDetail = {
+  export interface LDEvaluationDetail {
     /**
      * The result of the flag evaluation. This will be either one of the flag's variations or
      * the default value that was passed to [[LDClient.variationDetail]].
@@ -335,7 +344,7 @@ declare module 'ldclient-js-common' {
      * An object describing the main factor that influenced the flag evaluation value.
      */
     reason: LDEvaluationReason;
-  };
+  }
 
   /**
    * The basic interface for the LaunchDarkly client. The browser SDK and the Electron SDK both
