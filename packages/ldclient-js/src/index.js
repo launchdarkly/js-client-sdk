@@ -38,29 +38,7 @@ export function initialize(env, user, options = {}) {
   }
   window.addEventListener('beforeunload', clientVars.stop);
 
-  enableClickEventUIHandshake(validatedOptions.baseUrl);
-
   return client;
-}
-
-function enableClickEventUIHandshake(baseUrl) {
-  // The following event listener is used for handshaking with the LaunchDarkly application UI when
-  // the user's page is being loaded within a frame, for setting up a click event.
-  window.addEventListener('message', handleMessage);
-  function handleMessage(event) {
-    if (event.origin !== baseUrl) {
-      return;
-    }
-    if (event.data.type === 'SYN') {
-      window.editorClientBaseUrl = baseUrl;
-      const editorTag = document.createElement('script');
-      editorTag.type = 'text/javascript';
-      editorTag.async = true;
-      editorTag.src = baseUrl + event.data.editorClientUrl;
-      const s = document.getElementsByTagName('script')[0];
-      s.parentNode.insertBefore(editorTag, s);
-    }
-  }
 }
 
 export const createConsoleLogger = common.createConsoleLogger;
