@@ -121,6 +121,7 @@ describe('LDClient', () => {
         expect(ep.events.length).toEqual(2);
         expectIdentifyEvent(ep.events[0], user);
         expectFeatureEvent(ep.events[1], 'foo', 'a', 1, 2000, 'x');
+        expect(ep.events[1].reason).toBe(undefined);
 
         done();
       });
@@ -128,7 +129,7 @@ describe('LDClient', () => {
       server.respond();
     });
 
-    it('sends a feature event for variationDetail()', done => {
+    it('sends a feature event with reason for variationDetail()', done => {
       const ep = stubEventProcessor();
       const server = sinon.fakeServer.create();
       server.respondWith([
@@ -140,6 +141,54 @@ describe('LDClient', () => {
 
       client.on('ready', () => {
         client.variationDetail('foo', 'x');
+
+        expect(ep.events.length).toEqual(2);
+        expectIdentifyEvent(ep.events[0], user);
+        expectFeatureEvent(ep.events[1], 'foo', 'a', 1, 2000, 'x');
+        expect(ep.events[1].reason).toEqual({ kind: 'OFF' });
+
+        done();
+      });
+
+      server.respond();
+    });
+
+    it('does not include reason in event for variation() even if reason is available', done => {
+      const ep = stubEventProcessor();
+      const server = sinon.fakeServer.create();
+      server.respondWith([
+        200,
+        { 'Content-Type': 'application/json' },
+        '{"foo":{"value":"a","variation":1,"version":2,"flagVersion":2000,"reason":{"kind":"OFF"}}}',
+      ]);
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
+
+      client.on('ready', () => {
+        client.variation('foo', 'x');
+
+        expect(ep.events.length).toEqual(2);
+        expectIdentifyEvent(ep.events[0], user);
+        expectFeatureEvent(ep.events[1], 'foo', 'a', 1, 2000, 'x');
+        expect(ep.events[1].reason).toBe(undefined);
+
+        done();
+      });
+
+      server.respond();
+    });
+
+    it('sends a feature event with reason for variation() if trackReason is set', done => {
+      const ep = stubEventProcessor();
+      const server = sinon.fakeServer.create();
+      server.respondWith([
+        200,
+        { 'Content-Type': 'application/json' },
+        '{"foo":{"value":"a","variation":1,"version":2,"flagVersion":2000,"reason":{"kind":"OFF"},"trackReason":true}}',
+      ]);
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
+
+      client.on('ready', () => {
+        client.variation('foo', 'x');
 
         expect(ep.events.length).toEqual(2);
         expectIdentifyEvent(ep.events[0], user);
