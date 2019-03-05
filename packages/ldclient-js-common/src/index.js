@@ -156,7 +156,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
       value: value,
       variation: detail ? detail.variationIndex : null,
       default: defaultValue,
-      creationDate: now.getTime()
+      creationDate: now.getTime(),
     };
     const flag = flags[key];
     if (flag) {
@@ -164,8 +164,8 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
       event.trackEvents = flag.trackEvents;
       event.debugEventsUntilDate = flag.debugEventsUntilDate;
     }
-    if ((includeReason || (flag && flag.trackReason)) && detail)  {
-      event.reason  = detail.reason;
+    if ((includeReason || (flag && flag.trackReason)) && detail) {
+      event.reason = detail.reason;
     }
 
     enqueueEvent(event);
