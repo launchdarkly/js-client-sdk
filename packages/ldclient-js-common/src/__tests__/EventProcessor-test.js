@@ -27,7 +27,7 @@ describe('EventProcessor', () => {
   };
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     mockEventSender.calls = [];
     mockEventSender.serverTime = null;
   });
