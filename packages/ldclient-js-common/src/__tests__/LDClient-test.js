@@ -206,7 +206,7 @@ describe('LDClient', () => {
     });
 
     it('should warn about missing user on first event', () => {
-      const sandbox = sinon.sandbox.create();
+      const sandbox = sinon.createSandbox();
       const client = platform.testing.makeClient(envName, null);
       client.track('eventkey', null);
       sandbox.restore();
