@@ -3,9 +3,11 @@ jest.mock('./context', () => ({ Provider: 'Provider' }));
 
 import * as React from 'react';
 import { create } from 'react-test-renderer';
+import { shallow } from 'enzyme';
 import { LDFlagChangeset, LDFlagSet, LDOptions, LDUser } from 'ldclient-js';
 import initLDClient from './initLDClient';
 import withLDProvider, { EnhancedComponent } from './withLDProvider';
+import { LDContext as HocState } from './context';
 
 const clientSideID = 'deadbeef';
 const App = () => <div>My App</div>;
@@ -43,6 +45,40 @@ describe('withLDProvider', () => {
 
     await instance.componentDidMount();
     expect(mockInitLDClient).toHaveBeenCalledWith(clientSideID, user, options, undefined);
+  });
+
+  test('ld client is bootstrapped correctly', async () => {
+    const user: LDUser = { key: 'yus', name: 'yus ng' };
+    const options: LDOptions = {
+      bootstrap: {
+        'test-flag': true,
+        'another-test-flag': false,
+        $flagsState: {
+          'test-flag': { version: 125, variation: 0, trackEvents: true },
+          'another-test-flag': { version: 18, variation: 1 },
+        },
+        $valid: true,
+      },
+    };
+    const LaunchDarklyApp = withLDProvider({ clientSideID, user, options })(App);
+    const component = shallow(<LaunchDarklyApp />, { disableLifecycleMethods: true });
+    const initialState = component.state() as HocState;
+
+    expect(mockInitLDClient).not.toHaveBeenCalled();
+    expect(initialState.flags).toEqual({ testFlag: true, anotherTestFlag: false });
+  });
+
+  test('state.flags should be initialised to empty when bootstrapping from localStorage', async () => {
+    const user: LDUser = { key: 'yus', name: 'yus ng' };
+    const options: LDOptions = {
+      bootstrap: 'localStorage',
+    };
+    const LaunchDarklyApp = withLDProvider({ clientSideID, user, options })(App);
+    const component = shallow(<LaunchDarklyApp />, { disableLifecycleMethods: true });
+    const initialState = component.state() as HocState;
+
+    expect(mockInitLDClient).not.toHaveBeenCalled();
+    expect(initialState.flags).toEqual({});
   });
 
   test('ld client is initialised correctly with target flags', async () => {

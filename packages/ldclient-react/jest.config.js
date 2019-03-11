@@ -2,7 +2,8 @@ module.exports = {
   reporters: ['default', 'jest-junit'],
   moduleFileExtensions: ['ts', 'tsx', 'js'],
   transform: {
-    '\\.(ts|tsx|js)$': 'ts-jest',
+    '\\.(ts|tsx)$': 'ts-jest',
   },
-  testRegex: '.*\\.test\\.(ts|tsx|js)$',
+  testRegex: '.*\\.test\\.(ts|tsx)$',
+  setupFilesAfterEnv: ['./setupTests.js'],
 };
