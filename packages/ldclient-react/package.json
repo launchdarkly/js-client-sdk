@@ -1,6 +1,6 @@
 {
   "name": "ldclient-react",
-  "version": "2.9.4",
+  "version": "2.9.5",
   "description": "LaunchDarkly SDK for React",
   "author": "LaunchDarkly <team@launchdarkly.com>",
   "license": "Apache-2.0",
@@ -53,7 +53,7 @@
     "typescript": "^3.3.3333"
   },
   "dependencies": {
-    "ldclient-js": "2.9.4",
+    "ldclient-js": "^2.9.5",
     "lodash.camelcase": "^4.3.0",
     "uuid": "^3.3.2"
   },
