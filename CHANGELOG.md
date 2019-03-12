@@ -3,6 +3,11 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.9.5] - 2019-03-12
+### Fixed:
+- In React, when using the `bootstrap` property to preload the SDK client with flag values, the client will now become ready immediately and make the flags available to other components as soon as it is initialized; previously this did not happen until after `componentDidMount`.
+- The user attribute `secondary` was not included in the TypeScript declarations and therefore could not be used from TypeScript code.
+
 ## [2.9.4] - 2019-02-22
 ### Fixed:
 - Running inside an iframe on Chrome with third-party cookies disabled-- which also disables HTML5 local storage-- would cause a security exception (due to the SDK attempting to check whether `window.localStorage` exists). This was a long-standing problem, but became worse in the 2.9.0 release since the SDK now checks for browser capabilities like this regardless of whether you've attempted to use them yet. It should now simply log a warning if you try to use `bootstrap: "localstorage"` when local storage is disabled. ([#138](https://github.com/launchdarkly/js-client/issues/138))

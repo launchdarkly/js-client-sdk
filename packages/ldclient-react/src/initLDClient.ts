@@ -1,21 +1,11 @@
 import { initialize as ldClientInitialize, LDClient, LDFlagSet, LDOptions, LDUser } from 'ldclient-js';
-import camelCase from 'lodash.camelcase';
 import { v4 as uuid } from 'uuid';
+import { camelCaseKeys } from './utils';
 
 interface AllFlagsLDClient {
   flags: LDFlagSet;
   ldClient: LDClient;
 }
-
-const camelCaseKeys = (rawFlags: LDFlagSet) => {
-  const flags: LDFlagSet = {};
-  for (const rawFlag in rawFlags) {
-    const camelCasedKey = camelCase(rawFlag);
-    flags[camelCasedKey] = rawFlags[rawFlag];
-  }
-
-  return flags;
-};
 
 const initLDClient = async (
   clientSideID: string,

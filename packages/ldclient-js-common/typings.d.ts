@@ -219,6 +219,14 @@ declare module 'ldclient-js-common' {
     key: string;
 
     /**
+     * An optional secondary key for a user. This affects
+     * [feature flag targeting](https://docs.launchdarkly.com/docs/targeting-users#section-targeting-rules-based-on-user-attributes)
+     * as follows: if you have chosen to bucket users by a specific attribute, the secondary key (if set)
+     * is used to further distinguish between users who are otherwise identical according to that attribute.
+     */
+    secondary?: string;
+
+    /**
      * The user's name.
      *
      * You can search for users on the User page by name.
