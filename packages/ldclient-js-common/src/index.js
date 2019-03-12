@@ -135,7 +135,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     store = new Store(platform.localStorage, environment, hash, ident, logger);
   }
 
-  function sendFlagEvent(key, detail, defaultValue) {
+  function sendFlagEvent(key, detail, defaultValue, includeReason) {
     const user = ident.getUser();
     const now = new Date();
     const value = detail ? detail.value : null;
@@ -157,13 +157,15 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
       variation: detail ? detail.variationIndex : null,
       default: defaultValue,
       creationDate: now.getTime(),
-      reason: detail ? detail.reason : null,
     };
     const flag = flags[key];
     if (flag) {
       event.version = flag.flagVersion ? flag.flagVersion : flag.version;
       event.trackEvents = flag.trackEvents;
       event.debugEventsUntilDate = flag.debugEventsUntilDate;
+    }
+    if ((includeReason || (flag && flag.trackReason)) && detail) {
+      event.reason = detail.reason;
     }
 
     enqueueEvent(event);
@@ -221,14 +223,14 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   }
 
   function variation(key, defaultValue) {
-    return variationDetailInternal(key, defaultValue, true).value;
+    return variationDetailInternal(key, defaultValue, true, false).value;
   }
 
   function variationDetail(key, defaultValue) {
-    return variationDetailInternal(key, defaultValue, true);
+    return variationDetailInternal(key, defaultValue, true, true);
   }
 
-  function variationDetailInternal(key, defaultValue, sendEvent) {
+  function variationDetailInternal(key, defaultValue, sendEvent, includeReasonInEvent) {
     let detail;
 
     if (flags && flags.hasOwnProperty(key) && flags[key] && !flags[key].deleted) {
@@ -242,7 +244,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     }
 
     if (sendEvent) {
-      sendFlagEvent(key, detail, defaultValue);
+      sendFlagEvent(key, detail, defaultValue, includeReasonInEvent);
     }
 
     return detail;
