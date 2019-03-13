@@ -15,7 +15,7 @@ describe('EventSender', () => {
   const envId = 'env';
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     requests = [];
     xhr = sinon.useFakeXMLHttpRequest();
     xhr.onCreate = function(xhr) {

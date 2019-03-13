@@ -10,6 +10,7 @@ var logger: ld.LDLogger = ld.createConsoleLogger("info");
 var userWithKeyOnly: ld.LDUser = { key: 'user' };
 var user: ld.LDUser = {
   key: 'user',
+  secondary: 'otherkey',
   name: 'name',
   firstName: 'first',
   lastName: 'last',
