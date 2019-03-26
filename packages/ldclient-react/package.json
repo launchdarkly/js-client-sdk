@@ -17,7 +17,7 @@
   "scripts": {
     "test": "jest",
     "test:junit": "jest --ci --reporters=default --reporters=jest-junit",
-    "build": "rimraf lib/* && tsc && rm -rf lib/*.test.*",
+    "build": "rimraf lib/* && tsc && rimraf lib/*.test.*",
     "lint": "tslint -p tsconfig.json 'src/**/*.ts*'",
     "lint:all": "npm run lint",
     "check-typescript": "tsc",
