@@ -1,4 +1,3 @@
-
 export const numericUser = {
   key: 1,
   secondary: 2,
