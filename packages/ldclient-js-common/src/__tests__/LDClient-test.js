@@ -2,6 +2,8 @@ import sinon from 'sinon';
 import semverCompare from 'semver-compare';
 
 import * as stubPlatform from './stubPlatform';
+import { makeBootstrap, numericUser, stringifiedNumericUser } from './testUtils';
+
 import * as LDClient from '../index';
 import * as messages from '../messages';
 import * as utils from '../utils';
@@ -162,26 +164,23 @@ describe('LDClient', () => {
       expect(result).toEqual(1);
     });
 
-    it('should not warn when tracking a custom event', done => {
+    it('should not warn when tracking a custom event', async () => {
       const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
+      await client.waitForInitialization();
 
-      client.on('ready', () => {
-        client.track('known');
-        expect(platform.testing.logger.output.warn).toEqual([]);
-        done();
-      });
+      client.track('known');
+      expect(platform.testing.logger.output.warn).toEqual([]);
     });
 
-    it('should emit an error when tracking a non-string custom event', done => {
+    it('should emit an error when tracking a non-string custom event', async () => {
       const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
-      client.on('ready', () => {
-        const badCustomEventKeys = [123, [], {}, null, undefined];
-        badCustomEventKeys.forEach(key => {
-          platform.testing.logger.reset();
-          client.track(key);
-          expect(platform.testing.logger.output.error).toEqual([messages.unknownCustomEventKey(key)]);
-        });
-        done();
+      await client.waitForInitialization();
+
+      const badCustomEventKeys = [123, [], {}, null, undefined];
+      badCustomEventKeys.forEach(key => {
+        platform.testing.logger.reset();
+        client.track(key);
+        expect(platform.testing.logger.output.error).toEqual([messages.unknownCustomEventKey(key)]);
       });
     });
 
@@ -231,6 +230,12 @@ describe('LDClient', () => {
 
     it('does not send custom header if sendLDHeaders is false', () => {
       verifyCustomHeader(undefined, true);
+    });
+
+    it('sanitizes the user', async () => {
+      const client = platform.testing.makeClient(envName, numericUser, { bootstrap: {} });
+      await client.waitForInitialization();
+      expect(client.getUser()).toEqual(stringifiedNumericUser);
     });
   });
 
@@ -302,7 +307,7 @@ describe('LDClient', () => {
   describe('variation', () => {
     it('returns value for an existing flag - from bootstrap', () => {
       const client = platform.testing.makeClient(envName, user, {
-        bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1 } } },
+        bootstrap: makeBootstrap({ foo: { value: 'bar', version: 1 } }),
       });
 
       expect(client.variation('foo')).toEqual('bar');
@@ -351,7 +356,7 @@ describe('LDClient', () => {
     const reason = { kind: 'FALLTHROUGH' };
     it('returns details for an existing flag - from bootstrap', () => {
       const client = platform.testing.makeClient(envName, user, {
-        bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1, variation: 2, reason: reason } } },
+        bootstrap: makeBootstrap({ foo: { value: 'bar', version: 1, variation: 2, reason: reason } }),
       });
 
       expect(client.variationDetail('foo')).toEqual({ value: 'bar', variationIndex: 2, reason: reason });
@@ -406,17 +411,12 @@ describe('LDClient', () => {
 
   describe('allFlags', () => {
     it('returns flag values', done => {
-      const client = platform.testing.makeClient(envName, user, {});
+      const data = makeBootstrap({ key1: { value: 'value1' }, key2: { value: 'value2' } });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: data });
       client.on('ready', () => {
         expect(client.allFlags()).toEqual({ key1: 'value1', key2: 'value2' });
         done();
       });
-      requests[0].respond(
-        200,
-        { 'Content-Type': 'application/json' },
-        '{"key1": {"value": "value1", "version": 1, "variation": 2},' +
-          '"key2": {"value": "value2", "version": 1, "variation": 2}}'
-      );
     });
 
     it('returns empty map if client is not initialized', () => {
@@ -526,7 +526,7 @@ describe('LDClient', () => {
   });
 
   describe('initializing with stateProvider', () => {
-    it('immediately uses initial state if available, and does not make an HTTP request', done => {
+    it('immediately uses initial state if available, and does not make an HTTP request', async () => {
       const user = { key: 'user' };
       const state = {
         environment: 'env',
@@ -536,10 +536,10 @@ describe('LDClient', () => {
       const sp = stubPlatform.mockStateProvider(state);
 
       const client = platform.testing.makeClient(null, null, { stateProvider: sp });
+      await client.waitForInitialization();
+
       expect(client.variation('flagkey')).toEqual('value');
       expect(requests.length).toEqual(0);
-
-      client.waitForInitialization().then(done);
     });
 
     it('defers initialization if initial state not available, and does not make an HTTP request', () => {
@@ -549,7 +549,7 @@ describe('LDClient', () => {
       expect(requests.length).toEqual(0);
     });
 
-    it('finishes initialization on receiving init event', done => {
+    it('finishes initialization on receiving init event', async () => {
       const user = { key: 'user' };
       const state = {
         environment: 'env',
@@ -562,10 +562,8 @@ describe('LDClient', () => {
 
       sp.emit('init', state);
 
-      client.waitForInitialization().then(() => {
-        expect(client.variation('flagkey')).toEqual('value');
-        done();
-      });
+      await client.waitForInitialization();
+      expect(client.variation('flagkey')).toEqual('value');
     });
 
     it('updates flags on receiving update event', done => {
@@ -598,7 +596,7 @@ describe('LDClient', () => {
       });
     });
 
-    it('disables identify()', done => {
+    it('disables identify()', async () => {
       const user = { key: 'user' };
       const user1 = { key: 'user1' };
       const state = { environment: 'env', user: user, flags: { flagkey: { value: 'value' } } };
@@ -608,15 +606,12 @@ describe('LDClient', () => {
 
       sp.emit('init', state);
 
-      client.waitForInitialization().then(() => {
-        client.identify(user1, null, (err, newFlags) => {
-          expect(err).toEqual(null);
-          expect(newFlags).toEqual({ flagkey: 'value' });
-          expect(requests.length).toEqual(0);
-          expect(platform.testing.logger.output.warn).toEqual([messages.identifyDisabled()]);
-          done();
-        });
-      });
+      await client.waitForInitialization();
+      const newFlags = await client.identify(user1);
+
+      expect(newFlags).toEqual({ flagkey: 'value' });
+      expect(requests.length).toEqual(0);
+      expect(platform.testing.logger.output.warn).toEqual([messages.identifyDisabled()]);
     });
   });
 });
