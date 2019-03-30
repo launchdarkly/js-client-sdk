@@ -1,3 +1,32 @@
+import sinon from 'sinon';
+
+export function asyncSleep(delay) {
+  return new Promise(resolve => {
+    setTimeout(resolve, delay);
+  });
+}
+
+// asyncifyNodeStyle(callback => doSomething(..., callback)) returns a promise that will resolve or reject
+export function asyncifyNodeStyle(f) {
+  return new Promise((resolve, reject) => f((err, value) => (err ? reject(err) : resolve(value))));
+}
+
+export function errorResponse(status) {
+  return [status, {}, ''];
+}
+
+export function jsonResponse(data) {
+  return [200, { 'Content-Type': 'application/json' }, JSON.stringify(data)];
+}
+
+export function makeDefaultServer() {
+  const server = sinon.createFakeServer();
+  server.autoRespond = true;
+  server.autoRespondAfter = 0;
+  server.respondWith(jsonResponse({})); // default 200 response for tests that don't specify otherwise
+  return server;
+}
+
 export const numericUser = {
   key: 1,
   secondary: 2,
@@ -11,6 +40,34 @@ export const numericUser = {
   anonymous: false,
   custom: { age: 99 },
 };
+
+// This returns a promise with a .callback property that is a Node-style callback function;
+// when called, it will resolve or reject the promise.
+export function promiseListenerWithError() {
+  let cb;
+  const p = new Promise((resolve, reject) => {
+    cb = (err, value) => (err ? reject(err) : resolve(value));
+  });
+  p.callback = cb;
+  return p;
+}
+
+// This returns a Promise with a .callback property that is a plain callback function; when
+// called, it will resolve the promise with either a single value or an array of arguments.
+export function promiseListener() {
+  let cb;
+  const p = new Promise(resolve => {
+    cb = function(value) {
+      if (arguments.length > 1) {
+        resolve(Array.prototype.slice.call(arguments));
+      } else {
+        resolve(value);
+      }
+    };
+  });
+  p.callback = cb;
+  return p;
+}
 
 export const stringifiedNumericUser = {
   key: '1',

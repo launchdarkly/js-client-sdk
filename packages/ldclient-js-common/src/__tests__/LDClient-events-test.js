@@ -1,29 +1,21 @@
-import sinon from 'sinon';
-
 import * as stubPlatform from './stubPlatform';
-import { makeBootstrap, numericUser, stringifiedNumericUser } from './testUtils';
+import { jsonResponse, makeBootstrap, makeDefaultServer, numericUser, stringifiedNumericUser } from './testUtils';
 
 describe('LDClient', () => {
   const envName = 'UNKNOWN_ENVIRONMENT_ID';
   const user = { key: 'user' };
   const fakeUrl = 'http://fake';
   let platform;
-  let xhr;
-  let requests = [];
+  let server;
 
   beforeEach(() => {
-    xhr = sinon.useFakeXMLHttpRequest();
-    xhr.onCreate = function(req) {
-      requests.push(req);
-    };
-
+    server = makeDefaultServer();
     platform = stubPlatform.defaults();
     platform.testing.setCurrentUrl(fakeUrl);
   });
 
   afterEach(() => {
-    requests = [];
-    xhr.restore();
+    server.restore();
   });
 
   describe('event generation', () => {
@@ -56,7 +48,7 @@ describe('LDClient', () => {
 
     it('sends an identify event at startup', async () => {
       const ep = stubEventProcessor();
-      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: {} });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
       await client.waitForInitialization();
 
       expect(ep.events.length).toEqual(1);
@@ -66,7 +58,7 @@ describe('LDClient', () => {
     it('stringifies user attributes in the identify event at startup', async () => {
       // This just verifies that the event is being sent with the sanitized user, not the user that was passed in
       const ep = stubEventProcessor();
-      const client = platform.testing.makeClient(envName, numericUser, { eventProcessor: ep, bootstrap: {} });
+      const client = platform.testing.makeClient(envName, numericUser, { eventProcessor: ep });
       await client.waitForInitialization();
 
       expect(ep.events.length).toEqual(1);
@@ -74,12 +66,8 @@ describe('LDClient', () => {
     });
 
     it('sends an identify event when identify() is called', async () => {
-      const server = sinon.fakeServer.create();
-      server.respondWith([200, { 'Content-Type': 'application/json' }, '{}']);
-      server.autoRespond = true; // necessary because otherwise await client.identify() will wait forever
-
       const ep = stubEventProcessor();
-      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: {} });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
       const user1 = { key: 'user1' };
       await client.waitForInitialization();
 
@@ -93,12 +81,8 @@ describe('LDClient', () => {
 
     it('stringifies user attributes in the identify event when identify() is called', async () => {
       // This just verifies that the event is being sent with the sanitized user, not the user that was passed in
-      const server = sinon.fakeServer.create();
-      server.respondWith([200, { 'Content-Type': 'application/json' }, '{}']);
-      server.autoRespond = true; // necessary because otherwise await client.identify() will wait forever
-
       const ep = stubEventProcessor();
-      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: {} });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
       await client.waitForInitialization();
 
       expect(ep.events.length).toEqual(1);
@@ -110,16 +94,8 @@ describe('LDClient', () => {
 
     it('does not send an identify event if doNotTrack is set', async () => {
       platform.testing.setDoNotTrack(true);
-      const server = sinon.fakeServer.create();
-      server.respondWith([200, { 'Content-Type': 'application/json' }, '{}']);
-      server.autoRespond = true; // necessary because otherwise await client.identify() will wait forever
-
       const ep = stubEventProcessor();
-      const client = platform.testing.makeClient(envName, user, {
-        eventProcessor: ep,
-        bootstrap: {},
-        fetchGoals: false,
-      });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
       const user1 = { key: 'user1' };
 
       await client.waitForInitialization();
@@ -129,9 +105,9 @@ describe('LDClient', () => {
     });
 
     it('sends a feature event for variation()', async () => {
-      const data = makeBootstrap({ foo: { value: 'a', variation: 1, version: 2, flagVersion: 2000 } });
+      const initFlags = makeBootstrap({ foo: { value: 'a', variation: 1, version: 2, flagVersion: 2000 } });
       const ep = stubEventProcessor();
-      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: data });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: initFlags });
 
       await client.waitForInitialization();
 
@@ -143,11 +119,11 @@ describe('LDClient', () => {
     });
 
     it('sends a feature event for variationDetail()', async () => {
-      const data = makeBootstrap({
+      const initFlags = makeBootstrap({
         foo: { value: 'a', variation: 1, version: 2, flagVersion: 2000, reason: { kind: 'OFF' } },
       });
       const ep = stubEventProcessor();
-      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: data });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: initFlags });
 
       await client.waitForInitialization();
       client.variationDetail('foo', 'x');
@@ -160,18 +136,16 @@ describe('LDClient', () => {
 
     it('sends a feature event on receiving a new flag value', async () => {
       const ep = stubEventProcessor();
-      const server = sinon.fakeServer.create();
-      server.autoRespond = true;
       const oldFlags = { foo: { value: 'a', variation: 1, version: 2, flagVersion: 2000 } };
       const newFlags = { foo: { value: 'b', variation: 2, version: 3, flagVersion: 2001 } };
 
-      server.respondWith([200, { 'Content-Type': 'application/json' }, JSON.stringify(oldFlags)]);
+      server.respondWith(jsonResponse(oldFlags));
 
       const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
       await client.waitForInitialization();
 
       const user1 = { key: 'user1' };
-      server.respondWith([200, { 'Content-Type': 'application/json' }, JSON.stringify(newFlags)]);
+      server.respondWith(jsonResponse(newFlags));
       await client.identify(user1);
 
       expect(ep.events.length).toEqual(3);
@@ -182,12 +156,10 @@ describe('LDClient', () => {
 
     it('does not send a feature event for a new flag value if sendEventsOnlyForVariation is set', async () => {
       const ep = stubEventProcessor();
-      const server = sinon.fakeServer.create();
-      server.autoRespond = true;
       const oldFlags = { foo: { value: 'a', variation: 1, version: 2, flagVersion: 2000 } };
       const newFlags = { foo: { value: 'b', variation: 2, version: 3, flagVersion: 2001 } };
 
-      server.respondWith([200, { 'Content-Type': 'application/json' }, JSON.stringify(oldFlags)]);
+      server.respondWith(jsonResponse(oldFlags));
 
       const client = platform.testing.makeClient(envName, user, {
         eventProcessor: ep,
@@ -196,7 +168,7 @@ describe('LDClient', () => {
       await client.waitForInitialization();
 
       const user1 = { key: 'user1' };
-      server.respondWith([200, { 'Content-Type': 'application/json' }, JSON.stringify(newFlags)]);
+      server.respondWith(jsonResponse(newFlags));
       await client.identify(user1);
 
       expect(ep.events.length).toEqual(2);
@@ -206,13 +178,6 @@ describe('LDClient', () => {
 
     it('does not send a feature event for a new flag value if there is a state provider', async () => {
       const ep = stubEventProcessor();
-      const server = sinon.fakeServer.create();
-      server.autoRespond = true;
-      server.respondWith([
-        200,
-        { 'Content-Type': 'application/json' },
-        '{"foo":{"value":"a","variation":1,"version":2,"flagVersion":2000}}',
-      ]);
       const oldFlags = { foo: { value: 'a', variation: 1, version: 2, flagVersion: 2000 } };
       const newFlags = { foo: { value: 'b', variation: 2, version: 3, flagVersion: 2001 } };
       const sp = stubPlatform.mockStateProvider({ environment: envName, user: user, flags: oldFlags });
@@ -228,11 +193,11 @@ describe('LDClient', () => {
 
     it('sends feature events for allFlags()', async () => {
       const ep = stubEventProcessor();
-      const boots = makeBootstrap({
+      const initFlags = makeBootstrap({
         foo: { value: 'a', variation: 1, version: 2 },
         bar: { value: 'b', variation: 1, version: 3 },
       });
-      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: boots });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: initFlags });
 
       await client.waitForInitialization();
       client.allFlags();
@@ -245,13 +210,13 @@ describe('LDClient', () => {
 
     it('does not send feature events for allFlags() if sendEventsOnlyForVariation is set', async () => {
       const ep = stubEventProcessor();
-      const boots = makeBootstrap({
+      const initFlags = makeBootstrap({
         foo: { value: 'a', variation: 1, version: 2 },
         bar: { value: 'b', variation: 1, version: 3 },
       });
       const client = platform.testing.makeClient(envName, user, {
         eventProcessor: ep,
-        bootstrap: boots,
+        bootstrap: initFlags,
         sendEventsOnlyForVariation: true,
       });
 
@@ -264,8 +229,8 @@ describe('LDClient', () => {
 
     it('uses "version" instead of "flagVersion" in event if "flagVersion" is absent', async () => {
       const ep = stubEventProcessor();
-      const boots = makeBootstrap({ foo: { value: 'a', variation: 1, version: 2 } });
-      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: boots });
+      const initFlags = makeBootstrap({ foo: { value: 'a', variation: 1, version: 2 } });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: initFlags });
 
       await client.waitForInitialization();
       client.variation('foo', 'x');
@@ -277,7 +242,7 @@ describe('LDClient', () => {
 
     it('omits event version if flag does not exist', async () => {
       const ep = stubEventProcessor();
-      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: {} });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
 
       await client.waitForInitialization();
       client.variation('foo', 'x');
@@ -289,7 +254,7 @@ describe('LDClient', () => {
 
     it('can get metadata for events from bootstrap object', async () => {
       const ep = stubEventProcessor();
-      const bootstrapData = makeBootstrap({
+      const initFlags = makeBootstrap({
         foo: {
           value: 'bar',
           variation: 1,
@@ -298,7 +263,7 @@ describe('LDClient', () => {
           debugEventsUntilDate: 1000,
         },
       });
-      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: bootstrapData });
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: initFlags });
 
       await client.waitForInitialization();
       client.variation('foo', 'x');
@@ -310,10 +275,10 @@ describe('LDClient', () => {
 
     it('sends an event for track()', async () => {
       const ep = stubEventProcessor();
-      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: {} });
-      const data = { thing: 'stuff' };
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
+      const eventData = { thing: 'stuff' };
       await client.waitForInitialization();
-      client.track('eventkey', data);
+      client.track('eventkey', eventData);
 
       expect(ep.events.length).toEqual(2);
       expectIdentifyEvent(ep.events[0], user);
@@ -321,17 +286,17 @@ describe('LDClient', () => {
       expect(trackEvent.kind).toEqual('custom');
       expect(trackEvent.key).toEqual('eventkey');
       expect(trackEvent.user).toEqual(user);
-      expect(trackEvent.data).toEqual(data);
+      expect(trackEvent.data).toEqual(eventData);
       expect(trackEvent.url).toEqual(fakeUrl);
     });
 
     it('does not send an event for track() if doNotTrack is set', async () => {
       platform.testing.setDoNotTrack(true);
       const ep = stubEventProcessor();
-      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: {} });
-      const data = { thing: 'stuff' };
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
+      const eventData = { thing: 'stuff' };
       await client.waitForInitialization();
-      client.track('eventkey', data);
+      client.track('eventkey', eventData);
       expect(ep.events.length).toEqual(0);
     });
 

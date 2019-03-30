@@ -1,35 +1,27 @@
 import * as base64 from 'base64-js';
-import sinon from 'sinon';
 
 import * as stubPlatform from './stubPlatform';
+import { makeDefaultServer } from './testUtils';
 import EventSender from '../EventSender';
 import * as utils from '../utils';
 
 describe('EventSender', () => {
   const platform = stubPlatform.defaults();
   const platformWithoutCors = Object.assign({}, platform, { httpAllowsPost: () => false });
-  let sandbox;
-  let xhr;
-  let requests = [];
+  let server;
   const eventsUrl = '/fake-url';
   const envId = 'env';
 
   beforeEach(() => {
-    sandbox = sinon.createSandbox();
-    requests = [];
-    xhr = sinon.useFakeXMLHttpRequest();
-    xhr.onCreate = function(xhr) {
-      requests.push(xhr);
-    };
+    server = makeDefaultServer();
   });
 
   afterEach(() => {
-    sandbox.restore();
-    xhr.restore();
+    server.restore();
   });
 
   function lastRequest() {
-    return requests[requests.length - 1];
+    return server.requests[server.requests.length - 1];
   }
 
   function fakeImageCreator() {
@@ -108,17 +100,15 @@ describe('EventSender', () => {
       const sender = EventSender(platform, eventsUrl, envId);
       const event = { kind: 'identify', key: 'userKey' };
       sender.sendEvents([event], false);
-      requests[0].respond();
-      expect(requests.length).toEqual(1);
-      expect(requests[0].async).toEqual(true);
-      expect(JSON.parse(requests[0].requestBody)).toEqual([event]);
+      expect(server.requests.length).toEqual(1);
+      expect(server.requests[0].async).toEqual(true);
+      expect(JSON.parse(server.requests[0].requestBody)).toEqual([event]);
     });
 
     it('should send synchronously', () => {
       const sender = EventSender(platform, eventsUrl, envId);
       const event = { kind: 'identify', key: 'userKey' };
       sender.sendEvents([event], true);
-      lastRequest().respond();
       expect(lastRequest().async).toEqual(false);
     });
 
@@ -129,7 +119,6 @@ describe('EventSender', () => {
         events.push({ kind: 'identify', key: 'thisIsALongUserKey' + i });
       }
       sender.sendEvents(events, false);
-      lastRequest().respond();
       const r = lastRequest();
       expect(r.url).toEqual(eventsUrl + '/events/bulk/' + envId);
       expect(r.method).toEqual('POST');
@@ -140,7 +129,6 @@ describe('EventSender', () => {
       const sender = EventSender(platform, eventsUrl, envId);
       const event = { kind: 'identify', key: 'userKey' };
       sender.sendEvents([event], false);
-      lastRequest().respond();
       expect(lastRequest().requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString(platform));
     });
 
@@ -148,40 +136,43 @@ describe('EventSender', () => {
     for (const i in retryableStatuses) {
       const status = retryableStatuses[i];
       it('should retry on error ' + status, () => {
+        server.autoRespond = false;
         const sender = EventSender(platform, eventsUrl, envId);
         const event = { kind: 'false', key: 'userKey' };
         sender.sendEvents([event], false);
-        requests[0].respond(status);
-        expect(requests.length).toEqual(2);
-        expect(JSON.parse(requests[1].requestBody)).toEqual([event]);
+        server.requests[0].respond(status);
+        expect(server.requests.length).toEqual(2);
+        expect(JSON.parse(server.requests[1].requestBody)).toEqual([event]);
       });
     }
 
     it('should not retry more than once', () => {
+      server.autoRespond = false;
       const sender = EventSender(platform, eventsUrl, envId);
       const event = { kind: 'false', key: 'userKey' };
       sender.sendEvents([event], false);
-      requests[0].respond(503);
-      expect(requests.length).toEqual(2);
-      requests[1].respond(503);
-      expect(requests.length).toEqual(2);
+      server.requests[0].respond(503);
+      server.requests[1].respond(503);
+      expect(server.requests.length).toEqual(2);
     });
 
     it('should not retry on error 401', () => {
+      server.autoRespond = false;
       const sender = EventSender(platform, eventsUrl, envId);
       const event = { kind: 'false', key: 'userKey' };
       sender.sendEvents([event], false);
-      requests[0].respond(401);
-      expect(requests.length).toEqual(1);
+      server.requests[0].respond(401);
+      expect(server.requests.length).toEqual(1);
     });
 
     it('should retry on I/O error', () => {
+      server.autoRespond = false;
       const sender = EventSender(platform, eventsUrl, envId);
       const event = { kind: 'false', key: 'userKey' };
       sender.sendEvents([event], false);
-      requests[0].error();
-      expect(requests.length).toEqual(2);
-      expect(JSON.parse(requests[1].requestBody)).toEqual([event]);
+      server.requests[0].error();
+      expect(server.requests.length).toEqual(2);
+      expect(JSON.parse(server.requests[1].requestBody)).toEqual([event]);
     });
   });
 
@@ -190,7 +181,7 @@ describe('EventSender', () => {
       const sender = EventSender(stubPlatform.withoutHttp(), eventsUrl, envId);
       const event = { kind: 'false', key: 'userKey' };
       sender.sendEvents([event], false);
-      expect(requests.length).toEqual(0);
+      expect(server.requests.length).toEqual(0);
     });
   });
 });

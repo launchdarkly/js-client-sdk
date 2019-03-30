@@ -1,4 +1,6 @@
 import * as stubPlatform from './stubPlatform';
+import { asyncifyNodeStyle } from './testUtils';
+
 import * as messages from '../messages';
 import Identity from '../Identity';
 import Store from '../Store';
@@ -10,22 +12,20 @@ describe('Store', () => {
   const env = 'ENVIRONMENT';
   const lsKey = 'ld:' + env + ':' + utils.btoa(JSON.stringify(user));
 
-  it('stores flags', done => {
+  it('stores flags', async () => {
     const platform = stubPlatform.defaults();
     const store = Store(platform.localStorage, env, '', ident, platform.testing.logger);
 
     const flags = { flagKey: { value: 'x' } };
 
-    store.saveFlags(flags, err => {
-      expect(err).toBe(null);
-      const value = platform.testing.getLocalStorageImmediately(lsKey);
-      const expected = Object.assign({ $schema: 1 }, flags);
-      expect(JSON.parse(value)).toEqual(expected);
-      done();
-    });
+    await asyncifyNodeStyle(cb => store.saveFlags(flags, cb));
+
+    const value = platform.testing.getLocalStorageImmediately(lsKey);
+    const expected = Object.assign({ $schema: 1 }, flags);
+    expect(JSON.parse(value)).toEqual(expected);
   });
 
-  it('retrieves and parses flags', done => {
+  it('retrieves and parses flags', async () => {
     const platform = stubPlatform.defaults();
     const store = Store(platform.localStorage, env, '', ident, platform.testing.logger);
 
@@ -33,14 +33,11 @@ describe('Store', () => {
     const stored = Object.assign({ $schema: 1 }, expected);
     platform.testing.setLocalStorageImmediately(lsKey, JSON.stringify(stored));
 
-    store.loadFlags((err, values) => {
-      expect(err).toBe(null);
-      expect(values).toEqual(expected);
-      done();
-    });
+    const values = await asyncifyNodeStyle(cb => store.loadFlags(cb));
+    expect(values).toEqual(expected);
   });
 
-  it('converts flags from old format if schema property is missing', done => {
+  it('converts flags from old format if schema property is missing', async () => {
     const platform = stubPlatform.defaults();
     const store = Store(platform.localStorage, env, '', ident, platform.testing.logger);
 
@@ -48,54 +45,43 @@ describe('Store', () => {
     const newFlags = { flagKey: { value: 'x', version: 0 } };
     platform.testing.setLocalStorageImmediately(lsKey, JSON.stringify(oldFlags));
 
-    store.loadFlags((err, values) => {
-      expect(err).toBe(null);
-      expect(values).toEqual(newFlags);
-      done();
-    });
+    const values = await asyncifyNodeStyle(cb => store.loadFlags(cb));
+    expect(values).toEqual(newFlags);
   });
 
-  it('returns null if storage is empty', done => {
+  it('returns null if storage is empty', async () => {
     const platform = stubPlatform.defaults();
     const store = Store(platform.localStorage, env, '', ident, platform.testing.logger);
 
-    store.loadFlags((err, values) => {
-      expect(err).toBe(null);
-      expect(values).toBe(null);
-      done();
-    });
+    const values = await asyncifyNodeStyle(cb => store.loadFlags(cb));
+    expect(values).toBe(null);
   });
 
-  it('clears storage and returns null if value is not valid JSON', done => {
+  it('clears storage and returns null if value is not valid JSON', async () => {
     const platform = stubPlatform.defaults();
     const store = Store(platform.localStorage, env, '', ident, platform.testing.logger);
 
     platform.testing.setLocalStorageImmediately(lsKey, '{bad');
 
-    store.loadFlags((err, values) => {
-      expect(err).not.toBe(null);
-      expect(values).toBe(null);
-      expect(platform.testing.getLocalStorageImmediately(lsKey)).toBe(undefined);
-      done();
-    });
+    await expect(asyncifyNodeStyle(cb => store.loadFlags(cb))).rejects.toThrow();
+
+    expect(platform.testing.getLocalStorageImmediately(lsKey)).toBe(undefined);
   });
 
-  it('uses hash, if present, instead of user properties', done => {
+  it('uses hash, if present, instead of user properties', async () => {
     const platform = stubPlatform.defaults();
     const hash = '12345';
     const keyWithHash = 'ld:' + env + ':' + hash;
     const store = Store(platform.localStorage, env, hash, ident, platform.testing.logger);
 
     const flags = { flagKey: { value: 'x' } };
-    store.saveFlags(flags, err => {
-      expect(err).toBe(null);
-      const value = platform.testing.getLocalStorageImmediately(keyWithHash);
-      expect(JSON.parse(value)).toEqual(Object.assign({ $schema: 1 }, flags));
-      done();
-    });
+    await asyncifyNodeStyle(cb => store.saveFlags(flags, cb));
+
+    const value = platform.testing.getLocalStorageImmediately(keyWithHash);
+    expect(JSON.parse(value)).toEqual(Object.assign({ $schema: 1 }, flags));
   });
 
-  it('should handle localStorage.get returning an error', done => {
+  it('should handle localStorage.get returning an error', async () => {
     const platform = stubPlatform.defaults();
     const store = Store(platform.localStorage, env, '', ident, platform.testing.logger);
     const myError = new Error('localstorage getitem error');
@@ -103,14 +89,11 @@ describe('Store', () => {
       callback(myError);
     });
 
-    store.loadFlags(err => {
-      expect(err).toEqual(myError);
-      expect(platform.testing.logger.output.warn).toEqual([messages.localStorageUnavailable()]);
-      done();
-    });
+    await expect(asyncifyNodeStyle(cb => store.loadFlags(cb))).rejects.toThrow(myError);
+    expect(platform.testing.logger.output.warn).toEqual([messages.localStorageUnavailable()]);
   });
 
-  it('should handle localStorage.set returning an error', done => {
+  it('should handle localStorage.set returning an error', async () => {
     const platform = stubPlatform.defaults();
     const store = Store(platform.localStorage, env, '', ident, platform.testing.logger);
     const myError = new Error('localstorage setitem error');
@@ -118,10 +101,7 @@ describe('Store', () => {
       callback(myError);
     });
 
-    store.saveFlags({ foo: {} }, err => {
-      expect(err).toEqual(myError);
-      expect(platform.testing.logger.output.warn).toEqual([messages.localStorageUnavailable()]);
-      done();
-    });
+    await expect(asyncifyNodeStyle(cb => store.saveFlags({ foo: {} }, cb))).rejects.toThrow(myError);
+    expect(platform.testing.logger.output.warn).toEqual([messages.localStorageUnavailable()]);
   });
 });
