@@ -41,17 +41,6 @@ export const numericUser = {
   custom: { age: 99 },
 };
 
-// This returns a promise with a .callback property that is a Node-style callback function;
-// when called, it will resolve or reject the promise.
-export function promiseListenerWithError() {
-  let cb;
-  const p = new Promise((resolve, reject) => {
-    cb = (err, value) => (err ? reject(err) : resolve(value));
-  });
-  p.callback = cb;
-  return p;
-}
-
 // This returns a Promise with a .callback property that is a plain callback function; when
 // called, it will resolve the promise with either a single value or an array of arguments.
 export function promiseListener() {
