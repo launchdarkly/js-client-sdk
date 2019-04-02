@@ -4,8 +4,8 @@ import * as errors from './errors';
 import * as messages from './messages';
 import * as utils from './utils';
 
-// Transforms the user object if necessary to make sure it has a valid key. Returns a Promise that
-// provides either the valid user object or an error.
+// Transforms the user object if necessary to make sure it has a valid key. Takes a callback that will
+// be called with (err, validatedUser).
 // 1. If a key is present, but is not a string, change it to a string.
 // 2. If no key is present, and "anonymous" is true, use a UUID as a key. This is cached in local
 // storage if possible.
@@ -46,29 +46,27 @@ export default function UserValidator(localStorageProvider, logger) {
       return;
     }
 
-    const sane = utils.clone(user);
-    if (sane.key) {
-      sane.key = sane.key.toString();
+    const userOut = utils.clone(user);
+    if (userOut.key !== null && userOut.key !== undefined) {
+      userOut.key = userOut.key.toString();
+      cb(null, userOut);
+      return;
     }
-    if (!sane.key) {
-      if (sane.anonymous) {
-        getCachedUserId(cachedId => {
-          if (cachedId) {
-            sane.key = cachedId;
-            cb(null, sane);
-          } else {
-            const id = uuidv1();
-            sane.key = id;
-            setCachedUserId(id, () => {
-              cb(null, sane);
-            });
-          }
-        });
-      } else {
-        cb(new errors.LDInvalidUserError(messages.invalidUser()));
-      }
+    if (userOut.anonymous) {
+      getCachedUserId(cachedId => {
+        if (cachedId) {
+          userOut.key = cachedId;
+          cb(null, userOut);
+        } else {
+          const id = uuidv1();
+          userOut.key = id;
+          setCachedUserId(id, () => {
+            cb(null, userOut);
+          });
+        }
+      });
     } else {
-      cb(null, sane);
+      cb(new errors.LDInvalidUserError(messages.invalidUser()));
     }
   };
 
