@@ -29,7 +29,9 @@ export default function UserValidator(localStorageProvider, logger) {
   function setCachedUserId(id, cb) {
     if (localStorageProvider) {
       localStorageProvider.set(ldUserIdKey, id, err => {
-        logger.warn(messages.localStorageUnavailableForUserId());
+        if (err) {
+          logger.warn(messages.localStorageUnavailableForUserId());
+        }
         cb();
       });
     } else {
