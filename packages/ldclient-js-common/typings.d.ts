@@ -215,6 +215,13 @@ declare module 'ldclient-js-common' {
   export interface LDUser {
     /**
      * A unique string identifying a user.
+     *
+     * If you omit this property, and also set `anonymous` to `true`, the SDK will generate a UUID string
+     * and use that as the key; it will attempt to persist that value in local storage if possible so the
+     * next anonymous user will get the same key, but if local storage is unavailable then it will
+     * generate a new key each time you specify the user.
+     *
+     * It is an error to omit the `key` property if `anonymous` is not set.
      */
     key: string;
 

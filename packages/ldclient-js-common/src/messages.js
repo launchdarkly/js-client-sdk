@@ -23,6 +23,10 @@ export const localStorageUnavailable = function() {
   return 'localStorage is unavailable';
 };
 
+export const localStorageUnavailableForUserId = function() {
+  return 'localStorage is unavailable, so anonymous user ID cannot be cached';
+};
+
 export const unknownCustomEventKey = function(key) {
   return 'Custom event "' + key + '" does not exist';
 };
