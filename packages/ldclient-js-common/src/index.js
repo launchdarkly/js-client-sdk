@@ -177,33 +177,42 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
       logger.warn(messages.identifyDisabled());
       return utils.wrapPromiseCallback(Promise.resolve(utils.transformVersionedValuesToValues(flags)), onDone);
     }
-    const clearFirst = (useLocalStorage && store) ? new Promise(resolve => store.clearFlags(resolve)) : Promise.resolve();
+    const clearFirst = useLocalStorage && store ? new Promise(resolve => store.clearFlags(resolve)) : Promise.resolve();
     return utils.wrapPromiseCallback(
-      clearFirst.then(() => new Promise((resolve, reject) =>
-        userValidator.validateUser(user, (err, realUser) => err ? reject(err) : resolve(realUser))
-      )).then(realUser => new Promise((resolve, reject) => {
-        ident.setUser(realUser);
-        requestor.fetchFlagSettings(realUser, hash, (err, settings) => {
-          if (err) {
-            emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
-            return reject(err);
-          }
-          const result = utils.transformVersionedValuesToValues(settings);
-          if (settings) {
-            updateSettings(settings, () => {
-              resolve(result);
-            });
-          } else {
-            resolve(result);
-          }
-          if (streamActive) {
-            connectStream();
-          }
-        });
-      })).catch(err => {
-        emitter.maybeReportError(err);
-        return Promise.reject(err);
-      }),
+      clearFirst
+        .then(
+          () =>
+            new Promise((resolve, reject) =>
+              userValidator.validateUser(user, (err, realUser) => (err ? reject(err) : resolve(realUser)))
+            )
+        )
+        .then(
+          realUser =>
+            new Promise((resolve, reject) => {
+              ident.setUser(realUser);
+              requestor.fetchFlagSettings(realUser, hash, (err, settings) => {
+                if (err) {
+                  emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+                  return reject(err);
+                }
+                const result = utils.transformVersionedValuesToValues(settings);
+                if (settings) {
+                  updateSettings(settings, () => {
+                    resolve(result);
+                  });
+                } else {
+                  resolve(result);
+                }
+                if (streamActive) {
+                  connectStream();
+                }
+              });
+            })
+        )
+        .catch(err => {
+          emitter.maybeReportError(err);
+          return Promise.reject(err);
+        }),
       onDone
     );
   }
@@ -577,7 +586,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
       if (err) {
         flags = {};
         const initErr = new errors.LDFlagFetchError(messages.errorFetchingFlags(err));
-        signalFailedInit(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
+        signalFailedInit(initErr);
       } else {
         flags = requestedFlags || {};
         // Note, we don't need to call updateSettings here because local storage and change events are not relevant
