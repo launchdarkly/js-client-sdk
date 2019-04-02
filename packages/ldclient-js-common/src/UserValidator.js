@@ -4,8 +4,7 @@ import * as errors from './errors';
 import * as messages from './messages';
 import * as utils from './utils';
 
-// Transforms the user object if necessary to make sure it has a valid key. Takes a callback that will
-// be called with (err, validatedUser).
+// Transforms the user object if necessary to make sure it has a valid key.
 // 1. If a key is present, but is not a string, change it to a string.
 // 2. If no key is present, and "anonymous" is true, use a UUID as a key. This is cached in local
 // storage if possible.
@@ -40,6 +39,10 @@ export default function UserValidator(localStorageProvider, logger) {
   }
 
   const ret = {};
+
+  // Validates the user, returning (err, validatedUser) via a callback. If we do not need to access
+  // local storage (for a generated user key) then the callback will be executed immediately; if we
+  // do need to access local storage, callback execution will be deferred.
   ret.validateUser = (user, cb) => {
     if (!user) {
       cb(new errors.LDInvalidUserError(messages.userNotSpecified()));
@@ -68,6 +71,14 @@ export default function UserValidator(localStorageProvider, logger) {
     } else {
       cb(new errors.LDInvalidUserError(messages.invalidUser()));
     }
+  };
+
+  // Validates the user, returning a Promise that will resolve to the validated user or be rejected
+  // with an error. As with all Promise callbacks, execution is always deferred, never immediate.
+  ret.validateUserPromise = user => {
+    return new Promise((resolve, reject) => {
+      ret.validateUser(user, (err, realUser) => (err ? reject(err) : resolve(realUser)))
+    });
   };
 
   return ret;

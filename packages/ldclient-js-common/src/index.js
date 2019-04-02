@@ -180,12 +180,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     const clearFirst = useLocalStorage && store ? new Promise(resolve => store.clearFlags(resolve)) : Promise.resolve();
     return utils.wrapPromiseCallback(
       clearFirst
-        .then(
-          () =>
-            new Promise((resolve, reject) =>
-              userValidator.validateUser(user, (err, realUser) => (err ? reject(err) : resolve(realUser)))
-            )
-        )
+        .then(() => userValidator.validateUserPromise(user))
         .then(
           realUser =>
             new Promise((resolve, reject) => {
