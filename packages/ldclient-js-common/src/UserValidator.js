@@ -75,11 +75,10 @@ export default function UserValidator(localStorageProvider, logger) {
 
   // Validates the user, returning a Promise that will resolve to the validated user or be rejected
   // with an error. As with all Promise callbacks, execution is always deferred, never immediate.
-  ret.validateUserPromise = user => {
-    return new Promise((resolve, reject) => {
+  ret.validateUserPromise = user =>
+    new Promise((resolve, reject) =>
       ret.validateUser(user, (err, realUser) => (err ? reject(err) : resolve(realUser)))
-    });
-  };
+    );
 
   return ret;
 }
