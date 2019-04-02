@@ -223,7 +223,7 @@ declare module 'ldclient-js-common' {
      *
      * It is an error to omit the `key` property if `anonymous` is not set.
      */
-    key: string;
+    key?: string;
 
     /**
      * An optional secondary key for a user. This affects
