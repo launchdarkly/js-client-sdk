@@ -1,6 +1,8 @@
 import * as base64 from 'base64-js';
 import fastDeepEqual from 'fast-deep-equal';
 
+const userAttrsToStringify = ['key', 'secondary', 'ip', 'country', 'email', 'firstName', 'lastName', 'avatar', 'name'];
+
 // See http://ecmanaut.blogspot.com/2006/07/encoding-decoding-utf8-in-javascript.html
 export function btoa(s) {
   const escaped = unescape(encodeURIComponent(s));
@@ -153,4 +155,20 @@ export function addLDHeaders(xhr, platform) {
 
 export function extend(...objects) {
   return objects.reduce((acc, obj) => ({ ...acc, ...obj }), {});
+}
+
+export function sanitizeUser(user) {
+  if (!user) {
+    return user;
+  }
+  let newUser;
+  for (const i in userAttrsToStringify) {
+    const attr = userAttrsToStringify[i];
+    const value = user[attr];
+    if (value !== undefined && typeof value !== 'string') {
+      newUser = newUser || Object.assign({}, user);
+      newUser[attr] = String(value);
+    }
+  }
+  return newUser || user;
 }
