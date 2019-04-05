@@ -213,6 +213,42 @@ describe('LDClient', () => {
       await client.waitForInitialization();
       expect(client.getUser()).toEqual(stringifiedNumericUser);
     });
+
+    it('provides a persistent key for an anonymous user with no key', async () => {
+      const anonUser = { anonymous: true, country: 'US' };
+      const client0 = platform.testing.makeClient(envName, anonUser);
+      await client0.waitForInitialization();
+
+      const newUser0 = client0.getUser();
+      expect(newUser0.key).toEqual(expect.anything());
+      expect(newUser0).toMatchObject(anonUser);
+
+      const client1 = platform.testing.makeClient(envName, anonUser);
+      await client1.waitForInitialization();
+
+      const newUser1 = client1.getUser();
+      expect(newUser1).toEqual(newUser0);
+    });
+
+    it('provides a key for an anonymous user with no key, even if local storage is unavailable', async () => {
+      platform.localStorage = null;
+
+      const anonUser = { anonymous: true, country: 'US' };
+      const client0 = platform.testing.makeClient(envName, anonUser);
+      await client0.waitForInitialization();
+
+      const newUser0 = client0.getUser();
+      expect(newUser0.key).toEqual(expect.anything());
+      expect(newUser0).toMatchObject(anonUser);
+
+      const client1 = platform.testing.makeClient(envName, anonUser);
+      await client1.waitForInitialization();
+
+      const newUser1 = client1.getUser();
+      expect(newUser1.key).toEqual(expect.anything());
+      // This key is probably different from newUser0.key, but that depends on execution time, so we can't count on it.
+      expect(newUser1).toMatchObject(anonUser);
+    });
   });
 
   describe('waitUntilReady', () => {
@@ -419,6 +455,19 @@ describe('LDClient', () => {
       await expect(client.identify({ country: 'US' })).rejects.toThrow();
 
       expect(client.variation('foo', 'x')).toEqual('bar');
+    });
+
+    it('provides a persistent key for an anonymous user with no key', async () => {
+      const initData = { foo: 'bar' };
+      const client = platform.testing.makeClient(envName, user, { bootstrap: initData });
+      await client.waitForInitialization();
+
+      const anonUser = { anonymous: true, country: 'US' };
+      await client.identify(anonUser);
+
+      const newUser = client.getUser();
+      expect(newUser.key).toEqual(expect.anything());
+      expect(newUser).toMatchObject(anonUser);
     });
   });
 

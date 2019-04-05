@@ -6,7 +6,9 @@ export default function Identity(initialUser, onChange) {
 
   ident.setUser = function(u) {
     user = utils.sanitizeUser(u);
-    onChange && onChange(utils.clone(user));
+    if (user && onChange) {
+      onChange(utils.clone(user));
+    }
   };
 
   ident.getUser = function() {

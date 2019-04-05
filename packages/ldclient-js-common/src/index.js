@@ -4,6 +4,7 @@ import Store from './Store';
 import Stream from './Stream';
 import Requestor from './Requestor';
 import Identity from './Identity';
+import UserValidator from './UserValidator';
 import * as configuration from './configuration';
 import createConsoleLogger from './consoleLogger';
 import * as utils from './utils';
@@ -33,7 +34,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   const events = options.eventProcessor || EventProcessor(platform, options, environment, logger, emitter);
   const requestor = Requestor(platform, options, environment, logger);
   const seenRequests = {};
-  let flags = typeof options.bootstrap === 'object' ? readFlagsFromBootstrap(options.bootstrap) : {};
+  let flags = {};
   let useLocalStorage;
   let streamActive;
   let streamForcedState;
@@ -51,6 +52,13 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   // - enqueueEvent(event) accepts an analytics event object and returns true if the stateProvider will
   //   be responsible for delivering it, or false if we still should deliver it ourselves.
   const stateProvider = options.stateProvider;
+
+  const ident = Identity(null, sendIdentifyEvent);
+  const userValidator = UserValidator(platform.localStorage, logger);
+  let store;
+  if (platform.localStorage) {
+    store = new Store(platform.localStorage, environment, hash, ident, logger);
+  }
 
   function createLogger() {
     if (specifiedOptions && specifiedOptions.logger) {
@@ -129,12 +137,6 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     }
   }
 
-  const ident = Identity(user, sendIdentifyEvent);
-  let store;
-  if (platform.localStorage) {
-    store = new Store(platform.localStorage, environment, hash, ident, logger);
-  }
-
   function sendFlagEvent(key, detail, defaultValue) {
     const user = ident.getUser();
     const now = new Date();
@@ -175,18 +177,15 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
       logger.warn(messages.identifyDisabled());
       return utils.wrapPromiseCallback(Promise.resolve(utils.transformVersionedValuesToValues(flags)), onDone);
     }
-    const clearFirst = new Promise(resolve => (useLocalStorage && store ? store.clearFlags(resolve) : resolve()));
+    const clearFirst = useLocalStorage && store ? new Promise(resolve => store.clearFlags(resolve)) : Promise.resolve();
     return utils.wrapPromiseCallback(
-      clearFirst.then(
-        () =>
-          new Promise((resolve, reject) => {
-            if (!user || user.key === null || user.key === undefined) {
-              const err = new errors.LDInvalidUserError(user ? messages.invalidUser() : messages.userNotSpecified());
-              emitter.maybeReportError(err);
-              reject(err);
-            } else {
-              ident.setUser(user);
-              requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
+      clearFirst
+        .then(() => userValidator.validateUserPromise(user))
+        .then(
+          realUser =>
+            new Promise((resolve, reject) => {
+              ident.setUser(realUser);
+              requestor.fetchFlagSettings(realUser, hash, (err, settings) => {
                 if (err) {
                   emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
                   return reject(err);
@@ -203,9 +202,12 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
                   connectStream();
                 }
               });
-            }
-          })
-      ),
+            })
+        )
+        .catch(err => {
+          emitter.maybeReportError(err);
+          return Promise.reject(err);
+        }),
       onDone
     );
   }
@@ -488,6 +490,14 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     });
   });
 
+  if (typeof options.bootstrap === 'string' && options.bootstrap.toUpperCase() === 'LOCALSTORAGE') {
+    if (store) {
+      useLocalStorage = true;
+    } else {
+      logger.warn(messages.localStorageUnavailable());
+    }
+  }
+
   if (stateProvider) {
     // The stateProvider option is used in the Electron SDK, to allow a client instance in the main process
     // to control another client instance (i.e. this one) in the renderer process. We can't predict which
@@ -501,34 +511,36 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     }
     stateProvider.on('update', updateFromStateProvider);
   } else {
+    finishInit(err => {
+      if (err) {
+        utils.onNextTick(() => emitter.maybeReportError(err));
+      }
+    });
+  }
+
+  function finishInit(cb) {
     if (!env) {
-      utils.onNextTick(() => {
-        emitter.maybeReportError(new errors.LDInvalidEnvironmentIdError(messages.environmentNotSpecified()));
-      });
+      cb(new errors.LDInvalidEnvironmentIdError(messages.environmentNotSpecified()));
+      return;
     }
-
-    if (!user) {
-      utils.onNextTick(() => {
-        emitter.maybeReportError(new errors.LDInvalidUserError(messages.userNotSpecified()));
-      });
-    } else if (!user.key) {
-      utils.onNextTick(() => {
-        emitter.maybeReportError(new errors.LDInvalidUserError(messages.invalidUser()));
-      });
-    }
+    userValidator.validateUser(user, (err, realUser) => {
+      if (err) {
+        cb(err);
+        return;
+      }
+      ident.setUser(realUser);
+      if (typeof options.bootstrap === 'object') {
+        flags = readFlagsFromBootstrap(options.bootstrap);
+        utils.onNextTick(signalSuccessfulInit);
+      } else if (useLocalStorage) {
+        finishInitWithLocalStorage();
+      } else {
+        finishInitWithPolling();
+      }
+    });
   }
 
-  if (typeof options.bootstrap === 'string' && options.bootstrap.toUpperCase() === 'LOCALSTORAGE') {
-    if (store) {
-      useLocalStorage = true;
-    } else {
-      logger.warn(messages.localStorageUnavailable());
-    }
-  }
-
-  if (typeof options.bootstrap === 'object') {
-    utils.onNextTick(signalSuccessfulInit);
-  } else if (useLocalStorage) {
+  function finishInitWithLocalStorage() {
     store.loadFlags((err, storedFlags) => {
       if (storedFlags === null || storedFlags === undefined) {
         flags = {};
@@ -562,7 +574,9 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
         });
       }
     });
-  } else if (!stateProvider) {
+  }
+
+  function finishInitWithPolling() {
     requestor.fetchFlagSettings(ident.getUser(), hash, (err, requestedFlags) => {
       if (err) {
         flags = {};
@@ -570,6 +584,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
         signalFailedInit(initErr);
       } else {
         flags = requestedFlags || {};
+        // Note, we don't need to call updateSettings here because local storage and change events are not relevant
         signalSuccessfulInit();
       }
     });
