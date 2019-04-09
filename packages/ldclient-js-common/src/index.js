@@ -23,6 +23,9 @@ const internalChangeEvent = 'internal-change';
 //   options: the configuration (after any appropriate defaults have been applied)
 // If we need to give the platform-specific clients access to any internals here, we should add those
 // as properties of the return object, not public properties of the client.
+//
+// For definitions of the API in the platform object, see stubPlatform.js in the test code.
+
 export function initialize(env, user, specifiedOptions, platform, extraDefaults) {
   const logger = createLogger();
   const emitter = EventEmitter(logger);
@@ -177,33 +180,26 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
       logger.warn(messages.identifyDisabled());
       return utils.wrapPromiseCallback(Promise.resolve(utils.transformVersionedValuesToValues(flags)), onDone);
     }
-    const clearFirst = useLocalStorage && store ? new Promise(resolve => store.clearFlags(resolve)) : Promise.resolve();
+    const clearFirst = useLocalStorage && store ? store.clearFlags() : Promise.resolve();
     return utils.wrapPromiseCallback(
       clearFirst
         .then(() => userValidator.validateUserPromise(user))
-        .then(
-          realUser =>
-            new Promise((resolve, reject) => {
-              ident.setUser(realUser);
-              requestor.fetchFlagSettings(realUser, hash, (err, settings) => {
-                if (err) {
-                  emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
-                  return reject(err);
-                }
-                const result = utils.transformVersionedValuesToValues(settings);
-                if (settings) {
-                  updateSettings(settings, () => {
-                    resolve(result);
-                  });
-                } else {
-                  resolve(result);
-                }
-                if (streamActive) {
-                  connectStream();
-                }
-              });
-            })
-        )
+        .then(realUser => ident.setUser(realUser))
+        .then(() => requestor.fetchFlagSettings(ident.getUser(), hash))
+        .then(requestedFlags => {
+          const flagValueMap = utils.transformVersionedValuesToValues(requestedFlags);
+          if (requestedFlags) {
+            return replaceAllFlags(requestedFlags).then(() => flagValueMap);
+          } else {
+            return flagValueMap;
+          }
+        })
+        .then(flagValueMap => {
+          if (streamActive) {
+            connectStream();
+          }
+          return flagValueMap;
+        })
         .catch(err => {
           emitter.maybeReportError(err);
           return Promise.reject(err);
@@ -309,13 +305,13 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
           if (err) {
             emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
           }
-          updateSettings(settings);
+          replaceAllFlags(settings); // don't wait for this Promise to be resolved
         });
       },
       put: function(e) {
         const data = JSON.parse(e.data);
         logger.debug(messages.debugStreamPut());
-        updateSettings(data);
+        replaceAllFlags(data); // don't wait for this Promise to be resolved
       },
       patch: function(e) {
         const data = JSON.parse(e.data);
@@ -335,7 +331,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
           } else {
             mods[data.key] = { current: newDetail };
           }
-          postProcessSettingsUpdate(mods);
+          handleFlagChanges(mods); // don't wait for this Promise to be resolved
         } else {
           logger.debug(messages.debugStreamPatchIgnored(data.key));
         }
@@ -349,7 +345,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
             mods[data.key] = { previous: flags[data.key].value };
           }
           flags[data.key] = { version: data.version, deleted: true };
-          postProcessSettingsUpdate(mods);
+          handleFlagChanges(mods); // don't wait for this Promise to be resolved
         } else {
           logger.debug(messages.debugStreamDeleteIgnored(data.key));
         }
@@ -364,11 +360,14 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     }
   }
 
-  function updateSettings(newFlags, callback) {
+  // Returns a Promise which will be resolved when we have completely updated the internal flags state,
+  // dispatched all change events, and updated local storage if appropriate. This Promise is guaranteed
+  // never to have an unhandled rejection.
+  function replaceAllFlags(newFlags) {
     const changes = {};
 
     if (!newFlags) {
-      return;
+      return Promise.resolve();
     }
 
     for (const key in flags) {
@@ -387,10 +386,12 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     }
 
     flags = newFlags;
-    postProcessSettingsUpdate(changes, callback);
+    return handleFlagChanges(changes).catch(() => {}); // swallow any exceptions from this Promise
   }
 
-  function postProcessSettingsUpdate(changes, callback) {
+  // Returns a Promise which will be resolved when we have dispatched all change events and updated
+  // local storage if appropriate.
+  function handleFlagChanges(changes) {
     const keys = Object.keys(changes);
 
     if (keys.length > 0) {
@@ -419,9 +420,9 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     }
 
     if (useLocalStorage && store) {
-      store.saveFlags(flags, callback);
+      return store.saveFlags(flags).catch(() => null); // disregard errors
     } else {
-      callback && callback();
+      return Promise.resolve();
     }
   }
 
@@ -541,53 +542,47 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   }
 
   function finishInitWithLocalStorage() {
-    store.loadFlags((err, storedFlags) => {
-      if (storedFlags === null || storedFlags === undefined) {
-        flags = {};
-        requestor.fetchFlagSettings(ident.getUser(), hash, (err, requestedFlags) => {
-          if (err) {
-            const initErr = new errors.LDFlagFetchError(messages.errorFetchingFlags(err));
-            signalFailedInit(initErr);
-          } else {
-            if (requestedFlags) {
-              updateSettings(requestedFlags, () => {}); // this includes saving to local storage and sending change events
-            } else {
-              flags = {};
-            }
-            signalSuccessfulInit();
-          }
-        });
-      } else {
-        // We're reading the flags from local storage. Signal that we're ready,
-        // then update localStorage for the next page load. We won't signal changes or update
-        // the in-memory flags unless you subscribe for changes
-        flags = storedFlags;
-        utils.onNextTick(signalSuccessfulInit);
+    store
+      .loadFlags()
+      .catch(() => null) // treat an error the same as if no flags were available
+      .then(storedFlags => {
+        if (storedFlags === null || storedFlags === undefined) {
+          flags = {};
+          return requestor
+            .fetchFlagSettings(ident.getUser(), hash)
+            .then(requestedFlags => replaceAllFlags(requestedFlags || {}))
+            .then(signalSuccessfulInit)
+            .catch(err => {
+              const initErr = new errors.LDFlagFetchError(messages.errorFetchingFlags(err));
+              signalFailedInit(initErr);
+            });
+        } else {
+          // We're reading the flags from local storage. Signal that we're ready,
+          // then update localStorage for the next page load. We won't signal changes or update
+          // the in-memory flags unless you subscribe for changes
+          flags = storedFlags;
+          utils.onNextTick(signalSuccessfulInit);
 
-        requestor.fetchFlagSettings(ident.getUser(), hash, (err, requestedFlags) => {
-          if (err) {
-            emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
-          }
-          if (requestedFlags) {
-            updateSettings(requestedFlags, () => {}); // this includes saving to local storage and sending change events
-          }
-        });
-      }
-    });
+          return requestor
+            .fetchFlagSettings(ident.getUser(), hash)
+            .then(requestedFlags => replaceAllFlags(requestedFlags))
+            .catch(err => emitter.maybeReportError(err));
+        }
+      });
   }
 
   function finishInitWithPolling() {
-    requestor.fetchFlagSettings(ident.getUser(), hash, (err, requestedFlags) => {
-      if (err) {
-        flags = {};
-        const initErr = new errors.LDFlagFetchError(messages.errorFetchingFlags(err));
-        signalFailedInit(initErr);
-      } else {
+    requestor
+      .fetchFlagSettings(ident.getUser(), hash)
+      .then(requestedFlags => {
         flags = requestedFlags || {};
         // Note, we don't need to call updateSettings here because local storage and change events are not relevant
         signalSuccessfulInit();
-      }
-    });
+      })
+      .catch(err => {
+        flags = {};
+        signalFailedInit(err);
+      });
   }
 
   function initFromStateProvider(state) {
@@ -602,7 +597,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
       ident.setUser(state.user);
     }
     if (state.flags) {
-      updateSettings(state.flags);
+      replaceAllFlags(state.flags); // don't wait for this Promise to be resolved
     }
   }
 

@@ -149,6 +149,12 @@ export function getLDUserAgentString(platform) {
   return platform.userAgent + '/' + VERSION;
 }
 
+export function getLDHeaders(platform) {
+  return {
+    'X-LaunchDarkly-User-Agent': getLDUserAgentString(platform)
+  };
+}
+
 export function addLDHeaders(xhr, platform) {
   xhr.setRequestHeader('X-LaunchDarkly-User-Agent', getLDUserAgentString(platform));
 }

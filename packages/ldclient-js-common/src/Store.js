@@ -18,54 +18,65 @@ export default function Store(localStorageProvider, environment, hash, ident, lo
     return 'ld:' + environment + ':' + key;
   }
 
-  store.loadFlags = function(callback) {
-    localStorageProvider.get(getFlagsKey(), (err, dataStr) => {
-      if (err) {
-        logger.warn(messages.localStorageUnavailable());
-        callback && callback(err, null);
-      } else {
-        if (dataStr === null || dataStr === undefined) {
-          callback && callback(null, null);
-          return;
-        }
-        try {
-          let data = JSON.parse(dataStr);
-          if (data) {
-            const schema = data.$schema;
-            if (schema === undefined || schema < 1) {
-              data = utils.transformValuesToVersionedValues(data);
-            } else {
-              delete data['$schema'];
-            }
+  // Returns a Promise which will be resolved with a parsed JSON value if a stored value was available,
+  // resolved with null if there was no value, or rejected if storage was not available.
+  store.loadFlags = () =>
+    new Promise((resolve, reject) => {
+      localStorageProvider.get(getFlagsKey(), (err, dataStr) => {
+        if (err) {
+          logger.warn(messages.localStorageUnavailable());
+          reject(err);
+        } else {
+          if (dataStr === null || dataStr === undefined) {
+            resolve(null);
+            return;
           }
-          callback && callback(null, data);
-        } catch (ex) {
-          store.clearFlags(() => {
-            callback && callback(ex, null);
-          });
+          try {
+            let data = JSON.parse(dataStr);
+            if (data) {
+              const schema = data.$schema;
+              if (schema === undefined || schema < 1) {
+                data = utils.transformValuesToVersionedValues(data);
+              } else {
+                delete data['$schema'];
+              }
+            }
+            resolve(data);
+          } catch (ex) {
+            store.clearFlags().then(() => {
+              reject(ex);
+            });
+          }
         }
-      }
+      });
     });
-  };
 
-  store.saveFlags = function(flags, callback) {
-    const data = utils.extend({}, flags, { $schema: 1 });
-    localStorageProvider.set(getFlagsKey(), JSON.stringify(data), err => {
-      if (err) {
-        logger.warn(messages.localStorageUnavailable());
-      }
-      callback && callback(err);
+  // Returns a Promise which will be resolved with no value if successful, or rejected if storage
+  // was not available.
+  store.saveFlags = flags =>
+    new Promise((resolve, reject) => {
+      const data = utils.extend({}, flags, { $schema: 1 });
+      localStorageProvider.set(getFlagsKey(), JSON.stringify(data), err => {
+        if (err) {
+          logger.warn(messages.localStorageUnavailable());
+          return reject(err);
+        }
+        resolve();
+      });
     });
-  };
 
-  store.clearFlags = function(callback) {
-    localStorageProvider.clear(getFlagsKey(), err => {
-      if (err) {
-        logger.warn(messages.localStorageUnavailable());
-      }
-      callback && callback(err);
+  // Returns a Promise which will be resolved with no value if successful, or rejected if storage
+  // was not available.
+  store.clearFlags = () =>
+    new Promise((resolve, reject) => {
+      localStorageProvider.clear(getFlagsKey(), err => {
+        if (err) {
+          logger.warn(messages.localStorageUnavailable());
+          return reject(err);
+        }
+        resolve();
+      });
     });
-  };
 
   return store;
 }

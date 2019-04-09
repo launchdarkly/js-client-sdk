@@ -12,6 +12,7 @@ import {
 } from './testUtils';
 
 import * as LDClient from '../index';
+import * as errors from '../errors';
 import * as messages from '../messages';
 import * as utils from '../utils';
 
@@ -82,7 +83,7 @@ describe('LDClient', () => {
       await expect(client.waitForInitialization()).rejects.toThrow();
 
       const err = await gotError;
-      expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
+      expect(err).toEqual(new errors.LDInvalidEnvironmentIdError(messages.environmentNotFound()));
     });
 
     it('should emit a failure event when an invalid environment key is specified', async () => {
@@ -95,7 +96,7 @@ describe('LDClient', () => {
       await expect(client.waitForInitialization()).rejects.toThrow();
 
       const err = await gotFailed;
-      expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
+      expect(err).toEqual(new errors.LDInvalidEnvironmentIdError(messages.environmentNotFound()));
     });
 
     it('returns default values when an invalid environment key is specified', async () => {
@@ -276,7 +277,7 @@ describe('LDClient', () => {
       server.respondWith(errorResponse(404));
 
       const client = platform.testing.makeClient('abc', user);
-      const err = new Error('Error fetching flag settings: ' + messages.environmentNotFound());
+      const err = new errors.LDInvalidEnvironmentIdError(messages.environmentNotFound());
       await expect(client.waitForInitialization()).rejects.toThrow(err);
     });
   });

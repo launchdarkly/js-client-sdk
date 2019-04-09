@@ -1,7 +1,7 @@
 import * as base64 from 'base64-js';
 
 import * as stubPlatform from './stubPlatform';
-import { makeDefaultServer } from './testUtils';
+import { errorResponse, makeDefaultServer } from './testUtils';
 import EventSender from '../EventSender';
 import * as utils from '../utils';
 
@@ -25,9 +25,8 @@ describe('EventSender', () => {
   }
 
   function fakeImageCreator() {
-    const ret = function(url, onDone) {
+    const ret = function(url) {
       ret.urls.push(url);
-      ret.onDone = onDone;
     };
     ret.urls = [];
     return ret;
@@ -53,21 +52,21 @@ describe('EventSender', () => {
   }
 
   describe('using image endpoint when CORS is not available', () => {
-    it('should encode events in a single chunk if they fit', () => {
+    it('should encode events in a single chunk if they fit', async () => {
       const imageCreator = fakeImageCreator();
       const sender = EventSender(platformWithoutCors, eventsUrl, envId, imageCreator);
       const event1 = { kind: 'identify', key: 'userKey1' };
       const event2 = { kind: 'identify', key: 'userKey2' };
       const events = [event1, event2];
 
-      sender.sendEvents(events, false);
+      await sender.sendEvents(events, false);
 
       const urls = imageCreator.urls;
       expect(urls.length).toEqual(1);
       expect(decodeOutputFromUrl(urls[0])).toEqual(events);
     });
 
-    it('should send events in multiple chunks if necessary', () => {
+    it('should send events in multiple chunks if necessary', async () => {
       const imageCreator = fakeImageCreator();
       const sender = EventSender(platformWithoutCors, eventsUrl, envId, imageCreator);
       const events = [];
@@ -75,7 +74,7 @@ describe('EventSender', () => {
         events.push({ kind: 'identify', key: 'thisIsALongUserKey' + i });
       }
 
-      sender.sendEvents(events, false);
+      await sender.sendEvents(events, false);
 
       const urls = imageCreator.urls;
       expect(urls.length).toEqual(3);
@@ -83,104 +82,105 @@ describe('EventSender', () => {
       expect(decodeOutputFromUrl(urls[1])).toEqual(events.slice(31, 62));
       expect(decodeOutputFromUrl(urls[2])).toEqual(events.slice(62, 80));
     });
-
-    it('should set a completion handler', () => {
-      const imageCreator = fakeImageCreator();
-      const sender = EventSender(platformWithoutCors, eventsUrl, envId, imageCreator);
-      const event1 = { kind: 'identify', key: 'userKey1' };
-
-      sender.sendEvents([event1], false);
-
-      expect(imageCreator.onDone).toBeDefined();
-    });
   });
 
   describe('using POST when CORS is available', () => {
-    it('should send asynchronously', () => {
+    it('should send asynchronously', async () => {
       const sender = EventSender(platform, eventsUrl, envId);
       const event = { kind: 'identify', key: 'userKey' };
-      sender.sendEvents([event], false);
+      await sender.sendEvents([event], false);
       expect(server.requests.length).toEqual(1);
       expect(server.requests[0].async).toEqual(true);
       expect(JSON.parse(server.requests[0].requestBody)).toEqual([event]);
     });
 
-    it('should send synchronously', () => {
+    it('should send synchronously', async () => {
       const sender = EventSender(platform, eventsUrl, envId);
       const event = { kind: 'identify', key: 'userKey' };
-      sender.sendEvents([event], true);
+      await sender.sendEvents([event], true);
       expect(lastRequest().async).toEqual(false);
     });
 
-    it('should send all events in request body', () => {
+    it('should send all events in request body', async () => {
       const sender = EventSender(platform, eventsUrl, envId);
       const events = [];
       for (let i = 0; i < 80; i++) {
         events.push({ kind: 'identify', key: 'thisIsALongUserKey' + i });
       }
-      sender.sendEvents(events, false);
+      await sender.sendEvents(events, false);
       const r = lastRequest();
       expect(r.url).toEqual(eventsUrl + '/events/bulk/' + envId);
       expect(r.method).toEqual('POST');
       expect(JSON.parse(r.requestBody)).toEqual(events);
     });
 
-    it('should send custom user-agent header', () => {
+    it('should send custom user-agent header', async () => {
       const sender = EventSender(platform, eventsUrl, envId);
       const event = { kind: 'identify', key: 'userKey' };
-      sender.sendEvents([event], false);
+      await sender.sendEvents([event], false);
       expect(lastRequest().requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(utils.getLDUserAgentString(platform));
     });
 
     const retryableStatuses = [400, 408, 429, 500, 503];
     for (const i in retryableStatuses) {
       const status = retryableStatuses[i];
-      it('should retry on error ' + status, () => {
-        server.autoRespond = false;
+      it('should retry on error ' + status, async () => {
+        let n = 0;
+        server.respondWith(req => {
+          n++;
+          req.respond(n >= 2 ? 200 : status);
+        });
         const sender = EventSender(platform, eventsUrl, envId);
         const event = { kind: 'false', key: 'userKey' };
-        sender.sendEvents([event], false);
-        server.requests[0].respond(status);
+        await sender.sendEvents([event], false);
         expect(server.requests.length).toEqual(2);
         expect(JSON.parse(server.requests[1].requestBody)).toEqual([event]);
       });
     }
 
-    it('should not retry more than once', () => {
-      server.autoRespond = false;
+    it('should not retry more than once', async () => {
+      let n = 0;
+      server.respondWith(req => {
+        n++;
+        req.respond(n >= 3 ? 200 : 503);
+      });
       const sender = EventSender(platform, eventsUrl, envId);
       const event = { kind: 'false', key: 'userKey' };
-      sender.sendEvents([event], false);
-      server.requests[0].respond(503);
-      server.requests[1].respond(503);
+      await sender.sendEvents([event], false);
       expect(server.requests.length).toEqual(2);
     });
 
-    it('should not retry on error 401', () => {
-      server.autoRespond = false;
+    it('should not retry on error 401', async () => {
+      server.respondWith(errorResponse(401));
       const sender = EventSender(platform, eventsUrl, envId);
       const event = { kind: 'false', key: 'userKey' };
-      sender.sendEvents([event], false);
-      server.requests[0].respond(401);
+      await sender.sendEvents([event], false);
       expect(server.requests.length).toEqual(1);
     });
 
-    it('should retry on I/O error', () => {
-      server.autoRespond = false;
+    it('should retry on I/O error', async () => {
+      let n = 0;
+      server.respondWith(req => {
+        n++;
+        if (n >= 2) {
+          req.respond(200);
+        } else {
+          req.error();
+        }
+      });
       const sender = EventSender(platform, eventsUrl, envId);
       const event = { kind: 'false', key: 'userKey' };
-      sender.sendEvents([event], false);
-      server.requests[0].error();
+      await sender.sendEvents([event], false);
       expect(server.requests.length).toEqual(2);
       expect(JSON.parse(server.requests[1].requestBody)).toEqual([event]);
     });
   });
 
   describe('When HTTP requests are not available at all', () => {
-    it('should silently discard events', () => {
+    it('should silently discard events', async () => {
       const sender = EventSender(stubPlatform.withoutHttp(), eventsUrl, envId);
       const event = { kind: 'false', key: 'userKey' };
-      sender.sendEvents([event], false);
+      await sender.sendEvents([event], false);
       expect(server.requests.length).toEqual(0);
     });
   });

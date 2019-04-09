@@ -76,19 +76,21 @@ export default function GoalManager(clientVars, readyCallback) {
     }
   }
 
-  clientVars.requestor.fetchGoals((err, g) => {
-    if (err) {
+  clientVars.requestor
+    .fetchGoals()
+    .then(g => {
+      if (g && g.length > 0) {
+        goals = g;
+        goalTracker = GoalTracker(goals, sendGoalEvent);
+        watchLocation(locationWatcherInterval, refreshGoalTracker);
+      }
+    })
+    .catch(err => {
       clientVars.emitter.maybeReportError(
-        new common.errors.LDUnexpectedResponseError('Error fetching goals: ' + err.message ? err.message : err)
+        new common.errors.LDUnexpectedResponseError('Error fetching goals: ' + (err && err.message) ? err.message : err)
       );
-    }
-    if (g && g.length > 0) {
-      goals = g;
-      goalTracker = GoalTracker(goals, sendGoalEvent);
-      watchLocation(locationWatcherInterval, refreshGoalTracker);
-    }
-    readyCallback();
-  });
+    })
+    .finally(readyCallback);
 
   return ret;
 }

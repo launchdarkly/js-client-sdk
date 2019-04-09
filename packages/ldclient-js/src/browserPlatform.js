@@ -1,9 +1,11 @@
+import newHttpRequest from './httpRequest';
+
 export default function makeBrowserPlatform() {
   const ret = {};
 
   // XMLHttpRequest may not exist if we're running in a server-side rendering context
   if (window.XMLHttpRequest) {
-    ret.newHttpRequest = () => new window.XMLHttpRequest();
+    ret.httpRequest = newHttpRequest;
   }
 
   let hasCors;

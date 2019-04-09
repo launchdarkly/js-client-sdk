@@ -1,8 +1,90 @@
+import sinon from 'sinon';
+
 import browserPlatform from '../browserPlatform';
 
 describe('browserPlatform', () => {
   const platform = browserPlatform();
   const lsKeyPrefix = 'ldclient-js-test:';
+
+  describe('httpRequest()', () => {
+    // These tests verify that our HTTP abstraction is correctly translated into the XMLHttpRequest API,
+    // which will be intercepted by Sinon.
+
+    const url = 'http://example';
+
+    let server;
+
+    beforeEach(() => {
+      server = sinon.createFakeServer();
+    });
+
+    afterEach(() => {
+      server.restore();
+    });
+
+    it('sets request properties', () => {
+      const method = 'POST';
+      const headers = { a: '1', b: '2' };
+      const body = '{}';
+      platform.httpRequest(method, url, headers, body);
+
+      expect(server.requests.length).toEqual(1);
+      const req = server.requests[0];
+
+      expect(req.method).toEqual(method);
+      expect(req.url).toEqual(url);
+      expect(req.requestHeaders['a']).toEqual('1');
+      expect(req.requestHeaders['b']).toEqual('2');
+      expect(req.requestBody).toEqual(body);
+      expect(req.async).toEqual(true);
+    });
+
+    it('makes a synchronous request', () => {
+      const method = 'POST';
+      const url = 'http://example';
+      const body = '{}';
+      platform.httpRequest(method, url, {}, body, true);
+
+      expect(server.requests.length).toEqual(1);
+      const req = server.requests[0];
+
+      expect(req.async).toEqual(false);
+    });
+
+    it('resolves promise when response is received', async () => {
+      const requestInfo = platform.httpRequest('GET', url);
+
+      expect(server.requests.length).toEqual(1);
+      const req = server.requests[0];
+      req.respond(200, {}, 'hello');
+
+      const result = await requestInfo.promise;
+      expect(result.status).toEqual(200);
+      expect(result.body).toEqual('hello');
+    });
+
+    it('rejects promise if request gets a network error', async () => {
+      const requestInfo = platform.httpRequest('GET', url);
+
+      expect(server.requests.length).toEqual(1);
+      const req = server.requests[0];
+      req.error();
+
+      await expect(requestInfo.promise).rejects.toThrow();
+    });
+
+    it('allows request to be cancelled', () => {
+      const requestInfo = platform.httpRequest('GET', url);
+
+      expect(server.requests.length).toEqual(1);
+      expect(server.requests[0].aborted).toBeFalsy();
+
+      requestInfo.cancel();
+
+      expect(server.requests.length).toEqual(1);
+      expect(server.requests[0].aborted).toBe(true);
+    });
+  });
 
   describe('getCurrentUrl()', () => {
     it('returns value of window.location.href', () => {

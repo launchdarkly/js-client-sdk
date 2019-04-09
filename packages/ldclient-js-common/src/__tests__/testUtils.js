@@ -6,11 +6,6 @@ export function asyncSleep(delay) {
   });
 }
 
-// asyncifyNodeStyle(callback => doSomething(..., callback)) returns a promise that will resolve or reject
-export function asyncifyNodeStyle(f) {
-  return new Promise((resolve, reject) => f((err, value) => (err ? reject(err) : resolve(value))));
-}
-
 export function errorResponse(status) {
   return [status, {}, ''];
 }
