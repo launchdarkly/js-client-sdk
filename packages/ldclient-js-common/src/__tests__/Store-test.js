@@ -84,9 +84,7 @@ describe('Store', () => {
     const platform = stubPlatform.defaults();
     const store = Store(platform.localStorage, env, '', ident, platform.testing.logger);
     const myError = new Error('localstorage getitem error');
-    jest.spyOn(platform.localStorage, 'get').mockImplementation((key, callback) => {
-      callback(myError);
-    });
+    jest.spyOn(platform.localStorage, 'get').mockImplementation(() => Promise.reject(myError));
 
     await expect(store.loadFlags()).rejects.toThrow(myError);
     expect(platform.testing.logger.output.warn).toEqual([messages.localStorageUnavailable()]);
@@ -96,9 +94,7 @@ describe('Store', () => {
     const platform = stubPlatform.defaults();
     const store = Store(platform.localStorage, env, '', ident, platform.testing.logger);
     const myError = new Error('localstorage setitem error');
-    jest.spyOn(platform.localStorage, 'set').mockImplementation((key, value, callback) => {
-      callback(myError);
-    });
+    jest.spyOn(platform.localStorage, 'set').mockImplementation(() => Promise.reject(myError));
 
     await expect(store.saveFlags({ foo: {} })).rejects.toThrow(myError);
     expect(platform.testing.logger.output.warn).toEqual([messages.localStorageUnavailable()]);

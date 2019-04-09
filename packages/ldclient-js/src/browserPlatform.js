@@ -34,29 +34,20 @@ export default function makeBrowserPlatform() {
   try {
     if (window.localStorage) {
       ret.localStorage = {
-        get: (key, callback) => {
-          try {
-            callback(null, window.localStorage.getItem(key));
-          } catch (ex) {
-            callback(ex);
-          }
-        },
-        set: (key, value, callback) => {
-          try {
+        get: key =>
+          new Promise(resolve => {
+            resolve(window.localStorage.getItem(key));
+          }),
+        set: (key, value) =>
+          new Promise(resolve => {
             window.localStorage.setItem(key, value);
-            callback(null);
-          } catch (ex) {
-            callback(ex);
-          }
-        },
-        clear: (key, callback) => {
-          try {
+            resolve();
+          }),
+        clear: key =>
+          new Promise(resolve => {
             window.localStorage.removeItem(key);
-            callback(null);
-          } catch (ex) {
-            callback(ex);
-          }
-        },
+            resolve();
+          }),
       };
     }
   } catch (e) {

@@ -44,19 +44,20 @@ export function defaults() {
     },
     eventSourceIsActive: es => es.readyState === EventSource.OPEN || es.readyState === EventSource.CONNECTING,
     localStorage: {
-      get: (key, callback) => {
-        setTimeout(() => {
-          callback(null, localStore[key]);
-        }, 0);
-      },
-      set: (key, value, callback) => {
-        localStore[key] = value;
-        setTimeout(() => callback(null), 0);
-      },
-      clear: (key, callback) => {
-        delete localStore[key];
-        setTimeout(() => callback(null), 0);
-      },
+      get: key =>
+        new Promise(resolve => {
+          resolve(localStore[key]);
+        }),
+      set: (key, value) =>
+        new Promise(resolve => {
+          localStore[key] = value;
+          resolve();
+        }),
+      clear: key =>
+        new Promise(resolve => {
+          delete localStore[key];
+          resolve();
+        }),
     },
     userAgent: 'stubClient',
 

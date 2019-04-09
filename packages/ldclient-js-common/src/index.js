@@ -183,7 +183,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     const clearFirst = useLocalStorage && store ? store.clearFlags() : Promise.resolve();
     return utils.wrapPromiseCallback(
       clearFirst
-        .then(() => userValidator.validateUserPromise(user))
+        .then(() => userValidator.validateUser(user))
         .then(realUser => ident.setUser(realUser))
         .then(() => requestor.fetchFlagSettings(ident.getUser(), hash))
         .then(requestedFlags => {
@@ -512,37 +512,28 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     }
     stateProvider.on('update', updateFromStateProvider);
   } else {
-    finishInit(err => {
-      if (err) {
-        utils.onNextTick(() => emitter.maybeReportError(err));
-      }
-    });
+    finishInit().catch(err => emitter.maybeReportError(err));
   }
 
-  function finishInit(cb) {
+  function finishInit() {
     if (!env) {
-      cb(new errors.LDInvalidEnvironmentIdError(messages.environmentNotSpecified()));
-      return;
+      return Promise.reject(new errors.LDInvalidEnvironmentIdError(messages.environmentNotSpecified()));
     }
-    userValidator.validateUser(user, (err, realUser) => {
-      if (err) {
-        cb(err);
-        return;
-      }
+    return userValidator.validateUser(user).then(realUser => {
       ident.setUser(realUser);
       if (typeof options.bootstrap === 'object') {
         flags = readFlagsFromBootstrap(options.bootstrap);
-        utils.onNextTick(signalSuccessfulInit);
+        return signalSuccessfulInit();
       } else if (useLocalStorage) {
-        finishInitWithLocalStorage();
+        return finishInitWithLocalStorage();
       } else {
-        finishInitWithPolling();
+        return finishInitWithPolling();
       }
     });
   }
 
   function finishInitWithLocalStorage() {
-    store
+    return store
       .loadFlags()
       .catch(() => null) // treat an error the same as if no flags were available
       .then(storedFlags => {
@@ -572,7 +563,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   }
 
   function finishInitWithPolling() {
-    requestor
+    return requestor
       .fetchFlagSettings(ident.getUser(), hash)
       .then(requestedFlags => {
         flags = requestedFlags || {};

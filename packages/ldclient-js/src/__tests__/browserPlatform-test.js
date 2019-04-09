@@ -131,39 +131,24 @@ describe('browserPlatform', () => {
     // mock implementation of window.localStorage, but these tests still verify that our async
     // wrapper code in browserPlatform.js is passing the parameters through correctly.
 
-    it('returns null or undefined for missing value', done => {
-      platform.localStorage.get(lsKeyPrefix + 'unused-key', (err, value) => {
-        expect(err).not.toBe(expect.anything());
-        expect(value).not.toBe(expect.anything());
-        done();
-      });
+    it('returns null or undefined for missing value', async () => {
+      const value = await platform.localStorage.get(lsKeyPrefix + 'unused-key');
+      expect(value).not.toBe(expect.anything());
     });
 
-    it('can get and set value', done => {
+    it('can get and set value', async () => {
       const key = lsKeyPrefix + 'get-set-key';
-      platform.localStorage.set(key, 'hello', err => {
-        expect(err).not.toBe(expect.anything());
-        platform.localStorage.get(key, (err, value) => {
-          expect(err).not.toBe(expect.anything());
-          expect(value).toEqual('hello');
-          done();
-        });
-      });
+      await platform.localStorage.set(key, 'hello');
+      const value = await platform.localStorage.get(key);
+      expect(value).toEqual('hello');
     });
 
-    it('can delete value', done => {
+    it('can delete value', async () => {
       const key = lsKeyPrefix + 'delete-key';
-      platform.localStorage.set(key, 'hello', err => {
-        expect(err).not.toBe(expect.anything());
-        platform.localStorage.clear(key, err => {
-          expect(err).not.toBe(expect.anything());
-          platform.localStorage.get(key, (err, value) => {
-            expect(err).not.toBe(expect.anything());
-            expect(value).not.toBe(expect.anything());
-            done();
-          });
-        });
-      });
+      await platform.localStorage.set(key, 'hello');
+      await platform.localStorage.clear(key);
+      const value = platform.localStorage.get(key);
+      expect(value).not.toBe(expect.anything());
     });
 
     it('reports local storage as being unavailable if window.localStorage is missing', () => {

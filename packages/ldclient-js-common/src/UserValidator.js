@@ -13,72 +13,53 @@ import * as utils from './utils';
 const ldUserIdKey = 'ld:$anonUserId';
 
 export default function UserValidator(localStorageProvider, logger) {
-  function getCachedUserId(cb) {
+  function getCachedUserId() {
     if (localStorageProvider) {
-      localStorageProvider.get(ldUserIdKey, (err, data) => {
-        cb(err ? null : data);
-        // Not logging errors here, because if local storage fails for the get, it will presumably fail for the set,
-        // so we will end up logging an error in setCachedUserId anyway.
-      });
-    } else {
-      cb(null);
+      return localStorageProvider.get(ldUserIdKey).catch(() => null);
+      // Not logging errors here, because if local storage fails for the get, it will presumably fail for the set,
+      // so we will end up logging an error in setCachedUserId anyway.
     }
+    return Promise.resolve(null);
   }
 
-  function setCachedUserId(id, cb) {
+  function setCachedUserId(id) {
     if (localStorageProvider) {
-      localStorageProvider.set(ldUserIdKey, id, err => {
-        if (err) {
-          logger.warn(messages.localStorageUnavailableForUserId());
-        }
-        cb();
+      return localStorageProvider.set(ldUserIdKey, id).catch(() => {
+        logger.warn(messages.localStorageUnavailableForUserId());
       });
-    } else {
-      cb();
     }
+    return Promise.resolve();
   }
 
   const ret = {};
 
-  // Validates the user, returning (err, validatedUser) via a callback. If we do not need to access
-  // local storage (for a generated user key) then the callback will be executed immediately; if we
-  // do need to access local storage, callback execution will be deferred.
-  ret.validateUser = (user, cb) => {
+  // Validates the user, returning a Promise that resolves to the validated user, or rejects if there is an error.
+  ret.validateUser = user => {
     if (!user) {
-      cb(new errors.LDInvalidUserError(messages.userNotSpecified()));
-      return;
+      return Promise.reject(new errors.LDInvalidUserError(messages.userNotSpecified()));
     }
 
     const userOut = utils.clone(user);
     if (userOut.key !== null && userOut.key !== undefined) {
       userOut.key = userOut.key.toString();
-      cb(null, userOut);
+      return Promise.resolve(userOut);
       return;
     }
     if (userOut.anonymous) {
-      getCachedUserId(cachedId => {
+      return getCachedUserId().then(cachedId => {
         if (cachedId) {
           userOut.key = cachedId;
-          cb(null, userOut);
+          return userOut;
         } else {
           const id = uuidv1();
           userOut.key = id;
-          setCachedUserId(id, () => {
-            cb(null, userOut);
-          });
+          return setCachedUserId(id).then(() => userOut);
         }
       });
     } else {
-      cb(new errors.LDInvalidUserError(messages.invalidUser()));
+      return Promise.reject(new errors.LDInvalidUserError(messages.invalidUser()));
     }
   };
-
-  // Validates the user, returning a Promise that will resolve to the validated user or be rejected
-  // with an error. As with all Promise callbacks, execution is always deferred, never immediate.
-  ret.validateUserPromise = user =>
-    new Promise((resolve, reject) =>
-      ret.validateUser(user, (err, realUser) => (err ? reject(err) : resolve(realUser)))
-    );
 
   return ret;
 }

@@ -109,14 +109,18 @@ describe('LDClient', () => {
       expect(client.variation('flag-key', 1)).toEqual(1);
     });
 
-    it('fetches flag settings if bootstrap is not provided (without reasons)', () => {
-      platform.testing.makeClient(envName, user);
+    it('fetches flag settings if bootstrap is not provided (without reasons)', async () => {
+      const client = platform.testing.makeClient(envName, user);
+      await client.waitForInitialization();
+
       expect(/sdk\/eval/.test(server.requests[0].url)).toEqual(true);
       expect(/withReasons=true/.test(server.requests[0].url)).toEqual(false);
     });
 
-    it('fetches flag settings if bootstrap is not provided (with reasons)', () => {
-      platform.testing.makeClient(envName, user, { evaluationReasons: true });
+    it('fetches flag settings if bootstrap is not provided (with reasons)', async () => {
+      const client = platform.testing.makeClient(envName, user, { evaluationReasons: true });
+      await client.waitForInitialization();
+
       expect(/sdk\/eval/.test(server.requests[0].url)).toEqual(true);
       expect(/withReasons=true/.test(server.requests[0].url)).toEqual(true);
     });
@@ -189,25 +193,20 @@ describe('LDClient', () => {
       expect(platform.testing.logger.output.warn).toEqual([messages.eventWithoutUser()]);
     });
 
-    function verifyCustomHeader(sendLDHeaders, shouldGetHeaders) {
-      platform.testing.makeClient(envName, user, { sendLDHeaders: sendLDHeaders });
+    async function verifyCustomHeader(sendLDHeaders, shouldGetHeaders) {
+      const client = platform.testing.makeClient(envName, user, { sendLDHeaders: sendLDHeaders });
+      await client.waitForInitialization();
       const request = server.requests[0];
       expect(request.requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(
         shouldGetHeaders ? utils.getLDUserAgentString(platform) : undefined
       );
     }
 
-    it('sends custom header by default', () => {
-      verifyCustomHeader(undefined, true);
-    });
+    it('sends custom header by default', () => verifyCustomHeader(undefined, true));
 
-    it('sends custom header if sendLDHeaders is true', () => {
-      verifyCustomHeader(true, true);
-    });
+    it('sends custom header if sendLDHeaders is true', () => verifyCustomHeader(true, true));
 
-    it('does not send custom header if sendLDHeaders is false', () => {
-      verifyCustomHeader(undefined, true);
-    });
+    it('does not send custom header if sendLDHeaders is false', () => verifyCustomHeader(undefined, true));
 
     it('sanitizes the user', async () => {
       const client = platform.testing.makeClient(envName, numericUser);
