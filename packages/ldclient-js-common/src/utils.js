@@ -155,10 +155,6 @@ export function getLDHeaders(platform) {
   };
 }
 
-export function addLDHeaders(xhr, platform) {
-  xhr.setRequestHeader('X-LaunchDarkly-User-Agent', getLDUserAgentString(platform));
-}
-
 export function extend(...objects) {
   return objects.reduce((acc, obj) => ({ ...acc, ...obj }), {});
 }
