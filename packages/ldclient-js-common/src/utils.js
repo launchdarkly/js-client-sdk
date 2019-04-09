@@ -151,7 +151,7 @@ export function getLDUserAgentString(platform) {
 
 export function getLDHeaders(platform) {
   return {
-    'X-LaunchDarkly-User-Agent': getLDUserAgentString(platform)
+    'X-LaunchDarkly-User-Agent': getLDUserAgentString(platform),
   };
 }
 
