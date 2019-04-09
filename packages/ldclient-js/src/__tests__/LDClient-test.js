@@ -40,7 +40,7 @@ describe('LDClient', () => {
       const client = LDClient.initialize(envName, user, { bootstrap: {} });
       await client.waitForInitialization();
       expect(server.requests.length).toEqual(1);
-      expect(/sdk\/eval/.test(server.requests[0].url)).toEqual(false); // it's the goals request
+      expect(server.requests[0].url).toMatch(/sdk\/goals/);
     });
 
     it('sends correct User-Agent in request', async () => {
@@ -57,20 +57,27 @@ describe('LDClient', () => {
       const client = LDClient.initialize(envName, user, {});
       await client.waitForInitialization();
       expect(server.requests.length).toEqual(2);
-      expect(/sdk\/goals/.test(server.requests[1].url)).toEqual(true);
+      // The following line uses arrayContaining because we can't be sure whether the goals request will
+      // be made before or after the flags request.
+      expect(server.requests).toEqual(
+        expect.arrayContaining([expect.objectContaining({ url: expect.stringMatching(/sdk\/goals/) })])
+      );
     });
 
     it('fetches goals if fetchGoals is true', async () => {
       const client = LDClient.initialize(envName, user, { fetchGoals: true });
       await client.waitForInitialization();
       expect(server.requests.length).toEqual(2);
-      expect(/sdk\/goals/.test(server.requests[1].url)).toEqual(true);
+      expect(server.requests).toEqual(
+        expect.arrayContaining([expect.objectContaining({ url: expect.stringMatching(/sdk\/goals/) })])
+      );
     });
 
     it('does not fetch goals if fetchGoals is false', async () => {
       const client = LDClient.initialize(envName, user, { fetchGoals: false });
       await client.waitForInitialization();
       expect(server.requests.length).toEqual(1);
+      expect(server.requests[0].url).toMatch(/sdk\/eval/);
     });
 
     it('should resolve waitUntilGoalsReady when goals are loaded', done => {
