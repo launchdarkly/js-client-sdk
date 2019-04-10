@@ -40,8 +40,9 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   let flags = {};
   let useLocalStorage;
   let streamActive;
-  let streamForcedState;
+  let streamForcedState = options.streaming;
   let subscribedToChangeEvents;
+  let inited = false;
   let firstEvent = true;
 
   // The "stateProvider" object is used in the Electron SDK, to allow one client instance to take partial
@@ -429,8 +430,8 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   function on(event, handler, context) {
     if (isChangeEventKey(event)) {
       subscribedToChangeEvents = true;
-      if (!streamActive && streamForcedState === undefined) {
-        connectStream();
+      if (inited) {
+        updateStreamingState();
       }
       emitter.on(event, handler, context);
     } else {
@@ -460,12 +461,16 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     const newState = state === null ? undefined : state;
     if (newState !== streamForcedState) {
       streamForcedState = newState;
-      const shouldBeStreaming = streamForcedState || (subscribedToChangeEvents && streamForcedState === undefined);
-      if (shouldBeStreaming && !streamActive) {
-        connectStream();
-      } else if (!shouldBeStreaming && streamActive) {
-        disconnectStream();
-      }
+      updateStreamingState();
+    }
+  }
+
+  function updateStreamingState() {
+    const shouldBeStreaming = streamForcedState || (subscribedToChangeEvents && streamForcedState === undefined);
+    if (shouldBeStreaming && !streamActive) {
+      connectStream();
+    } else if (!shouldBeStreaming && streamActive) {
+      disconnectStream();
     }
   }
 
@@ -594,9 +599,8 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
 
   function signalSuccessfulInit() {
     logger.info(messages.clientInitialized());
-    if (options.streaming !== undefined) {
-      setStreaming(options.streaming);
-    }
+    inited = true;
+    updateStreamingState();
     emitter.emit(readyEvent);
     emitter.emit(successEvent); // allows initPromise to distinguish between success and failure
   }
