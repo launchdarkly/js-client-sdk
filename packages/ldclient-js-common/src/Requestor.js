@@ -58,7 +58,7 @@ export default function Requestor(platform, options, environment, logger) {
           return Promise.reject(getResponseError(result));
         }
       },
-      () => Promise.reject(new errors.LDFlagFetchError(messages.networkError()))
+      e => Promise.reject(new errors.LDFlagFetchError(messages.networkError(e)))
     );
     coalescer.addPromise(p, () => {
       // this will be called if another request for the same endpoint supersedes this one

@@ -195,7 +195,7 @@ describe('Requestor', () => {
 
     server.respondWith(req => req.error());
 
-    const err = new errors.LDFlagFetchError(messages.networkError());
+    const err = new errors.LDFlagFetchError(messages.networkError(new Error()));
     await expect(requestor.fetchFlagSettings(user)).rejects.toThrow(err);
   });
 

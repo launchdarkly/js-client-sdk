@@ -27,7 +27,7 @@ export const localStorageUnavailableForUserId = function() {
   return 'localStorage is unavailable, so anonymous user ID cannot be cached';
 };
 
-export const networkError = () => 'network error';
+export const networkError = e => 'network error' + (e ? ' (' + e + ')' : '');
 
 export const unknownCustomEventKey = function(key) {
   return 'Custom event "' + key + '" does not exist';
