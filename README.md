@@ -118,7 +118,7 @@ var user = { key: 'user.example.com' };
 var client = LDClient.initialize('YOUR_CLIENT_SIDE_ID', user);
 ```
 
-The user object can contain any of the properties described [here](https://docs.launchdarkly.com/docs/targeting-users). The SDK always has a single current user; you can change it after initialization (see "Changing users").
+The user object can contain any of the properties described [here](https://docs.launchdarkly.com/docs/targeting-users). The SDK always has a single current user; you can change it after initialization (see "Changing users"). If you want the SDK to generate a unique key for the user, omit the `key` property and set the `anonymous` property to `true`.
 
 The client is initialized asynchronously, so if you want to determine when the client is ready to evaluate feature flags, use the `ready` event, or the Promise-based method `waitForInitialization()`:
 

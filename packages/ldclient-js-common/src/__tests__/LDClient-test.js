@@ -1,7 +1,16 @@
-import sinon from 'sinon';
 import semverCompare from 'semver-compare';
 
 import * as stubPlatform from './stubPlatform';
+import {
+  errorResponse,
+  jsonResponse,
+  makeBootstrap,
+  makeDefaultServer,
+  numericUser,
+  promiseListener,
+  stringifiedNumericUser,
+} from './testUtils';
+
 import * as LDClient from '../index';
 import * as messages from '../messages';
 import * as utils from '../utils';
@@ -9,213 +18,179 @@ import * as utils from '../utils';
 describe('LDClient', () => {
   const envName = 'UNKNOWN_ENVIRONMENT_ID';
   const user = { key: 'user' };
-  let xhr;
-  let requests = [];
   let platform;
+  let server;
 
   beforeEach(() => {
-    xhr = sinon.useFakeXMLHttpRequest();
-    xhr.onCreate = function(req) {
-      requests.push(req);
-    };
-
+    server = makeDefaultServer();
     platform = stubPlatform.defaults();
   });
 
   afterEach(() => {
-    requests = [];
-    xhr.restore();
+    server.restore();
   });
-
-  function getLastRequest() {
-    return requests[requests.length - 1];
-  }
 
   it('should exist', () => {
     expect(LDClient).toBeDefined();
   });
 
   describe('initialization', () => {
-    it('should trigger the ready event', done => {
-      const handleReady = jest.fn();
-      const client = platform.testing.makeClient(envName, user, {
-        bootstrap: {},
-      });
+    it('should trigger the ready event', async () => {
+      const client = platform.testing.makeClient(envName, user);
+      const gotReady = promiseListener();
+      client.on('ready', gotReady.callback);
 
-      client.on('ready', handleReady);
-
-      setTimeout(() => {
-        expect(handleReady).toHaveBeenCalled();
-        expect(platform.testing.logger.output.info).toEqual([messages.clientInitialized()]);
-        done();
-      }, 0);
+      await gotReady;
+      expect(platform.testing.logger.output.info).toEqual([messages.clientInitialized()]);
     });
 
-    it('should trigger the initialized event', done => {
-      const handleReady = jest.fn();
-      const client = platform.testing.makeClient(envName, user, {
-        bootstrap: {},
-      });
+    it('should trigger the initialized event', async () => {
+      const client = platform.testing.makeClient(envName, user);
+      const gotInited = promiseListener();
+      client.on('initialized', gotInited.callback);
 
-      client.on('initialized', handleReady);
-
-      setTimeout(() => {
-        expect(handleReady).toHaveBeenCalled();
-        done();
-      }, 0);
+      await gotInited;
     });
 
-    it('should emit an error when an invalid samplingInterval is specified', done => {
+    it('should emit an error when an invalid samplingInterval is specified', async () => {
       const client = platform.testing.makeClient(envName, user, {
-        bootstrap: {},
         samplingInterval: 'totally not a number',
       });
+      const gotError = promiseListener();
+      client.on('error', gotError.callback);
 
-      client.on('error', err => {
-        expect(err.message).toEqual('Invalid sampling interval configured. Sampling interval must be an integer >= 0.');
-        done();
-      });
+      const err = await gotError;
+      expect(err.message).toEqual('Invalid sampling interval configured. Sampling interval must be an integer >= 0.');
     });
 
-    it('should emit an error when initialize is called without an environment key', done => {
-      const client = platform.testing.makeClient('', user, {
-        bootstrap: {},
-      });
-      client.on('error', err => {
-        expect(err.message).toEqual(messages.environmentNotSpecified());
-        done();
-      });
+    it('should emit an error when initialize is called without an environment key', async () => {
+      const client = platform.testing.makeClient('', user);
+      const gotError = promiseListener();
+      client.on('error', gotError.callback);
+
+      const err = await gotError;
+      expect(err.message).toEqual(messages.environmentNotSpecified());
     });
 
-    it('should emit an error when an invalid environment key is specified', done => {
+    it('should emit an error when an invalid environment key is specified', async () => {
+      server.respondWith(errorResponse(404));
+
       const client = platform.testing.makeClient('abc', user);
-      client.on('error', err => {
-        expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
-        done();
-      });
-      client.waitForInitialization().catch(() => {}); // jest doesn't like unhandled rejections
-      requests[0].respond(404);
+      const gotError = promiseListener();
+      client.on('error', gotError.callback);
+
+      await expect(client.waitForInitialization()).rejects.toThrow();
+
+      const err = await gotError;
+      expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
     });
 
-    it('should emit a failure event when an invalid environment key is specified', done => {
+    it('should emit a failure event when an invalid environment key is specified', async () => {
+      server.respondWith(errorResponse(404));
+
       const client = platform.testing.makeClient('abc', user);
-      client.on('failed', err => {
-        expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
-        done();
-      });
-      client.waitForInitialization().catch(() => {});
-      requests[0].respond(404);
+      const gotFailed = promiseListener();
+      client.on('failed', gotFailed.callback);
+
+      await expect(client.waitForInitialization()).rejects.toThrow();
+
+      const err = await gotFailed;
+      expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
     });
 
-    it('returns default values when an invalid environment key is specified', done => {
+    it('returns default values when an invalid environment key is specified', async () => {
+      server.respondWith(errorResponse(404));
+
       const client = platform.testing.makeClient('abc', user);
-      client.on('error', () => {
-        expect(client.variation('flag-key', 1)).toEqual(1);
-        done();
-      });
-      client.waitForInitialization().catch(() => {});
-      requests[0].respond(404);
+
+      await expect(client.waitForInitialization()).rejects.toThrow();
+
+      expect(client.variation('flag-key', 1)).toEqual(1);
     });
 
     it('fetches flag settings if bootstrap is not provided (without reasons)', () => {
-      platform.testing.makeClient(envName, user, {});
-      expect(/sdk\/eval/.test(requests[0].url)).toEqual(true);
-      expect(/withReasons=true/.test(requests[0].url)).toEqual(false);
+      platform.testing.makeClient(envName, user);
+      expect(/sdk\/eval/.test(server.requests[0].url)).toEqual(true);
+      expect(/withReasons=true/.test(server.requests[0].url)).toEqual(false);
     });
 
     it('fetches flag settings if bootstrap is not provided (with reasons)', () => {
       platform.testing.makeClient(envName, user, { evaluationReasons: true });
-      expect(/sdk\/eval/.test(requests[0].url)).toEqual(true);
-      expect(/withReasons=true/.test(requests[0].url)).toEqual(true);
+      expect(/sdk\/eval/.test(server.requests[0].url)).toEqual(true);
+      expect(/withReasons=true/.test(server.requests[0].url)).toEqual(true);
     });
 
-    it('should not fetch flag settings if bootstrap is provided', () => {
-      platform.testing.makeClient(envName, user, {
-        bootstrap: {},
-      });
-      expect(requests.length).toEqual(0);
+    it('should not fetch flag settings if bootstrap is provided', async () => {
+      const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
+      await client.waitForInitialization();
+
+      expect(server.requests.length).toEqual(0);
     });
 
-    it('logs warning when bootstrap object uses old format', () => {
-      platform.testing.makeClient(envName, user, { bootstrap: { foo: 'bar' } });
+    it('logs warning when bootstrap object uses old format', async () => {
+      const client = platform.testing.makeClient(envName, user, { bootstrap: { foo: 'bar' } });
+      await client.waitForInitialization();
 
       expect(platform.testing.logger.output.warn).toEqual([messages.bootstrapOldFormat()]);
     });
 
-    it('does not log warning when bootstrap object uses new format', () => {
-      platform.testing.makeClient(envName, user, {
-        bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1 } } },
-      });
+    it('does not log warning when bootstrap object uses new format', async () => {
+      const initData = makeBootstrap({ foo: { value: 'bar', version: 1 } });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: initData });
+      await client.waitForInitialization();
 
       expect(platform.testing.logger.output.warn).toEqual([]);
+      expect(client.variation('foo')).toEqual('bar');
     });
 
     it('should contain package version', () => {
-      // Arrange
       const version = LDClient.version;
-
-      // Act: all client bundles above 1.0.7 should contain package version
-      // https://github.com/substack/semver-compare
+      // All client bundles above 1.0.7 should contain package version
       const result = semverCompare(version, '1.0.6');
-
-      // Assert
       expect(result).toEqual(1);
     });
 
-    it('should not warn when tracking a custom event', done => {
-      const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
+    it('should not warn when tracking a custom event', async () => {
+      const client = platform.testing.makeClient(envName, user);
+      await client.waitForInitialization();
 
-      client.on('ready', () => {
-        client.track('known');
-        expect(platform.testing.logger.output.warn).toEqual([]);
-        done();
+      client.track('known');
+      expect(platform.testing.logger.output.warn).toEqual([]);
+    });
+
+    it('should emit an error when tracking a non-string custom event', async () => {
+      const client = platform.testing.makeClient(envName, user);
+      await client.waitForInitialization();
+
+      const badCustomEventKeys = [123, [], {}, null, undefined];
+      badCustomEventKeys.forEach(key => {
+        platform.testing.logger.reset();
+        client.track(key);
+        expect(platform.testing.logger.output.error).toEqual([messages.unknownCustomEventKey(key)]);
       });
     });
 
-    it('should emit an error when tracking a non-string custom event', done => {
-      const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
-      client.on('ready', () => {
-        const badCustomEventKeys = [123, [], {}, null, undefined];
-        badCustomEventKeys.forEach(key => {
-          platform.testing.logger.reset();
-          client.track(key);
-          expect(platform.testing.logger.output.error).toEqual([messages.unknownCustomEventKey(key)]);
-        });
-        done();
-      });
-    });
+    it('should emit an error event if there was an error fetching flags', async () => {
+      server.respondWith(errorResponse(503));
 
-    it('should emit an error event if there was an error fetching flags', done => {
-      const server = sinon.fakeServer.create();
-      server.respondWith(req => {
-        req.respond(503);
-      });
+      const client = platform.testing.makeClient(envName, user);
 
-      const client = platform.testing.makeClient(envName, user, {});
+      const gotError = promiseListener();
+      client.on('error', gotError.callback);
 
-      const handleError = jest.fn();
-      client.on('error', handleError);
-      server.respond();
-
-      client.waitForInitialization().catch(() => {});
-
-      setTimeout(() => {
-        expect(handleError).toHaveBeenCalled();
-        done();
-      }, 0);
+      await expect(client.waitForInitialization()).rejects.toThrow();
+      await gotError;
     });
 
     it('should warn about missing user on first event', () => {
-      const sandbox = sinon.createSandbox();
       const client = platform.testing.makeClient(envName, null);
       client.track('eventkey', null);
-      sandbox.restore();
       expect(platform.testing.logger.output.warn).toEqual([messages.eventWithoutUser()]);
     });
 
     function verifyCustomHeader(sendLDHeaders, shouldGetHeaders) {
       platform.testing.makeClient(envName, user, { sendLDHeaders: sendLDHeaders });
-      const request = requests[0];
+      const request = server.requests[0];
       expect(request.requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(
         shouldGetHeaders ? utils.getLDUserAgentString(platform) : undefined
       );
@@ -232,116 +207,120 @@ describe('LDClient', () => {
     it('does not send custom header if sendLDHeaders is false', () => {
       verifyCustomHeader(undefined, true);
     });
+
+    it('sanitizes the user', async () => {
+      const client = platform.testing.makeClient(envName, numericUser);
+      await client.waitForInitialization();
+      expect(client.getUser()).toEqual(stringifiedNumericUser);
+    });
+
+    it('provides a persistent key for an anonymous user with no key', async () => {
+      const anonUser = { anonymous: true, country: 'US' };
+      const client0 = platform.testing.makeClient(envName, anonUser);
+      await client0.waitForInitialization();
+
+      const newUser0 = client0.getUser();
+      expect(newUser0.key).toEqual(expect.anything());
+      expect(newUser0).toMatchObject(anonUser);
+
+      const client1 = platform.testing.makeClient(envName, anonUser);
+      await client1.waitForInitialization();
+
+      const newUser1 = client1.getUser();
+      expect(newUser1).toEqual(newUser0);
+    });
+
+    it('provides a key for an anonymous user with no key, even if local storage is unavailable', async () => {
+      platform.localStorage = null;
+
+      const anonUser = { anonymous: true, country: 'US' };
+      const client0 = platform.testing.makeClient(envName, anonUser);
+      await client0.waitForInitialization();
+
+      const newUser0 = client0.getUser();
+      expect(newUser0.key).toEqual(expect.anything());
+      expect(newUser0).toMatchObject(anonUser);
+
+      const client1 = platform.testing.makeClient(envName, anonUser);
+      await client1.waitForInitialization();
+
+      const newUser1 = client1.getUser();
+      expect(newUser1.key).toEqual(expect.anything());
+      // This key is probably different from newUser0.key, but that depends on execution time, so we can't count on it.
+      expect(newUser1).toMatchObject(anonUser);
+    });
   });
 
   describe('waitUntilReady', () => {
-    it('should resolve waitUntilReady promise when ready', done => {
-      const handleReady = jest.fn();
-      const client = platform.testing.makeClient(envName, user, {
-        bootstrap: {},
-      });
+    it('should resolve waitUntilReady promise when ready', async () => {
+      const client = platform.testing.makeClient(envName, user);
+      const gotReady = promiseListener();
+      client.on('ready', gotReady.callback);
 
-      client.waitUntilReady().then(handleReady);
-
-      client.on('ready', () => {
-        setTimeout(() => {
-          expect(handleReady).toHaveBeenCalled();
-          done();
-        }, 0);
-      });
-    });
-
-    it('should resolve waitUntilReady promise after ready event was already emitted', done => {
-      const handleInitialReady = jest.fn();
-      const handleReady = jest.fn();
-      const client = platform.testing.makeClient(envName, user, {
-        bootstrap: {},
-      });
-
-      client.on('ready', handleInitialReady);
-
-      setTimeout(() => {
-        client.waitUntilReady().then(handleReady);
-
-        setTimeout(() => {
-          expect(handleInitialReady).toHaveBeenCalled();
-          expect(handleReady).toHaveBeenCalled();
-          done();
-        }, 0);
-      }, 0);
+      await gotReady;
+      await client.waitUntilReady();
     });
   });
 
   describe('waitForInitialization', () => {
-    it('resolves promise on successful init', done => {
-      const handleReady = jest.fn();
-      const client = platform.testing.makeClient(envName, user, {
-        bootstrap: {},
-      });
+    it('resolves promise on successful init', async () => {
+      const client = platform.testing.makeClient(envName, user);
+      const gotReady = promiseListener();
+      client.on('ready', gotReady.callback);
 
-      client.waitForInitialization().then(handleReady);
-
-      client.on('ready', () => {
-        setTimeout(() => {
-          expect(handleReady).toHaveBeenCalled();
-          done();
-        }, 0);
-      });
+      await gotReady;
+      await client.waitForInitialization();
     });
 
-    it('rejects promise if flags request fails', done => {
-      const client = platform.testing.makeClient('abc', user, {});
-      client.waitForInitialization().catch(err => {
-        expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
-        done();
-      });
-      requests[0].respond(404);
+    it('rejects promise if flags request fails', async () => {
+      server.respondWith(errorResponse(404));
+
+      const client = platform.testing.makeClient('abc', user);
+      const err = new Error('Error fetching flag settings: ' + messages.environmentNotFound());
+      await expect(client.waitForInitialization()).rejects.toThrow(err);
     });
   });
 
   describe('variation', () => {
-    it('returns value for an existing flag - from bootstrap', () => {
+    it('returns value for an existing flag - from bootstrap', async () => {
       const client = platform.testing.makeClient(envName, user, {
-        bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1 } } },
+        bootstrap: makeBootstrap({ foo: { value: 'bar', version: 1 } }),
       });
+      await client.waitForInitialization();
 
       expect(client.variation('foo')).toEqual('bar');
     });
 
-    it('returns value for an existing flag - from bootstrap with old format', () => {
+    it('returns value for an existing flag - from bootstrap with old format', async () => {
       const client = platform.testing.makeClient(envName, user, {
         bootstrap: { foo: 'bar' },
       });
+      await client.waitForInitialization();
 
       expect(client.variation('foo')).toEqual('bar');
     });
 
-    it('returns value for an existing flag - from polling', done => {
-      const client = platform.testing.makeClient(envName, user, {});
-      client.on('ready', () => {
-        expect(client.variation('enable-foo', 1)).toEqual(true);
-        done();
-      });
-      requests[0].respond(
-        200,
-        { 'Content-Type': 'application/json' },
-        '{"enable-foo": {"value": true, "version": 1, "variation": 2}}'
-      );
+    it('returns value for an existing flag - from polling', async () => {
+      server.respondWith(jsonResponse({ 'enable-foo': { value: true, version: 1, variation: 2 } }));
+
+      const client = platform.testing.makeClient(envName, user);
+      await client.waitForInitialization();
+
+      expect(client.variation('enable-foo', 1)).toEqual(true);
     });
 
-    it('returns default value for flag that had null value', done => {
-      const client = platform.testing.makeClient(envName, user, {});
-      client.on('ready', () => {
-        expect(client.variation('foo', 'default')).toEqual('default');
-        done();
-      });
-      requests[0].respond(200, { 'Content-Type': 'application/json' }, '{"foo": {"value": null, "version": 1}}');
+    it('returns default value for flag that had null value', async () => {
+      server.respondWith(jsonResponse({ 'enable-foo': { value: null, version: 1 } }));
+
+      const client = platform.testing.makeClient(envName, user);
+      await client.waitForInitialization();
+
+      expect(client.variation('foo', 'default')).toEqual('default');
     });
 
-    it('returns default value for unknown flag', () => {
-      const client = platform.testing.makeClient(envName, user, {
-        bootstrap: { $flagsState: {} },
-      });
+    it('returns default value for unknown flag', async () => {
+      const client = platform.testing.makeClient(envName, user);
+      await client.waitForInitialization();
 
       expect(client.variation('foo', 'default')).toEqual('default');
     });
@@ -349,52 +328,50 @@ describe('LDClient', () => {
 
   describe('variationDetail', () => {
     const reason = { kind: 'FALLTHROUGH' };
-    it('returns details for an existing flag - from bootstrap', () => {
+    it('returns details for an existing flag - from bootstrap', async () => {
       const client = platform.testing.makeClient(envName, user, {
-        bootstrap: { foo: 'bar', $flagsState: { foo: { version: 1, variation: 2, reason: reason } } },
+        bootstrap: makeBootstrap({ foo: { value: 'bar', version: 1, variation: 2, reason: reason } }),
       });
+      await client.waitForInitialization();
 
       expect(client.variationDetail('foo')).toEqual({ value: 'bar', variationIndex: 2, reason: reason });
     });
 
-    it('returns details for an existing flag - from bootstrap with old format', () => {
+    it('returns details for an existing flag - from bootstrap with old format', async () => {
       const client = platform.testing.makeClient(envName, user, {
         bootstrap: { foo: 'bar' },
       });
+      await client.waitForInitialization();
 
       expect(client.variationDetail('foo')).toEqual({ value: 'bar', variationIndex: null, reason: null });
     });
 
-    it('returns details for an existing flag - from polling', done => {
-      const client = platform.testing.makeClient(envName, user, {});
-      client.on('ready', () => {
-        expect(client.variationDetail('foo', 'default')).toEqual({ value: 'bar', variationIndex: 2, reason: reason });
-        done();
-      });
-      requests[0].respond(
-        200,
-        { 'Content-Type': 'application/json' },
-        '{"foo": {"value": "bar", "version": 1, "variation": 2, "reason":' + JSON.stringify(reason) + '}}'
-      );
+    it('returns details for an existing flag - from polling', async () => {
+      const pollData = { foo: { value: 'bar', version: 1, variation: 2, reason: reason } };
+      server.respondWith(jsonResponse(pollData));
+
+      const client = platform.testing.makeClient(envName, user);
+      await client.waitForInitialization();
+
+      expect(client.variationDetail('foo', 'default')).toEqual({ value: 'bar', variationIndex: 2, reason: reason });
     });
 
-    it('returns default value for flag that had null value', done => {
-      const client = platform.testing.makeClient(envName, user, {});
-      client.on('ready', () => {
-        expect(client.variationDetail('foo', 'default')).toEqual({
-          value: 'default',
-          variationIndex: null,
-          reason: null,
-        });
-        done();
+    it('returns default value for flag that had null value', async () => {
+      server.respondWith(jsonResponse({ foo: { value: null, version: 1 } }));
+
+      const client = platform.testing.makeClient(envName, user);
+      await client.waitForInitialization();
+
+      expect(client.variationDetail('foo', 'default')).toEqual({
+        value: 'default',
+        variationIndex: null,
+        reason: null,
       });
-      requests[0].respond(200, { 'Content-Type': 'application/json' }, '{"foo": {"value": null, "version": 1}}');
     });
 
-    it('returns default value and error for unknown flag', () => {
-      const client = platform.testing.makeClient(envName, user, {
-        bootstrap: { $flagsState: {} },
-      });
+    it('returns default value and error for unknown flag', async () => {
+      const client = platform.testing.makeClient(envName, user);
+      await client.waitForInitialization();
 
       expect(client.variationDetail('foo', 'default')).toEqual({
         value: 'default',
@@ -405,18 +382,12 @@ describe('LDClient', () => {
   });
 
   describe('allFlags', () => {
-    it('returns flag values', done => {
-      const client = platform.testing.makeClient(envName, user, {});
-      client.on('ready', () => {
-        expect(client.allFlags()).toEqual({ key1: 'value1', key2: 'value2' });
-        done();
-      });
-      requests[0].respond(
-        200,
-        { 'Content-Type': 'application/json' },
-        '{"key1": {"value": "value1", "version": 1, "variation": 2},' +
-          '"key2": {"value": "value2", "version": 1, "variation": 2}}'
-      );
+    it('returns flag values', async () => {
+      const initData = makeBootstrap({ key1: { value: 'value1' }, key2: { value: 'value2' } });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: initData });
+      await client.waitForInitialization();
+
+      expect(client.allFlags()).toEqual({ key1: 'value1', key2: 'value2' });
     });
 
     it('returns empty map if client is not initialized', () => {
@@ -426,107 +397,82 @@ describe('LDClient', () => {
   });
 
   describe('identify', () => {
-    it('updates flag values when the user changes', done => {
+    it('updates flag values when the user changes', async () => {
       const user2 = { key: 'user2' };
-      const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
+      const client = platform.testing.makeClient(envName, user);
+      await client.waitForInitialization();
 
-      client.on('ready', () => {
-        client.identify(user2, null, () => {
-          expect(client.variation('enable-foo')).toEqual(true);
-          done();
-        });
+      server.respondWith(jsonResponse({ 'enable-foo': { value: true } }));
 
-        utils.onNextTick(() =>
-          getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": {"value": true}}')
-        );
-      });
+      await client.identify(user2);
+      expect(client.variation('enable-foo')).toEqual(true);
     });
 
-    it('yields map of flag values as the result of identify()', done => {
+    it('yields map of flag values as the result of identify()', async () => {
       const user2 = { key: 'user2' };
-      const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
+      const client = platform.testing.makeClient(envName, user);
+      await client.waitForInitialization();
 
-      client.on('ready', () => {
-        client.identify(user2, null).then(flagMap => {
-          expect(flagMap).toEqual({ 'enable-foo': true });
-          done();
-        });
+      server.respondWith(jsonResponse({ 'enable-foo': { value: true } }));
 
-        utils.onNextTick(() =>
-          getLastRequest().respond(200, { 'Content-Type': 'application/json' }, '{"enable-foo": {"value": true}}')
-        );
-      });
+      const flagMap = await client.identify(user2);
+      expect(flagMap).toEqual({ 'enable-foo': true });
     });
 
-    it('returns an error when identify is called with null user', done => {
-      const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
+    it('returns an error when identify is called with null user', async () => {
+      const client = platform.testing.makeClient(envName, user);
+      await client.waitForInitialization();
 
-      client.on('ready', () => {
-        client.identify(null).then(
-          () => {
-            throw Error('should not have succeeded');
-          },
-          () => {
-            done();
-          }
-        );
-      });
+      await expect(client.identify(null)).rejects.toThrow();
     });
 
-    it('returns an error when identify is called with user with no key', done => {
-      const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
+    it('returns an error when identify is called with user with no key', async () => {
+      const client = platform.testing.makeClient(envName, user);
+      await client.waitForInitialization();
 
-      client.on('ready', () => {
-        client.identify({ country: 'US' }).then(
-          () => {
-            throw Error('should not have succeeded');
-          },
-          () => {
-            done();
-          }
-        );
-      });
+      await expect(client.identify({ country: 'US' })).rejects.toThrow();
     });
 
-    it('does not change flag values after identify is called with null user', done => {
-      const data = { foo: 'bar' };
-      const client = platform.testing.makeClient(envName, user, { bootstrap: data });
+    it('does not change flag values after identify is called with null user', async () => {
+      const initData = { foo: 'bar' };
+      const client = platform.testing.makeClient(envName, user, { bootstrap: initData });
+      await client.waitForInitialization();
 
-      client.on('ready', () => {
-        expect(client.variation('foo', 'x')).toEqual('bar');
-        client.identify(null).then(
-          () => {
-            throw Error('should not have succeeded');
-          },
-          () => {
-            expect(client.variation('foo', 'x')).toEqual('bar');
-            done();
-          }
-        );
-      });
+      expect(client.variation('foo', 'x')).toEqual('bar');
+
+      await expect(client.identify(null)).rejects.toThrow();
+
+      expect(client.variation('foo', 'x')).toEqual('bar');
     });
 
-    it('does not change flag values after identify is called with invalid user', done => {
-      const data = { foo: 'bar' };
-      const client = platform.testing.makeClient(envName, user, { bootstrap: data });
+    it('does not change flag values after identify is called with invalid user', async () => {
+      const initData = { foo: 'bar' };
+      const client = platform.testing.makeClient(envName, user, { bootstrap: initData });
+      await client.waitForInitialization();
 
-      client.on('ready', () => {
-        expect(client.variation('foo', 'x')).toEqual('bar');
-        client.identify({ country: 'US' }).then(
-          () => {
-            throw Error('should not have succeeded');
-          },
-          () => {
-            expect(client.variation('foo', 'x')).toEqual('bar');
-            done();
-          }
-        );
-      });
+      expect(client.variation('foo', 'x')).toEqual('bar');
+
+      await expect(client.identify({ country: 'US' })).rejects.toThrow();
+
+      expect(client.variation('foo', 'x')).toEqual('bar');
+    });
+
+    it('provides a persistent key for an anonymous user with no key', async () => {
+      const initData = { foo: 'bar' };
+      const client = platform.testing.makeClient(envName, user, { bootstrap: initData });
+      await client.waitForInitialization();
+
+      const anonUser = { anonymous: true, country: 'US' };
+      await client.identify(anonUser);
+
+      const newUser = client.getUser();
+      expect(newUser.key).toEqual(expect.anything());
+      expect(newUser).toMatchObject(anonUser);
     });
   });
 
   describe('initializing with stateProvider', () => {
-    it('immediately uses initial state if available, and does not make an HTTP request', done => {
+    it('immediately uses initial state if available, and does not make an HTTP request', async () => {
       const user = { key: 'user' };
       const state = {
         environment: 'env',
@@ -536,20 +482,20 @@ describe('LDClient', () => {
       const sp = stubPlatform.mockStateProvider(state);
 
       const client = platform.testing.makeClient(null, null, { stateProvider: sp });
-      expect(client.variation('flagkey')).toEqual('value');
-      expect(requests.length).toEqual(0);
+      await client.waitForInitialization();
 
-      client.waitForInitialization().then(done);
+      expect(client.variation('flagkey')).toEqual('value');
+      expect(server.requests.length).toEqual(0);
     });
 
     it('defers initialization if initial state not available, and does not make an HTTP request', () => {
       const sp = stubPlatform.mockStateProvider(null);
 
       platform.testing.makeClient(null, null, { stateProvider: sp });
-      expect(requests.length).toEqual(0);
+      expect(server.requests.length).toEqual(0);
     });
 
-    it('finishes initialization on receiving init event', done => {
+    it('finishes initialization on receiving init event', async () => {
       const user = { key: 'user' };
       const state = {
         environment: 'env',
@@ -562,13 +508,11 @@ describe('LDClient', () => {
 
       sp.emit('init', state);
 
-      client.waitForInitialization().then(() => {
-        expect(client.variation('flagkey')).toEqual('value');
-        done();
-      });
+      await client.waitForInitialization();
+      expect(client.variation('flagkey')).toEqual('value');
     });
 
-    it('updates flags on receiving update event', done => {
+    it('updates flags on receiving update event', async () => {
       const user = { key: 'user' };
       const state0 = {
         environment: 'env',
@@ -578,27 +522,24 @@ describe('LDClient', () => {
       const sp = stubPlatform.mockStateProvider(state0);
 
       const client = platform.testing.makeClient(null, null, { stateProvider: sp });
+      await client.waitForInitialization();
 
-      client.waitForInitialization().then(() => {
-        expect(client.variation('flagkey')).toEqual('value0');
+      expect(client.variation('flagkey')).toEqual('value0');
 
-        const state1 = {
-          flags: { flagkey: { value: 'value1' } },
-        };
+      const state1 = {
+        flags: { flagkey: { value: 'value1' } },
+      };
 
-        client.on('change:flagkey', (newValue, oldValue) => {
-          expect(newValue).toEqual('value1');
-          expect(oldValue).toEqual('value0');
-          expect(client.variation('flagkey')).toEqual('value1');
+      const gotChange = promiseListener();
+      client.on('change:flagkey', gotChange.callback);
 
-          done();
-        });
+      sp.emit('update', state1);
 
-        sp.emit('update', state1);
-      });
+      const args = await gotChange;
+      expect(args).toEqual(['value1', 'value0']);
     });
 
-    it('disables identify()', done => {
+    it('disables identify()', async () => {
       const user = { key: 'user' };
       const user1 = { key: 'user1' };
       const state = { environment: 'env', user: user, flags: { flagkey: { value: 'value' } } };
@@ -608,15 +549,12 @@ describe('LDClient', () => {
 
       sp.emit('init', state);
 
-      client.waitForInitialization().then(() => {
-        client.identify(user1, null, (err, newFlags) => {
-          expect(err).toEqual(null);
-          expect(newFlags).toEqual({ flagkey: 'value' });
-          expect(requests.length).toEqual(0);
-          expect(platform.testing.logger.output.warn).toEqual([messages.identifyDisabled()]);
-          done();
-        });
-      });
+      await client.waitForInitialization();
+      const newFlags = await client.identify(user1);
+
+      expect(newFlags).toEqual({ flagkey: 'value' });
+      expect(server.requests.length).toEqual(0);
+      expect(platform.testing.logger.output.warn).toEqual([messages.identifyDisabled()]);
     });
   });
 });

@@ -8,6 +8,7 @@ var ver: string = ld.version;
 
 var logger: ld.LDLogger = ld.createConsoleLogger("info");
 var userWithKeyOnly: ld.LDUser = { key: 'user' };
+var anonUserWithNoKey: ld.LDUser = { anonymous: true };
 var user: ld.LDUser = {
   key: 'user',
   secondary: 'otherkey',
