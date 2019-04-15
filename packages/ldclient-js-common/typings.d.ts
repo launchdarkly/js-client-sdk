@@ -565,8 +565,10 @@ declare module 'ldclient-js-common' {
      *   The name of the event, which may correspond to a goal in A/B tests.
      * @param data
      *   Additional information to associate with the event.
+     * @param metricValue
+     *   An optional numeric value that can be used in analytics.
      */
-    track(key: string, data?: any): void;
+    track(key: string, data?: any, metricValue?: number): void;
 
     /**
      * Returns a map of all available flags to the current user's values.
