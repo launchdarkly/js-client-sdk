@@ -15,6 +15,9 @@ export default function makeBrowserPlatform() {
     return hasCors;
   };
 
+  const allowsSync = isSyncXhrSupported();
+  ret.httpAllowsSync = () => allowsSync;
+
   ret.getCurrentUrl = () => window.location.href;
 
   ret.isDoNotTrack = () => {
@@ -89,4 +92,18 @@ export default function makeBrowserPlatform() {
   ret.userAgent = 'JSClient';
 
   return ret;
+}
+
+// This is temporary logic to disable synchronous XHR in Chrome 73 and above. In all other browsers,
+// we will assume it is supported. See https://github.com/launchdarkly/js-client/issues/147
+function isSyncXhrSupported() {
+  const userAgent = window.navigator && window.navigator.userAgent;
+  if (userAgent) {
+    const chromeMatch = userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
+    if (chromeMatch) {
+      const version = parseInt(chromeMatch[2], 10);
+      return version < 73;
+    }
+  }
+  return true;
 }

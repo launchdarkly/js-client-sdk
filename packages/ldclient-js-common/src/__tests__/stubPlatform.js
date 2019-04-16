@@ -14,6 +14,7 @@ export function defaults() {
   const p = {
     newHttpRequest: () => new sinonXhr(),
     httpAllowsPost: () => true,
+    httpAllowsSync: () => true,
     getCurrentUrl: () => currentUrl,
     isDoNotTrack: () => doNotTrack,
     eventSourceFactory: (url, options) => {

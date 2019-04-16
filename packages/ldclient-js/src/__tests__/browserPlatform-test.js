@@ -4,6 +4,43 @@ describe('browserPlatform', () => {
   const platform = browserPlatform();
   const lsKeyPrefix = 'ldclient-js-test:';
 
+  describe('httpAllowsSync()', () => {
+    function setUserAgent(s) {
+      window.navigator.__defineGetter__('userAgent', () => s);
+    }
+
+    it('returns true for Chrome 72', () => {
+      setUserAgent(
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36'
+      );
+      expect(platform.httpAllowsSync()).toBe(true);
+    });
+
+    it('returns false for Chrome 73', () => {
+      setUserAgent(
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
+      );
+      expect(platform.httpAllowsSync()).toBe(false);
+    });
+
+    it('returns false for Chrome 74', () => {
+      setUserAgent(
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3683.103 Safari/537.36'
+      );
+      expect(platform.httpAllowsSync()).toBe(false);
+    });
+
+    it('returns true for unknown browser', () => {
+      setUserAgent('Special Kitty Cat Browser');
+      expect(platform.httpAllowsSync()).toBe(true);
+    });
+
+    it('returns true if userAgent is missing', () => {
+      setUserAgent(null);
+      expect(platform.httpAllowsSync()).toBe(true);
+    });
+  });
+
   describe('getCurrentUrl()', () => {
     it('returns value of window.location.href', () => {
       expect(platform.getCurrentUrl()).toEqual(window.location.href);
