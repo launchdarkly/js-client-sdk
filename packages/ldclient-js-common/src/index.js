@@ -296,6 +296,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
       url: platform.getCurrentUrl(),
       creationDate: new Date().getTime(),
     };
+    // Note, check specifically for null/undefined because it is legal to set these fields to a falsey value.
     if (data !== null && data !== undefined) {
       e.data = data;
     }
