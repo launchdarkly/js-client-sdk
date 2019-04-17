@@ -101,6 +101,15 @@ describe('EventSender', () => {
       expect(lastRequest().async).toEqual(false);
     });
 
+    it('should skip synchronous request if not supported', () => {
+      const noSyncPlatform = stubPlatform.defaults();
+      noSyncPlatform.httpAllowsSync = () => false;
+      const sender = EventSender(noSyncPlatform, eventsUrl, envId);
+      const event = { kind: 'identify', key: 'userKey' };
+      sender.sendEvents([event], true);
+      expect(server.requests.length).toEqual(0);
+    });
+
     it('should send all events in request body', async () => {
       const sender = EventSender(platform, eventsUrl, envId);
       const events = [];

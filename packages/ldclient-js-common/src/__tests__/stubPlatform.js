@@ -35,6 +35,7 @@ export function defaults() {
   const p = {
     httpRequest: newHttpRequest,
     httpAllowsPost: () => true,
+    httpAllowsSync: () => true,
     getCurrentUrl: () => currentUrl,
     isDoNotTrack: () => doNotTrack,
     eventSourceFactory: (url, options) => {
