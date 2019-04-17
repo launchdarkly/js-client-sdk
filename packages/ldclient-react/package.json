@@ -1,6 +1,6 @@
 {
   "name": "ldclient-react",
-  "version": "2.9.5",
+  "version": "2.9.7",
   "description": "LaunchDarkly SDK for React",
   "author": "LaunchDarkly <team@launchdarkly.com>",
   "license": "Apache-2.0",
@@ -17,7 +17,7 @@
   "scripts": {
     "test": "jest",
     "test:junit": "jest --ci --reporters=default --reporters=jest-junit",
-    "build": "rimraf lib/* && tsc && rimraf lib/*.test.*",
+    "build": "rimraf lib/* && tsc && rm -rf lib/*.test.*",
     "lint": "tslint -p tsconfig.json 'src/**/*.ts*'",
     "lint:all": "npm run lint",
     "check-typescript": "tsc",
@@ -53,7 +53,7 @@
     "typescript": "^3.3.3333"
   },
   "dependencies": {
-    "ldclient-js": "^2.9.5",
+    "ldclient-js": "2.9.4",
     "lodash.camelcase": "^4.3.0",
     "uuid": "^3.3.2"
   },
