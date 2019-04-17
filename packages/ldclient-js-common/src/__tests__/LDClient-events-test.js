@@ -308,6 +308,22 @@ describe('LDClient', () => {
     it('sends an event for track()', async () => {
       const ep = stubEventProcessor();
       const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
+      await client.waitForInitialization();
+      client.track('eventkey');
+
+      expect(ep.events.length).toEqual(2);
+      expectIdentifyEvent(ep.events[0], user);
+      const trackEvent = ep.events[1];
+      expect(trackEvent.kind).toEqual('custom');
+      expect(trackEvent.key).toEqual('eventkey');
+      expect(trackEvent.user).toEqual(user);
+      expect(trackEvent.data).toEqual(undefined);
+      expect(trackEvent.url).toEqual(fakeUrl);
+    });
+
+    it('sends an event for track() with data', async () => {
+      const ep = stubEventProcessor();
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
       const eventData = { thing: 'stuff' };
       await client.waitForInitialization();
       client.track('eventkey', eventData);
@@ -319,6 +335,25 @@ describe('LDClient', () => {
       expect(trackEvent.key).toEqual('eventkey');
       expect(trackEvent.user).toEqual(user);
       expect(trackEvent.data).toEqual(eventData);
+      expect(trackEvent.url).toEqual(fakeUrl);
+    });
+
+    it('sends an event for track() with metric value', async () => {
+      const ep = stubEventProcessor();
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
+      const eventData = { thing: 'stuff' };
+      const metricValue = 1.5;
+      await client.waitForInitialization();
+      client.track('eventkey', eventData, metricValue);
+
+      expect(ep.events.length).toEqual(2);
+      expectIdentifyEvent(ep.events[0], user);
+      const trackEvent = ep.events[1];
+      expect(trackEvent.kind).toEqual('custom');
+      expect(trackEvent.key).toEqual('eventkey');
+      expect(trackEvent.user).toEqual(user);
+      expect(trackEvent.data).toEqual(eventData);
+      expect(trackEvent.metricValue).toEqual(metricValue);
       expect(trackEvent.url).toEqual(fakeUrl);
     });
 

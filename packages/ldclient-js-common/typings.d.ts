@@ -565,8 +565,12 @@ declare module 'ldclient-js-common' {
      *   The name of the event, which may correspond to a goal in A/B tests.
      * @param data
      *   Additional information to associate with the event.
+     * @param metricValue
+     *   A numeric value to signify the value used by the LaunchDarkly experimentation feature
+     *   in numeric custom metrics. Can be omitted if this event is used by only non-numeric
+     *   metrics. This field will also be returned as part of the custom event for Data Export.
      */
-    track(key: string, data?: any): void;
+    track(key: string, data?: any, metricValue?: number): void;
 
     /**
      * Returns a map of all available flags to the current user's values.

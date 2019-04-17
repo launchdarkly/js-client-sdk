@@ -279,7 +279,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     return results;
   }
 
-  function track(key, data) {
+  function track(key, data, metricValue) {
     if (typeof key !== 'string') {
       emitter.maybeReportError(new errors.LDInvalidEventKeyError(messages.unknownCustomEventKey(key)));
       return;
@@ -289,14 +289,21 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
       logger.warn(messages.unknownCustomEventKey(key));
     }
 
-    enqueueEvent({
+    const e = {
       kind: 'custom',
       key: key,
-      data: data,
       user: ident.getUser(),
       url: platform.getCurrentUrl(),
       creationDate: new Date().getTime(),
-    });
+    };
+    // Note, check specifically for null/undefined because it is legal to set these fields to a falsey value.
+    if (data !== null && data !== undefined) {
+      e.data = data;
+    }
+    if (metricValue !== null && metricValue !== undefined) {
+      e.metricValue = metricValue;
+    }
+    enqueueEvent(e);
   }
 
   function connectStream() {
