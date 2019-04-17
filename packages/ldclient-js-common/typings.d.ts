@@ -566,7 +566,9 @@ declare module 'ldclient-js-common' {
      * @param data
      *   Additional information to associate with the event.
      * @param metricValue
-     *   An optional numeric value that can be used in analytics.
+     *   A numeric value to signify the value used by the LaunchDarkly experimentation feature
+     *   in numeric custom metrics. Can be omitted if this event is used by only non-numeric
+     *   metrics. This field will also be returned as part of the custom event for Data Export.
      */
     track(key: string, data?: any, metricValue?: number): void;
 
