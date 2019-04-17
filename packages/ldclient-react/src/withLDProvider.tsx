@@ -3,6 +3,7 @@ import camelCase from 'lodash.camelcase';
 import { LDClient, LDFlagSet, LDOptions, LDUser, LDFlagChangeset } from 'ldclient-js';
 import { Provider, LDContext as HocState } from './context';
 import initLDClient from './initLDClient';
+import { camelCaseKeys } from './utils';
 
 /**
  * Configuration object used to initialise LaunchDarkly's js client.
@@ -58,7 +59,27 @@ export interface EnhancedComponent extends React.Component {
 export function withLDProvider(config: ProviderConfig) {
   return function withLDPoviderHoc<P>(WrappedComponent: React.ComponentType<P>) {
     return class extends React.Component<P, HocState> implements EnhancedComponent {
-      readonly state: Readonly<HocState> = { flags: {}, ldClient: undefined };
+      readonly state: Readonly<HocState>;
+
+      constructor(props: P) {
+        super(props);
+
+        this.state = {
+          flags: {},
+          ldClient: undefined,
+        };
+
+        const { options } = config;
+        if (options) {
+          const { bootstrap } = options;
+          if (bootstrap && bootstrap !== 'localStorage') {
+            this.state = {
+              flags: camelCaseKeys(bootstrap),
+              ldClient: undefined,
+            };
+          }
+        }
+      }
 
       subscribeToChanges = (ldClient: LDClient) => {
         ldClient.on('change', (changes: LDFlagChangeset) => {

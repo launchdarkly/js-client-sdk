@@ -3,9 +3,13 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org).
 
-## [2.9.6] - 2019-04-16
+## [2.9.7] - 2019-04-16
 ### Fixed:
 - If there are pending analytics events when the page is being closed, the SDK normally attempts to deliver them by making a synchronous HTTP request. Chrome, as of version 73, does not allow this and logs an error. An upcoming release will change how events are sent, but as a temporary measure to avoid these errors, the SDK will now simply discard any pending events when the page is being closed _if_ the browser is Chrome version 73 or higher. In other browsers, there is no change. Note that this means that in Chrome 73, some events may be lost; that was already the case. The purpose of this patch is simply to avoid triggering errors. ([#178](https://github.com/launchdarkly/js-client-private/pull/178))
+
+## [2.9.6] - 2019-04-16
+
+This release was an error and has been removed.
 
 ## [2.9.5] - 2019-03-12
 ### Fixed:

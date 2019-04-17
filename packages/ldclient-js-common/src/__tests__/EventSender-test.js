@@ -15,7 +15,7 @@ describe('EventSender', () => {
   const envId = 'env';
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     requests = [];
     xhr = sinon.useFakeXMLHttpRequest();
     xhr.onCreate = function(xhr) {
@@ -120,6 +120,15 @@ describe('EventSender', () => {
       sender.sendEvents([event], true);
       lastRequest().respond();
       expect(lastRequest().async).toEqual(false);
+    });
+
+    it('should skip synchronous request if not supported', () => {
+      const noSyncPlatform = stubPlatform.defaults();
+      noSyncPlatform.httpAllowsSync = () => false;
+      const sender = EventSender(noSyncPlatform, eventsUrl, envId);
+      const event = { kind: 'identify', key: 'userKey' };
+      sender.sendEvents([event], true);
+      expect(requests.length).toEqual(0);
     });
 
     it('should send all events in request body', () => {

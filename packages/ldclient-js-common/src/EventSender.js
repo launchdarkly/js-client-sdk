@@ -75,6 +75,10 @@ export default function EventSender(platform, eventsUrl, environmentId, imageCre
     if (!platform.newHttpRequest) {
       return Promise.resolve();
     }
+    // Workaround for non-support of sync XHR in some browsers - https://github.com/launchdarkly/js-client/issues/147
+    if (sync && !(platform.httpAllowsSync && platform.httpAllowsSync())) {
+      return Promise.resolve();
+    }
     const canPost = platform.httpAllowsPost();
     const finalSync = sync === undefined ? false : sync;
     let chunks;

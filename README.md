@@ -147,7 +147,7 @@ LaunchDarkly's server-side SDKs have a function called `allFlagsState`, which re
 // in the back-end code:
 app.get('/page', function(req, res) {
   var user = { key: 'example-user' };
-  client.allFlagsState(user, function(flagsData) {
+  client.allFlagsState(user, function(err, flagsData) {
     templateVars = {
       user: user,
       allFlags: flagsData
