@@ -18,11 +18,12 @@ describe('LDClient local storage', () => {
   });
 
   describe('bootstrapping from local storage', () => {
-    it('does not try to use local storage if the platform says it is unavailable', () => {
+    it('does not try to use local storage if the platform says it is unavailable', async () => {
       const platform = stubPlatform.defaults();
       platform.localStorage = null;
 
-      platform.testing.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
+      await client.waitForInitialization();
 
       // should see a flag request to the server right away, as if bootstrap was not specified
       expect(server.requests.length).toEqual(1);
@@ -58,9 +59,7 @@ describe('LDClient local storage', () => {
 
     it('should handle localStorage.get returning an error', async () => {
       const platform = stubPlatform.defaults();
-      platform.localStorage.get = (_, callback) => {
-        utils.onNextTick(() => callback(new Error()));
-      };
+      platform.localStorage.get = () => Promise.reject(new Error());
       server.respondWith(jsonResponse({ 'enable-foo': { value: true } }));
 
       const client = platform.testing.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
@@ -71,9 +70,7 @@ describe('LDClient local storage', () => {
 
     it('should handle localStorage.set returning an error', async () => {
       const platform = stubPlatform.defaults();
-      platform.localStorage.set = (_1, _2, callback) => {
-        utils.onNextTick(() => callback(new Error()));
-      };
+      platform.localStorage.set = () => Promise.reject(new Error());
       server.respondWith(jsonResponse({ 'enable-foo': { value: true } }));
 
       const client = platform.testing.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });

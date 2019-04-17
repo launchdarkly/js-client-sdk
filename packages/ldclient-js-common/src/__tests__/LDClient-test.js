@@ -12,6 +12,7 @@ import {
 } from './testUtils';
 
 import * as LDClient from '../index';
+import * as errors from '../errors';
 import * as messages from '../messages';
 import * as utils from '../utils';
 
@@ -82,7 +83,7 @@ describe('LDClient', () => {
       await expect(client.waitForInitialization()).rejects.toThrow();
 
       const err = await gotError;
-      expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
+      expect(err).toEqual(new errors.LDInvalidEnvironmentIdError(messages.environmentNotFound()));
     });
 
     it('should emit a failure event when an invalid environment key is specified', async () => {
@@ -95,7 +96,7 @@ describe('LDClient', () => {
       await expect(client.waitForInitialization()).rejects.toThrow();
 
       const err = await gotFailed;
-      expect(err.message).toEqual('Error fetching flag settings: ' + messages.environmentNotFound());
+      expect(err).toEqual(new errors.LDInvalidEnvironmentIdError(messages.environmentNotFound()));
     });
 
     it('returns default values when an invalid environment key is specified', async () => {
@@ -108,14 +109,18 @@ describe('LDClient', () => {
       expect(client.variation('flag-key', 1)).toEqual(1);
     });
 
-    it('fetches flag settings if bootstrap is not provided (without reasons)', () => {
-      platform.testing.makeClient(envName, user);
+    it('fetches flag settings if bootstrap is not provided (without reasons)', async () => {
+      const client = platform.testing.makeClient(envName, user);
+      await client.waitForInitialization();
+
       expect(/sdk\/eval/.test(server.requests[0].url)).toEqual(true);
       expect(/withReasons=true/.test(server.requests[0].url)).toEqual(false);
     });
 
-    it('fetches flag settings if bootstrap is not provided (with reasons)', () => {
-      platform.testing.makeClient(envName, user, { evaluationReasons: true });
+    it('fetches flag settings if bootstrap is not provided (with reasons)', async () => {
+      const client = platform.testing.makeClient(envName, user, { evaluationReasons: true });
+      await client.waitForInitialization();
+
       expect(/sdk\/eval/.test(server.requests[0].url)).toEqual(true);
       expect(/withReasons=true/.test(server.requests[0].url)).toEqual(true);
     });
@@ -188,25 +193,20 @@ describe('LDClient', () => {
       expect(platform.testing.logger.output.warn).toEqual([messages.eventWithoutUser()]);
     });
 
-    function verifyCustomHeader(sendLDHeaders, shouldGetHeaders) {
-      platform.testing.makeClient(envName, user, { sendLDHeaders: sendLDHeaders });
+    async function verifyCustomHeader(sendLDHeaders, shouldGetHeaders) {
+      const client = platform.testing.makeClient(envName, user, { sendLDHeaders: sendLDHeaders });
+      await client.waitForInitialization();
       const request = server.requests[0];
       expect(request.requestHeaders['X-LaunchDarkly-User-Agent']).toEqual(
         shouldGetHeaders ? utils.getLDUserAgentString(platform) : undefined
       );
     }
 
-    it('sends custom header by default', () => {
-      verifyCustomHeader(undefined, true);
-    });
+    it('sends custom header by default', () => verifyCustomHeader(undefined, true));
 
-    it('sends custom header if sendLDHeaders is true', () => {
-      verifyCustomHeader(true, true);
-    });
+    it('sends custom header if sendLDHeaders is true', () => verifyCustomHeader(true, true));
 
-    it('does not send custom header if sendLDHeaders is false', () => {
-      verifyCustomHeader(undefined, true);
-    });
+    it('does not send custom header if sendLDHeaders is false', () => verifyCustomHeader(undefined, true));
 
     it('sanitizes the user', async () => {
       const client = platform.testing.makeClient(envName, numericUser);
@@ -276,7 +276,7 @@ describe('LDClient', () => {
       server.respondWith(errorResponse(404));
 
       const client = platform.testing.makeClient('abc', user);
-      const err = new Error('Error fetching flag settings: ' + messages.environmentNotFound());
+      const err = new errors.LDInvalidEnvironmentIdError(messages.environmentNotFound());
       await expect(client.waitForInitialization()).rejects.toThrow(err);
     });
   });

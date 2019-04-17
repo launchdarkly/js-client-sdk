@@ -1,8 +1,103 @@
+import sinon from 'sinon';
+
 import browserPlatform from '../browserPlatform';
 
 describe('browserPlatform', () => {
   const platform = browserPlatform();
   const lsKeyPrefix = 'ldclient-js-test:';
+
+  describe('httpRequest()', () => {
+    // These tests verify that our HTTP abstraction is correctly translated into the XMLHttpRequest API,
+    // which will be intercepted by Sinon.
+
+    const url = 'http://example';
+
+    let server;
+
+    beforeEach(() => {
+      server = sinon.createFakeServer();
+    });
+
+    afterEach(() => {
+      server.restore();
+    });
+
+    it('sets request properties', () => {
+      const method = 'POST';
+      const headers = { a: '1', b: '2' };
+      const body = '{}';
+      platform.httpRequest(method, url, headers, body);
+
+      expect(server.requests.length).toEqual(1);
+      const req = server.requests[0];
+
+      expect(req.method).toEqual(method);
+      expect(req.url).toEqual(url);
+      expect(req.requestHeaders['a']).toEqual('1');
+      expect(req.requestHeaders['b']).toEqual('2');
+      expect(req.requestBody).toEqual(body);
+      expect(req.async).toEqual(true);
+    });
+
+    it('makes a synchronous request', () => {
+      const method = 'POST';
+      const url = 'http://example';
+      const body = '{}';
+      platform.httpRequest(method, url, {}, body, true);
+
+      expect(server.requests.length).toEqual(1);
+      const req = server.requests[0];
+
+      expect(req.async).toEqual(false);
+    });
+
+    it('resolves promise when response is received', async () => {
+      const requestInfo = platform.httpRequest('GET', url);
+
+      expect(server.requests.length).toEqual(1);
+      const req = server.requests[0];
+      req.respond(200, {}, 'hello');
+
+      const result = await requestInfo.promise;
+      expect(result.status).toEqual(200);
+      expect(result.body).toEqual('hello');
+    });
+
+    it('returns the headers we care about', async () => {
+      const headers = { 'Content-Type': 'text/plain', Date: 'not really a date' };
+      const lowercaseHeaders = { 'content-type': 'text/plain', date: 'not really a date' };
+      const requestInfo = platform.httpRequest('GET', url);
+
+      expect(server.requests.length).toEqual(1);
+      const req = server.requests[0];
+      req.respond(200, headers, 'hello');
+
+      const result = await requestInfo.promise;
+      expect(result.headers).toEqual(lowercaseHeaders);
+    });
+
+    it('rejects promise if request gets a network error', async () => {
+      const requestInfo = platform.httpRequest('GET', url);
+
+      expect(server.requests.length).toEqual(1);
+      const req = server.requests[0];
+      req.error();
+
+      await expect(requestInfo.promise).rejects.toThrow();
+    });
+
+    it('allows request to be cancelled', () => {
+      const requestInfo = platform.httpRequest('GET', url);
+
+      expect(server.requests.length).toEqual(1);
+      expect(server.requests[0].aborted).toBeFalsy();
+
+      requestInfo.cancel();
+
+      expect(server.requests.length).toEqual(1);
+      expect(server.requests[0].aborted).toBe(true);
+    });
+  });
 
   describe('httpAllowsSync()', () => {
     function platformWithUserAgent(s) {
@@ -87,39 +182,24 @@ describe('browserPlatform', () => {
     // mock implementation of window.localStorage, but these tests still verify that our async
     // wrapper code in browserPlatform.js is passing the parameters through correctly.
 
-    it('returns null or undefined for missing value', done => {
-      platform.localStorage.get(lsKeyPrefix + 'unused-key', (err, value) => {
-        expect(err).not.toBe(expect.anything());
-        expect(value).not.toBe(expect.anything());
-        done();
-      });
+    it('returns null or undefined for missing value', async () => {
+      const value = await platform.localStorage.get(lsKeyPrefix + 'unused-key');
+      expect(value).not.toBe(expect.anything());
     });
 
-    it('can get and set value', done => {
+    it('can get and set value', async () => {
       const key = lsKeyPrefix + 'get-set-key';
-      platform.localStorage.set(key, 'hello', err => {
-        expect(err).not.toBe(expect.anything());
-        platform.localStorage.get(key, (err, value) => {
-          expect(err).not.toBe(expect.anything());
-          expect(value).toEqual('hello');
-          done();
-        });
-      });
+      await platform.localStorage.set(key, 'hello');
+      const value = await platform.localStorage.get(key);
+      expect(value).toEqual('hello');
     });
 
-    it('can delete value', done => {
+    it('can delete value', async () => {
       const key = lsKeyPrefix + 'delete-key';
-      platform.localStorage.set(key, 'hello', err => {
-        expect(err).not.toBe(expect.anything());
-        platform.localStorage.clear(key, err => {
-          expect(err).not.toBe(expect.anything());
-          platform.localStorage.get(key, (err, value) => {
-            expect(err).not.toBe(expect.anything());
-            expect(value).not.toBe(expect.anything());
-            done();
-          });
-        });
-      });
+      await platform.localStorage.set(key, 'hello');
+      await platform.localStorage.clear(key);
+      const value = platform.localStorage.get(key);
+      expect(value).not.toBe(expect.anything());
     });
 
     it('reports local storage as being unavailable if window.localStorage is missing', () => {
