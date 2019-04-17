@@ -128,7 +128,7 @@ describe('EventSender', () => {
       const sender = EventSender(noSyncPlatform, eventsUrl, envId);
       const event = { kind: 'identify', key: 'userKey' };
       sender.sendEvents([event], true);
-      expect(server.requests.length).toEqual(0);
+      expect(requests.length).toEqual(0);
     });
 
     it('should send all events in request body', () => {
