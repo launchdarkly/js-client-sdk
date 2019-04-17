@@ -6,6 +6,10 @@ export function asyncSleep(delay) {
   });
 }
 
+export function asyncify(f) {
+  return new Promise(resolve => f(resolve));
+}
+
 export function errorResponse(status) {
   return [status, {}, ''];
 }

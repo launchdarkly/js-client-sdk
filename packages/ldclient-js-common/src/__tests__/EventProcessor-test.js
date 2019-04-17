@@ -67,35 +67,6 @@ describe('EventProcessor', () => {
     expect(e.kind).toEqual('summary');
   }
 
-  it('should flush asynchronously', () => {
-    const processor = EventProcessor(platform, defaultConfig, envId, logger, null, mockEventSender);
-    const event = { kind: 'identify', key: user.key };
-
-    processor.enqueue(event);
-    processor.enqueue(event);
-    processor.enqueue(event);
-    processor.enqueue(event);
-    processor.flush();
-
-    expect(mockEventSender.calls.length).toEqual(1);
-    expect(mockEventSender.calls[0].sync).toEqual(false);
-  });
-
-  it('should flush synchronously', () => {
-    const processor = EventProcessor(platform, defaultConfig, envId, logger, null, mockEventSender);
-    const user = { key: 'foo' };
-    const event = { kind: 'identify', key: user.key };
-
-    processor.enqueue(event);
-    processor.enqueue(event);
-    processor.enqueue(event);
-    processor.enqueue(event);
-    processor.flush(true);
-
-    expect(mockEventSender.calls.length).toEqual(1);
-    expect(mockEventSender.calls[0].sync).toEqual(true);
-  });
-
   it('should enqueue identify event', async () => {
     const ep = EventProcessor(platform, defaultConfig, envId, logger, null, mockEventSender);
     const event = { kind: 'identify', creationDate: 1000, key: user.key, user: user };

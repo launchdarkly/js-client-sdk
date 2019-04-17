@@ -83,7 +83,7 @@ export default function EventProcessor(platform, options, environmentId, logger,
     }
   };
 
-  processor.flush = function(sync) {
+  processor.flush = function() {
     if (disabled) {
       return Promise.resolve();
     }
@@ -99,7 +99,7 @@ export default function EventProcessor(platform, options, environmentId, logger,
     }
     queue = [];
     logger.debug(messages.debugPostingEvents(eventsToSend.length));
-    return eventSender.sendEvents(eventsToSend, sync).then(responseInfo => {
+    return eventSender.sendEvents(eventsToSend).then(responseInfo => {
       if (responseInfo) {
         if (responseInfo.serverTime) {
           lastKnownPastTime = responseInfo.serverTime;
