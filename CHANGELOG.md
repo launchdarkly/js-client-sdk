@@ -3,6 +3,15 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.9.6] - 2019-04-16
+### Fixed:
+- If there are pending analytics events when the page is being closed, the SDK normally attempts to deliver them by making a synchronous HTTP request. Chrome, as of version 73, does not allow this and logs an error. An upcoming release will change how events are sent, but as a temporary measure to avoid these errors, the SDK will now simply discard any pending events when the page is being closed _if_ the browser is Chrome version 73 or higher. In other browsers, there is no change. Note that this means that in Chrome 73, some events may be lost; that was already the case. The purpose of this patch is simply to avoid triggering errors. ([#178](https://github.com/launchdarkly/js-client-private/pull/178))
+
+## [2.9.5] - 2019-03-12
+### Fixed:
+- In React, when using the `bootstrap` property to preload the SDK client with flag values, the client will now become ready immediately and make the flags available to other components as soon as it is initialized; previously this did not happen until after `componentDidMount`.
+- The user attribute `secondary` was not included in the TypeScript declarations and therefore could not be used from TypeScript code.
+
 ## [2.9.4] - 2019-02-22
 ### Fixed:
 - Running inside an iframe on Chrome with third-party cookies disabled-- which also disables HTML5 local storage-- would cause a security exception (due to the SDK attempting to check whether `window.localStorage` exists). This was a long-standing problem, but became worse in the 2.9.0 release since the SDK now checks for browser capabilities like this regardless of whether you've attempted to use them yet. It should now simply log a warning if you try to use `bootstrap: "localstorage"` when local storage is disabled. ([#138](https://github.com/launchdarkly/js-client/issues/138))
