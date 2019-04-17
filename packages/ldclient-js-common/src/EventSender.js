@@ -25,7 +25,7 @@ export default function EventSender(platform, eventsUrl, environmentId, imageCre
     return ret;
   }
 
-  function sendChunk(events, usePost, closingClient) {
+  function sendChunk(events, usePost) {
     const createImage = imageCreator || loadUrlUsingImage;
     const jsonBody = JSON.stringify(events);
 
@@ -38,7 +38,7 @@ export default function EventSender(platform, eventsUrl, environmentId, imageCre
         utils.getLDHeaders(platform)
       );
       return platform
-        .httpRequest('POST', postUrl, headers, jsonBody, closingClient)
+        .httpRequest('POST', postUrl, headers, jsonBody)
         .promise.then(result => {
           if (!result) {
             // This was a response from a fire-and-forget request, so we won't have a status.
