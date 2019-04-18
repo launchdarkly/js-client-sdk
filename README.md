@@ -305,7 +305,7 @@ client.identify(newUser, hash, function() {
 
 For an additional overview with code samples, see the online [JavaScript SDK Reference](https://docs.launchdarkly.com/docs/js-sdk-reference).
 
-The authoritative full description of all properties and methods is in the TypeScript declaration files for [`ldclient-js`](https://github.com/launchdarkly/js-client/blob/master/packages/ldclient-js/typings.d.ts) and [`ldclient-js-common`](https://github.com/launchdarkly/js-client/blob/master/packages/ldclient-js-common/typings.d.ts).
+The authoritative full description of all properties and methods is in the TypeScript declaration files for [`ldclient-js`](https://github.com/launchdarkly/js-client/blob/master/packages/ldclient-js/typings.d.ts) and [`ldclient-js-common`](https://github.com/launchdarkly/js-client/blob/master/packages/ldclient-js-common/typings.d.ts) (a common package used by LaunchDarkly's JavaScript, React, and Electron SDKs).
 
 For examples of using the SDK in a simple JavaScript application, see [`hello-js`](https://github.com/launchdarkly/hello-js) and [`hello-bootstrap`](https://github.com/launchdarkly/hello-bootstrap).
 
