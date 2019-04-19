@@ -41,4 +41,6 @@ for package in ldclient-js-common ldclient-js ldclient-react; do
   npm publish
 done
 
+$(PROJECT_DIR)/scripts/release-docs.sh $VERSION
+
 echo "Done with js-client release"
