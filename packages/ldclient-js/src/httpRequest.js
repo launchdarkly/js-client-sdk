@@ -46,7 +46,6 @@ export default function newHttpRequest(method, url, headers, body, pageIsClosing
         const headers = {};
         for (const i in responseHeadersToCopy) {
           const key = responseHeadersToCopy[i];
-          console.warn('Getting header "' + key + '" for: ' + url);
           const value = xhr.getResponseHeader(key);
           if (value !== null && value !== undefined) {
             headers[key.toLowerCase()] = value;
