@@ -14,12 +14,15 @@ function isSyncXhrSupported() {
   return true;
 }
 
+const emptyResult = { promise: Promise.resolve({ status: 200, headers: {}, body: null }) };
+
 export default function newHttpRequest(method, url, headers, body, pageIsClosing) {
   if (pageIsClosing) {
     // When the page is about to close, we have to use synchronous XHR (until we migrate to sendBeacon).
     // But not all browsers support this.
     if (!isSyncXhrSupported()) {
-      return Promise.resolve();
+      return emptyResult;
+      // Note that we return a fake success response, because we don't want the request to be retried in this case.
     }
   }
 
@@ -31,11 +34,8 @@ export default function newHttpRequest(method, url, headers, body, pageIsClosing
     }
   }
   if (pageIsClosing) {
-    const p = new Promise(resolve => {
-      xhr.send(body);
-      resolve(); // no one will be able to chain from this promise anyway, but let's not leave it hanging
-    });
-    return { promise: p };
+    xhr.send(body); // We specified synchronous mode when we called xhr.open
+    return emptyResult; // Again, we never want a request to be retried in this case, so we must say it succeeded.
   } else {
     let cancelled;
     const p = new Promise((resolve, reject) => {
