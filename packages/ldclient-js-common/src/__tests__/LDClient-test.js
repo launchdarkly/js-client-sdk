@@ -2,6 +2,7 @@ import semverCompare from 'semver-compare';
 
 import * as stubPlatform from './stubPlatform';
 import {
+  asyncify,
   errorResponse,
   jsonResponse,
   makeBootstrap,
@@ -555,6 +556,50 @@ describe('LDClient', () => {
       expect(newFlags).toEqual({ flagkey: 'value' });
       expect(server.requests.length).toEqual(0);
       expect(platform.testing.logger.output.warn).toEqual([messages.identifyDisabled()]);
+    });
+  });
+
+  describe('close()', () => {
+    it('flushes events', async () => {
+      const client = platform.testing.makeClient(envName, user, { bootstrap: {}, flushInterval: 100000 });
+      await client.waitForInitialization();
+
+      await client.close();
+
+      expect(server.requests.length).toEqual(1);
+      const data = JSON.parse(server.requests[0].requestBody);
+      expect(data.length).toEqual(1);
+      expect(data[0].kind).toEqual('identify');
+    });
+
+    it('does nothing if called twice', async () => {
+      const client = platform.testing.makeClient(envName, user, { bootstrap: {}, flushInterval: 100000 });
+      await client.waitForInitialization();
+
+      await client.close();
+
+      expect(server.requests.length).toEqual(1);
+
+      await client.close();
+
+      expect(server.requests.length).toEqual(1);
+    });
+
+    it('is not rejected if flush fails', async () => {
+      server.respondWith(errorResponse(401));
+      const client = platform.testing.makeClient(envName, user, { bootstrap: {}, flushInterval: 100000 });
+      await client.waitForInitialization();
+
+      await client.close(); // shouldn't throw or have an unhandled rejection
+    });
+
+    it('can take a callback instead of returning a promise', async () => {
+      const client = platform.testing.makeClient(envName, user, { bootstrap: {}, flushInterval: 100000 });
+      await client.waitForInitialization();
+
+      await asyncify(cb => client.close(cb));
+
+      expect(server.requests.length).toEqual(1);
     });
   });
 });

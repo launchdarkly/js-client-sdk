@@ -36,7 +36,10 @@ export function initialize(env, user, options = {}) {
   } else {
     clientVars.start();
   }
-  window.addEventListener('beforeunload', clientVars.stop);
+  window.addEventListener('beforeunload', () => {
+    platform.pageIsClosing = true;
+    client.close();
+  });
 
   return client;
 }

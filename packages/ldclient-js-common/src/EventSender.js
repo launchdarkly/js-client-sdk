@@ -25,7 +25,7 @@ export default function EventSender(platform, eventsUrl, environmentId, imageCre
     return ret;
   }
 
-  function sendChunk(events, usePost, sync) {
+  function sendChunk(events, usePost) {
     const createImage = imageCreator || loadUrlUsingImage;
     const jsonBody = JSON.stringify(events);
 
@@ -38,8 +38,12 @@ export default function EventSender(platform, eventsUrl, environmentId, imageCre
         utils.getLDHeaders(platform)
       );
       return platform
-        .httpRequest('POST', postUrl, headers, jsonBody, !!sync)
+        .httpRequest('POST', postUrl, headers, jsonBody)
         .promise.then(result => {
+          if (!result) {
+            // This was a response from a fire-and-forget request, so we won't have a status.
+            return;
+          }
           if (result.status >= 400 && errors.isHttpErrorRecoverable(result.status) && canRetry) {
             return doPostRequest(false);
           } else {
@@ -65,12 +69,8 @@ export default function EventSender(platform, eventsUrl, environmentId, imageCre
     }
   }
 
-  sender.sendEvents = function(events, sync) {
+  sender.sendEvents = function(events) {
     if (!platform.httpRequest) {
-      return Promise.resolve();
-    }
-    // Workaround for non-support of sync XHR in some browsers - https://github.com/launchdarkly/js-client/issues/147
-    if (sync && !(platform.httpAllowsSync && platform.httpAllowsSync())) {
       return Promise.resolve();
     }
     const canPost = platform.httpAllowsPost();
@@ -83,9 +83,9 @@ export default function EventSender(platform, eventsUrl, environmentId, imageCre
     }
     const results = [];
     for (let i = 0; i < chunks.length; i++) {
-      results.push(sendChunk(chunks[i], canPost, sync));
+      results.push(sendChunk(chunks[i], canPost));
     }
-    return sync ? Promise.resolve() : Promise.all(results);
+    return Promise.all(results);
   };
 
   return sender;

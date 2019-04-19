@@ -43,6 +43,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   let streamForcedState = options.streaming;
   let subscribedToChangeEvents;
   let inited = false;
+  let closed = false;
   let firstEvent = true;
 
   // The "stateProvider" object is used in the Electron SDK, to allow one client instance to take partial
@@ -101,7 +102,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   }
 
   function shouldEnqueueEvent() {
-    return sendEvents && !platform.isDoNotTrack();
+    return sendEvents && !closed && !platform.isDoNotTrack();
   }
 
   function enqueueEvent(event) {
@@ -176,6 +177,9 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   }
 
   function identify(user, hash, onDone) {
+    if (closed) {
+      return utils.wrapPromiseCallback(Promise.resolve({}), onDone);
+    }
     if (stateProvider) {
       // We're being controlled by another client instance, so only that instance is allowed to change the user
       logger.warn(messages.identifyDisabled());
@@ -214,9 +218,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   }
 
   function flush(onDone) {
-    return utils.wrapPromiseCallback(
-      new Promise(resolve => (sendEvents ? resolve(events.flush()) : resolve()), onDone)
-    );
+    return utils.wrapPromiseCallback(sendEvents ? events.flush() : Promise.resolve(), onDone);
   }
 
   function variation(key, defaultValue) {
@@ -617,11 +619,24 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     }
   }
 
-  function stop() {
-    if (sendEvents) {
-      events.stop();
-      events.flush(true);
+  function close(onDone) {
+    if (closed) {
+      return utils.wrapPromiseCallback(Promise.resolve(), onDone);
     }
+    const p = Promise.resolve()
+      .then(() => {
+        disconnectStream();
+        if (sendEvents) {
+          events.stop();
+          return events.flush();
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        closed = true;
+        flags = {};
+      });
+    return utils.wrapPromiseCallback(p, onDone);
   }
 
   function getFlagsInternal() {
@@ -642,6 +657,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     setStreaming: setStreaming,
     flush: flush,
     allFlags: allFlags,
+    close: close,
   };
 
   return {
@@ -652,7 +668,6 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     logger: logger, // The logging abstraction.
     requestor: requestor, // The Requestor object.
     start: start, // Starts the client once the environment is ready.
-    stop: stop, // Shuts down the client.
     enqueueEvent: enqueueEvent, // Puts an analytics event in the queue, if event sending is enabled.
     getFlagsInternal: getFlagsInternal, // Returns flag data structure with all details.
     internalChangeEventName: internalChangeEvent, // This event is triggered whenever we have new flag state.

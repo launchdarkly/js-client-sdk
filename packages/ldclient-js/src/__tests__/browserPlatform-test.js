@@ -39,18 +39,6 @@ describe('browserPlatform', () => {
       expect(req.async).toEqual(true);
     });
 
-    it('makes a synchronous request', () => {
-      const method = 'POST';
-      const url = 'http://example';
-      const body = '{}';
-      platform.httpRequest(method, url, {}, body, true);
-
-      expect(server.requests.length).toEqual(1);
-      const req = server.requests[0];
-
-      expect(req.async).toEqual(false);
-    });
-
     it('resolves promise when response is received', async () => {
       const requestInfo = platform.httpRequest('GET', url);
 
@@ -96,44 +84,6 @@ describe('browserPlatform', () => {
 
       expect(server.requests.length).toEqual(1);
       expect(server.requests[0].aborted).toBe(true);
-    });
-  });
-
-  describe('httpAllowsSync()', () => {
-    function platformWithUserAgent(s) {
-      window.navigator.__defineGetter__('userAgent', () => s);
-      return browserPlatform();
-    }
-
-    it('returns true for Chrome 72', () => {
-      const p = platformWithUserAgent(
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36'
-      );
-      expect(p.httpAllowsSync()).toBe(true);
-    });
-
-    it('returns false for Chrome 73', () => {
-      const p = platformWithUserAgent(
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
-      );
-      expect(p.httpAllowsSync()).toBe(false);
-    });
-
-    it('returns false for Chrome 74', () => {
-      const p = platformWithUserAgent(
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3683.103 Safari/537.36'
-      );
-      expect(p.httpAllowsSync()).toBe(false);
-    });
-
-    it('returns true for unknown browser', () => {
-      const p = platformWithUserAgent('Special Kitty Cat Browser');
-      expect(p.httpAllowsSync()).toBe(true);
-    });
-
-    it('returns true if userAgent is missing', () => {
-      const p = platformWithUserAgent(null);
-      expect(p.httpAllowsSync()).toBe(true);
     });
   });
 
