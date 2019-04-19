@@ -35,4 +35,5 @@ git add *
 git commit -m "Updating documentation to version $VERSION"
 git push origin gh-pages
 
+cd $PROJECT_DIR
 rm -rf $TEMP_DIR
