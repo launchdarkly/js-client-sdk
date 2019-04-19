@@ -1,4 +1,4 @@
-const responseHeadersToCopy = ['date', 'content-type'];
+const responseHeadersToCopy = ['Date', 'Content-Type'];
 
 function isSyncXhrSupported() {
   // This is temporary logic to disable synchronous XHR in Chrome 73 and above. In all other browsers,
@@ -48,7 +48,7 @@ export default function newHttpRequest(method, url, headers, body, pageIsClosing
           const key = responseHeadersToCopy[i];
           const value = xhr.getResponseHeader(key);
           if (value !== null && value !== undefined) {
-            headers[key] = value;
+            headers[key.toLowerCase()] = value;
           }
         }
         resolve({
