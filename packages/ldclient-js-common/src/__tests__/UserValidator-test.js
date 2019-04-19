@@ -6,11 +6,9 @@ describe('UserValidator', () => {
   let uv;
 
   beforeEach(() => {
-    localStorage = {
-
-    };
+    localStorage = {};
     logger = {
-      warn: jest.fn()
+      warn: jest.fn(),
     };
     uv = UserValidator(localStorage, logger);
   });
@@ -45,11 +43,11 @@ describe('UserValidator', () => {
   it('generates and stores key for anonymous user', async () => {
     let storageKey;
     let storedValue;
-    localStorage.get = async key => null;
+    localStorage.get = async () => null;
     localStorage.set = async (key, value) => {
       storageKey = key;
       storedValue = value;
-    }
+    };
     const u0 = { anonymous: true };
     const u1 = await uv.validateUser(u0);
     expect(storedValue).toEqual(expect.anything());
