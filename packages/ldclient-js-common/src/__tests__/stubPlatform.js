@@ -11,7 +11,7 @@ sinonXhr.restore();
 // The SDK expects the platform object to have the following properties and methods:
 //
 // httpRequest?: (method, url, headers, body, sync) => requestProperties
-//   requestProperties.promise: Promise     // resolves to { status, headers, body } or rejects for a network error
+//   requestProperties.promise: Promise     // resolves to { status, header: (name) => value, body } or rejects for a network error
 //   requestProperties.cancel?: () => void  // provided if it's possible to cancel requests in this implementation
 // httpAllowsPost: boolean        // true if we can do cross-origin POST requests
 // getCurrentUrl: () => string    // returns null if we're not in a browser
@@ -119,8 +119,6 @@ export function mockStateProvider(initialState) {
 // It'd be nice to be able to reuse this same logic in the browser client instead of copying it,
 // but it's not of any use in Node or Electron so it doesn't really belong in the common package.
 
-const responseHeadersToCopy = ['date', 'content-type'];
-
 function newHttpRequest(method, url, headers, body, synchronous) {
   const xhr = new sinonXhr();
   xhr.open(method, url, !synchronous);
@@ -142,17 +140,9 @@ function newHttpRequest(method, url, headers, body, synchronous) {
         if (cancelled) {
           return;
         }
-        const headers = {};
-        for (const i in responseHeadersToCopy) {
-          const key = responseHeadersToCopy[i];
-          const value = xhr.getResponseHeader(key);
-          if (value !== null && value !== undefined) {
-            headers[key] = value;
-          }
-        }
         resolve({
           status: xhr.status,
-          headers: headers,
+          header: key => xhr.getResponseHeader(key),
           body: xhr.responseText,
         });
       });
