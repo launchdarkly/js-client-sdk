@@ -3,6 +3,14 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.10.0] - 2019-04-19
+### Added:
+- Generated TypeDoc documentation for all types, properties, and methods is now available online at [https://launchdarkly.github.io/js-client/](https://launchdarkly.github.io/js-client/). Currently this will only be for the latest released version.
+- The SDK now allows you to specify an anonymous user without a key (i.e. the `anonymous` property is `true`, and there is no `key` property). In that case, the SDK will generate a UUID and send that as the user key. It will also cache this generated key in local storage (if local storage is available) so that anonymous users in the same browser will always get the same key.
+
+### Fixed:
+- Setting user attributes to non-string values when a string was expected would prevent evaluations and analytics events from working. The SDK will now convert attribute values to strings as needed.
+
 ## [2.9.7] - 2019-04-16
 ### Fixed:
 - If there are pending analytics events when the page is being closed, the SDK normally attempts to deliver them by making a synchronous HTTP request. Chrome, as of version 73, does not allow this and logs an error. An upcoming release will change how events are sent, but as a temporary measure to avoid these errors, the SDK will now simply discard any pending events when the page is being closed _if_ the browser is Chrome version 73 or higher. In other browsers, there is no change. Note that this means that in Chrome 73, some events may be lost; that was already the case. The purpose of this patch is simply to avoid triggering errors. ([#178](https://github.com/launchdarkly/js-client-private/pull/178))

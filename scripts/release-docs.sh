@@ -29,7 +29,7 @@ make
 
 cd $DOCS_CHECKOUT_DIR
 
-git rm -r *
+git rm -r * || true
 touch .nojekyll  # this turns off unneeded preprocessing by GH Pages which can break our docs
 git add .nojekyll
 cp -r $PROJECT_DIR/docs/build/html/* .
