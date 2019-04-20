@@ -2,10 +2,10 @@ import * as messages from './messages';
 import * as utils from './utils';
 
 // The localStorageProvider is provided by the platform object. It should have the following
-// *asynchronous* methods:
-// - get(key, callback): Gets the string value, if any, for the given key; calls callback(error, value)
-// - set(key, value, callback): Stores a string value for the given key; calls callback(error)
-// - remove(key, callback): Removes the given key; calls callback(error)
+// methods, each of which should return a Promise:
+// - get(key): Gets the string value, if any, for the given key
+// - set(key, value): Stores a string value for the given key
+// - remove(key): Removes the given key
 export default function Store(localStorageProvider, environment, hash, ident, logger) {
   const store = {};
 
@@ -18,15 +18,14 @@ export default function Store(localStorageProvider, environment, hash, ident, lo
     return 'ld:' + environment + ':' + key;
   }
 
-  store.loadFlags = function(callback) {
-    localStorageProvider.get(getFlagsKey(), (err, dataStr) => {
-      if (err) {
-        logger.warn(messages.localStorageUnavailable());
-        callback && callback(err, null);
-      } else {
+  // Returns a Promise which will be resolved with a parsed JSON value if a stored value was available,
+  // resolved with null if there was no value, or rejected if storage was not available.
+  store.loadFlags = () =>
+    localStorageProvider
+      .get(getFlagsKey())
+      .then(dataStr => {
         if (dataStr === null || dataStr === undefined) {
-          callback && callback(null, null);
-          return;
+          return null;
         }
         try {
           let data = JSON.parse(dataStr);
@@ -38,34 +37,33 @@ export default function Store(localStorageProvider, environment, hash, ident, lo
               delete data['$schema'];
             }
           }
-          callback && callback(null, data);
+          return data;
         } catch (ex) {
-          store.clearFlags(() => {
-            callback && callback(ex, null);
-          });
+          return store.clearFlags().then(() => Promise.reject(ex));
         }
-      }
-    });
-  };
+      })
+      .catch(err => {
+        logger.warn(messages.localStorageUnavailable());
+        return Promise.reject(err);
+      });
 
-  store.saveFlags = function(flags, callback) {
+  // Returns a Promise which will be resolved with no value if successful, or rejected if storage
+  // was not available.
+  store.saveFlags = flags => {
     const data = utils.extend({}, flags, { $schema: 1 });
-    localStorageProvider.set(getFlagsKey(), JSON.stringify(data), err => {
-      if (err) {
-        logger.warn(messages.localStorageUnavailable());
-      }
-      callback && callback(err);
+    return localStorageProvider.set(getFlagsKey(), JSON.stringify(data)).catch(err => {
+      logger.warn(messages.localStorageUnavailable());
+      return Promise.reject(err);
     });
   };
 
-  store.clearFlags = function(callback) {
-    localStorageProvider.clear(getFlagsKey(), err => {
-      if (err) {
-        logger.warn(messages.localStorageUnavailable());
-      }
-      callback && callback(err);
+  // Returns a Promise which will be resolved with no value if successful, or rejected if storage
+  // was not available.
+  store.clearFlags = () =>
+    localStorageProvider.clear(getFlagsKey()).catch(err => {
+      logger.warn(messages.localStorageUnavailable());
+      return Promise.reject(err);
     });
-  };
 
   return store;
 }

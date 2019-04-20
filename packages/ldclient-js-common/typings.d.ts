@@ -215,8 +215,15 @@ declare module 'ldclient-js-common' {
   export interface LDUser {
     /**
      * A unique string identifying a user.
+     *
+     * If you omit this property, and also set `anonymous` to `true`, the SDK will generate a UUID string
+     * and use that as the key; it will attempt to persist that value in local storage if possible so the
+     * next anonymous user will get the same key, but if local storage is unavailable then it will
+     * generate a new key each time you specify the user.
+     *
+     * It is an error to omit the `key` property if `anonymous` is not set.
      */
-    key: string;
+    key?: string;
 
     /**
      * An optional secondary key for a user. This affects
@@ -570,6 +577,20 @@ declare module 'ldclient-js-common' {
      *   [[variation]], so any flag that cannot be evaluated will have a null value.
      */
     allFlags(): LDFlagSet;
-  }
 
+   /**
+    * Shuts down the client and releases its resources, after delivering any pending analytics
+    * events. After the client is closed, all calls to [[variation]] will return default values,
+    * and it will not make any requests to LaunchDarkly.
+    *
+    * @param onDone
+    *   A function which will be called when the operation completes. If omitted, you
+    *   will receive a Promise instead.
+    *
+    * @returns
+    *   If you provided a callback, then nothing. Otherwise, a Promise which resolves once
+    *   closing is finished. It will never be rejected.
+    */
+   close(onDone?: () => void): Promise<void>;
+  }
 }

@@ -8,17 +8,14 @@ export default function EventSender(platform, eventsUrl, environmentId, imageCre
   const imageUrl = eventsUrl + '/a/' + environmentId + '.gif';
   const sender = {};
 
-  function loadUrlUsingImage(src, onDone) {
+  function loadUrlUsingImage(src) {
     const img = new window.Image();
-    if (onDone) {
-      img.addEventListener('load', onDone);
-    }
     img.src = src;
   }
 
-  function getResponseInfo(xhr) {
-    const ret = { status: xhr.status };
-    const dateStr = xhr.getResponseHeader('Date');
+  function getResponseInfo(result) {
+    const ret = { status: result.status };
+    const dateStr = result.header('date');
     if (dateStr) {
       const time = Date.parse(dateStr);
       if (time) {
@@ -28,59 +25,55 @@ export default function EventSender(platform, eventsUrl, environmentId, imageCre
     return ret;
   }
 
-  function sendChunk(events, usePost, sync) {
+  function sendChunk(events, usePost) {
     const createImage = imageCreator || loadUrlUsingImage;
     const jsonBody = JSON.stringify(events);
-    const send = onDone => {
-      function createRequest(canRetry) {
-        const xhr = platform.newHttpRequest();
-        xhr.open('POST', postUrl, !sync);
-        utils.addLDHeaders(xhr, platform);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('X-LaunchDarkly-Event-Schema', '3');
-        if (!sync) {
-          xhr.addEventListener('load', () => {
-            if (xhr.status >= 400 && errors.isHttpErrorRecoverable(xhr.status) && canRetry) {
-              createRequest(false).send(jsonBody);
-            } else {
-              onDone(getResponseInfo(xhr));
-            }
-          });
-          if (canRetry) {
-            xhr.addEventListener('error', () => {
-              createRequest(false).send(jsonBody);
-            });
-          }
-        }
-        return xhr;
-      }
-      if (usePost) {
-        createRequest(true).send(jsonBody);
-      } else {
-        const src = imageUrl + '?d=' + utils.base64URLEncode(jsonBody);
-        createImage(src, sync ? null : onDone);
-      }
-    };
 
-    if (sync) {
-      send();
+    function doPostRequest(canRetry) {
+      const headers = utils.extend(
+        {
+          'Content-Type': 'application/json',
+          'X-LaunchDarkly-Event-Schema': '3',
+        },
+        utils.getLDHeaders(platform)
+      );
+      return platform
+        .httpRequest('POST', postUrl, headers, jsonBody)
+        .promise.then(result => {
+          if (!result) {
+            // This was a response from a fire-and-forget request, so we won't have a status.
+            return;
+          }
+          if (result.status >= 400 && errors.isHttpErrorRecoverable(result.status) && canRetry) {
+            return doPostRequest(false);
+          } else {
+            return getResponseInfo(result);
+          }
+        })
+        .catch(() => {
+          if (canRetry) {
+            return doPostRequest(false);
+          }
+          return Promise.reject();
+        });
+    }
+
+    if (usePost) {
+      return doPostRequest(true).catch(() => {});
     } else {
-      return new Promise(resolve => {
-        send(resolve);
-      });
+      const src = imageUrl + '?d=' + utils.base64URLEncode(jsonBody);
+      createImage(src);
+      return Promise.resolve();
+      // We do not specify an onload handler for the image because we don't want the client to wait around
+      // for the image to load - it won't provide a server response, there's nothing to be done.
     }
   }
 
-  sender.sendEvents = function(events, sync) {
-    if (!platform.newHttpRequest) {
-      return Promise.resolve();
-    }
-    // Workaround for non-support of sync XHR in some browsers - https://github.com/launchdarkly/js-client/issues/147
-    if (sync && !(platform.httpAllowsSync && platform.httpAllowsSync())) {
+  sender.sendEvents = function(events) {
+    if (!platform.httpRequest) {
       return Promise.resolve();
     }
     const canPost = platform.httpAllowsPost();
-    const finalSync = sync === undefined ? false : sync;
     let chunks;
     if (canPost) {
       // no need to break up events into chunks if we can send a POST
@@ -90,9 +83,9 @@ export default function EventSender(platform, eventsUrl, environmentId, imageCre
     }
     const results = [];
     for (let i = 0; i < chunks.length; i++) {
-      results.push(sendChunk(chunks[i], canPost, finalSync));
+      results.push(sendChunk(chunks[i], canPost));
     }
-    return sync ? Promise.resolve() : Promise.all(results);
+    return Promise.all(results);
   };
 
   return sender;

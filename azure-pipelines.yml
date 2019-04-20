@@ -1,0 +1,22 @@
+jobs:
+  - job: build
+    pool:
+      vmImage: 'vs2017-win2016'
+    steps:
+      - task: PowerShell@2
+        displayName: 'install dependencies'
+        inputs:
+          targetType: inline
+          script: |
+            node --version
+            npm install
+      - task: PowerShell@2
+        displayName: 'build'
+        inputs:
+          targetType: inline
+          script: npm run build
+      - task: PowerShell@2
+        displayName: 'test'
+        inputs:
+          targetType: inline
+          script: npm test

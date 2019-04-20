@@ -1,44 +1,89 @@
+import sinon from 'sinon';
+
 import browserPlatform from '../browserPlatform';
 
 describe('browserPlatform', () => {
   const platform = browserPlatform();
   const lsKeyPrefix = 'ldclient-js-test:';
 
-  describe('httpAllowsSync()', () => {
-    function platformWithUserAgent(s) {
-      window.navigator.__defineGetter__('userAgent', () => s);
-      return browserPlatform();
-    }
+  describe('httpRequest()', () => {
+    // These tests verify that our HTTP abstraction is correctly translated into the XMLHttpRequest API,
+    // which will be intercepted by Sinon.
 
-    it('returns true for Chrome 72', () => {
-      const p = platformWithUserAgent(
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36'
-      );
-      expect(p.httpAllowsSync()).toBe(true);
+    const url = 'http://example';
+
+    let server;
+
+    beforeEach(() => {
+      server = sinon.createFakeServer();
     });
 
-    it('returns false for Chrome 73', () => {
-      const p = platformWithUserAgent(
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
-      );
-      expect(p.httpAllowsSync()).toBe(false);
+    afterEach(() => {
+      server.restore();
     });
 
-    it('returns false for Chrome 74', () => {
-      const p = platformWithUserAgent(
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3683.103 Safari/537.36'
-      );
-      expect(p.httpAllowsSync()).toBe(false);
+    it('sets request properties', () => {
+      const method = 'POST';
+      const headers = { a: '1', b: '2' };
+      const body = '{}';
+      platform.httpRequest(method, url, headers, body);
+
+      expect(server.requests.length).toEqual(1);
+      const req = server.requests[0];
+
+      expect(req.method).toEqual(method);
+      expect(req.url).toEqual(url);
+      expect(req.requestHeaders['a']).toEqual('1');
+      expect(req.requestHeaders['b']).toEqual('2');
+      expect(req.requestBody).toEqual(body);
+      expect(req.async).toEqual(true);
     });
 
-    it('returns true for unknown browser', () => {
-      const p = platformWithUserAgent('Special Kitty Cat Browser');
-      expect(p.httpAllowsSync()).toBe(true);
+    it('resolves promise when response is received', async () => {
+      const requestInfo = platform.httpRequest('GET', url);
+
+      expect(server.requests.length).toEqual(1);
+      const req = server.requests[0];
+      req.respond(200, {}, 'hello');
+
+      const result = await requestInfo.promise;
+      expect(result.status).toEqual(200);
+      expect(result.body).toEqual('hello');
     });
 
-    it('returns true if userAgent is missing', () => {
-      const p = platformWithUserAgent(null);
-      expect(p.httpAllowsSync()).toBe(true);
+    it('returns headers', async () => {
+      const headers = { 'Content-Type': 'text/plain', Date: 'not really a date' };
+      const requestInfo = platform.httpRequest('GET', url);
+
+      expect(server.requests.length).toEqual(1);
+      const req = server.requests[0];
+      req.respond(200, headers, 'hello');
+
+      const result = await requestInfo.promise;
+      expect(result.header('content-type')).toEqual(headers['Content-Type']);
+      expect(result.header('date')).toEqual(headers['Date']);
+    });
+
+    it('rejects promise if request gets a network error', async () => {
+      const requestInfo = platform.httpRequest('GET', url);
+
+      expect(server.requests.length).toEqual(1);
+      const req = server.requests[0];
+      req.error();
+
+      await expect(requestInfo.promise).rejects.toThrow();
+    });
+
+    it('allows request to be cancelled', () => {
+      const requestInfo = platform.httpRequest('GET', url);
+
+      expect(server.requests.length).toEqual(1);
+      expect(server.requests[0].aborted).toBeFalsy();
+
+      requestInfo.cancel();
+
+      expect(server.requests.length).toEqual(1);
+      expect(server.requests[0].aborted).toBe(true);
     });
   });
 
@@ -87,39 +132,24 @@ describe('browserPlatform', () => {
     // mock implementation of window.localStorage, but these tests still verify that our async
     // wrapper code in browserPlatform.js is passing the parameters through correctly.
 
-    it('returns null or undefined for missing value', done => {
-      platform.localStorage.get(lsKeyPrefix + 'unused-key', (err, value) => {
-        expect(err).not.toBe(expect.anything());
-        expect(value).not.toBe(expect.anything());
-        done();
-      });
+    it('returns null or undefined for missing value', async () => {
+      const value = await platform.localStorage.get(lsKeyPrefix + 'unused-key');
+      expect(value).not.toBe(expect.anything());
     });
 
-    it('can get and set value', done => {
+    it('can get and set value', async () => {
       const key = lsKeyPrefix + 'get-set-key';
-      platform.localStorage.set(key, 'hello', err => {
-        expect(err).not.toBe(expect.anything());
-        platform.localStorage.get(key, (err, value) => {
-          expect(err).not.toBe(expect.anything());
-          expect(value).toEqual('hello');
-          done();
-        });
-      });
+      await platform.localStorage.set(key, 'hello');
+      const value = await platform.localStorage.get(key);
+      expect(value).toEqual('hello');
     });
 
-    it('can delete value', done => {
+    it('can delete value', async () => {
       const key = lsKeyPrefix + 'delete-key';
-      platform.localStorage.set(key, 'hello', err => {
-        expect(err).not.toBe(expect.anything());
-        platform.localStorage.clear(key, err => {
-          expect(err).not.toBe(expect.anything());
-          platform.localStorage.get(key, (err, value) => {
-            expect(err).not.toBe(expect.anything());
-            expect(value).not.toBe(expect.anything());
-            done();
-          });
-        });
-      });
+      await platform.localStorage.set(key, 'hello');
+      await platform.localStorage.clear(key);
+      const value = platform.localStorage.get(key);
+      expect(value).not.toBe(expect.anything());
     });
 
     it('reports local storage as being unavailable if window.localStorage is missing', () => {

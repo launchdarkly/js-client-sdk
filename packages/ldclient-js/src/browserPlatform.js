@@ -1,9 +1,13 @@
+import newHttpRequest from './httpRequest';
+
 export default function makeBrowserPlatform() {
   const ret = {};
 
+  ret.pageIsClosing = false; // this will be set to true by index.js if the page is closing
+
   // XMLHttpRequest may not exist if we're running in a server-side rendering context
   if (window.XMLHttpRequest) {
-    ret.newHttpRequest = () => new window.XMLHttpRequest();
+    ret.httpRequest = (method, url, headers, body) => newHttpRequest(method, url, headers, body, ret.pageIsClosing);
   }
 
   let hasCors;
@@ -14,9 +18,6 @@ export default function makeBrowserPlatform() {
     }
     return hasCors;
   };
-
-  const allowsSync = isSyncXhrSupported();
-  ret.httpAllowsSync = () => allowsSync;
 
   ret.getCurrentUrl = () => window.location.href;
 
@@ -35,29 +36,20 @@ export default function makeBrowserPlatform() {
   try {
     if (window.localStorage) {
       ret.localStorage = {
-        get: (key, callback) => {
-          try {
-            callback(null, window.localStorage.getItem(key));
-          } catch (ex) {
-            callback(ex);
-          }
-        },
-        set: (key, value, callback) => {
-          try {
+        get: key =>
+          new Promise(resolve => {
+            resolve(window.localStorage.getItem(key));
+          }),
+        set: (key, value) =>
+          new Promise(resolve => {
             window.localStorage.setItem(key, value);
-            callback(null);
-          } catch (ex) {
-            callback(ex);
-          }
-        },
-        clear: (key, callback) => {
-          try {
+            resolve();
+          }),
+        clear: key =>
+          new Promise(resolve => {
             window.localStorage.removeItem(key);
-            callback(null);
-          } catch (ex) {
-            callback(ex);
-          }
-        },
+            resolve();
+          }),
       };
     }
   } catch (e) {
@@ -92,18 +84,4 @@ export default function makeBrowserPlatform() {
   ret.userAgent = 'JSClient';
 
   return ret;
-}
-
-// This is temporary logic to disable synchronous XHR in Chrome 73 and above. In all other browsers,
-// we will assume it is supported. See https://github.com/launchdarkly/js-client/issues/147
-function isSyncXhrSupported() {
-  const userAgent = window.navigator && window.navigator.userAgent;
-  if (userAgent) {
-    const chromeMatch = userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
-    if (chromeMatch) {
-      const version = parseInt(chromeMatch[2], 10);
-      return version < 73;
-    }
-  }
-  return true;
 }

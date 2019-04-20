@@ -8,22 +8,20 @@ describe('LDClient', () => {
   const user = { key: 'user' };
   let warnSpy;
   let errorSpy;
-  let xhr;
-  let requests = [];
+  let server;
 
   beforeEach(() => {
-    xhr = sinon.useFakeXMLHttpRequest();
-    xhr.onCreate = function(req) {
-      requests.push(req);
-    };
+    server = sinon.createFakeServer();
+    server.autoRespond = true;
+    server.autoRespondAfter = 0;
+    server.respondWith([200, { 'Content-Type': 'application/json' }, '{}']); // default 200 response for tests that don't specify otherwise
 
     warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
-    requests = [];
-    xhr.restore();
+    server.restore();
     warnSpy.mockRestore();
     errorSpy.mockRestore();
   });
@@ -33,58 +31,58 @@ describe('LDClient', () => {
   });
 
   describe('initialization', () => {
-    it('should trigger the ready event', done => {
-      const handleReady = jest.fn();
-      const client = LDClient.initialize(envName, user, {
-        bootstrap: {},
-      });
-
-      client.on('ready', handleReady);
-
-      setTimeout(() => {
-        expect(handleReady).toHaveBeenCalled();
-        done();
-      }, 0);
+    it('should trigger the ready event', async () => {
+      const client = LDClient.initialize(envName, user, { bootstrap: {}, sendEvents: false });
+      await client.waitForInitialization();
     });
 
-    it('should not fetch flag settings if bootstrap is provided, but should still fetch goals', () => {
-      LDClient.initialize(envName, user, { bootstrap: {} });
-      expect(requests.length).toEqual(1);
-      expect(/sdk\/eval/.test(requests[0].url)).toEqual(false); // it's the goals request
+    it('should not fetch flag settings if bootstrap is provided, but should still fetch goals', async () => {
+      const client = LDClient.initialize(envName, user, { bootstrap: {}, sendEvents: false });
+      await client.waitForInitialization();
+      expect(server.requests.length).toEqual(1);
+      expect(server.requests[0].url).toMatch(/sdk\/goals/);
     });
 
-    it('sends correct User-Agent in request', done => {
-      LDClient.initialize(envName, user, { fetchGoals: false });
+    it('sends correct User-Agent in request', async () => {
+      const client = LDClient.initialize(envName, user, { fetchGoals: false, sendEvents: false });
+      await client.waitForInitialization();
 
-      setTimeout(() => {
-        expect(requests.length).toEqual(1);
-        expect(requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toMatch(/^JSClient\//);
-        done();
-      }, 0);
+      expect(server.requests.length).toEqual(1);
+      expect(server.requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toMatch(/^JSClient\//);
     });
   });
 
   describe('goals', () => {
-    it('fetches goals if fetchGoals is unspecified', () => {
-      LDClient.initialize(envName, user, {});
-      expect(requests.length).toEqual(2);
-      expect(/sdk\/goals/.test(requests[1].url)).toEqual(true);
+    it('fetches goals if fetchGoals is unspecified', async () => {
+      const client = LDClient.initialize(envName, user, { sendEvents: false });
+      await client.waitForInitialization();
+      expect(server.requests.length).toEqual(2);
+      // The following line uses arrayContaining because we can't be sure whether the goals request will
+      // be made before or after the flags request.
+      expect(server.requests).toEqual(
+        expect.arrayContaining([expect.objectContaining({ url: expect.stringMatching(/sdk\/goals/) })])
+      );
     });
 
-    it('fetches goals if fetchGoals is true', () => {
-      LDClient.initialize(envName, user, { fetchGoals: true });
-      expect(requests.length).toEqual(2);
-      expect(/sdk\/goals/.test(requests[1].url)).toEqual(true);
+    it('fetches goals if fetchGoals is true', async () => {
+      const client = LDClient.initialize(envName, user, { fetchGoals: true, sendEvents: false });
+      await client.waitForInitialization();
+      expect(server.requests.length).toEqual(2);
+      expect(server.requests).toEqual(
+        expect.arrayContaining([expect.objectContaining({ url: expect.stringMatching(/sdk\/goals/) })])
+      );
     });
 
-    it('does not fetch goals if fetchGoals is false', () => {
-      LDClient.initialize(envName, user, { fetchGoals: false });
-      expect(requests.length).toEqual(1);
+    it('does not fetch goals if fetchGoals is false', async () => {
+      const client = LDClient.initialize(envName, user, { fetchGoals: false, sendEvents: false });
+      await client.waitForInitialization();
+      expect(server.requests.length).toEqual(1);
+      expect(server.requests[0].url).toMatch(/sdk\/eval/);
     });
 
     it('should resolve waitUntilGoalsReady when goals are loaded', done => {
       const handleGoalsReady = jest.fn();
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+      const client = LDClient.initialize(envName, user, { bootstrap: {}, sendEvents: false });
 
       client.waitUntilGoalsReady().then(handleGoalsReady);
 
@@ -95,35 +93,104 @@ describe('LDClient', () => {
         }, 0);
       });
 
-      expect(requests.length).toEqual(1);
-      requests[0].respond(200, { 'Content-Type': 'application/json' }, '[]');
+      expect(server.requests.length).toEqual(1);
+      server.requests[0].respond(200, { 'Content-Type': 'application/json' }, '[]');
     });
   });
 
   describe('track()', () => {
-    it('should not warn when tracking a known custom goal event', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+    it('should not warn when tracking a known custom goal event', async () => {
+      server.respondWith([200, { 'Content-Type': 'application/json' }, '[{"key": "known", "kind": "custom"}]']);
 
-      client.on('ready', () => {
-        client.track('known');
-        expect(warnSpy).not.toHaveBeenCalled();
-        expect(errorSpy).not.toHaveBeenCalled();
-        done();
-      });
+      const client = LDClient.initialize(envName, user, { bootstrap: {}, sendEvents: false });
+      await client.waitForInitialization();
+      await client.waitUntilGoalsReady();
 
-      requests[0].respond(200, { 'Content-Type': 'application/json' }, '[{"key": "known", "kind": "custom"}]');
+      client.track('known');
+      expect(warnSpy).not.toHaveBeenCalled();
+      expect(errorSpy).not.toHaveBeenCalled();
     });
 
-    it('should warn when tracking an unknown custom goal event', done => {
-      const client = LDClient.initialize(envName, user, { bootstrap: {} });
+    it('should warn when tracking an unknown custom goal event', async () => {
+      server.respondWith([200, { 'Content-Type': 'application/json' }, '[{"key": "known", "kind": "custom"}]']);
 
-      requests[0].respond(200, { 'Content-Type': 'application/json' }, '[{"key": "known", "kind": "custom"}]');
+      const client = LDClient.initialize(envName, user, { bootstrap: {}, sendEvents: false });
+      await client.waitForInitialization();
+      await client.waitUntilGoalsReady();
 
-      client.on('ready', () => {
-        client.track('unknown');
-        expect(warnSpy).toHaveBeenCalledWith(common.messages.unknownCustomEventKey('unknown'));
-        done();
-      });
+      client.track('unknown');
+      expect(warnSpy).toHaveBeenCalledWith(common.messages.unknownCustomEventKey('unknown'));
+    });
+  });
+
+  describe('event flushing', () => {
+    it('normally uses asynchronous XHR', async () => {
+      const config = { bootstrap: {}, flushInterval: 100000, fetchGoals: false };
+      const client = LDClient.initialize(envName, user, config);
+      await client.waitForInitialization();
+
+      await client.flush();
+
+      expect(server.requests.length).toEqual(2);
+      expect(server.requests[0].async).toBe(true); // flags query
+      expect(server.requests[1].async).toBe(true); // events
+    });
+
+    async function setupClientAndTriggerUnload() {
+      const config = { bootstrap: {}, flushInterval: 100000, fetchGoals: false };
+      const client = LDClient.initialize(envName, user, config);
+      await client.waitForInitialization();
+
+      window.dispatchEvent(new window.Event('beforeunload'));
+
+      return client;
+    }
+
+    describe('uses synchronous XHR during page unload', () => {
+      function testWithUserAgent(desc, ua) {
+        it('in ' + desc, async () => {
+          window.navigator.__defineGetter__('userAgent', () => ua);
+
+          await setupClientAndTriggerUnload();
+
+          expect(server.requests.length).toEqual(2);
+          expect(server.requests[0].async).toBe(true); // flags query
+          expect(server.requests[1].async).toBe(false); // events
+        });
+      }
+
+      testWithUserAgent(
+        'Chrome 72',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36'
+      );
+
+      testWithUserAgent('unknown browser', 'Special Kitty Cat Browser');
+
+      testWithUserAgent('empty user-agent', null);
+    });
+
+    describe('discards events during page unload', () => {
+      function testWithUserAgent(desc, ua) {
+        it('in ' + desc, async () => {
+          window.navigator.__defineGetter__('userAgent', () => ua);
+
+          await setupClientAndTriggerUnload();
+
+          window.dispatchEvent(new window.Event('beforeunload'));
+
+          expect(server.requests.length).toEqual(1); // flags query
+        });
+      }
+
+      testWithUserAgent(
+        'Chrome 73',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
+      );
+
+      testWithUserAgent(
+        'Chrome 74',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3683.103 Safari/537.36'
+      );
     });
   });
 });
