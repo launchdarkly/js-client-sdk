@@ -15,7 +15,7 @@ export default function EventSender(platform, eventsUrl, environmentId, imageCre
 
   function getResponseInfo(result) {
     const ret = { status: result.status };
-    const dateStr = result.headers['date'];
+    const dateStr = result.header('date');
     if (dateStr) {
       const time = Date.parse(dateStr);
       if (time) {
