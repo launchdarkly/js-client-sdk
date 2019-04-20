@@ -1,5 +1,3 @@
-const responseHeadersToCopy = ['Date', 'Content-Type'];
-
 function isSyncXhrSupported() {
   // This is temporary logic to disable synchronous XHR in Chrome 73 and above. In all other browsers,
   // we will assume it is supported. See https://github.com/launchdarkly/js-client/issues/147
@@ -14,7 +12,7 @@ function isSyncXhrSupported() {
   return true;
 }
 
-const emptyResult = { promise: Promise.resolve({ status: 200, headers: {}, body: null }) };
+const emptyResult = { promise: Promise.resolve({ status: 200, header: () => null, body: null }) };
 
 export default function newHttpRequest(method, url, headers, body, pageIsClosing) {
   if (pageIsClosing) {
@@ -43,17 +41,9 @@ export default function newHttpRequest(method, url, headers, body, pageIsClosing
         if (cancelled) {
           return;
         }
-        const headers = {};
-        for (const i in responseHeadersToCopy) {
-          const key = responseHeadersToCopy[i];
-          const value = xhr.getResponseHeader(key);
-          if (value !== null && value !== undefined) {
-            headers[key.toLowerCase()] = value;
-          }
-        }
         resolve({
           status: xhr.status,
-          headers: headers,
+          header: key => xhr.getResponseHeader(key),
           body: xhr.responseText,
         });
       });

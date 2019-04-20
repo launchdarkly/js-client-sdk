@@ -51,9 +51,8 @@ describe('browserPlatform', () => {
       expect(result.body).toEqual('hello');
     });
 
-    it('returns the headers we care about', async () => {
+    it('returns headers', async () => {
       const headers = { 'Content-Type': 'text/plain', Date: 'not really a date' };
-      const lowercaseHeaders = { 'content-type': 'text/plain', date: 'not really a date' };
       const requestInfo = platform.httpRequest('GET', url);
 
       expect(server.requests.length).toEqual(1);
@@ -61,7 +60,8 @@ describe('browserPlatform', () => {
       req.respond(200, headers, 'hello');
 
       const result = await requestInfo.promise;
-      expect(result.headers).toEqual(lowercaseHeaders);
+      expect(result.header('content-type')).toEqual(headers['Content-Type']);
+      expect(result.header('date')).toEqual(headers['Date']);
     });
 
     it('rejects promise if request gets a network error', async () => {

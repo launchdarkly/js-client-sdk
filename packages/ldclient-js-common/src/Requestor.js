@@ -50,8 +50,8 @@ export default function Requestor(platform, options, environment, logger) {
       result => {
         if (
           result.status === 200 &&
-          result.headers['content-type'] &&
-          result.headers['content-type'].lastIndexOf(json) === 0
+          result.header('content-type') &&
+          result.header('content-type').lastIndexOf(json) === 0
         ) {
           return JSON.parse(result.body);
         } else {
