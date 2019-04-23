@@ -84,13 +84,14 @@ export default function GoalManager(clientVars, readyCallback) {
         goalTracker = GoalTracker(goals, sendGoalEvent);
         watchLocation(locationWatcherInterval, refreshGoalTracker);
       }
+      readyCallback();
     })
     .catch(err => {
       clientVars.emitter.maybeReportError(
         new common.errors.LDUnexpectedResponseError('Error fetching goals: ' + (err && err.message) ? err.message : err)
       );
-    })
-    .finally(readyCallback);
+      readyCallback();
+    });
 
   return ret;
 }
