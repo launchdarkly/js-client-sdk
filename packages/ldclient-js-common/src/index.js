@@ -623,6 +623,10 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     if (closed) {
       return utils.wrapPromiseCallback(Promise.resolve(), onDone);
     }
+    const finishClose = () => {
+      closed = true;
+      flags = {};
+    };
     const p = Promise.resolve()
       .then(() => {
         disconnectStream();
@@ -631,11 +635,8 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
           return events.flush();
         }
       })
-      .catch(() => {})
-      .finally(() => {
-        closed = true;
-        flags = {};
-      });
+      .then(finishClose)
+      .catch(finishClose);
     return utils.wrapPromiseCallback(p, onDone);
   }
 
