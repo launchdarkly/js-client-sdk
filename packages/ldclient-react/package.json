@@ -1,6 +1,6 @@
 {
   "name": "ldclient-react",
-  "version": "2.10.0",
+  "version": "2.10.1",
   "description": "LaunchDarkly SDK for React",
   "author": "LaunchDarkly <team@launchdarkly.com>",
   "license": "Apache-2.0",

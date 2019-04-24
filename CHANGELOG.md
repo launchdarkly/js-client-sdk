@@ -3,6 +3,10 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.10.1] - 2019-04-23
+### Fixed:
+- The 2.10.0 release added a usage of the `Promise.finally()` method, which made it incompatible with some older browsers. This has been removed. ([#151](https://github.com/launchdarkly/js-client/issues/151))
+
 ## [2.10.0] - 2019-04-19
 ### Added:
 - Generated TypeDoc documentation for all types, properties, and methods is now available online at [https://launchdarkly.github.io/js-client/](https://launchdarkly.github.io/js-client/). Currently this will only be for the latest released version.
