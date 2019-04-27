@@ -1,4 +1,6 @@
-import { base64URLEncode, wrapPromiseCallback, chunkUserEventsForUrl } from '../utils';
+import { base64URLEncode, getLDUserAgentString, wrapPromiseCallback, chunkUserEventsForUrl } from '../utils';
+
+import * as stubPlatform from './stubPlatform';
 
 describe('utils', () => {
   describe('wrapPromiseCallback', () => {
@@ -36,6 +38,21 @@ describe('utils', () => {
         expect(value).toBeNull();
         done();
       });
+    });
+  });
+
+  describe('getUserAgentString', () => {
+    it('uses platform user-agent and package version by default', () => {
+      const platform = stubPlatform.defaults();
+      const ua = getLDUserAgentString(platform);
+      expect(ua).toEqual('stubClient/' + VERSION);
+    });
+
+    it('uses platform user-agent and platform version if provided', () => {
+      const platform = stubPlatform.defaults();
+      platform.version = '7.8.9';
+      const ua = getLDUserAgentString(platform);
+      expect(ua).toEqual('stubClient/7.8.9');
     });
   });
 
