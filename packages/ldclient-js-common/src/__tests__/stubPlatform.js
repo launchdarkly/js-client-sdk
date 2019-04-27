@@ -26,6 +26,7 @@ sinonXhr.restore();
 // eventSourceIsActive?: (es: EventSource) => boolean  // returns true if it's open or connecting
 // eventSourceAllowsReport?: boolean  // returns true if we can set { method: 'REPORT' } in the options
 // userAgent: string
+// version?: string  // the SDK version for the User-Agent header, if that is *not* the same as the version of ldclient-js-common
 
 export function defaults() {
   const localStore = {};
