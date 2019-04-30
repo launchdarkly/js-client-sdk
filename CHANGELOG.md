@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org).
 
 The LaunchDarkly SDK repositories are being renamed for consistency. This repository is now `js-client-sdk` rather than `js-client`.
 
-The package names will also change. In the 2.10.1 release, there were packages for `ldclient-js`, `ldclient-react` and `ldclient-js-common`; in all future releases, they will be `launchdarkly-js-client-sdk`, `launchdarkly-react-client-sdk`, and `launchdarkly-js-common`, respectively.
+The package names will also change. In the 2.10.1 release, there were packages for `ldclient-js`, `ldclient-react` and `ldclient-js-common`; in all future releases, they will be `launchdarkly-js-client-sdk`, `launchdarkly-react-client-sdk`, and `launchdarkly-js-sdk-common`, respectively.
 
 ## [2.10.1] - 2019-04-23
 ### Fixed:

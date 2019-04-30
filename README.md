@@ -18,7 +18,7 @@ Please note that the JavaScript SDK has two special requirements in terms of you
 
 The SDK does not require any particular JavaScript framework. However, if you are using [React](https://reactjs.org/), there is an add-on to simplify use of the SDK. See the [`ldclient-react` documentation](packages/ldclient-react/README.md).
 
-## SDK browser compatibility
+## Browser compatibility
 
 The SDK supports the following browsers:
 
@@ -95,7 +95,7 @@ Then import it before the module that initializes the LaunchDarkly client:
 
 ### Logging
 
-By default, the SDK uses the `winston` package. There are four logging levels: `debug`, `info`, `warn`, and `error`; by default, `debug` and `info` messages are hidden. See the [TypeScript definitions](https://github.com/launchdarkly/js-client-sdk/tree/master/packages/ldclient-js-common/typings.d.ts) for `LDLogger`, `LDOptions`, and `createConsoleLogger` for more details.
+By default, the SDK uses the `winston` package. There are four logging levels: `debug`, `info`, `warn`, and `error`; by default, `debug` and `info` messages are hidden. See [`LDOptions.logger`](https://launchdarkly.github.io/js-client-sdk/interfaces/_ldclient_js_.ldoptions.html#logger) and [`createConsoleLogger`](https://launchdarkly.github.io/js-client-sdk/index.html#createconsolelogger)` for more details.
 
 ## Learn more
 
