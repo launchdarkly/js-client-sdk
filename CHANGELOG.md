@@ -3,6 +3,16 @@
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.10.2] - 2019-05-01
+### Fixed:
+- Fixed a problem that prevented the Electron and client-side Node SDKs from reporting their own version strings correctly. This fix does not affect the browser JS SDK, so there is no need to upgrade if you are using that.
+
+# Note on future releases
+
+The LaunchDarkly SDK repositories are being renamed for consistency. This repository is now `js-client-sdk` rather than `js-client`.
+
+The package names will also change. In the 2.10.2 release, there were packages for `ldclient-js`, `ldclient-react` and `ldclient-js-common`; in all future releases, they will be `launchdarkly-js-client-sdk`, `launchdarkly-react-client-sdk`, and `launchdarkly-js-sdk-common`, respectively.
+
 ## [2.10.1] - 2019-04-23
 ### Fixed:
 - The 2.10.0 release added a usage of the `Promise.finally()` method, which made it incompatible with some older browsers. This has been removed. ([#151](https://github.com/launchdarkly/js-client/issues/151))
