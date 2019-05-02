@@ -12,6 +12,8 @@
 
 Refer to the [SDK documentation](https://docs.launchdarkly.com/docs/js-sdk-reference#section-getting-started) for instructions on getting started with using the SDK.
 
+Note: _If you are using JavaScript in a non-browser environment,_ please see our [server-side Node.js SDK](https://github.com/launchdarkly/node-server-sdk), [client-side Node.js SDK](https://github.com/launchdarkly/node-client-sdk), and [Electron SDK](https://github.com/launchdarkly/electron-client-sdk).
+
 Please note that the JavaScript SDK has two special requirements in terms of your LaunchDarkly environment. First, in terms of the credentials for your environment that appear on your [Account Settings](https://app.launchdarkly.com/settings/projects) dashboard, the JavaScript SDK uses the "Client-side ID"-- not the "SDK key" or the "Mobile key". Second, for any feature flag that you will be using in JavaScript code, you must check the "Make this flag available to client-side SDKs" box on that flag's Settings page.
 
 ### ReactJS
@@ -20,78 +22,7 @@ The SDK does not require any particular JavaScript framework. However, if you ar
 
 ## Browser compatibility
 
-The SDK supports the following browsers:
-
-* Chrome (any recent)
-* Firefox (any recent)
-* Safari (any recent)
-* Internet Explorer (IE10+)\*
-* Edge (any recent)\*
-* Opera (any recent)\*
-
-\* These browsers do not have built-in support for streaming; see ["EventSource"](#eventsource) below.
-
-_If you are using JavaScript in a non-browser environment,_ please see our [server-side Node.js SDK](https://github.com/launchdarkly/node-server-sdk), [client-side Node.js SDK](https://github.com/launchdarkly/node-client-sdk), and [Electron SDK](https://github.com/launchdarkly/electron-client-sdk).
-
-Web browsers vary widely in their support of specific features and standards. Three features that are used by the LaunchDarkly SDK that may not be available on every browser are `EventSource`, `document.querySelectorAll()`, and `Promise`. See below for more about how to ensure that these will work.
-
-### EventSource
-
-The SDK uses [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) to provide a live streaming connection to LaunchDarkly, if you have enabled streaming (by using the `streaming` property or the `setStreaming` method, or by subscribing to `change` events). If you never enable streaming, `EventSource` is not used.
-
-It is widely available in browsers, [except for Internet Explorer and Microsoft Edge](https://caniuse.com/#search=EventSource). If you wish to support these, and you need streaming support, you can install a polyfill such as [event-source-polyfill](https://github.com/Yaffle/EventSource).
-
-#### CDN
-
-You can load the polyfill via a script tag in the `<head>` before the script where you initialize `LDClient`:
-
-    <script src="https://unpkg.com/event-source-polyfill@0.0.12/src/eventsource.min.js"></script>
-
-#### NPM or Yarn
-
-    npm install event-source-polyfill@0.0.12
-
-Then import it before the module that initializes the LaunchDarkly client:
-
-    require('event-source-polyfill');
-
-### Document.querySelectorAll() polyfill
-
-The SDK uses `querySelectorAll` to support click events for A/B testing.
-
-It is widely available in browser, [except in old versions of Internet Explorer](https://caniuse.com/#feat=queryselector). If you wish to support these, and you need A/B testing support, you can install a polyfill such as [polyfill-queryselector](https://github.com/cobbdb/polyfill-queryselector).
-
-#### CDN
-
-You can load the polyfill via a script tag in the `<head>` before the script where you initialize `LDClient`:
-
-    <script src="https://unpkg.com/polyfill-queryselector@1.0.2/querySelector.js"></script>
-
-#### NPM or Yarn
-
-    npm install polyfill-queryselector@1.0.2
-
-Then import it before the module that initializes the LaunchDarkly client:
-
-    require('polyfill-queryselector');
-
-### Promise polyfill
-
-The SDK relies heavily on JavaScript `Promise`s. [Browsers that do not support `Promise`](https://caniuse.com/#search=Promise) include Internet Explorer and older versions of Microsoft Edge. If you need to support these, you will need to install a polyfill for `Promise`, such as [es6-promise](https://github.com/stefanpenner/es6-promise).
-
-#### CDN
-
-You can load the polyfill via a script tag in the `<head>` before the script where you initialize `LDClient`:
-
-    <script src="https://unpkg.com/es6-promise@4.2.4/dist/es6-promise.auto.min.js"></script>
-
-#### NPM or Yarn
-
-    npm install es6-promise@4.2.4
-
-Then import it before the module that initializes the LaunchDarkly client:
-
-    require('es6-promise/auto');
+The LaunchDarkly SDK can be used in all major browsers. However, web browsers vary widely in their support of specific features and standards. Three features that are used by the LaunchDarkly SDK that may not be available on every browser are `Promise`, `EventSource`, and `document.querySelectorAll()`. For more information on whether you may need to use a polyfill to ensure compatibility, and how to do so, see ["JS SDK requirements and polyfills"](https://docs.launchdarkly.com/docs/js-sdk-requirements-and-polyfills).
 
 ### Logging
 
