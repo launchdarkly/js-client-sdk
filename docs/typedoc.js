@@ -5,7 +5,7 @@
 
 let version = process.env.VERSION;
 if (!version) {
-  const package = require('../packages/ldclient-js/package.json');
+  const package = require('../packages/launchdarkly-js-client-sdk/package.json');
   version = package.version;
 }
 
@@ -15,5 +15,5 @@ module.exports = {
   readme: 'none',                // don't add a home page with a copy of README.md
   mode: 'file',                  // don't treat "typings.d.ts" itself as a parent module
   includeDeclarations: true,     // allows it to process a .d.ts file instead of actual TS code
-  entryPoint: '"ldclient-js"'    // note extra quotes - workaround for a TypeDoc bug
+  entryPoint: '"launchdarkly-js-client-sdk"'    // note extra quotes - workaround for a TypeDoc bug
 };
