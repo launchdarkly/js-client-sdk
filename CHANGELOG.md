@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org).
 ### Fixed:
 - Fixed a problem that prevented the Electron and client-side Node SDKs from reporting their own version strings correctly. This fix does not affect the browser JS SDK, so there is no need to upgrade if you are using that.
 
-# Note on future releases
+### Note on future releases:
 
 The LaunchDarkly SDK repositories are being renamed for consistency. This repository is now `js-client-sdk` rather than `js-client`.
 
