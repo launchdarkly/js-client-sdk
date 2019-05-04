@@ -66,11 +66,7 @@
   },
   "dependencies": {
     "escape-string-regexp": "1.0.5",
-<<<<<<< HEAD:packages/ldclient-js/package.json
-    "ldclient-js-common": "^2.10.2"
-=======
-    "launchdarkly-js-sdk-common": "^2.10.1"
->>>>>>> d0d87ecb015fd27c50d9ad82c1947f4891537780:packages/launchdarkly-js-client-sdk/package.json
+    "launchdarkly-js-sdk-common": "^2.10.2"
   },
   "repository": {
     "type": "git",
