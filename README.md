@@ -5,7 +5,7 @@
 ## LaunchDarkly overview
 
 [LaunchDarkly](https://www.launchdarkly.com) is a feature management platform that serves over 100 billion feature flags daily to help teams build better software, faster. [Get started](https://docs.launchdarkly.com/docs/getting-started) using LaunchDarkly today!
- 
+
 [![Twitter Follow](https://img.shields.io/twitter/follow/launchdarkly.svg?style=social&label=Follow&maxAge=2592000)](https://twitter.com/intent/follow?screen_name=launchdarkly)
 
 ## Getting started
@@ -18,7 +18,7 @@ Please note that the JavaScript SDK has two special requirements in terms of you
 
 ### ReactJS
 
-The SDK does not require any particular JavaScript framework. However, if you are using [React](https://reactjs.org/), there is an add-on to simplify use of the SDK. See the [`ldclient-react` documentation](packages/ldclient-react/README.md).
+The SDK does not require any particular JavaScript framework. However, if you are using [React](https://reactjs.org/), there is an add-on to simplify use of the SDK. See the [`launchdarkly-react-client-sdk` documentation](packages/launchdarkly-react-client-sdk/README.md).
 
 ## Browser compatibility
 
