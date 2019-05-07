@@ -2,13 +2,13 @@
 
 ## Introduction
 
-This is an optional React wrapper for the LaunchDarkly SDK for browser JavaScript SDK. It builds upon the [JavaScript SDK](../launchdarkly-js-client-sdk/README.md), supporting all of the same functionality, but using React's Context API to provide additional conveniences:
+This is an optional React wrapper for the LaunchDarkly SDK for browser JavaScript SDK. It builds upon the [JavaScript SDK](https://github.com/launchdarkly/js-client-sdk/tree/master/packages/launchdarkly-js-client-sdk), supporting all of the same functionality, but using React's Context API to provide additional conveniences:
 
 * Easy initialization and usage with React.
 * Feature flags as camelCased props.
 * Subscription to flag changes out of the box.
 
-For a general overview of JavaScript SDK characteristics, see the [main README](../../README.md). Also see the online [React SDK Reference](https://docs.launchdarkly.com/docs/react-sdk-reference).
+For a general overview of JavaScript SDK characteristics, see the [main README](https://github.com/launchdarkly/js-client-sdk/blob/master/README.md). Also see the online [React SDK Reference](https://docs.launchdarkly.com/docs/react-sdk-reference).
 
 ## Dependency
 
