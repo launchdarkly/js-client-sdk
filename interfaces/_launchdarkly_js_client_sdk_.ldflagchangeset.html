@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LDEvaluationReason | LaunchDarkly JavaScript SDK (2.10.2)</title>
+	<title>LDFlagChangeset | LaunchDarkly JavaScript SDK (2.10.3)</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">LaunchDarkly JavaScript SDK (2.10.2)</a>
+					<a href="../index.html" class="title">LaunchDarkly JavaScript SDK (2.10.3)</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -53,13 +53,13 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../index.html">&quot;ldclient-js&quot;</a>
+					<a href="../index.html">&quot;launchdarkly-js-client-sdk&quot;</a>
 				</li>
 				<li>
-					<a href="_ldclient_js_.ldevaluationreason.html">LDEvaluationReason</a>
+					<a href="_launchdarkly_js_client_sdk_.ldflagchangeset.html">LDFlagChangeset</a>
 				</li>
 			</ul>
-			<h1>Interface LDEvaluationReason</h1>
+			<h1>Interface LDFlagChangeset</h1>
 		</div>
 	</div>
 </header>
@@ -69,8 +69,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Describes the reason that a flag evaluation produced a particular value. This is
-						part of the <a href="_ldclient_js_.ldevaluationdetail.html">LDEvaluationDetail</a> object returned by <a href="_ldclient_js_.ldclient.html#variationdetail">LDClient.variationDetail</a>.</p>
+						<p>A map of feature flag keys to objects holding changes in their values.</p>
 					</div>
 				</div>
 			</section>
@@ -78,170 +77,65 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">LDEvaluationReason</span>
+						<span class="target">LDFlagChangeset</span>
 					</li>
 				</ul>
 			</section>
-			<section class="tsd-panel-group tsd-index-group">
-				<h2>Index</h2>
-				<section class="tsd-panel tsd-index-panel">
-					<div class="tsd-index-content">
-						<section class="tsd-index-section ">
-							<h3>Properties</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_ldclient_js_.ldevaluationreason.html#errorkind" class="tsd-kind-icon">error<wbr>Kind</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_ldclient_js_.ldevaluationreason.html#kind" class="tsd-kind-icon">kind</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_ldclient_js_.ldevaluationreason.html#prerequisitekey" class="tsd-kind-icon">prerequisite<wbr>Key</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_ldclient_js_.ldevaluationreason.html#ruleid" class="tsd-kind-icon">rule<wbr>Id</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_ldclient_js_.ldevaluationreason.html#ruleindex" class="tsd-kind-icon">rule<wbr>Index</a></li>
-							</ul>
-						</section>
+			<section class="tsd-panel tsd-kind-interface tsd-parent-kind-module">
+				<h3 class="tsd-before-signature">Indexable</h3>
+				<div class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">[</span>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">object</span></div>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A map of feature flag keys to objects holding changes in their values.</p>
 					</div>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="errorkind" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> error<wbr>Kind</h3>
-					<div class="tsd-signature tsd-kind-icon">error<wbr>Kind<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in docs/build/typings.d.ts:325</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>A further description of the error condition, if the kind was <code>&#39;ERROR&#39;</code>.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="kind" class="tsd-anchor"></a>
-					<h3>kind</h3>
-					<div class="tsd-signature tsd-kind-icon">kind<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in docs/build/typings.d.ts:320</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The general category of the reason:</p>
-						</div>
-						<ul>
-							<li><code>&#39;OFF&#39;</code>: The flag was off and therefore returned its configured off value.</li>
-							<li><code>&#39;FALLTHROUGH&#39;</code>: The flag was on but the user did not match any targets or rules.</li>
-							<li><code>&#39;TARGET_MATCH&#39;</code>: The user key was specifically targeted for this flag.</li>
-							<li><code>&#39;RULE_MATCH&#39;</code>: the user matched one of the flag&#39;s rules.</li>
-							<li><code>&#39;PREREQUISITE_FAILED&#39;</code>: The flag was considered off because it had at least one
-							prerequisite flag that either was off or did not return the desired variation.</li>
-							<li><code>&#39;ERROR&#39;</code>: The flag could not be evaluated, e.g. because it does not exist or due
-							to an unexpected error.</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="prerequisitekey" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> prerequisite<wbr>Key</h3>
-					<div class="tsd-signature tsd-kind-icon">prerequisite<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in docs/build/typings.d.ts:340</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The key of the failed prerequisite flag, if the kind was <code>&#39;PREREQUISITE_FAILED&#39;</code>.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="ruleid" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> rule<wbr>Id</h3>
-					<div class="tsd-signature tsd-kind-icon">rule<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in docs/build/typings.d.ts:335</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The unique identifier of the matched rule, if the kind was <code>&#39;RULE_MATCH&#39;</code>.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="ruleindex" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> rule<wbr>Index</h3>
-					<div class="tsd-signature tsd-kind-icon">rule<wbr>Index<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in docs/build/typings.d.ts:330</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The index of the matched rule (0 for the first), if the kind was <code>&#39;RULE_MATCH&#39;</code>.</p>
-						</div>
-					</div>
-				</section>
+				</div>
+				<ul class="tsd-parameters">
+					<li class="tsd-parameter">
+						<h5>current<span class="tsd-signature-symbol">: </span><a href="../index.html#ldflagvalue" class="tsd-signature-type">LDFlagValue</a></h5>
+					</li>
+					<li class="tsd-parameter">
+						<h5>previous<span class="tsd-signature-symbol">: </span><a href="../index.html#ldflagvalue" class="tsd-signature-type">LDFlagValue</a></h5>
+					</li>
+				</ul>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
 					<li class="current tsd-kind-module tsd-is-not-exported">
-						<a href="../index.html">"ldclient-<wbr>js"</a>
+						<a href="../index.html">"launchdarkly-<wbr>js-<wbr>client-<wbr>sdk"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="_ldclient_js_.ldclient.html" class="tsd-kind-icon">LDClient</a>
+						<a href="_launchdarkly_js_client_sdk_.ldclient.html" class="tsd-kind-icon">LDClient</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="_ldclient_js_.ldevaluationdetail.html" class="tsd-kind-icon">LDEvaluation<wbr>Detail</a>
+						<a href="_launchdarkly_js_client_sdk_.ldevaluationdetail.html" class="tsd-kind-icon">LDEvaluation<wbr>Detail</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="_launchdarkly_js_client_sdk_.ldevaluationreason.html" class="tsd-kind-icon">LDEvaluation<wbr>Reason</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="_ldclient_js_.ldevaluationreason.html" class="tsd-kind-icon">LDEvaluation<wbr>Reason</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_ldclient_js_.ldevaluationreason.html#errorkind" class="tsd-kind-icon">error<wbr>Kind</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_ldclient_js_.ldevaluationreason.html#kind" class="tsd-kind-icon">kind</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_ldclient_js_.ldevaluationreason.html#prerequisitekey" class="tsd-kind-icon">prerequisite<wbr>Key</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_ldclient_js_.ldevaluationreason.html#ruleid" class="tsd-kind-icon">rule<wbr>Id</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_ldclient_js_.ldevaluationreason.html#ruleindex" class="tsd-kind-icon">rule<wbr>Index</a>
-							</li>
-						</ul>
+						<a href="_launchdarkly_js_client_sdk_.ldflagchangeset.html" class="tsd-kind-icon">LDFlag<wbr>Changeset</a>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="_ldclient_js_.ldflagchangeset.html" class="tsd-kind-icon">LDFlag<wbr>Changeset</a>
+						<a href="_launchdarkly_js_client_sdk_.ldflagset.html" class="tsd-kind-icon">LDFlag<wbr>Set</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="_ldclient_js_.ldflagset.html" class="tsd-kind-icon">LDFlag<wbr>Set</a>
+						<a href="_launchdarkly_js_client_sdk_.ldlogger.html" class="tsd-kind-icon">LDLogger</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="_ldclient_js_.ldlogger.html" class="tsd-kind-icon">LDLogger</a>
+						<a href="_launchdarkly_js_client_sdk_.ldoptions.html" class="tsd-kind-icon">LDOptions</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="_ldclient_js_.ldoptions.html" class="tsd-kind-icon">LDOptions</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="_ldclient_js_.lduser.html" class="tsd-kind-icon">LDUser</a>
+						<a href="_launchdarkly_js_client_sdk_.lduser.html" class="tsd-kind-icon">LDUser</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
 						<a href="../index.html#ldflagvalue" class="tsd-kind-icon">LDFlag<wbr>Value</a>
