@@ -1,6 +1,16 @@
 # Change log
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file.
+
+## [2.10.3] - 2019-05-08 
+### Changed:
+- Changed the package names from `ldclient-js`, `ldclient-react`, and `ldclient-js-common` to `launchdarkly-js-client-sdk`, `launchdarkly-react-client-sdk`, and `launchdarkly-js-sdk-common`, respectively.
+ 
+There are no other changes in this release. Substituting `ldclient-js`, `ldclient-react`, and `ldclient-js-common` version 2.10.2 with `launchdarkly-js-client-sdk`, `launchdarkly-react-client-sdk`, and `launchdarkly-js-sdk-common` version 2.10.3 will not affect functionality.
+
+### Fixed:
+- Fixed some broken links in the package READMEs.
+
 This project adheres to [Semantic Versioning](http://semver.org).
 
 ## [2.10.2] - 2019-05-01
