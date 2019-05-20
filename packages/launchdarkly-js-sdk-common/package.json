@@ -16,6 +16,7 @@
   "types": "./typings.d.ts",
   "main": "dist/ldclient-common.cjs.js",
   "module": "dist/ldclient-common.es.js",
+  "unpkg": "dist/ldclient-common.min.js",
   "scripts": {
     "lint": "eslint --format 'node_modules/eslint-formatter-pretty' --ignore-path ../../.eslintignore",
     "lint:all": "eslint --format 'node_modules/eslint-formatter-pretty' --ignore-path ../../.eslintignore src",
