@@ -304,12 +304,12 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     stream.connect(ident.getUser(), {
       ping: function() {
         logger.debug(messages.debugStreamPing());
-        requestor.fetchFlagSettings(ident.getUser(), hash, (err, settings) => {
-          if (err) {
+        requestor
+          .fetchFlagSettings(ident.getUser(), hash)
+          .then(requestedFlags => replaceAllFlags(requestedFlags || {}))
+          .catch(err => {
             emitter.maybeReportError(new errors.LDFlagFetchError(messages.errorFetchingFlags(err)));
-          }
-          replaceAllFlags(settings); // don't wait for this Promise to be resolved
-        });
+          });
       },
       put: function(e) {
         const data = JSON.parse(e.data);
