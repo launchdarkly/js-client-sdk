@@ -1,6 +1,6 @@
 # Change log
 
-All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file.
+All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
 ## [2.10.3] - 2019-05-08 
 ### Changed:
@@ -10,8 +10,6 @@ There are no other changes in this release. Substituting `ldclient-js`, `ldclien
 
 ### Fixed:
 - Fixed some broken links in the package READMEs.
-
-This project adheres to [Semantic Versioning](http://semver.org).
 
 ## [2.10.2] - 2019-05-01
 ### Fixed:
