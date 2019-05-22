@@ -29,6 +29,7 @@
     "import/prefer-default-export": 0,
     "import/no-mutable-exports": 0,
     "import/no-named-as-default": 0,
+    "react/display-name": 0,
     "react/jsx-filename-extension": 0,
     "react/jsx-indent": 0,
     "react/jsx-indent-props": 0,

@@ -179,6 +179,64 @@ export default withLDConsumer()(Home);
 
 ```
 
+-----------------
+
+### `useFlags()`
+`useFlags` is a custom hook which returns all feature flags. It uses the `useContext` primitive 
+to access the LaunchDarkly context set up by `withLDProvider`. As such you will still need to 
+use the `withLDProvider` HOC at the root of your app to initialise the React SDK and populate the
+context with the ldClient and your flags.
+
+#### Returns
+Returns all the feature flags configured in your LaunchDarkly project. 
+
+#### Example usage:
+```js
+import React from 'react';
+import { useFlags } from 'launchdarkly-react-client-sdk';
+
+const HooksDemo = () => {
+  const { devTestFlag } = useFlags();
+
+  return (
+    <div>{devTestFlag ? 'Flag on' : 'Flag off'}</div>
+  );
+};
+
+export default HooksDemo;
+```
+
+### `useLDClient()`
+`useLDClient` is a custom hook which returns the underlying [LaunchDarkly JavaScript SDK client object](https://launchdarkly.github.io/js-client-sdk/interfaces/_launchdarkly_js_client_sdk_.ldclient.html).
+Like the `useFlags` custom hook, `useLDClient` also uses the `useContext` primitive to access the launch
+darkly context setup by `withLDProvider`. You will still need to use the `withLDProvider` HOC 
+to initialise the react sdk to use this custom hook.
+
+#### Returns
+Returns the launchdarkly-js-client-sdk object.
+
+#### Example usage:
+```js
+import React from 'react';
+import { useLDClient } from 'launchdarkly-react-client-sdk';
+
+const HooksDemo = () => {
+    const ldClient = useLDClient();
+    
+    // track goals
+    const onAddToCart = () => ldClient.track('add to cart');
+  
+    // change user context
+    const onLoginSuccessful = () => ldClient.identify({ key: 'someUserId' });
+  
+    return (
+      <div>Hooks ldClient demo</div>
+    );
+};
+
+export default HooksDemo;
+```
+
 ## Example
 
 Check the [example](example) for a fully working SPA with `react` and `react-router`. Remember to enter your `clientSideID` in the client [root app file](example/src/universal/app.js) and create a flag called `dev-test-flag` in your dashboard before running the example.

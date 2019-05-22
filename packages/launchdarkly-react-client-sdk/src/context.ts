@@ -20,5 +20,8 @@ interface LDContext {
   ldClient?: LDClient;
 }
 
-const { Provider, Consumer } = createContext<LDContext>({ flags: {}, ldClient: undefined });
+const context = createContext<LDContext>({ flags: {}, ldClient: undefined });
+const { Provider, Consumer } = context;
+
 export { Provider, Consumer, LDContext };
+export default context;
