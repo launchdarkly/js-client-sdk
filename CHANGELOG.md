@@ -2,6 +2,12 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.10.4] - 2019-05-22
+### Added:
+- `unpkg` entry to `package.json` to specify primary build artifact to simplify the unpkg snippet URL.
+### Fixed:
+- Streaming updates did not work if `useReport` was enabled, or if the SDK was connecting through the LaunchDarkly relay proxy. This bug was introduced in version 2.10.0.
+
 ## [2.10.3] - 2019-05-08 
 ### Changed:
 - Changed the package names from `ldclient-js`, `ldclient-react`, and `ldclient-js-common` to `launchdarkly-js-client-sdk`, `launchdarkly-react-client-sdk`, and `launchdarkly-js-sdk-common`, respectively.
