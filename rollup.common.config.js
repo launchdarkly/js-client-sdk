@@ -18,6 +18,7 @@ let plugins = [
   globals(),
   builtins(),
   resolve({
+    browser: true,
     module: true,
     jsnext: true,
     main: true,

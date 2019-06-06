@@ -1,7 +1,51 @@
 # Change log
 
-All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file.
-This project adheres to [Semantic Versioning](http://semver.org).
+All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
+
+## [2.10.4] - 2019-05-22
+### Added:
+- `unpkg` entry to `package.json` to specify primary build artifact to simplify the unpkg snippet URL.
+### Fixed:
+- Streaming updates did not work if `useReport` was enabled, or if the SDK was connecting through the LaunchDarkly relay proxy. This bug was introduced in version 2.10.0.
+
+## [2.10.3] - 2019-05-08 
+### Changed:
+- Changed the package names from `ldclient-js`, `ldclient-react`, and `ldclient-js-common` to `launchdarkly-js-client-sdk`, `launchdarkly-react-client-sdk`, and `launchdarkly-js-sdk-common`, respectively.
+ 
+There are no other changes in this release. Substituting `ldclient-js`, `ldclient-react`, and `ldclient-js-common` version 2.10.2 with `launchdarkly-js-client-sdk`, `launchdarkly-react-client-sdk`, and `launchdarkly-js-sdk-common` version 2.10.3 will not affect functionality.
+
+### Fixed:
+- Fixed some broken links in the package READMEs.
+
+## [2.10.2] - 2019-05-01
+### Fixed:
+- Fixed a problem that prevented the Electron and client-side Node SDKs from reporting their own version strings correctly. This fix does not affect the browser JS SDK, so there is no need to upgrade if you are using that.
+
+### Note on future releases:
+
+The LaunchDarkly SDK repositories are being renamed for consistency. This repository is now `js-client-sdk` rather than `js-client`.
+
+The package names will also change. In the 2.10.2 release, there were packages for `ldclient-js`, `ldclient-react` and `ldclient-js-common`; in all future releases, they will be `launchdarkly-js-client-sdk`, `launchdarkly-react-client-sdk`, and `launchdarkly-js-sdk-common`, respectively.
+
+## [2.10.1] - 2019-04-23
+### Fixed:
+- The 2.10.0 release added a usage of the `Promise.finally()` method, which made it incompatible with some older browsers. This has been removed. ([#151](https://github.com/launchdarkly/js-client/issues/151))
+
+## [2.10.0] - 2019-04-19
+### Added:
+- Generated TypeDoc documentation for all types, properties, and methods is now available online at [https://launchdarkly.github.io/js-client/](https://launchdarkly.github.io/js-client/). Currently this will only be for the latest released version.
+- The SDK now allows you to specify an anonymous user without a key (i.e. the `anonymous` property is `true`, and there is no `key` property). In that case, the SDK will generate a UUID and send that as the user key. It will also cache this generated key in local storage (if local storage is available) so that anonymous users in the same browser will always get the same key.
+
+### Fixed:
+- Setting user attributes to non-string values when a string was expected would prevent evaluations and analytics events from working. The SDK will now convert attribute values to strings as needed.
+
+## [2.9.7] - 2019-04-16
+### Fixed:
+- If there are pending analytics events when the page is being closed, the SDK normally attempts to deliver them by making a synchronous HTTP request. Chrome, as of version 73, does not allow this and logs an error. An upcoming release will change how events are sent, but as a temporary measure to avoid these errors, the SDK will now simply discard any pending events when the page is being closed _if_ the browser is Chrome version 73 or higher. In other browsers, there is no change. Note that this means that in Chrome 73, some events may be lost; that was already the case. The purpose of this patch is simply to avoid triggering errors. ([#178](https://github.com/launchdarkly/js-client-private/pull/178))
+
+## [2.9.6] - 2019-04-16
+
+This release was an error and has been removed.
 
 ## [2.9.5] - 2019-03-12
 ### Fixed:
