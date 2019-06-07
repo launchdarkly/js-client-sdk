@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.11.0] - 2019-06-06
+### Added:
+- Added support for hooks to the React SDK.
+
 ## [2.10.4] - 2019-05-22
 ### Added:
 - `unpkg` entry to `package.json` to specify primary build artifact to simplify the unpkg snippet URL.
