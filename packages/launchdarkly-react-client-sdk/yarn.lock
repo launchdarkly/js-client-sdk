@@ -2263,28 +2263,29 @@ kleur@^3.0.2:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.2.tgz#83c7ec858a41098b613d5998a7b653962b504f68"
   integrity sha512-3h7B2WRT5LNXOtQiAaWonilegHcPSf9nLVXlSTci8lu1dZUuui61+EsPEZqSVxY7rXYmB2DVKMQILxaO5WL61Q==
 
+launchdarkly-js-client-sdk@^2.10.3:
+  version "2.10.3"
+  resolved "https://registry.yarnpkg.com/launchdarkly-js-client-sdk/-/launchdarkly-js-client-sdk-2.10.3.tgz#caa6ec6a93de1e6aec15976b80d56d6f26a546d0"
+  integrity sha512-plRlyt+TvV9xJlsVOjthjrpeiU4KyXx8mb70C98sMb395flinF4OGJTQLJ5trxLChxpM0VoLlXgH+z3mkse+2w==
+  dependencies:
+    escape-string-regexp "1.0.5"
+    launchdarkly-js-sdk-common "^2.10.3"
+
+launchdarkly-js-sdk-common@^2.10.3:
+  version "2.10.3"
+  resolved "https://registry.yarnpkg.com/launchdarkly-js-sdk-common/-/launchdarkly-js-sdk-common-2.10.3.tgz#f1d924434faface05e113be3c78a097c96a43511"
+  integrity sha512-fde2i0/+EG9V1YSq+LMrLfa3Q0OnRN9+rHBUynAD64/WuOnC8Tn9dx8fP+qfPBRys8x8ndYHY0G4IFJj/jISnA==
+  dependencies:
+    base64-js "1.3.0"
+    fast-deep-equal "2.0.1"
+    uuid "3.3.2"
+
 lcid@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/lcid/-/lcid-2.0.0.tgz#6ef5d2df60e52f82eb228a4c373e8d1f397253cf"
   integrity sha512-avPEb8P8EGnwXKClwsNUgryVjllcRqtMYa49NTsbQagYuT1DcXnl1915oxWjoyGrXR6zH/Y0Zc96xWsPcoDKeA==
   dependencies:
     invert-kv "^2.0.0"
-
-ldclient-js-common@^2.9.4:
-  version "2.9.4"
-  resolved "https://registry.yarnpkg.com/ldclient-js-common/-/ldclient-js-common-2.9.4.tgz#5e52615e57efd6f37f24ac3b01091817f07129b9"
-  integrity sha512-ys8z2DCfThRsLm0Q3DJY4MIixzN/O/Mmsiobi2WSo0V7XTd/ZtYEMv5Tfq/ta+ZwxoXmWKq0uRZoBS2btK1Ifw==
-  dependencies:
-    base64-js "1.3.0"
-    fast-deep-equal "2.0.1"
-
-ldclient-js@2.9.4:
-  version "2.9.4"
-  resolved "https://registry.yarnpkg.com/ldclient-js/-/ldclient-js-2.9.4.tgz#38965d52520eb678f4dfccbb73c1b0babab534af"
-  integrity sha512-BobLN6DJiZQaLjTuXKGU7IkxjaM8ib5ng1ulXZq0Hp2Lu5jwlbR8/UJWPP1KW1oYgQLmmzpy9qMhuUMV+K9OUw==
-  dependencies:
-    escape-string-regexp "1.0.5"
-    ldclient-js-common "^2.9.4"
 
 left-pad@^1.3.0:
   version "1.3.0"
@@ -3860,7 +3861,7 @@ util.promisify@^1.0.0:
     define-properties "^1.1.2"
     object.getownpropertydescriptors "^2.0.3"
 
-uuid@^3.3.2:
+uuid@3.3.2, uuid@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
   integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
