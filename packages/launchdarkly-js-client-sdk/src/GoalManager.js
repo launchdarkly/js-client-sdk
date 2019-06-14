@@ -21,6 +21,10 @@ export default function GoalManager(clientVars, readyCallback) {
     return false;
   };
 
+  function getGoalsPath() {
+    return '/sdk/goals/' + clientVars.getEnvironmentId();
+  }
+
   function refreshGoalTracker() {
     if (goalTracker) {
       goalTracker.dispose();
@@ -77,7 +81,7 @@ export default function GoalManager(clientVars, readyCallback) {
   }
 
   clientVars.requestor
-    .fetchGoals()
+    .fetchJSON(getGoalsPath())
     .then(g => {
       if (g && g.length > 0) {
         goals = g;

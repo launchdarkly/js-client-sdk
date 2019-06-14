@@ -15,6 +15,10 @@ export const eventWithoutUser = function() {
   return 'Be sure to call `identify` in the LaunchDarkly client: http://docs.launchdarkly.com/docs/running-an-ab-test#include-the-client-side-snippet';
 };
 
+export const invalidContentType = function(contentType) {
+  return 'Expected application/json content type but got "' + contentType + '"';
+};
+
 export const invalidKey = function() {
   return 'Event key must be a string';
 };
