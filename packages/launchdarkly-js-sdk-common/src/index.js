@@ -671,6 +671,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     start: start, // Starts the client once the environment is ready.
     enqueueEvent: enqueueEvent, // Puts an analytics event in the queue, if event sending is enabled.
     getFlagsInternal: getFlagsInternal, // Returns flag data structure with all details.
+    getEnvironmentId: () => environment, // Gets the environment ID (this may have changed since initialization, if we have a state provider)
     internalChangeEventName: internalChangeEvent, // This event is triggered whenever we have new flag state.
   };
 }

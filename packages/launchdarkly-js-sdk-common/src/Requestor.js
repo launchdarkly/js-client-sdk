@@ -48,12 +48,13 @@ export default function Requestor(platform, options, environment, logger) {
     const req = platform.httpRequest(method, endpoint, headers, body);
     const p = req.promise.then(
       result => {
-        if (
-          result.status === 200 &&
-          result.header('content-type') &&
-          result.header('content-type').lastIndexOf(json) === 0
-        ) {
-          return JSON.parse(result.body);
+        if (result.status === 200) {
+          if (result.header('content-type') && result.header('content-type').lastIndexOf(json) === 0) {
+            return JSON.parse(result.body);
+          } else {
+            const message = messages.invalidContentType(result.header('content-type') || '');
+            return Promise.reject(new errors.LDFlagFetchError(message));
+          }
         } else {
           return Promise.reject(getResponseError(result));
         }
@@ -67,8 +68,14 @@ export default function Requestor(platform, options, environment, logger) {
     return coalescer.resultPromise;
   }
 
-  // Returns a Promise which will resolve with the parsed JSON response, or will be
-  // rejected if the request failed.
+  // Performs a GET request to an arbitrary path under baseUrl. Returns a Promise which will resolve
+  // with the parsed JSON response, or will be rejected if the request failed.
+  requestor.fetchJSON = function(path) {
+    return fetchJSON(baseUrl + path, null);
+  };
+
+  // Requests the current state of all flags for the given user from LaunchDarkly. Returns a Promise
+  // which will resolve with the parsed JSON response, or will be rejected if the request failed.
   requestor.fetchFlagSettings = function(user, hash) {
     let data;
     let endpoint;
@@ -92,13 +99,6 @@ export default function Requestor(platform, options, environment, logger) {
     logger.debug(messages.debugPolling(endpoint));
 
     return fetchJSON(endpoint, body);
-  };
-
-  // Returns a Promise which will resolve with the parsed JSON response, or will be
-  // rejected if the request failed.
-  requestor.fetchGoals = function() {
-    const endpoint = [baseUrl, '/sdk/goals/', environment].join('');
-    return fetchJSON(endpoint, null);
   };
 
   return requestor;
