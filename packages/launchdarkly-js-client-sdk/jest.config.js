@@ -13,4 +13,5 @@ module.exports = {
     window: true,
     VERSION: version,
   },
+  testURL: 'https://mydomain.com/some/path',
 };
