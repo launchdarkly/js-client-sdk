@@ -1,6 +1,6 @@
 import newHttpRequest from './httpRequest';
 
-export default function makeBrowserPlatform() {
+export default function makeBrowserPlatform(options) {
   const ret = {};
 
   ret.pageIsClosing = false; // this will be set to true by index.js if the page is closing
@@ -19,7 +19,8 @@ export default function makeBrowserPlatform() {
     return hasCors;
   };
 
-  ret.getCurrentUrl = () => window.location.href;
+  const eventUrlTransformer = options && options.eventUrlTransformer;
+  ret.getCurrentUrl = () => (eventUrlTransformer ? eventUrlTransformer(window.location.href) : window.location.href);
 
   ret.isDoNotTrack = () => {
     let flag;
