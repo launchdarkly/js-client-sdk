@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LDOptions | LaunchDarkly JavaScript SDK (2.11.0)</title>
+	<title>LDOptions | LaunchDarkly JavaScript SDK (2.12.0)</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">LaunchDarkly JavaScript SDK (2.11.0)</a>
+					<a href="../index.html" class="title">LaunchDarkly JavaScript SDK (2.12.0)</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -98,6 +98,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#baseurl" class="tsd-kind-icon">base<wbr>Url</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#bootstrap" class="tsd-kind-icon">bootstrap</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#evaluationreasons" class="tsd-kind-icon">evaluation<wbr>Reasons</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#eventurltransformer" class="tsd-kind-icon">event<wbr>Url<wbr>Transformer</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#eventsurl" class="tsd-kind-icon">events<wbr>Url</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#fetchgoals" class="tsd-kind-icon">fetch<wbr>Goals</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#flushinterval" class="tsd-kind-icon">flush<wbr>Interval</a></li>
@@ -210,6 +211,23 @@
 						<p>The additional information will then be available through the client&#39;s
 							<a href="_launchdarkly_js_client_sdk_.ldclient.html#variationdetail">LDClient.variationDetail</a> method. Since this increases the size of network requests,
 						such information is not sent unless you set this option to true.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="eventurltransformer" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> event<wbr>Url<wbr>Transformer</h3>
+					<div class="tsd-signature tsd-kind-icon">event<wbr>Url<wbr>Transformer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in docs/build/typings.d.ts:668</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A function which, if present, can change the URL in analytics events to something other
+								than the actual browser URL. It will be called with the current browser URL as a parameter,
+							and returns the value that should be stored in the event&#39;s <code>url</code> property.</p>
+						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
@@ -515,6 +533,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_launchdarkly_js_client_sdk_.ldoptions.html#evaluationreasons" class="tsd-kind-icon">evaluation<wbr>Reasons</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_launchdarkly_js_client_sdk_.ldoptions.html#eventurltransformer" class="tsd-kind-icon">event<wbr>Url<wbr>Transformer</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_launchdarkly_js_client_sdk_.ldoptions.html#eventsurl" class="tsd-kind-icon">events<wbr>Url</a>
