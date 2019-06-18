@@ -22,7 +22,7 @@ describe('LDClient local storage', () => {
       const platform = stubPlatform.defaults();
       platform.localStorage = null;
 
-      const client = platform.testing.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: 'localstorage' });
       await client.waitForInitialization();
 
       // should see a flag request to the server right away, as if bootstrap was not specified
@@ -36,7 +36,7 @@ describe('LDClient local storage', () => {
       const json = '{"flag-key": 1}';
       platform.testing.setLocalStorageImmediately(lsKey, json);
 
-      const client = platform.testing.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: 'localstorage' });
       await client.waitForInitialization();
 
       expect(client.variation('flag-key')).toEqual(1);
@@ -47,7 +47,7 @@ describe('LDClient local storage', () => {
       const platform = stubPlatform.defaults();
       server.respondWith(jsonResponse({ 'flag-key': { value: 1 } }));
 
-      const client = platform.testing.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: 'localstorage' });
 
       // don't wait for ready event - verifying that variation() doesn't throw an error if called before ready
       expect(client.variation('flag-key', 0)).toEqual(0);
@@ -62,7 +62,7 @@ describe('LDClient local storage', () => {
       platform.localStorage.get = () => Promise.reject(new Error());
       server.respondWith(jsonResponse({ 'enable-foo': { value: true } }));
 
-      const client = platform.testing.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: 'localstorage' });
       await client.waitForInitialization();
 
       expect(platform.testing.logger.output.warn).toEqual([messages.localStorageUnavailable()]);
@@ -73,7 +73,7 @@ describe('LDClient local storage', () => {
       platform.localStorage.set = () => Promise.reject(new Error());
       server.respondWith(jsonResponse({ 'enable-foo': { value: true } }));
 
-      const client = platform.testing.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: 'localstorage' });
       await client.waitForInitialization();
 
       await asyncSleep(0); // allow any pending async tasks to complete
@@ -87,7 +87,7 @@ describe('LDClient local storage', () => {
       server.respondWith(errorResponse(503));
       platform.testing.setLocalStorageImmediately(lsKey, json);
 
-      const client = platform.testing.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: 'localstorage' });
       await client.waitForInitialization();
 
       await asyncSleep(0); // allow any pending async tasks to complete
@@ -103,7 +103,6 @@ describe('LDClient local storage', () => {
       const client = platform.testing.makeClient(envName, user, {
         bootstrap: 'localstorage',
         hash: 'totallyLegitHash',
-        fetchGoals: false,
       });
 
       await client.waitForInitialization();
@@ -119,7 +118,7 @@ describe('LDClient local storage', () => {
       const lsKey2 = 'ld:UNKNOWN_ENVIRONMENT_ID:' + utils.btoa('{"key":"user2"}');
 
       const user2 = { key: 'user2' };
-      const client = platform.testing.makeClient(envName, user, { bootstrap: 'localstorage', fetchGoals: false });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: 'localstorage' });
 
       server.respondWith(jsonResponse({ 'enable-foo': { value: true } }));
 

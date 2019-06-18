@@ -72,6 +72,13 @@ declare module 'launchdarkly-js-client-sdk' {
      * Set it to false if you are not using A/B testing and want to skip the request.
      */
     fetchGoals?: boolean;
+
+    /**
+     * A function which, if present, can change the URL in analytics events to something other
+     * than the actual browser URL. It will be called with the current browser URL as a parameter,
+     * and returns the value that should be stored in the event's `url` property.
+     */
+    eventUrlTransformer?: (url: string) => string;
   }
 
   /**

@@ -2,6 +2,16 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.12.0] - 2019-06-18
+### Added:
+- Configuration property `eventUrlTransformer` allows application code to modify the URL that is sent in analytics events.
+### Fixed:
+- If the SDK receives data from the service that does not have the expected JSON content type, it will now log an appropriate error message, rather than "Error fetching flags: 200".
+
+## [2.11.0] - 2019-06-06
+### Added:
+- Added support for hooks to the React SDK.
+
 ## [2.10.4] - 2019-05-22
 ### Added:
 - `unpkg` entry to `package.json` to specify primary build artifact to simplify the unpkg snippet URL.
