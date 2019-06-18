@@ -172,6 +172,24 @@ describe('Requestor', () => {
     expect(result).toEqual(data);
   });
 
+  it('returns error for non-JSON content type', async () => {
+    const requestor = Requestor(platform, defaultConfig, env, logger);
+
+    server.respondWith([200, { 'Content-Type': 'text/html' }, '<html></html>']);
+
+    const err = new errors.LDFlagFetchError(messages.invalidContentType('text/html'));
+    await expect(requestor.fetchFlagSettings(user)).rejects.toThrow(err);
+  });
+
+  it('returns error for unspecified content type', async () => {
+    const requestor = Requestor(platform, defaultConfig, env, logger);
+
+    server.respondWith([200, {}, '{}']);
+
+    const err = new errors.LDFlagFetchError(messages.invalidContentType(''));
+    await expect(requestor.fetchFlagSettings(user)).rejects.toThrow(err);
+  });
+
   it('signals specific error for 404 response', async () => {
     const requestor = Requestor(platform, defaultConfig, env, logger);
 
