@@ -86,7 +86,7 @@ export default function makeBrowserPlatform() {
       // EventSource polyfills allow us to specify a timeout interval, and in some cases they will
       // default to a too-short timeout if we don't specify one. So, here, we are setting the
       // timeout properties that are used by several popular polyfills.
-      let esOptions = {
+      const esOptions = {
         heartbeatTimeout: timeoutMillis, // used by "event-source-polyfill" package
         silentTimeout: timeoutMillis, // used by "eventsource-polyfill" package
       };
