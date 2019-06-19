@@ -58,28 +58,56 @@ export default function makeBrowserPlatform() {
     ret.localStorage = null;
   }
 
+  // The browser built in EventSource implementations do not support
+  // setting the method used for the request. When useReport is true,
+  // we ensure sending the user in the body of a REPORT request rather
+  // than in the URL path. If a polyfill for EventSource supporting
+  // setting the request method is provided, we use it to connect to a
+  // flag stream that will provide evaluated flags for the specific
+  // user. Otherwise, when useReport is true, we fallback to a generic
+  // 'ping' stream that informs the SDK to make a separate REPORT
+  // request for the user's flag evaluations whenever the flag
+  // definitions have been updated.
+  let eventSourceAllowsReport;
+  if (typeof window.EventSourcePolyfill === 'function' &&
+      window.EventSourcePolyfill.supportsSettingMethod === true) {
+    eventSourceAllowsReport = true;
+  } else {
+    eventSourceAllowsReport = false;
+  }
+
+  ret.eventSourceAllowsReport = eventSourceAllowsReport;
+
   // If EventSource does not exist, the absence of eventSourceFactory will make us not try to open streams
   if (window.EventSource) {
     const timeoutMillis = 300000; // this is only used by polyfills - see below
 
-    ret.eventSourceFactory = url => {
+    ret.eventSourceFactory = (url, options) => {
+      if (typeof options !== 'object') {
+        options = {};
+      }
+
       // The standard EventSource constructor doesn't take any options, just a URL. However, some
       // EventSource polyfills allow us to specify a timeout interval, and in some cases they will
       // default to a too-short timeout if we don't specify one. So, here, we are setting the
       // timeout properties that are used by several popular polyfills.
-      const options = {
-        heartbeatTimeout: timeoutMillis, // used by "event-source-polyfill" package
-        silentTimeout: timeoutMillis, // used by "eventsource-polyfill" package
-      };
+      options.heartbeatTimeout = timeoutMillis; // used by "event-source-polyfill" package
+      options.silentTimeout = timeoutMillis; // used by "eventsource-polyfill" package
 
-      return new window.EventSource(url, options);
+      // Here we check if we have a polyfill that supports report and
+      // the SDK implementation is attempting to use the REPORT
+      // method. If so, we return an instance of the Polyfill,
+      // otherwise we use the default browser implementation.
+      if (eventSourceAllowsReport && options.method === 'REPORT') {
+        return new window.EventSourcePolyfill(url, options);
+      } else {
+        return new window.EventSource(url, options);
+      }
     };
 
     ret.eventSourceIsActive = es =>
       es.readyState === window.EventSource.OPEN || es.readyState === window.EventSource.CONNECTING;
   }
-
-  ret.eventSourceAllowsReport = false;
 
   ret.userAgent = 'JSClient';
 
