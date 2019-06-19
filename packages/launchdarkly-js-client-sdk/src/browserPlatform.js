@@ -69,8 +69,7 @@ export default function makeBrowserPlatform() {
   // request for the user's flag evaluations whenever the flag
   // definitions have been updated.
   let eventSourceAllowsReport;
-  if (typeof window.EventSourcePolyfill === 'function' &&
-      window.EventSourcePolyfill.supportsSettingMethod === true) {
+  if (typeof window.EventSourcePolyfill === 'function' && window.EventSourcePolyfill.supportsSettingMethod === true) {
     eventSourceAllowsReport = true;
   } else {
     eventSourceAllowsReport = false;
@@ -83,25 +82,34 @@ export default function makeBrowserPlatform() {
     const timeoutMillis = 300000; // this is only used by polyfills - see below
 
     ret.eventSourceFactory = (url, options) => {
-      if (typeof options !== 'object') {
-        options = {};
-      }
-
       // The standard EventSource constructor doesn't take any options, just a URL. However, some
       // EventSource polyfills allow us to specify a timeout interval, and in some cases they will
       // default to a too-short timeout if we don't specify one. So, here, we are setting the
       // timeout properties that are used by several popular polyfills.
-      options.heartbeatTimeout = timeoutMillis; // used by "event-source-polyfill" package
-      options.silentTimeout = timeoutMillis; // used by "eventsource-polyfill" package
+      let esOptions = {
+        heartbeatTimeout: timeoutMillis, // used by "event-source-polyfill" package
+        silentTimeout: timeoutMillis, // used by "eventsource-polyfill" package
+      };
+
+      // Copy any arguments given to the factory to the EventSource
+      // options argument
+      if (typeof options === 'object') {
+        for (const field in options) {
+          const value = options[field];
+          if (value) {
+            esOptions[field] = value;
+          }
+        }
+      }
 
       // Here we check if we have a polyfill that supports report and
       // the SDK implementation is attempting to use the REPORT
       // method. If so, we return an instance of the Polyfill,
       // otherwise we use the default browser implementation.
-      if (eventSourceAllowsReport && options.method === 'REPORT') {
-        return new window.EventSourcePolyfill(url, options);
+      if (eventSourceAllowsReport && esOptions.method === 'REPORT') {
+        return new window.EventSourcePolyfill(url, esOptions);
       } else {
-        return new window.EventSource(url, options);
+        return new window.EventSource(url, esOptions);
       }
     };
 
