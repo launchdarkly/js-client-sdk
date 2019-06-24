@@ -1,5 +1,4 @@
 import { initialize as ldClientInitialize, LDClient, LDFlagSet, LDOptions, LDUser } from 'launchdarkly-js-client-sdk';
-import { v4 as uuid } from 'uuid';
 import { camelCaseKeys } from './utils';
 
 interface AllFlagsLDClient {
@@ -9,7 +8,7 @@ interface AllFlagsLDClient {
 
 const initLDClient = async (
   clientSideID: string,
-  user: LDUser = { key: uuid() },
+  user: LDUser = {},
   options?: LDOptions,
   targetFlags?: LDFlagSet,
 ): Promise<AllFlagsLDClient> => {
