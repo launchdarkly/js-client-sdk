@@ -40,7 +40,7 @@ export default function Stream(platform, config, environment, hash) {
   };
 
   function handleError(err) {
-    logger && logger.warn(messages.streamError(err));
+    logger.warn(messages.streamError(err));
     closeConnection();
     tryConnect(streamReconnectDelay);
   }
@@ -84,7 +84,7 @@ export default function Stream(platform, config, environment, hash) {
       url = url + (query ? '?' : '') + query;
 
       closeConnection();
-      logger && logger.info(messages.streamConnecting(url));
+      logger.info(messages.streamConnecting(url));
       es = platform.eventSourceFactory(url, options);
       for (const key in handlers) {
         if (handlers.hasOwnProperty(key)) {
@@ -98,7 +98,7 @@ export default function Stream(platform, config, environment, hash) {
 
   function closeConnection() {
     if (es) {
-      logger && logger.info(messages.streamClosing());
+      logger.info(messages.streamClosing());
       es.close();
       es = null;
     }

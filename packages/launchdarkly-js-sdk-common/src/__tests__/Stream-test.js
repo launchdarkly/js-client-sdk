@@ -11,7 +11,7 @@ describe('Stream', () => {
   const user = { key: 'me' };
   const encodedUser = 'eyJrZXkiOiJtZSJ9';
   const hash = '012345789abcde';
-  const defaultConfig = { streamUrl: baseUrl };
+  const defaultConfig = { streamUrl: baseUrl, logger: stubPlatform.logger() };
   let platform;
 
   beforeEach(() => {
