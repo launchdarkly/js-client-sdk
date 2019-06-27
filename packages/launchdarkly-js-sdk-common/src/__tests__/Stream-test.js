@@ -13,7 +13,7 @@ describe('Stream', () => {
   const hash = '012345789abcde';
   const defaultConfig = { streamUrl: baseUrl };
   let platform;
-  
+
   beforeEach(() => {
     resetSources();
     platform = stubPlatform.defaults();
@@ -31,7 +31,7 @@ describe('Stream', () => {
 
   function expectOneStream() {
     const keys = Object.keys(sources);
-    if (keys.length != 1) {
+    if (keys.length !== 1) {
       throw new Error('Expected only one stream; active streams are: ' + keys.join(', '));
     }
     return sources[keys[0]];
@@ -126,14 +126,14 @@ describe('Stream', () => {
     const config = Object.assign({}, defaultConfig, { streamReconnectDelay: 0.1, useReport: false });
     const stream = new Stream(platform, config, envName);
     stream.connect(user);
-    
+
     let es = expectOneStream();
     expect(es.readyState).toBe(EventSource.CONNECTING);
     es.mockOpen();
     expect(es.readyState).toBe(EventSource.OPEN);
 
     const nAttempts = 5;
-    for (var i = 0; i < nAttempts; i++) {
+    for (let i = 0; i < nAttempts; i++) {
       const newEventSourcePromise = asyncify(onNewEventSource);
 
       es.mockError('test error');
@@ -141,7 +141,7 @@ describe('Stream', () => {
 
       expect(es.readyState).toBe(EventSource.CLOSED);
       expect(es1.readyState).toBe(EventSource.CONNECTING);
-      
+
       es1.mockOpen();
       await asyncSleep(0); // make sure the stream logic has a chance to catch up with the new EventSource state
 
