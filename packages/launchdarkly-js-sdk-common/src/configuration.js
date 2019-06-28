@@ -20,7 +20,7 @@ export function validate(options, emitter, extraDefaults, logger) {
     allAttributesPrivate: false,
     privateAttributeNames: [],
   };
-  const defaults = utils.extend({}, baseDefaults, extraDefaults);
+  const defaults = utils.extend({ logger: logger }, baseDefaults, extraDefaults);
 
   const deprecatedOptions = {
     // eslint-disable-next-line camelcase

@@ -7,12 +7,15 @@ import * as utils from '../utils';
 
 describe('Requestor', () => {
   const baseUrl = 'http://requestee';
-  const defaultConfig = { baseUrl: baseUrl };
   const user = { key: 'foo' };
   const encodedUser = 'eyJrZXkiOiJmb28ifQ';
   const env = 'FAKE_ENV';
   const platform = stubPlatform.defaults();
   const logger = stubPlatform.logger();
+  const defaultConfig = {
+    baseUrl: baseUrl,
+    logger: logger,
+  };
   let server;
 
   beforeEach(() => {
@@ -24,7 +27,7 @@ describe('Requestor', () => {
   });
 
   it('resolves on success', async () => {
-    const requestor = Requestor(platform, defaultConfig, 'FAKE_ENV', logger);
+    const requestor = Requestor(platform, defaultConfig, 'FAKE_ENV');
     await requestor.fetchFlagSettings({ key: 'user1' }, 'hash1');
     await requestor.fetchFlagSettings({ key: 'user2' }, 'hash2');
 
@@ -33,7 +36,7 @@ describe('Requestor', () => {
 
   it('makes requests with the GET verb if useReport is disabled', async () => {
     const config = Object.assign({}, defaultConfig, { useReport: false });
-    const requestor = Requestor(platform, config, env, logger);
+    const requestor = Requestor(platform, config, env);
 
     await requestor.fetchFlagSettings(user, 'hash1');
 
@@ -43,7 +46,7 @@ describe('Requestor', () => {
 
   it('makes requests with the REPORT verb with a payload if useReport is enabled', async () => {
     const config = Object.assign({}, defaultConfig, { useReport: true });
-    const requestor = Requestor(platform, config, env, logger);
+    const requestor = Requestor(platform, config, env);
 
     await requestor.fetchFlagSettings(user, 'hash1');
 
@@ -53,7 +56,7 @@ describe('Requestor', () => {
   });
 
   it('includes environment and user in GET URL', async () => {
-    const requestor = Requestor(platform, defaultConfig, env, logger);
+    const requestor = Requestor(platform, defaultConfig, env);
 
     await requestor.fetchFlagSettings(user, null);
 
@@ -62,7 +65,7 @@ describe('Requestor', () => {
   });
 
   it('includes environment, user, and hash in GET URL', async () => {
-    const requestor = Requestor(platform, defaultConfig, env, logger);
+    const requestor = Requestor(platform, defaultConfig, env);
 
     await requestor.fetchFlagSettings(user, 'hash1');
 
@@ -72,7 +75,7 @@ describe('Requestor', () => {
 
   it('includes environment, user, and withReasons in GET URL', async () => {
     const config = Object.assign({}, defaultConfig, { evaluationReasons: true });
-    const requestor = Requestor(platform, config, env, logger);
+    const requestor = Requestor(platform, config, env);
 
     await requestor.fetchFlagSettings(user, null);
 
@@ -82,7 +85,7 @@ describe('Requestor', () => {
 
   it('includes environment, user, hash, and withReasons in GET URL', async () => {
     const config = Object.assign({}, defaultConfig, { evaluationReasons: true });
-    const requestor = Requestor(platform, config, env, logger);
+    const requestor = Requestor(platform, config, env);
 
     await requestor.fetchFlagSettings(user, 'hash1');
 
@@ -92,7 +95,7 @@ describe('Requestor', () => {
 
   it('includes environment in REPORT URL', async () => {
     const config = Object.assign({}, defaultConfig, { useReport: true });
-    const requestor = Requestor(platform, config, env, logger);
+    const requestor = Requestor(platform, config, env);
 
     await requestor.fetchFlagSettings(user, null);
 
@@ -102,7 +105,7 @@ describe('Requestor', () => {
 
   it('includes environment and hash in REPORT URL', async () => {
     const config = Object.assign({}, defaultConfig, { useReport: true });
-    const requestor = Requestor(platform, config, env, logger);
+    const requestor = Requestor(platform, config, env);
 
     await requestor.fetchFlagSettings(user, 'hash1');
 
@@ -112,7 +115,7 @@ describe('Requestor', () => {
 
   it('includes environment and withReasons in REPORT URL', async () => {
     const config = Object.assign({}, defaultConfig, { useReport: true, evaluationReasons: true });
-    const requestor = Requestor(platform, config, env, logger);
+    const requestor = Requestor(platform, config, env);
 
     await requestor.fetchFlagSettings(user, null);
 
@@ -122,7 +125,7 @@ describe('Requestor', () => {
 
   it('includes environment, hash, and withReasons in REPORT URL', async () => {
     const config = Object.assign({}, defaultConfig, { useReport: true, evaluationReasons: true });
-    const requestor = Requestor(platform, config, env, logger);
+    const requestor = Requestor(platform, config, env);
 
     await requestor.fetchFlagSettings(user, 'hash1');
 
@@ -132,7 +135,7 @@ describe('Requestor', () => {
 
   it('sends custom user-agent header in GET mode when sendLDHeaders is true', async () => {
     const config = Object.assign({}, defaultConfig, { sendLDHeaders: true });
-    const requestor = Requestor(platform, config, env, logger);
+    const requestor = Requestor(platform, config, env);
     await requestor.fetchFlagSettings(user, 'hash1');
 
     expect(server.requests.length).toEqual(1);
@@ -143,7 +146,7 @@ describe('Requestor', () => {
 
   it('sends custom user-agent header in REPORT mode when sendLDHeaders is true', async () => {
     const config = Object.assign({}, defaultConfig, { useReport: true, sendLDHeaders: true });
-    const requestor = Requestor(platform, config, env, logger);
+    const requestor = Requestor(platform, config, env);
     await requestor.fetchFlagSettings(user, 'hash1');
 
     expect(server.requests.length).toEqual(1);
@@ -154,7 +157,7 @@ describe('Requestor', () => {
 
   it('does NOT send custom user-agent header when sendLDHeaders is false', async () => {
     const config = Object.assign({}, defaultConfig, { useReport: true, sendLDHeaders: false });
-    const requestor = Requestor(platform, config, env, logger);
+    const requestor = Requestor(platform, config, env);
 
     await requestor.fetchFlagSettings(user, 'hash1');
 
@@ -163,7 +166,7 @@ describe('Requestor', () => {
   });
 
   it('returns parsed JSON response on success', async () => {
-    const requestor = Requestor(platform, defaultConfig, env, logger);
+    const requestor = Requestor(platform, defaultConfig, env);
 
     const data = { foo: 'bar' };
     server.respondWith(jsonResponse(data));
@@ -173,7 +176,7 @@ describe('Requestor', () => {
   });
 
   it('returns error for non-JSON content type', async () => {
-    const requestor = Requestor(platform, defaultConfig, env, logger);
+    const requestor = Requestor(platform, defaultConfig, env);
 
     server.respondWith([200, { 'Content-Type': 'text/html' }, '<html></html>']);
 
@@ -182,7 +185,7 @@ describe('Requestor', () => {
   });
 
   it('returns error for unspecified content type', async () => {
-    const requestor = Requestor(platform, defaultConfig, env, logger);
+    const requestor = Requestor(platform, defaultConfig, env);
 
     server.respondWith([200, {}, '{}']);
 
@@ -191,7 +194,7 @@ describe('Requestor', () => {
   });
 
   it('signals specific error for 404 response', async () => {
-    const requestor = Requestor(platform, defaultConfig, env, logger);
+    const requestor = Requestor(platform, defaultConfig, env);
 
     server.respondWith(errorResponse(404));
 
@@ -200,7 +203,7 @@ describe('Requestor', () => {
   });
 
   it('signals general error for non-404 error status', async () => {
-    const requestor = Requestor(platform, defaultConfig, env, logger);
+    const requestor = Requestor(platform, defaultConfig, env);
 
     server.respondWith(errorResponse(500));
 
@@ -209,7 +212,7 @@ describe('Requestor', () => {
   });
 
   it('signals general error for network error', async () => {
-    const requestor = Requestor(platform, defaultConfig, env, logger);
+    const requestor = Requestor(platform, defaultConfig, env);
 
     server.respondWith(req => req.error());
 
@@ -218,7 +221,7 @@ describe('Requestor', () => {
   });
 
   it('coalesces multiple requests so all callers get the latest result', async () => {
-    const requestor = Requestor(platform, defaultConfig, env, logger);
+    const requestor = Requestor(platform, defaultConfig, env);
 
     let n = 0;
     server.autoRespond = false;
@@ -245,7 +248,7 @@ describe('Requestor', () => {
 
   describe('When HTTP requests are not available at all', () => {
     it('fails on fetchFlagSettings', async () => {
-      const requestor = Requestor(stubPlatform.withoutHttp(), defaultConfig, env, logger);
+      const requestor = Requestor(stubPlatform.withoutHttp(), defaultConfig, env);
       await expect(requestor.fetchFlagSettings(user, null)).rejects.toThrow(messages.httpUnavailable());
     });
   });
