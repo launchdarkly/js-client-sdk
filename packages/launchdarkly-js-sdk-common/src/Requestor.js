@@ -13,11 +13,12 @@ function getResponseError(result) {
   }
 }
 
-export default function Requestor(platform, options, environment, logger) {
+export default function Requestor(platform, options, environment) {
   const baseUrl = options.baseUrl;
   const useReport = options.useReport;
   const withReasons = options.evaluationReasons;
   const sendLDHeaders = options.sendLDHeaders;
+  const logger = options.logger;
 
   const requestor = {};
 
