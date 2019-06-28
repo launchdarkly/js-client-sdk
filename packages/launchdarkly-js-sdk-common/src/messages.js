@@ -1,5 +1,15 @@
 import * as errors from './errors';
 
+function errorString(err) {
+  if (err && err.message) {
+    return err.message;
+  }
+  if (typeof err === 'string' || err instanceof String) {
+    return err;
+  }
+  return JSON.stringify(err);
+}
+
 export const clientInitialized = function() {
   return 'LaunchDarkly client initialized';
 };
@@ -46,7 +56,7 @@ export const environmentNotSpecified = function() {
 };
 
 export const errorFetchingFlags = function(err) {
-  return 'Error fetching flag settings: ' + (err.message || err);
+  return 'Error fetching flag settings: ' + errorString(err);
 };
 
 export const userNotSpecified = function() {
@@ -91,6 +101,18 @@ export const httpUnavailable = function() {
 
 export const identifyDisabled = function() {
   return 'identify() has no effect here; it must be called on the main client instance';
+};
+
+export const streamClosing = function() {
+  return 'Closing stream connection';
+};
+
+export const streamConnecting = function(url) {
+  return 'Opening stream connection to ' + url;
+};
+
+export const streamError = function(err) {
+  return 'Error on stream connection: ' + errorString(err);
 };
 
 export const debugPolling = function(url) {

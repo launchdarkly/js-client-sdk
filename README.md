@@ -26,7 +26,7 @@ The LaunchDarkly SDK can be used in all major browsers. However, web browsers va
 
 ### Logging
 
-By default, the SDK uses the `winston` package. There are four logging levels: `debug`, `info`, `warn`, and `error`; by default, `debug` and `info` messages are hidden. See [`LDOptions.logger`](https://launchdarkly.github.io/js-client-sdk/interfaces/_ldclient_js_.ldoptions.html#logger) and [`createConsoleLogger`](https://launchdarkly.github.io/js-client-sdk/index.html#createconsolelogger)` for more details.
+By default, the SDK uses the `winston` package. There are four logging levels: `debug`, `info`, `warn`, and `error`; by default, `debug` and `info` messages are hidden. See [`LDOptions.logger`](https://launchdarkly.github.io/js-client-sdk/interfaces/_launchdarkly_js_client_sdk_.ldoptions.html#logger) and [`createConsoleLogger`](https://launchdarkly.github.io/js-client-sdk/index.html#createconsolelogger) for more details.
 
 ## Learn more
 
