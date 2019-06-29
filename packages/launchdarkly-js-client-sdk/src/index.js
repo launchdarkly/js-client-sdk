@@ -9,7 +9,7 @@ const extraDefaults = {
 
 // Pass our platform object to the common code to create the browser version of the client
 export function initialize(env, user, options = {}) {
-  const platform = browserPlatform();
+  const platform = browserPlatform(options);
   const clientVars = common.initialize(env, user, options, platform, extraDefaults);
 
   const client = clientVars.client;

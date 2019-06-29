@@ -27,36 +27,55 @@ describe('LDClient', () => {
     }
 
     // This tests that the client calls our platform's getCurrentUrl() method.
-    it('sends an event for track()', done => {
+    it('sends an event for track()', async () => {
       const urlShouldBe = window.location.href; // we can't actually change this in a test
       const ep = stubEventProcessor();
       const client = LDClient.initialize(envName, user, { eventProcessor: ep, bootstrap: {} });
       const data = { thing: 'stuff' };
-      client.on('ready', () => {
-        client.track('eventkey', data);
 
-        expect(ep.events.length).toEqual(2);
-        const trackEvent = ep.events[1];
-        expect(trackEvent.kind).toEqual('custom');
-        expect(trackEvent.key).toEqual('eventkey');
-        expect(trackEvent.user).toEqual(user);
-        expect(trackEvent.data).toEqual(data);
-        expect(trackEvent.url).toEqual(urlShouldBe);
-        done();
-      });
+      await client.waitForInitialization();
+      client.track('eventkey', data);
+
+      expect(ep.events.length).toEqual(2);
+      const trackEvent = ep.events[1];
+      expect(trackEvent.kind).toEqual('custom');
+      expect(trackEvent.key).toEqual('eventkey');
+      expect(trackEvent.user).toEqual(user);
+      expect(trackEvent.data).toEqual(data);
+      expect(trackEvent.url).toEqual(urlShouldBe);
     });
 
     // This tests that the client calls our platform's isDoNotTrack() method.
-    it('does not send an event for track() if doNotTrack is set', done => {
+    it('does not send an event for track() if doNotTrack is set', async () => {
       window.doNotTrack = 1;
       const ep = stubEventProcessor();
       const client = LDClient.initialize(envName, user, { eventProcessor: ep, bootstrap: {} });
       const data = { thing: 'stuff' };
-      client.on('ready', () => {
-        client.track('eventkey', data);
-        expect(ep.events.length).toEqual(0);
-        done();
+
+      await client.waitForInitialization();
+      client.track('eventkey', data);
+
+      expect(ep.events.length).toEqual(0);
+    });
+
+    it('can transform URL for track()', async () => {
+      const suffix = '/foo';
+      const urlShouldBe = window.location.href + suffix;
+      const ep = stubEventProcessor();
+      const client = LDClient.initialize(envName, user, {
+        eventProcessor: ep,
+        bootstrap: {},
+        eventUrlTransformer: url => url + suffix,
       });
+      await client.waitForInitialization();
+      client.track('eventkey');
+
+      expect(ep.events.length).toEqual(2);
+      const trackEvent = ep.events[1];
+      expect(trackEvent.kind).toEqual('custom');
+      expect(trackEvent.key).toEqual('eventkey');
+      expect(trackEvent.user).toEqual(user);
+      expect(trackEvent.url).toEqual(urlShouldBe);
     });
   });
 });
