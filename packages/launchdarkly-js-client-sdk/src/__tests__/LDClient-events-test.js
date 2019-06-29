@@ -32,7 +32,7 @@ describe('LDClient', () => {
       const ep = stubEventProcessor();
       const client = LDClient.initialize(envName, user, { eventProcessor: ep, bootstrap: {} });
       const data = { thing: 'stuff' };
-      
+
       await client.waitForInitialization();
       client.track('eventkey', data);
 
