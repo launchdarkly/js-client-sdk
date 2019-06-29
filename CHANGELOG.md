@@ -2,6 +2,11 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.1.2] - 2019-06-28
+### Fixed:
+- The `eventUrlTransformer` property that was added in 2.12.0 had no effect. It now works.
+
+
 ## [2.12.1] - 2019-06-28
 ### Added:
 - The SDK now logs a message at `info` level when the stream connection is started or stopped. It also logs a message at `warn` level if it detects that the stream had to be restarted due to a connection failure; however, in browsers that have native support for EventSource, connection restarts may be handled internally by the browser in which case there will be no log message.
