@@ -557,6 +557,32 @@ describe('LDClient', () => {
       expect(server.requests.length).toEqual(0);
       expect(platform.testing.logger.output.warn).toEqual([messages.identifyDisabled()]);
     });
+
+    it('copies data from state provider to avoid unintentional object-sharing', async () => {
+      const user = { key: 'user' };
+      const state = {
+        environment: 'env',
+        user: user,
+        flags: { flagkey: { value: 'value' } },
+      };
+      const sp = stubPlatform.mockStateProvider(null);
+
+      const client = platform.testing.makeClient(null, null, { stateProvider: sp });
+
+      sp.emit('init', state);
+
+      await client.waitForInitialization();
+      expect(client.variation('flagkey')).toEqual('value');
+
+      state.flags.flagkey = { value: 'secondValue' };
+      expect(client.variation('flagkey')).toEqual('value');
+
+      sp.emit('update', state);
+      expect(client.variation('flagkey')).toEqual('secondValue');
+
+      state.flags.flagkey = { value: 'thirdValue' };
+      expect(client.variation('flagkey')).toEqual('secondValue');
+    });
   });
 
   describe('close()', () => {

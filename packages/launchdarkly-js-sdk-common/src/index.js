@@ -388,7 +388,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
       }
     }
 
-    flags = newFlags;
+    flags = Object.assign({}, newFlags);
     return handleFlagChanges(changes).catch(() => {}); // swallow any exceptions from this Promise
   }
 
