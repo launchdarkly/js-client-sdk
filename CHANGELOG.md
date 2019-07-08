@@ -2,6 +2,17 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.12.3] - 2019-07-08
+### Added:
+- The SDK now logs a message at `info` level when the stream connection is started or stopped. It also logs a message at `warn` level if it detects that the stream had to be restarted due to a connection failure; however, in browsers that have native support for EventSource, connection restarts may be handled internally by the browser in which case there will be no log message.
+ 
+### Changed:
+- When providing precomputed flag values to the SDK via the `bootstrap` option, these values will now be immediately available as soon as `initialize()` returns. That was already the behavior in earlier versions of the SDK, but ever since version 2.10.0 the values only became available once the client was officially ready (i.e. the `ready` event had fired or the `waitUntilInitialized()` promise had resolved), so they could not be used in non-asynchronous application code. The correct behavior had never been explicitly defined, so this had not been documented as a change. The behavior is now as it was prior to 2.10.0, and is now documented as such. ([#162](https://github.com/launchdarkly/js-client-sdk/issues/162))
+ 
+### Fixed:
+- Under some circumstances, the SDK would fail to restart a streaming connection if it had already been dropped and restarted before. This normally would not happen when using a built-in browser implementation of EventSource, but could happen with some EventSource polyfills.
+- Fixed a broken link in the project README.
+
 ## [2.1.2] - 2019-06-28
 ### Fixed:
 - The `eventUrlTransformer` property that was added in 2.12.0 had no effect. It now works.
