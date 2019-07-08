@@ -27,6 +27,7 @@ var allOptions: ld.LDOptions = {
   flushInterval: 1,
   samplingInterval: 1,
   streamReconnectDelay: 1,
+  eventUrlTransformer: url => url + 'x',
   logger: logger
 };
 var userWithKeyOnly: ld.LDUser = { key: 'user' };

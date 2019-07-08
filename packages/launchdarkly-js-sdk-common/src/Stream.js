@@ -1,3 +1,4 @@
+import * as messages from './messages';
 import { base64URLEncode } from './utils';
 
 // The underlying event source implementation is abstracted via the platform object, which should
@@ -11,6 +12,7 @@ import { base64URLEncode } from './utils';
 
 export default function Stream(platform, config, environment, hash) {
   const baseUrl = config.streamUrl;
+  const logger = config.logger;
   const stream = {};
   const evalUrlPrefix = baseUrl + '/eval/' + environment;
   const useReport = config.useReport;
@@ -34,10 +36,11 @@ export default function Stream(platform, config, environment, hash) {
   };
 
   stream.isConnected = function() {
-    return es && platform.eventSourceIsActive && platform.eventSourceIsActive(es);
+    return !!(es && platform.eventSourceIsActive && platform.eventSourceIsActive(es));
   };
 
-  function reconnect() {
+  function handleError(err) {
+    logger.warn(messages.streamError(err));
     closeConnection();
     tryConnect(streamReconnectDelay);
   }
@@ -53,6 +56,7 @@ export default function Stream(platform, config, environment, hash) {
   }
 
   function openConnection() {
+    reconnectTimeoutReference = null;
     let url;
     let query = '';
     const options = {};
@@ -80,6 +84,7 @@ export default function Stream(platform, config, environment, hash) {
       url = url + (query ? '?' : '') + query;
 
       closeConnection();
+      logger.info(messages.streamConnecting(url));
       es = platform.eventSourceFactory(url, options);
       for (const key in handlers) {
         if (handlers.hasOwnProperty(key)) {
@@ -87,12 +92,13 @@ export default function Stream(platform, config, environment, hash) {
         }
       }
 
-      es.onerror = reconnect;
+      es.onerror = handleError;
     }
   }
 
   function closeConnection() {
     if (es) {
+      logger.info(messages.streamClosing());
       es.close();
       es = null;
     }
