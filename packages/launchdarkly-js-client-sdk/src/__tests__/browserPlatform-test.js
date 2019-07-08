@@ -190,8 +190,89 @@ describe('browserPlatform', () => {
   });
 
   describe('EventSource', () => {
-    it('does not support REPORT mode', () => {
+    const oldWindowEventSource = window.EventSource;
+    const oldWindowPolyfill = window.EventSourcePolyfill;
+
+    const browser = {};
+    const polyfill = {};
+    const browserConstructor = () => browser;
+    const polyfillConstructor = () => polyfill;
+    const reportPolyfillConstructor = () => polyfill;
+    reportPolyfillConstructor.supportsSettingMethod = true;
+
+    beforeEach(() => {
+      window.EventSource = browserConstructor;
+      delete window.EventSourcePolyfill;
+    });
+
+    afterAll(() => {
+      window.EventSource = oldWindowEventSource;
+      window.EventSourcePolyfill = oldWindowPolyfill;
+    });
+
+    it('does not support REPORT mode without polyfill', () => {
+      const testPlatform = browserPlatform({ useReport: true });
       expect(platform.eventSourceAllowsReport).toBe(false);
+    });
+
+    it('does not support REPORT mode with unsupported polyfill', () => {
+      window.EventSourcePolyfill = polyfillConstructor;
+      const testPlatform = browserPlatform({ useReport: true });
+      expect(testPlatform.eventSourceAllowsReport).toBe(false);
+    });
+
+    it('supports REPORT mode with supported polyfill', () => {
+      window.EventSourcePolyfill = reportPolyfillConstructor;
+      const testPlatform = browserPlatform({ useReport: true });
+      expect(testPlatform.eventSourceAllowsReport).toBe(true);
+    });
+
+    it('uses browser implementation when useReport is false', () => {
+      window.EventSourcePolyfill = reportPolyfillConstructor;
+      const testPlatform = browserPlatform();
+      expect(testPlatform.eventSourceFactory('URL')).toBe(browser);
+    });
+
+    it('uses browser implementation when method is unsupported by polyfill', () => {
+      window.EventSourcePolyfill = polyfillConstructor;
+      const testPlatform = browserPlatform({ useReport: true });
+      expect(testPlatform.eventSourceFactory('URL')).toBe(browser);
+    });
+
+    it('uses polyfill when method supported and useReport is true', () => {
+      window.EventSourcePolyfill = reportPolyfillConstructor;
+      const testPlatform = browserPlatform({ useReport: true });
+      expect(testPlatform.eventSourceFactory('URL')).toBe(polyfill);
+    });
+
+    it('does not provide stream factory when EventSource unsupported', () => {
+      delete window.EventSource;
+      const testPlatform = browserPlatform();
+      expect(testPlatform.eventSourceFactory).toBe(undefined);
+    });
+
+    it('factory includes provided options in polyfill constructor', () => {
+      window.EventSourcePolyfill = (url, options) => {
+        return { url: url, options: options };
+      };
+      window.EventSourcePolyfill.supportsSettingMethod = true;
+      const testPlatform = browserPlatform({ useReport: true });
+      const res = testPlatform.eventSourceFactory('URL', { method: 'REPORT' });
+      expect(res['url']).toEqual('URL');
+      expect(res['options']).toEqual(expect.objectContaining({ method: 'REPORT' }));
+    });
+
+    it('factory sets common polyfill timeouts', () => {
+      window.EventSourcePolyfill = (url, options) => {
+        return { url: url, options: options };
+      };
+      window.EventSourcePolyfill.supportsSettingMethod = true;
+      const testPlatform = browserPlatform({ useReport: true });
+      const res = testPlatform.eventSourceFactory('URL');
+      expect(res['url']).toEqual('URL');
+      expect(res['options']).toEqual(
+        expect.objectContaining({ heartbeatTimeout: expect.any(Number), silentTimeout: expect.any(Number) })
+      );
     });
   });
 });

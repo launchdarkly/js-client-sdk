@@ -69,13 +69,18 @@ export default function makeBrowserPlatform(options) {
   // 'ping' stream that informs the SDK to make a separate REPORT
   // request for the user's flag evaluations whenever the flag
   // definitions have been updated.
-  let eventSourceReportConstructor;
-  if (typeof window.EventSourcePolyfill === 'function' && window.EventSourcePolyfill.supportsSettingMethod === true) {
+  let eventSourceConstructor;
+  const useReport = options && options.useReport;
+  if (
+    useReport &&
+    typeof window.EventSourcePolyfill === 'function' &&
+    window.EventSourcePolyfill.supportsSettingMethod === true
+  ) {
     ret.eventSourceAllowsReport = true;
-    eventSourceReportConstructor = window.EventSourcePolyfill;
+    eventSourceConstructor = window.EventSourcePolyfill;
   } else {
     ret.eventSourceAllowsReport = false;
-    eventSourceReportConstructor = window.EventSource;
+    eventSourceConstructor = window.EventSource;
   }
 
   // If EventSource does not exist, the absence of eventSourceFactory will make us not try to open streams
@@ -96,19 +101,7 @@ export default function makeBrowserPlatform(options) {
       // factory for the EventSource options argument
       const esOptions = Object.assign({}, timeoutOptions, options);
 
-      // Here we check if the SDK implementation is attempting to use
-      // the REPORT method. If so, we use the
-      // eventSourceReportConstructor to create the EventSource object
-      // rather than the default browser constructor. The SDK should
-      // only attempt to use the REPORT method if the platform (this
-      // file) has declared support for it, meaning
-      // eventSourceReportConstructor will be a polyfill with support
-      // for the REPORT method.
-      if (esOptions.method === 'REPORT') {
-        return new eventSourceReportConstructor(url, esOptions);
-      } else {
-        return new window.EventSource(url, esOptions);
-      }
+      return new eventSourceConstructor(url, esOptions);
     };
 
     ret.eventSourceIsActive = es =>
