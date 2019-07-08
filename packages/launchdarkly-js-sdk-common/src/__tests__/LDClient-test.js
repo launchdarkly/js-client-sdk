@@ -126,29 +126,6 @@ describe('LDClient', () => {
       expect(/withReasons=true/.test(server.requests[0].url)).toEqual(true);
     });
 
-    it('should not fetch flag settings if bootstrap is provided', async () => {
-      const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
-      await client.waitForInitialization();
-
-      expect(server.requests.length).toEqual(0);
-    });
-
-    it('logs warning when bootstrap object uses old format', async () => {
-      const client = platform.testing.makeClient(envName, user, { bootstrap: { foo: 'bar' } });
-      await client.waitForInitialization();
-
-      expect(platform.testing.logger.output.warn).toEqual([messages.bootstrapOldFormat()]);
-    });
-
-    it('does not log warning when bootstrap object uses new format', async () => {
-      const initData = makeBootstrap({ foo: { value: 'bar', version: 1 } });
-      const client = platform.testing.makeClient(envName, user, { bootstrap: initData });
-      await client.waitForInitialization();
-
-      expect(platform.testing.logger.output.warn).toEqual([]);
-      expect(client.variation('foo')).toEqual('bar');
-    });
-
     it('should contain package version', () => {
       const version = LDClient.version;
       // All client bundles above 1.0.7 should contain package version
@@ -249,6 +226,38 @@ describe('LDClient', () => {
       expect(newUser1.key).toEqual(expect.anything());
       // This key is probably different from newUser0.key, but that depends on execution time, so we can't count on it.
       expect(newUser1).toMatchObject(anonUser);
+    });
+  });
+
+  describe('initialization with bootstrap object', () => {
+    it('should not fetch flag settings', async () => {
+      const client = platform.testing.makeClient(envName, user, { bootstrap: {} });
+      await client.waitForInitialization();
+
+      expect(server.requests.length).toEqual(0);
+    });
+
+    it('makes flags available immediately before ready event', async () => {
+      const initData = makeBootstrap({ foo: { value: 'bar', version: 1 } });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: initData });
+
+      expect(client.variation('foo')).toEqual('bar');
+    });
+
+    it('logs warning when bootstrap object uses old format', async () => {
+      const client = platform.testing.makeClient(envName, user, { bootstrap: { foo: 'bar' } });
+      await client.waitForInitialization();
+
+      expect(platform.testing.logger.output.warn).toEqual([messages.bootstrapOldFormat()]);
+    });
+
+    it('does not log warning when bootstrap object uses new format', async () => {
+      const initData = makeBootstrap({ foo: { value: 'bar', version: 1 } });
+      const client = platform.testing.makeClient(envName, user, { bootstrap: initData });
+      await client.waitForInitialization();
+
+      expect(platform.testing.logger.output.warn).toEqual([]);
+      expect(client.variation('foo')).toEqual('bar');
     });
   });
 
