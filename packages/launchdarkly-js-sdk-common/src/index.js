@@ -388,7 +388,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
       }
     }
 
-    flags = newFlags;
+    flags = Object.assign({}, newFlags);
     return handleFlagChanges(changes).catch(() => {}); // swallow any exceptions from this Promise
   }
 
@@ -506,6 +506,12 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     }
   }
 
+  if (typeof options.bootstrap === 'object') {
+    // Set the flags as soon as possible before we get into any async code, so application code can read
+    // them even if the ready event has not yet fired.
+    flags = readFlagsFromBootstrap(options.bootstrap);
+  }
+
   if (stateProvider) {
     // The stateProvider option is used in the Electron SDK, to allow a client instance in the main process
     // to control another client instance (i.e. this one) in the renderer process. We can't predict which
@@ -529,7 +535,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
     return userValidator.validateUser(user).then(realUser => {
       ident.setUser(realUser);
       if (typeof options.bootstrap === 'object') {
-        flags = readFlagsFromBootstrap(options.bootstrap);
+        // flags have already been set earlier
         return signalSuccessfulInit();
       } else if (useLocalStorage) {
         return finishInitWithLocalStorage();
@@ -586,7 +592,7 @@ export function initialize(env, user, specifiedOptions, platform, extraDefaults)
   function initFromStateProvider(state) {
     environment = state.environment;
     ident.setUser(state.user);
-    flags = state.flags;
+    flags = Object.assign({}, state.flags);
     utils.onNextTick(signalSuccessfulInit);
   }
 
