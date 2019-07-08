@@ -190,19 +190,19 @@ describe('browserPlatform', () => {
   });
 
   describe('EventSource', () => {
-    const oldWindowEventSource = window.EventSource;
-    const oldWindowPolyfill = window.EventSourcePolyfill;
+    let oldWindowEventSource;
+    let oldWindowPolyfill;
 
     const browser = {};
     const polyfill = {};
     const browserConstructor = () => browser;
     const polyfillConstructor = () => polyfill;
     const reportPolyfillConstructor = () => polyfill;
-    reportPolyfillConstructor.supportsSettingMethod = true;
 
-    beforeEach(() => {
-      window.EventSource = browserConstructor;
-      delete window.EventSourcePolyfill;
+    beforeAll(() => {
+      oldWindowEventSource = window.EventSource;
+      oldWindowPolyfill = window.EventSourcePolyfill;
+      reportPolyfillConstructor.supportsSettingMethod = true;
     });
 
     afterAll(() => {
@@ -210,9 +210,14 @@ describe('browserPlatform', () => {
       window.EventSourcePolyfill = oldWindowPolyfill;
     });
 
+    beforeEach(() => {
+      window.EventSource = browserConstructor;
+      delete window.EventSourcePolyfill;
+    });
+
     it('does not support REPORT mode without polyfill', () => {
       const testPlatform = browserPlatform({ useReport: true });
-      expect(platform.eventSourceAllowsReport).toBe(false);
+      expect(testPlatform.eventSourceAllowsReport).toBe(false);
     });
 
     it('does not support REPORT mode with unsupported polyfill', () => {
@@ -252,9 +257,7 @@ describe('browserPlatform', () => {
     });
 
     it('factory includes provided options in polyfill constructor', () => {
-      window.EventSourcePolyfill = (url, options) => {
-        return { url: url, options: options };
-      };
+      window.EventSourcePolyfill = (url, options) => ({ url: url, options: options });
       window.EventSourcePolyfill.supportsSettingMethod = true;
       const testPlatform = browserPlatform({ useReport: true });
       const res = testPlatform.eventSourceFactory('URL', { method: 'REPORT' });
@@ -263,9 +266,7 @@ describe('browserPlatform', () => {
     });
 
     it('factory sets common polyfill timeouts', () => {
-      window.EventSourcePolyfill = (url, options) => {
-        return { url: url, options: options };
-      };
+      window.EventSourcePolyfill = (url, options) => ({ url: url, options: options });
       window.EventSourcePolyfill.supportsSettingMethod = true;
       const testPlatform = browserPlatform({ useReport: true });
       const res = testPlatform.eventSourceFactory('URL');
