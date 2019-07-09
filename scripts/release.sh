@@ -36,11 +36,12 @@ npm install
 # to npm do not contain the build products. In other words, it is *not* equivalent to just running
 # "npm publish" in each package directory. So, for now, we'll just do the latter.
 
-for package in ldclient-js-common ldclient-js ldclient-react; do
+for package in launchdarkly-js-sdk-common launchdarkly-js-client-sdk launchdarkly-react-client-sdk; do
   cd $PROJECT_DIR/packages/$package
   npm publish
 done
 
+cd $PROJECT_DIR
 $PROJECT_DIR/scripts/release-docs.sh $VERSION
 
 echo "Done with js-client release"

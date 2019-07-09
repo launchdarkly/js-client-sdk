@@ -1,7 +1,65 @@
 # Change log
 
-All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file.
-This project adheres to [Semantic Versioning](http://semver.org).
+All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
+
+## [2.12.3] - 2019-07-08
+### Added:
+- The SDK now logs a message at `info` level when the stream connection is started or stopped. It also logs a message at `warn` level if it detects that the stream had to be restarted due to a connection failure; however, in browsers that have native support for EventSource, connection restarts may be handled internally by the browser in which case there will be no log message.
+ 
+### Changed:
+- When providing precomputed flag values to the SDK via the `bootstrap` option, these values will now be immediately available as soon as `initialize()` returns. That was already the behavior in earlier versions of the SDK, but ever since version 2.10.0 the values only became available once the client was officially ready (i.e. the `ready` event had fired or the `waitUntilInitialized()` promise had resolved), so they could not be used in non-asynchronous application code. The correct behavior had never been explicitly defined, so this had not been documented as a change. The behavior is now as it was prior to 2.10.0, and is now documented as such. ([#162](https://github.com/launchdarkly/js-client-sdk/issues/162))
+ 
+### Fixed:
+- Under some circumstances, the SDK would fail to restart a streaming connection if it had already been dropped and restarted before. This normally would not happen when using a built-in browser implementation of EventSource, but could happen with some EventSource polyfills.
+- Fixed a broken link in the project README.
+
+## [2.1.2] - 2019-06-28
+### Fixed:
+- The `eventUrlTransformer` property that was added in 2.12.0 had no effect. It now works.
+
+
+## [2.12.1] - 2019-06-28
+### Added:
+- The SDK now logs a message at `info` level when the stream connection is started or stopped. It also logs a message at `warn` level if it detects that the stream had to be restarted due to a connection failure; however, in browsers that have native support for EventSource, connection restarts may be handled internally by the browser in which case there will be no log message.
+ 
+### Fixed:
+- Under some circumstances, the SDK would fail to restart a streaming connection if it had already been dropped and restarted before. This normally would not happen when using a built-in browser implementation of EventSource, but could happen with some EventSource polyfills.
+- Fixed a broken link in the project README.
+
+## [2.12.0] - 2019-06-18
+### Added:
+- Configuration property `eventUrlTransformer` allows application code to modify the URL that is sent in analytics events.
+### Fixed:
+- If the SDK receives data from the service that does not have the expected JSON content type, it will now log an appropriate error message, rather than "Error fetching flags: 200".
+
+## [2.11.0] - 2019-06-06
+### Added:
+- Added support for hooks to the React SDK.
+
+## [2.10.4] - 2019-05-22
+### Added:
+- `unpkg` entry to `package.json` to specify primary build artifact to simplify the unpkg snippet URL.
+### Fixed:
+- Streaming updates did not work if `useReport` was enabled, or if the SDK was connecting through the LaunchDarkly relay proxy. This bug was introduced in version 2.10.0.
+
+## [2.10.3] - 2019-05-08 
+### Changed:
+- Changed the package names from `ldclient-js`, `ldclient-react`, and `ldclient-js-common` to `launchdarkly-js-client-sdk`, `launchdarkly-react-client-sdk`, and `launchdarkly-js-sdk-common`, respectively.
+ 
+There are no other changes in this release. Substituting `ldclient-js`, `ldclient-react`, and `ldclient-js-common` version 2.10.2 with `launchdarkly-js-client-sdk`, `launchdarkly-react-client-sdk`, and `launchdarkly-js-sdk-common` version 2.10.3 will not affect functionality.
+
+### Fixed:
+- Fixed some broken links in the package READMEs.
+
+## [2.10.2] - 2019-05-01
+### Fixed:
+- Fixed a problem that prevented the Electron and client-side Node SDKs from reporting their own version strings correctly. This fix does not affect the browser JS SDK, so there is no need to upgrade if you are using that.
+
+### Note on future releases:
+
+The LaunchDarkly SDK repositories are being renamed for consistency. This repository is now `js-client-sdk` rather than `js-client`.
+
+The package names will also change. In the 2.10.2 release, there were packages for `ldclient-js`, `ldclient-react` and `ldclient-js-common`; in all future releases, they will be `launchdarkly-js-client-sdk`, `launchdarkly-react-client-sdk`, and `launchdarkly-js-sdk-common`, respectively.
 
 ## [2.10.1] - 2019-04-23
 ### Fixed:
