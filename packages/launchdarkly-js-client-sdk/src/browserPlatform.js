@@ -59,22 +59,21 @@ export default function makeBrowserPlatform(options) {
     ret.localStorage = null;
   }
 
-  // The browser built in EventSource implementations do not support
-  // setting the method used for the request. When useReport is true,
-  // we ensure sending the user in the body of a REPORT request rather
-  // than in the URL path. If a polyfill for EventSource supporting
-  // setting the request method is provided, we use it to connect to a
-  // flag stream that will provide evaluated flags for the specific
-  // user. Otherwise, when useReport is true, we fallback to a generic
-  // 'ping' stream that informs the SDK to make a separate REPORT
-  // request for the user's flag evaluations whenever the flag
-  // definitions have been updated.
+  // The browser built-in EventSource implementations do not support setting the method used for
+  // the request. When useReport is true, we ensure sending the user in the body of a REPORT request
+  // rather than in the URL path. If a polyfill for EventSource that supports setting the request
+  // method is provided (currently, launchdarkly-eventsource is the only polyfill that both supports
+  // it and gives us a way to *know* that it supports it), we use the polyfill to connect to a flag
+  // stream that will provide evaluated flags for the specific user. Otherwise, when useReport is
+  // true, we fall back to a generic  'ping' stream that informs the SDK to make a separate REPORT
+  // request for the user's flag evaluations whenever the flag definitions have been updated.
   let eventSourceConstructor;
   const useReport = options && options.useReport;
   if (
     useReport &&
     typeof window.EventSourcePolyfill === 'function' &&
-    window.EventSourcePolyfill.supportsSettingMethod === true
+    window.EventSourcePolyfill.supportedOptions &&
+    window.EventSourcePolyfill.supportedOptions.method
   ) {
     ret.eventSourceAllowsReport = true;
     eventSourceConstructor = window.EventSourcePolyfill;
@@ -92,14 +91,16 @@ export default function makeBrowserPlatform(options) {
       // EventSource polyfills allow us to specify a timeout interval, and in some cases they will
       // default to a too-short timeout if we don't specify one. So, here, we are setting the
       // timeout properties that are used by several popular polyfills.
-      const timeoutOptions = {
-        heartbeatTimeout: timeoutMillis, // used by "event-source-polyfill" package
-        silentTimeout: timeoutMillis, // used by "eventsource-polyfill" package
+      // Also, the skipDefaultHeaders property (if supported) tells the polyfill not to add the
+      // Cache-Control header that can cause CORS problems in browsers.
+      // See: https://github.com/launchdarkly/js-eventsource
+      const defaultOptions = {
+        heartbeatTimeout: timeoutMillis,
+        silentTimeout: timeoutMillis,
+        skipDefaultHeaders: true,
       };
 
-      // Combine timeout presets with any arguments given to the
-      // factory for the EventSource options argument
-      const esOptions = Object.assign({}, timeoutOptions, options);
+      const esOptions = Object.assign({}, defaultOptions, options);
 
       return new eventSourceConstructor(url, esOptions);
     };
