@@ -202,7 +202,7 @@ describe('browserPlatform', () => {
     beforeAll(() => {
       oldWindowEventSource = window.EventSource;
       oldWindowPolyfill = window.EventSourcePolyfill;
-      reportPolyfillConstructor.supportsSettingMethod = true;
+      reportPolyfillConstructor.supportedOptions = { method: true };
     });
 
     afterAll(() => {
@@ -258,7 +258,7 @@ describe('browserPlatform', () => {
 
     it('factory includes provided options in polyfill constructor', () => {
       window.EventSourcePolyfill = (url, options) => ({ url: url, options: options });
-      window.EventSourcePolyfill.supportsSettingMethod = true;
+      window.EventSourcePolyfill.supportedOptions = { method: true };
       const testPlatform = browserPlatform({ useReport: true });
       const res = testPlatform.eventSourceFactory('URL', { method: 'REPORT' });
       expect(res['url']).toEqual('URL');
@@ -267,7 +267,7 @@ describe('browserPlatform', () => {
 
     it('factory sets common polyfill timeouts', () => {
       window.EventSourcePolyfill = (url, options) => ({ url: url, options: options });
-      window.EventSourcePolyfill.supportsSettingMethod = true;
+      window.EventSourcePolyfill.supportedOptions = { method: true };
       const testPlatform = browserPlatform({ useReport: true });
       const res = testPlatform.eventSourceFactory('URL');
       expect(res['url']).toEqual('URL');
