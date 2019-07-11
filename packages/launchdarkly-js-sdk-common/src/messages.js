@@ -48,11 +48,11 @@ export const unknownCustomEventKey = function(key) {
 };
 
 export const environmentNotFound = function() {
-  return 'environment not found.' + docLink;
+  return 'Environment not found. Double check that you specified a valid environment/client-side ID.' + docLink;
 };
 
 export const environmentNotSpecified = function() {
-  return 'No environment specified.' + docLink;
+  return 'No environment/client-side ID was specified.' + docLink;
 };
 
 export const errorFetchingFlags = function(err) {
