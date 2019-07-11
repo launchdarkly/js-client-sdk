@@ -2,6 +2,13 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.12.4] - 2019-07-10
+### Changed:
+- The `useReport` property, which tells the SDK to use the REPORT method for HTTP requests so that user data will not appear in the URL path, was only actually using REPORT for requesting all flags at once— not for streaming updates, because streaming uses the EventSource API which normally can only use the GET method; so, to avoid exposing user data in the URL for the streaming connection, the SDK had to use a different and slower mechanism (in which all of the flags are reloaded whenever there is a change) if `useReport` was true. That is still the case by default; but, if you load the specific EventSource [polyfill implementation](https://docs.launchdarkly.com/docs/js-sdk-requirements-and-polyfills) [`launchdarkly-eventsource`](https://github.com/launchdarkly/js-eventsource) (v1.1.0 or later), the SDK _can_ now use REPORT for streaming connections.
+ 
+### Fixed:
+- The `homepage` attribute in the `launchdarkly-react-client-sdk` and `launchdarkly-react-client-sdk-example` packages has been updated to the correct value.
+
 ## [2.12.3] - 2019-07-08
 ### Added:
 - The SDK now logs a message at `info` level when the stream connection is started or stopped. It also logs a message at `warn` level if it detects that the stream had to be restarted due to a connection failure; however, in browsers that have native support for EventSource, connection restarts may be handled internally by the browser in which case there will be no log message.
