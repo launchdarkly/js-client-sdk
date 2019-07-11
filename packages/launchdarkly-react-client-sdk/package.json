@@ -27,7 +27,7 @@
     "type": "git",
     "url": "git://github.com/launchdarkly/js-client-sdk.git"
   },
-  "homepage": "https://github.com/launchdarkly/js-client-sdk-private/packages/launchdarkly-react-client-sdk",
+  "homepage": "https://github.com/launchdarkly/js-client-sdk/tree/master/packages/launchdarkly-react-client-sdk",
   "devDependencies": {
     "@types/enzyme": "3.9.0",
     "@types/jest": "^23.3.14",

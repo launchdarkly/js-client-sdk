@@ -22,7 +22,7 @@
   ],
   "author": "LaunchDarkly <team@launchdarkly.com>",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/launchdarkly/js-client-sdk-private/packages/launchdarkly-react-client-sdk",
+  "homepage": "https://github.com/launchdarkly/js-client-sdk/tree/master/packages/launchdarkly-react-client-sdk",
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
     "express": "^4.16.4",
