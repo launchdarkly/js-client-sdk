@@ -1,6 +1,6 @@
 {
   "name": "launchdarkly-react-client-sdk",
-  "version": "2.12.3",
+  "version": "2.12.4",
   "description": "LaunchDarkly SDK for React",
   "author": "LaunchDarkly <team@launchdarkly.com>",
   "license": "Apache-2.0",
@@ -53,7 +53,7 @@
     "typescript": "^3.3.3333"
   },
   "dependencies": {
-    "launchdarkly-js-client-sdk": "^2.12.3",
+    "launchdarkly-js-client-sdk": "^2.12.4",
     "lodash.camelcase": "^4.3.0",
     "uuid": "^3.3.2"
   },
