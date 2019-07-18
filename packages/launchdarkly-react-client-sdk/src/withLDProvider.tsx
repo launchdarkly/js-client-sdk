@@ -43,8 +43,10 @@ export interface ProviderConfig {
  */
 export interface EnhancedComponent extends React.Component {
   subscribeToChanges(ldClient: LDClient): void;
-  componentDidMount(): Promise<void>;
+  initSession(clientSideID: string, user?: LDUser, options?: LDOptions, flags?: LDFlagSet): Promise<void>;
 }
+
+export type Callback<P> = (ownProps: P) => ProviderConfig
 
 /**
  * withLDProvider is a function which accepts a config object which is used to initialise launchdarkly-js-client-sdk.
@@ -56,8 +58,8 @@ export interface EnhancedComponent extends React.Component {
  *
  * @param config - The configuration used to initialize LaunchDarkly's js client
  */
-export function withLDProvider(config: ProviderConfig) {
-  return function withLDPoviderHoc<P>(WrappedComponent: React.ComponentType<P>) {
+export function withLDProvider<P>(config: ProviderConfig | Callback<P>) {
+  return function withLDPoviderHoc(WrappedComponent: React.ComponentType<P>) {
     return class extends React.Component<P, HocState> implements EnhancedComponent {
       readonly state: Readonly<HocState>;
 
@@ -69,14 +71,16 @@ export function withLDProvider(config: ProviderConfig) {
           ldClient: undefined,
         };
 
-        const { options } = config;
-        if (options) {
-          const { bootstrap } = options;
-          if (bootstrap && bootstrap !== 'localStorage') {
-            this.state = {
-              flags: camelCaseKeys(bootstrap),
-              ldClient: undefined,
-            };
+        if (typeof config !== 'function') {
+          const { options } = config;
+          if (options) {
+            const { bootstrap } = options;
+            if (bootstrap && bootstrap !== 'localStorage') {
+              this.state = {
+                flags: camelCaseKeys(bootstrap),
+                ldClient: undefined,
+              };
+            }
           }
         }
       }
@@ -91,8 +95,17 @@ export function withLDProvider(config: ProviderConfig) {
         });
       };
 
-      async componentDidMount() {
-        const { clientSideID, user, options, flags } = config;
+      componentDidMount() {
+        if (typeof config !== 'function') {
+          const { clientSideID, user, options, flags } = config;
+          this.initSession(clientSideID, user, options, flags)
+        } else {
+          const { clientSideID, user, options, flags } = config(this.props);
+          this.initSession(clientSideID, user, options, flags)
+        }
+      }
+
+      initSession = async (clientSideID: string, user?: LDUser, options?: LDOptions, flags?: LDFlagSet) => {
         const { flags: fetchedFlags, ldClient } = await initLDClient(clientSideID, user, options, flags);
         this.setState({ flags: fetchedFlags, ldClient });
         this.subscribeToChanges(ldClient);
