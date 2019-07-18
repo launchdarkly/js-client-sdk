@@ -22,7 +22,7 @@ export const clientNotReady = function() {
 };
 
 export const eventWithoutUser = function() {
-  return 'Be sure to call `identify` in the LaunchDarkly client: http://docs.launchdarkly.com/docs/running-an-ab-test#include-the-client-side-snippet';
+  return 'Be sure to call `identify` in the LaunchDarkly client: https://docs.launchdarkly.com/docs/js-sdk-reference#section-analytics-events';
 };
 
 export const invalidContentType = function(contentType) {
