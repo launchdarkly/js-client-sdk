@@ -5,7 +5,7 @@ export const camelCaseKeys = (rawFlags: LDFlagSet) => {
   const flags: LDFlagSet = {};
   for (const rawFlag in rawFlags) {
     // Exclude system keys
-    if (!rawFlag.startsWith('$')) {
+    if (rawFlag.indexOf('$') !== 0) {
       const camelCasedKey = camelCase(rawFlag);
       flags[camelCasedKey] = rawFlags[rawFlag];
     }
