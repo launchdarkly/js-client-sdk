@@ -2,6 +2,14 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.12.5] - 2019-07-29
+### Changed:
+- The error messages logged upon having an invalid environment/client-side ID have been updated to better clarify what went wrong. ([#165](https://github.com/launchdarkly/js-client-sdk/issues/165))
+ 
+### Fixed:
+- The React SDK was incompatible with Internet Explorer 11 due to using `String.startsWith()`. (Thanks, [cvetanov](https://github.com/launchdarkly/js-client-sdk/pull/169)!)
+- There was a broken documentation link in the error message logged when initially sending an event without identifying a user. The broken link has been fixed.
+
 ## [2.12.4] - 2019-07-10
 ### Changed:
 - The `useReport` property, which tells the SDK to use the REPORT method for HTTP requests so that user data will not appear in the URL path, was only actually using REPORT for requesting all flags at once— not for streaming updates, because streaming uses the EventSource API which normally can only use the GET method; so, to avoid exposing user data in the URL for the streaming connection, the SDK had to use a different and slower mechanism (in which all of the flags are reloaded whenever there is a change) if `useReport` was true. That is still the case by default; but, if you load the specific EventSource [polyfill implementation](https://docs.launchdarkly.com/docs/js-sdk-requirements-and-polyfills) [`launchdarkly-eventsource`](https://github.com/launchdarkly/js-eventsource) (v1.1.0 or later), the SDK _can_ now use REPORT for streaming connections.
