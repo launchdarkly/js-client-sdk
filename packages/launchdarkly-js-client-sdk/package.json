@@ -22,6 +22,7 @@
   "main": "dist/ldclient.cjs.js",
   "module": "dist/ldclient.es.js",
   "unpkg": "dist/ldclient.min.js",
+  "jsdelivr": "dist/ldclient.min.js",
   "scripts": {
     "lint": "eslint --format 'node_modules/eslint-formatter-pretty' --ignore-path ../../.eslintignore",
     "lint:all": "eslint --format 'node_modules/eslint-formatter-pretty' --ignore-path ../../.eslintignore src",
