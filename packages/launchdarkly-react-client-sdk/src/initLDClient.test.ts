@@ -6,19 +6,15 @@ jest.mock('launchdarkly-js-client-sdk', () => {
     initialize: jest.fn(),
   };
 });
-jest.mock('uuid', () => ({ v4: jest.fn() }));
 
-import { v4 } from 'uuid';
 import { initialize, LDClient, LDOptions, LDUser } from 'launchdarkly-js-client-sdk';
 import { defaultReactOptions, LDReactOptions } from './types';
 import initLDClient from './initLDClient';
 
 const ldClientInitialize = initialize as jest.Mock;
-const uuid = v4 as jest.Mock;
 
 const clientSideID = 'deadbeef';
-const mockUserKey = 'abcdef';
-const defaultUser: LDUser = { key: mockUserKey };
+const defaultUser: LDUser = { key: 'abcdef' };
 const options: LDOptions = { bootstrap: 'localStorage' };
 const flags = { 'test-flag': false, 'another-test-flag': true };
 
@@ -35,7 +31,6 @@ describe('initLDClient', () => {
     };
 
     ldClientInitialize.mockImplementation(() => mockLDClient);
-    uuid.mockImplementation(() => mockUserKey);
   });
 
   afterEach(() => {
@@ -43,9 +38,10 @@ describe('initLDClient', () => {
   });
 
   test('initialise with clientSideID only', async () => {
+    const anonUser: LDUser = { anonymous: true };
     await initLDClient(clientSideID);
 
-    expect(ldClientInitialize.mock.calls[0]).toEqual([clientSideID, defaultUser, undefined]);
+    expect(ldClientInitialize.mock.calls[0]).toEqual([clientSideID, anonUser, undefined]);
     expect(mockLDClient.variation).toHaveBeenCalledTimes(0);
   });
 
