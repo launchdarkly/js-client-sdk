@@ -51,7 +51,7 @@ to the resulting function. Your flags are available via props.flags:
     ```
 
 ## API
-### `withLDProvider(config: { clientSideID: string, user?: LDUser, options?: LDOptions, flags?: LDFlagSet })`
+### `withLDProvider(config: { clientSideID: string, user?: LDUser, options?: LDOptions, reactOptions?: LDReactOptions, flags?: LDFlagSet })`
 `withLDProvider` is a function which accepts a config object which is used to initialise launchdarkly-js-client-sdk.
 It returns a function which accepts your root react component and returns a HOC. This HOC does three things:
 
@@ -62,7 +62,7 @@ It returns a function which accepts your root react component and returns a HOC.
 * It subscribes to flag changes and propagate them through the Context API
 
 #### Parameter
-#### `config: { clientSideID: string, user?: LDUser, options?: LDOptions, flags?: LDFlagSet }`
+#### `config: { clientSideID: string, user?: LDUser, options?: LDOptions, reactOptions?: LDReactOptions, flags?: LDFlagSet }`
 
 ##### `clientSideID: string`
 This is the clientSideID specific to your project and environment. You can find this in 
@@ -81,7 +81,8 @@ If not specified, launchdarkly-react-client-sdk will create a default user that 
 
 ##### `options?: LDOptions`
 These options will be used to customise the ldClient instance. To see what options are available, check the 
-[JS SDK reference](https://docs.launchdarkly.com/docs/js-sdk-reference#section-customizing-your-client). 
+[JS SDK reference](https://docs.launchdarkly.com/docs/js-sdk-reference#section-customizing-your-client).
+
 For example:
 
    ```js
@@ -89,6 +90,20 @@ For example:
         clientSideID,
         options: {
           bootstrap: 'localStorage',
+        },
+    })(App);
+   ```
+
+##### `reactOptions?: LDReactOptions`
+These are additional options which are specific to the React SDK -- as opposed to `options` which are common to the JavaScript and React SDKs.
+
+For example:
+
+   ```js
+    withLDProvider({
+        clientSideID,
+        reactOptions: {
+          camelCasedFlagKeyTransformation: false,
         },
     })(App);
    ```
