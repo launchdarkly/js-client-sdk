@@ -2,6 +2,14 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.13.0] - 2019-08-15
+### Added:
+- A `jsdelivr` entry to `package.json` to specify the primary build artifact and simplify the jsDelivr snippet URL.
+- In the React SDK, the new `reactOptions` parameter to `withLDProvider` provides React-specific options that do not affect the underlying JavaScript SDK. Currently, the only such option is `useCamelCaseFlagKeys`, which is true by default but can be set to false to disable the automatic camel-casing of flag keys.
+ 
+### Changed:
+- In the React SDK, when omitting the `user` parameter to `withLDProvider`, an anonymous user will be created. This user will remain constant across browser sessions. Previously a new user was generated on each page load.
+
 ## [2.12.5] - 2019-07-29
 ### Changed:
 - The error messages logged upon having an invalid environment/client-side ID have been updated to better clarify what went wrong. ([#165](https://github.com/launchdarkly/js-client-sdk/issues/165))
