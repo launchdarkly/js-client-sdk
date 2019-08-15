@@ -11,6 +11,7 @@ jest.mock('./context', () => {
   }
 
   return {
+    // tslint:disable-next-line:no-null-undefined-union
     Consumer(props: ConsumerChildren) {
       return props.children({ flags: { testFlag: true }, ldClient: { track: jest.fn() } });
     },
@@ -40,7 +41,7 @@ describe('withLDConsumer', () => {
     expect(component).toMatchSnapshot();
   });
 
-  test('only ldClient is passed down through context api', async () => {
+  test('only ldClient is passed down through context api', () => {
     const Home = (props: HocProps) => (
       <div>
         {props.flags ? 'flags detected' : 'Negative, no flag'}

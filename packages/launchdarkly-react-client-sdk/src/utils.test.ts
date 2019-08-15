@@ -1,5 +1,4 @@
 import { camelCaseKeys } from './utils';
-import { LDOptions } from 'launchdarkly-js-client-sdk';
 
 describe('Utils', () => {
   test('camelCaseKeys should ignore system keys', () => {

@@ -6,18 +6,15 @@ jest.mock('launchdarkly-js-client-sdk', () => {
     initialize: jest.fn(),
   };
 });
-jest.mock('uuid', () => ({ v4: jest.fn() }));
 
-import { v4 } from 'uuid';
 import { initialize, LDClient, LDOptions, LDUser } from 'launchdarkly-js-client-sdk';
+import { defaultReactOptions, LDReactOptions } from './types';
 import initLDClient from './initLDClient';
 
 const ldClientInitialize = initialize as jest.Mock;
-const uuid = v4 as jest.Mock;
 
 const clientSideID = 'deadbeef';
-const mockUserKey = 'abcdef';
-const defaulUser: LDUser = { key: mockUserKey };
+const defaultUser: LDUser = { key: 'abcdef' };
 const options: LDOptions = { bootstrap: 'localStorage' };
 const flags = { 'test-flag': false, 'another-test-flag': true };
 
@@ -34,7 +31,6 @@ describe('initLDClient', () => {
     };
 
     ldClientInitialize.mockImplementation(() => mockLDClient);
-    uuid.mockImplementation(() => mockUserKey);
   });
 
   afterEach(() => {
@@ -42,22 +38,38 @@ describe('initLDClient', () => {
   });
 
   test('initialise with clientSideID only', async () => {
+    const anonUser: LDUser = { anonymous: true };
     await initLDClient(clientSideID);
 
-    expect(ldClientInitialize.mock.calls[0]).toEqual([clientSideID, defaulUser, undefined]);
+    expect(ldClientInitialize.mock.calls[0]).toEqual([clientSideID, anonUser, undefined]);
     expect(mockLDClient.variation).toHaveBeenCalledTimes(0);
   });
 
   test('initialise with custom user and options', async () => {
     const customUser = { key: 'yus@reactjunkie.com' };
-    await initLDClient(clientSideID, customUser, options);
+    await initLDClient(clientSideID, customUser, defaultReactOptions, options);
 
     expect(ldClientInitialize.mock.calls[0]).toEqual([clientSideID, customUser, options]);
     expect(mockLDClient.variation).toHaveBeenCalledTimes(0);
   });
 
-  test('initialise should return camelCased flags', async () => {
+  test('initialise should return camelCased flags by default', async () => {
     const flagsClient = await initLDClient(clientSideID);
+
+    expect(mockLDClient.variation).toHaveBeenCalledTimes(0);
+    expect(flagsClient).toEqual({ flags: { anotherTestFlag: true, testFlag: false }, ldClient: mockLDClient });
+  });
+
+  test('initialise should not transform keys to camel case if option is disabled', async () => {
+    const reactOptions: LDReactOptions = { useCamelCaseFlagKeys: false };
+    const flagsClient = await initLDClient(clientSideID, defaultUser, reactOptions, options);
+
+    expect(mockLDClient.variation).toHaveBeenCalledTimes(0);
+    expect(flagsClient).toEqual({ flags: { 'another-test-flag': true, 'test-flag': false }, ldClient: mockLDClient });
+  });
+
+  test('initialise should transform keys to camel case if option is absent', async () => {
+    const flagsClient = await initLDClient(clientSideID, defaultUser, defaultReactOptions, options);
 
     expect(mockLDClient.variation).toHaveBeenCalledTimes(0);
     expect(flagsClient).toEqual({ flags: { anotherTestFlag: true, testFlag: false }, ldClient: mockLDClient });
@@ -67,7 +79,7 @@ describe('initLDClient', () => {
     const customUser = { key: 'yus@reactjunkie.com' };
     const targetFlags = { 'lonely-flag': false, 'lonelier-flag': false };
 
-    const flagsClient = await initLDClient(clientSideID, customUser, options, targetFlags);
+    const flagsClient = await initLDClient(clientSideID, customUser, defaultReactOptions, options, targetFlags);
 
     expect(mockLDClient.variation).toHaveBeenCalledTimes(2);
     expect(mockLDClient.variation).toHaveBeenNthCalledWith(1, 'lonely-flag', false);

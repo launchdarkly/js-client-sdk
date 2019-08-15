@@ -6,8 +6,7 @@ export const camelCaseKeys = (rawFlags: LDFlagSet) => {
   for (const rawFlag in rawFlags) {
     // Exclude system keys
     if (rawFlag.indexOf('$') !== 0) {
-      const camelCasedKey = camelCase(rawFlag);
-      flags[camelCasedKey] = rawFlags[rawFlag];
+      flags[camelCase(rawFlag)] = rawFlags[rawFlag]; // tslint:disable-line:no-unsafe-any
     }
   }
 

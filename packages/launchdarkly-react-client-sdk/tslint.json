@@ -30,7 +30,9 @@
         "member-ordering": false,
         "member-access": false,
         "prefer-function-over-method": false,
-        "no-unbound-method": false
+        "no-unbound-method": false,
+        "no-unused-variable": true,
+        "comment-format": false
     },
     "rulesDirectory": []
 }
