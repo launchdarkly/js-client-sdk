@@ -2,6 +2,8 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+Note that the React SDK code has moved to its own repository, [`react-client-sdk`](https://github.com/launchdarkly/react-client-sdk). The 2.13.0 release was the last one that had the React wrapper code in the same repository, and from this point on the React package will be versioned separately.
+
 ## [2.13.0] - 2019-08-15
 ### Added:
 - A `jsdelivr` entry to `package.json` to specify the primary build artifact and simplify the jsDelivr snippet URL.

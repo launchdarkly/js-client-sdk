@@ -18,7 +18,7 @@ Please note that the JavaScript SDK has two special requirements in terms of you
 
 ### ReactJS
 
-The SDK does not require any particular JavaScript framework. However, if you are using [React](https://reactjs.org/), there is an add-on to simplify use of the SDK. See the [`launchdarkly-react-client-sdk` documentation](packages/launchdarkly-react-client-sdk/README.md).
+The SDK does not require any particular JavaScript framework. However, if you are using [React](https://reactjs.org/), there is an add-on to simplify use of the SDK. See [`launchdarkly-react-client-sdk`](https://github.com/launchdarkly/react-client-sdk).
 
 ## Browser compatibility
 
