@@ -76,7 +76,9 @@ declare module 'launchdarkly-js-sdk-common' {
      *
      * If `"localStorage"` is specified, the flags will be saved and retrieved from browser local
      * storage. Alternatively, an [[LDFlagSet]] can be specified which will be used as the initial
-     * source of flag values.
+     * source of flag values. In the latter case, the flag values will be available via [[variation]]
+     * immediately after calling `initialize()` (normally they would not be available until the
+     * client signals that it is ready).
      *
      * For more information, see the [SDK Reference Guide](https://docs.launchdarkly.com/docs/js-sdk-reference#section-bootstrapping).
      */

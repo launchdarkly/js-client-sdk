@@ -1,6 +1,6 @@
 {
   "name": "launchdarkly-js-sdk-common",
-  "version": "2.12.1",
+  "version": "2.13.0",
   "description": "LaunchDarkly SDK for JavaScript - common code",
   "author": "LaunchDarkly <team@launchdarkly.com>",
   "license": "Apache-2.0",
@@ -17,6 +17,7 @@
   "main": "dist/ldclient-common.cjs.js",
   "module": "dist/ldclient-common.es.js",
   "unpkg": "dist/ldclient-common.min.js",
+  "jsdelivr": "dist/ldclient-common.min.js",
   "scripts": {
     "lint": "eslint --format 'node_modules/eslint-formatter-pretty' --ignore-path ../../.eslintignore",
     "lint:all": "eslint --format 'node_modules/eslint-formatter-pretty' --ignore-path ../../.eslintignore src",

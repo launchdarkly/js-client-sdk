@@ -23,10 +23,6 @@ jobs:
           command: cd ~/project/packages/launchdarkly-js-client-sdk && npm run test:junit
           environment:
             JEST_JUNIT_OUTPUT: "./reports/junit/js-test-results.xml"
-      - run:
-          command: cd ~/project/packages/launchdarkly-react-client-sdk && npm run test:junit
-          environment:
-            JEST_JUNIT_OUTPUT: "./reports/junit/react-test-results.xml"
 
       - run: cd ~/project && npm run check-typescript
       - store_test_results:

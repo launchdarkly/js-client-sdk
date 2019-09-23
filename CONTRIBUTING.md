@@ -14,11 +14,10 @@ We encourage pull requests and other contributions from the community. Before su
 Build instructions
 ------------------
 
-Before building the code, it would be helpful to know a bit about the structure of the code in this repository. This repository is a monorepo containing three projects, each of which is published to npm as a package with the same name:
+Before building the code, it would be helpful to know a bit about the structure of the code in this repository. This repository is a monorepo containing two projects, each of which is published to npm as a package with the same name:
 
 - `launchdarkly-js-client-sdk`: This is the main SDK package that applications will import. Any logic that specifically relies on being in a browser environment should go here (see `browserPlatform.js`). This automatically imports `launchdarkly-js-sdk-common`.
 - `launchdarkly-js-sdk-common`: Internal implementation code that is not browser-specific.
-- `launchdarkly-react-client-sdk`: The React wrapper. This automatically imports both of the other packages.
 
 The reason `launchdarkly-js-sdk-common` exists is that the [Electron SDK](https://github.com/launchdarkly/electron-client) has very similar functionality to the browser SDK. Therefore, all of the code that is used by both has been factored out into the common package.
 
