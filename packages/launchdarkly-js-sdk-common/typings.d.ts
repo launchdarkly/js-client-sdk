@@ -507,7 +507,7 @@ declare module 'launchdarkly-js-sdk-common' {
     /**
      * Registers an event listener.
      *
-     * The following event names (keys) are used by the cliet:
+     * The following event names (keys) are used by the client:
      *
      * - `"ready"`: The client has finished starting up. This event will be sent regardless
      *   of whether it successfully connected to LaunchDarkly, or encountered an error
