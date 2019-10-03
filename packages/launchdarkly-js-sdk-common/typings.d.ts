@@ -2,6 +2,17 @@
  * Basic LaunchDarkly JavaScript client interfaces, shared between the browser SDK and the Electron SDK.
  */
 declare module 'launchdarkly-js-sdk-common' {
+  /**
+   * The available event listener names for the LDClient
+   */
+  export interface LDClientEventMap {
+    ready: string;
+    initialized: string;
+    failed: string;
+    error: string;
+    change: string;
+    'change:<FLAG-KEY>': string;
+  }
 
   /**
    * The current version string of the SDK.
@@ -153,7 +164,7 @@ declare module 'launchdarkly-js-sdk-common' {
      * Whether to send analytics events back to LaunchDarkly. By default, this is true.
      */
     sendEvents?: boolean;
-    
+
     /**
      * Whether all user attributes (except the user key) should be marked as private, and
      * not sent to LaunchDarkly in analytics events.
@@ -377,13 +388,13 @@ declare module 'launchdarkly-js-sdk-common' {
      *
      * The returned Promise will be resolved once the client has either successfully initialized
      * or failed to initialize (e.g. due to an invalid environment key or a server error).
-     * 
+     *
      * If you want to distinguish between these success and failure conditions, use
      * [[waitForInitialization]] instead.
-     * 
+     *
      * If you prefer to use event listeners ([[on]]) rather than Promises, you can listen on the
      * client for a `"ready"` event, which will be fired in either case.
-     * 
+     *
      * @returns
      *   A Promise that will be resolved once the client is no longer trying to initialize.
      */
@@ -397,7 +408,7 @@ declare module 'launchdarkly-js-sdk-common' {
      *
      * Note that you can also use event listeners ([[on]]) for the same purpose: the event `"initialized"`
      * indicates success, and `"failed"` indicates failure.
-     * 
+     *
      * @returns
      *   A Promise that will be resolved if the client initializes successfully, or rejected if it
      *   fails.
@@ -507,7 +518,7 @@ declare module 'launchdarkly-js-sdk-common' {
     /**
      * Registers an event listener.
      *
-     * The following event names (keys) are used by the client:
+     * The following event names (keys) are used by the cliet:
      *
      * - `"ready"`: The client has finished starting up. This event will be sent regardless
      *   of whether it successfully connected to LaunchDarkly, or encountered an error
@@ -542,7 +553,7 @@ declare module 'launchdarkly-js-sdk-common' {
      * @param context
      *   The `this` context to use for the callback.
      */
-    on(key: string, callback: (...args: any[]) => void, context?: any): void;
+    on<K extends keyof LDClientEventMap>(key: K, callback: (...args: any[]) => void, context?: any): void;
 
     /**
      * Deregisters an event listener. See [[on]] for the available event types.
@@ -554,7 +565,7 @@ declare module 'launchdarkly-js-sdk-common' {
      * @param context
      *   The `this` context for the callback, if one was specified for [[on]].
      */
-    off(key: string, callback: (...args: any[]) => void, context?: any): void;
+    off<K extends keyof LDClientEventMap>(key: K, callback: (...args: any[]) => void, context?: any): void;
 
     /**
      * Track page events to use in goals or A/B tests.
@@ -580,19 +591,19 @@ declare module 'launchdarkly-js-sdk-common' {
      */
     allFlags(): LDFlagSet;
 
-   /**
-    * Shuts down the client and releases its resources, after delivering any pending analytics
-    * events. After the client is closed, all calls to [[variation]] will return default values,
-    * and it will not make any requests to LaunchDarkly.
-    *
-    * @param onDone
-    *   A function which will be called when the operation completes. If omitted, you
-    *   will receive a Promise instead.
-    *
-    * @returns
-    *   If you provided a callback, then nothing. Otherwise, a Promise which resolves once
-    *   closing is finished. It will never be rejected.
-    */
-   close(onDone?: () => void): Promise<void>;
+    /**
+     * Shuts down the client and releases its resources, after delivering any pending analytics
+     * events. After the client is closed, all calls to [[variation]] will return default values,
+     * and it will not make any requests to LaunchDarkly.
+     *
+     * @param onDone
+     *   A function which will be called when the operation completes. If omitted, you
+     *   will receive a Promise instead.
+     *
+     * @returns
+     *   If you provided a callback, then nothing. Otherwise, a Promise which resolves once
+     *   closing is finished. It will never be rejected.
+     */
+    close(onDone?: () => void): Promise<void>;
   }
 }
