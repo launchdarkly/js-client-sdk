@@ -119,7 +119,7 @@ describe('LDClient', () => {
       await client.waitUntilGoalsReady();
 
       client.track('unknown');
-      expect(warnSpy).toHaveBeenCalledWith("LD: [warn] " + common.messages.unknownCustomEventKey('unknown'));
+      expect(warnSpy).toHaveBeenCalledWith('LD: [warn] ' + common.messages.unknownCustomEventKey('unknown'));
     });
   });
 
