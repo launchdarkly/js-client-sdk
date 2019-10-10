@@ -1,6 +1,6 @@
 {
   "name": "launchdarkly-js-client-sdk",
-  "version": "2.13.0",
+  "version": "2.14.0",
   "description": "LaunchDarkly SDK for JavaScript",
   "author": "LaunchDarkly <team@launchdarkly.com>",
   "license": "Apache-2.0",
@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "escape-string-regexp": "1.0.5",
-    "launchdarkly-js-sdk-common": "^2.13.0"
+    "launchdarkly-js-sdk-common": "^2.14.0"
   },
   "repository": {
     "type": "git",
