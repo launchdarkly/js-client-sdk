@@ -53,8 +53,14 @@ declare module 'launchdarkly-js-sdk-common' {
    * respectively.
    *
    * To make LDClient use this logger, put it in the `logger` property of [[LDOptions]].
+   *
+   * @param minimumLevel
+   *   The minimum log level to be displayed: 'debug', 'info', 'warn', or 'error'. For instance, if
+   *   it is 'warn', then 'debug' and 'info' messages will be suppressed. The default is 'debug'.
+   * @param prefix
+   *   A string to prepend to each log line. The default is 'LD:'.
    */
-  export function createConsoleLogger(minimumLevel: string): LDLogger;
+  export function createConsoleLogger(minimumLevel: string, prefix?: string): LDLogger;
 
   /**
    * LaunchDarkly initialization options that are supported by all variants of the JS client.
@@ -567,8 +573,12 @@ declare module 'launchdarkly-js-sdk-common' {
      *   The name of the event, which may correspond to a goal in A/B tests.
      * @param data
      *   Additional information to associate with the event.
+     * @param metricValue
+     *   A numeric value to signify the value used by the LaunchDarkly experimentation feature
+     *   in numeric custom metrics. Can be omitted if this event is used by only non-numeric
+     *   metrics. This field will also be returned as part of the custom event for Data Export.
      */
-    track(key: string, data?: any): void;
+    track(key: string, data?: any, metricValue?: number): void;
 
     /**
      * Returns a map of all available flags to the current user's values.

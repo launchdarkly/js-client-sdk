@@ -118,7 +118,7 @@ describe('LDClient', () => {
       expectFeatureEvent(ep.events[1], 'foo', 'a', 1, 2000, 'x');
     });
 
-    it('sends a feature event for variationDetail()', async () => {
+    it('sends a feature event with reason for variationDetail()', async () => {
       const initFlags = makeBootstrap({
         foo: { value: 'a', variation: 1, version: 2, flagVersion: 2000, reason: { kind: 'OFF' } },
       });
@@ -127,6 +127,38 @@ describe('LDClient', () => {
 
       await client.waitForInitialization();
       client.variationDetail('foo', 'x');
+
+      expect(ep.events.length).toEqual(2);
+      expectIdentifyEvent(ep.events[0], user);
+      expectFeatureEvent(ep.events[1], 'foo', 'a', 1, 2000, 'x');
+      expect(ep.events[1].reason).toEqual({ kind: 'OFF' });
+    });
+
+    it('does not include reason in event for variation() even if reason is available', async () => {
+      const initFlags = makeBootstrap({
+        foo: { value: 'a', variation: 1, version: 2, flagVersion: 2000, reason: { kind: 'OFF' } },
+      });
+      const ep = stubEventProcessor();
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: initFlags });
+
+      await client.waitForInitialization();
+      client.variation('foo', 'x');
+
+      expect(ep.events.length).toEqual(2);
+      expectIdentifyEvent(ep.events[0], user);
+      expectFeatureEvent(ep.events[1], 'foo', 'a', 1, 2000, 'x');
+      expect(ep.events[1].reason).toBe(undefined);
+    });
+
+    it('sends a feature event with reason for variation() if trackReason is set', async () => {
+      const initFlags = makeBootstrap({
+        foo: { value: 'a', variation: 1, version: 2, flagVersion: 2000, reason: { kind: 'OFF' }, trackReason: true },
+      });
+      const ep = stubEventProcessor();
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep, bootstrap: initFlags });
+
+      await client.waitForInitialization();
+      client.variation('foo', 'x');
 
       expect(ep.events.length).toEqual(2);
       expectIdentifyEvent(ep.events[0], user);
@@ -276,6 +308,22 @@ describe('LDClient', () => {
     it('sends an event for track()', async () => {
       const ep = stubEventProcessor();
       const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
+      await client.waitForInitialization();
+      client.track('eventkey');
+
+      expect(ep.events.length).toEqual(2);
+      expectIdentifyEvent(ep.events[0], user);
+      const trackEvent = ep.events[1];
+      expect(trackEvent.kind).toEqual('custom');
+      expect(trackEvent.key).toEqual('eventkey');
+      expect(trackEvent.user).toEqual(user);
+      expect(trackEvent.data).toEqual(undefined);
+      expect(trackEvent.url).toEqual(fakeUrl);
+    });
+
+    it('sends an event for track() with data', async () => {
+      const ep = stubEventProcessor();
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
       const eventData = { thing: 'stuff' };
       await client.waitForInitialization();
       client.track('eventkey', eventData);
@@ -287,6 +335,25 @@ describe('LDClient', () => {
       expect(trackEvent.key).toEqual('eventkey');
       expect(trackEvent.user).toEqual(user);
       expect(trackEvent.data).toEqual(eventData);
+      expect(trackEvent.url).toEqual(fakeUrl);
+    });
+
+    it('sends an event for track() with metric value', async () => {
+      const ep = stubEventProcessor();
+      const client = platform.testing.makeClient(envName, user, { eventProcessor: ep });
+      const eventData = { thing: 'stuff' };
+      const metricValue = 1.5;
+      await client.waitForInitialization();
+      client.track('eventkey', eventData, metricValue);
+
+      expect(ep.events.length).toEqual(2);
+      expectIdentifyEvent(ep.events[0], user);
+      const trackEvent = ep.events[1];
+      expect(trackEvent.kind).toEqual('custom');
+      expect(trackEvent.key).toEqual('eventkey');
+      expect(trackEvent.user).toEqual(user);
+      expect(trackEvent.data).toEqual(eventData);
+      expect(trackEvent.metricValue).toEqual(metricValue);
       expect(trackEvent.url).toEqual(fakeUrl);
     });
 
