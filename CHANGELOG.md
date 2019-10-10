@@ -2,6 +2,17 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.14.0] - 2019-10-10
+### Added:
+- Added support for upcoming LaunchDarkly experimentation features. See `LDClient.track()`.
+- The `createConsoleLogger()` function now has an optional second parameter for customizing the log prefix.
+
+### Changed:
+- Log messages now include the level ("[warn]", "[error]", etc.) and have a prefix of "LD:" by default.
+
+### Removed:
+- The source code for the `launchdarkly-react-client-sdk` package is no longer part of this monorepo. It is now in its own repository, [`react-client-sdk`](https://github.com/launchdarkly/react-client-sdk). Future updates to the LaunchDarkly React interface will be tracked there.
+
 Note that the React SDK code has moved to its own repository, [`react-client-sdk`](https://github.com/launchdarkly/react-client-sdk). The 2.13.0 release was the last one that had the React wrapper code in the same repository, and from this point on the React package will be versioned separately.
 
 ## [2.13.0] - 2019-08-15
