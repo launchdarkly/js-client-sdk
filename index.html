@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;launchdarkly-js-client-sdk&quot; | LaunchDarkly JavaScript SDK (2.13.0)</title>
+	<title>&quot;launchdarkly-js-client-sdk&quot; | LaunchDarkly JavaScript SDK (2.14.0)</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">LaunchDarkly JavaScript SDK (2.13.0)</a>
+					<a href="index.html" class="title">LaunchDarkly JavaScript SDK (2.14.0)</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -155,13 +155,13 @@
 					<a name="createconsolelogger" class="tsd-anchor"></a>
 					<h3>create<wbr>Console<wbr>Logger</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Console<wbr>Logger<span class="tsd-signature-symbol">(</span>minimumLevel<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/_launchdarkly_js_client_sdk_.ldlogger.html" class="tsd-signature-type">LDLogger</a></li>
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Console<wbr>Logger<span class="tsd-signature-symbol">(</span>minimumLevel<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, prefix<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/_launchdarkly_js_client_sdk_.ldlogger.html" class="tsd-signature-type">LDLogger</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:63</li>
+									<li>Defined in docs/build/typings.d.ts:69</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -177,6 +177,16 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>minimumLevel: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>  The minimum log level to be displayed: &#39;debug&#39;, &#39;info&#39;, &#39;warn&#39;, or &#39;error&#39;. For instance, if
+										it is &#39;warn&#39;, then &#39;debug&#39; and &#39;info&#39; messages will be suppressed. The default is &#39;debug&#39;.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> prefix: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>  A string to prepend to each log line. The default is &#39;LD:&#39;.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="interfaces/_launchdarkly_js_client_sdk_.ldlogger.html" class="tsd-signature-type">LDLogger</a></h4>
@@ -193,7 +203,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:632</li>
+									<li>Defined in docs/build/typings.d.ts:642</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
