@@ -53,8 +53,14 @@ declare module 'launchdarkly-js-sdk-common' {
    * respectively.
    *
    * To make LDClient use this logger, put it in the `logger` property of [[LDOptions]].
+   *
+   * @param minimumLevel
+   *   The minimum log level to be displayed: 'debug', 'info', 'warn', or 'error'. For instance, if
+   *   it is 'warn', then 'debug' and 'info' messages will be suppressed. The default is 'debug'.
+   * @param prefix
+   *   A string to prepend to each log line. The default is 'LD:'.
    */
-  export function createConsoleLogger(minimumLevel: string): LDLogger;
+  export function createConsoleLogger(minimumLevel: string, prefix?: string): LDLogger;
 
   /**
    * LaunchDarkly initialization options that are supported by all variants of the JS client.

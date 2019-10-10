@@ -7,6 +7,7 @@ import * as ld from 'launchdarkly-js-sdk-common';
 const ver: string = ld.version;
 
 const logger: ld.LDLogger = ld.createConsoleLogger("info");
+const loggerWithPrefix: ld.LDLogger = ld.createConsoleLogger("info", "prefix");
 const userWithKeyOnly: ld.LDUser = { key: 'user' };
 const anonUserWithNoKey: ld.LDUser = { anonymous: true };
 const user: ld.LDUser = {

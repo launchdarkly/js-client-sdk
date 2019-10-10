@@ -20,15 +20,33 @@ describe('createConsoleLogger', () => {
     errorSpy.mockRestore();
   });
 
+  it('has default prefix', () => {
+    const logger = createConsoleLogger('info');
+    logger.info('xyz');
+    expect(infoSpy).toHaveBeenCalledWith('LD: [info] xyz');
+  });
+
+  it('can specify prefix', () => {
+    const logger = createConsoleLogger('info', 'thing');
+    logger.info('xyz');
+    expect(infoSpy).toHaveBeenCalledWith('thing [info] xyz');
+  });
+
+  it('can specify no prefix', () => {
+    const logger = createConsoleLogger('info', '');
+    logger.info('xyz');
+    expect(infoSpy).toHaveBeenCalledWith('[info] xyz');
+  });
+
   [undefined, 'debug', 'info', 'warn', 'error', 'none'].forEach(configuredLevel => {
     describe('when logger level is set to "' + configuredLevel + '"', () => {
-      const logger = createConsoleLogger(configuredLevel);
+      const logger = createConsoleLogger(configuredLevel, '');
 
       it('debug message', () => {
         logger.debug('a');
 
         if (configuredLevel === undefined || configuredLevel === 'debug') {
-          expect(logSpy).toHaveBeenCalledWith('a');
+          expect(logSpy).toHaveBeenCalledWith('[debug] a');
         } else {
           expect(logSpy).not.toHaveBeenCalled();
         }
@@ -41,7 +59,7 @@ describe('createConsoleLogger', () => {
         logger.info('b');
 
         if (configuredLevel === undefined || configuredLevel === 'debug' || configuredLevel === 'info') {
-          expect(infoSpy).toHaveBeenCalledWith('b');
+          expect(infoSpy).toHaveBeenCalledWith('[info] b');
         } else {
           expect(infoSpy).not.toHaveBeenCalled();
         }
@@ -54,7 +72,7 @@ describe('createConsoleLogger', () => {
         logger.warn('c');
 
         if (configuredLevel !== 'error' && configuredLevel !== 'none') {
-          expect(warnSpy).toHaveBeenCalledWith('c');
+          expect(warnSpy).toHaveBeenCalledWith('[warn] c');
         } else {
           expect(warnSpy).not.toHaveBeenCalled();
         }
@@ -67,7 +85,7 @@ describe('createConsoleLogger', () => {
         logger.error('d');
 
         if (configuredLevel !== 'none') {
-          expect(errorSpy).toHaveBeenCalledWith('d');
+          expect(errorSpy).toHaveBeenCalledWith('[error] d');
         } else {
           expect(errorSpy).not.toHaveBeenCalled();
         }
