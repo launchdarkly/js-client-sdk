@@ -27,7 +27,7 @@ export function validate(options, emitter, extraDefaults, logger) {
     all_attributes_private: 'allAttributesPrivate',
     // eslint-disable-next-line camelcase
     private_attribute_names: 'privateAttributeNames',
-    samplingInterval: null
+    samplingInterval: null,
   };
 
   function checkDeprecatedOptions(config) {

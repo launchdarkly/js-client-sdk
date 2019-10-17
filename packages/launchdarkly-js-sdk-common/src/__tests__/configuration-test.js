@@ -35,8 +35,9 @@ describe('configuration', () => {
   checkDefault('streamReconnectDelay', 1000, 2000);
 
   function checkDeprecated(oldName, newName, value) {
-    const desc = newName ? ('allows "' + oldName + '" as a deprecated equivalent to "' + newName + '"') :
-      ('warns that "' + oldName + '" is deprecated');
+    const desc = newName
+      ? 'allows "' + oldName + '" as a deprecated equivalent to "' + newName + '"'
+      : 'warns that "' + oldName + '" is deprecated';
     it(desc, () => {
       const config0 = {};
       config0[oldName] = value;
