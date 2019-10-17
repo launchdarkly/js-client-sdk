@@ -27,6 +27,7 @@ export function validate(options, emitter, extraDefaults, logger) {
     all_attributes_private: 'allAttributesPrivate',
     // eslint-disable-next-line camelcase
     private_attribute_names: 'privateAttributeNames',
+    samplingInterval: null
   };
 
   function checkDeprecatedOptions(config) {
@@ -34,11 +35,13 @@ export function validate(options, emitter, extraDefaults, logger) {
     Object.keys(deprecatedOptions).forEach(oldName => {
       if (opts[oldName] !== undefined) {
         const newName = deprecatedOptions[oldName];
-        logger.warn(messages.deprecated(oldName, newName));
-        if (opts[newName] === undefined) {
-          opts[newName] = opts[oldName];
+        logger && logger.warn(messages.deprecated(oldName, newName));
+        if (newName) {
+          if (opts[newName] === undefined) {
+            opts[newName] = opts[oldName];
+          }
+          delete opts[oldName];
         }
-        delete opts[oldName];
       }
     });
   }

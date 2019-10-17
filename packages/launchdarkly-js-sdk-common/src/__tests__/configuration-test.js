@@ -35,19 +35,26 @@ describe('configuration', () => {
   checkDefault('streamReconnectDelay', 1000, 2000);
 
   function checkDeprecated(oldName, newName, value) {
-    it('allows "' + oldName + '" as a deprecated equivalent to "' + newName + '"', () => {
+    const desc = newName ? ('allows "' + oldName + '" as a deprecated equivalent to "' + newName + '"') :
+      ('warns that "' + oldName + '" is deprecated');
+    it(desc, () => {
       const config0 = {};
       config0[oldName] = value;
       logger.reset();
       const config1 = configuration.validate(config0, null, null, logger);
-      expect(config1[newName]).toBe(value);
-      expect(config1[oldName]).toBeUndefined();
+      if (newName) {
+        expect(config1[newName]).toBe(value);
+        expect(config1[oldName]).toBeUndefined();
+      } else {
+        expect(config1[oldName]).toEqual(value);
+      }
       expect(logger.output.warn).toEqual([messages.deprecated(oldName, newName)]);
     });
   }
 
   checkDeprecated('all_attributes_private', 'allAttributesPrivate', true);
   checkDeprecated('private_attribute_names', 'privateAttributeNames', ['foo']);
+  checkDeprecated('samplingInterval', null, 100);
 
   function checkInvalidValue(name, badValue, goodValue, done) {
     const emitter = EventEmitter();

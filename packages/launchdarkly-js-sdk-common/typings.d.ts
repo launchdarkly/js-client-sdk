@@ -204,6 +204,8 @@ declare module 'launchdarkly-js-sdk-common' {
      *
      * When set to greater than zero, there is a 1 in `samplingInterval` chance that events will be
      * sent: for example, a value of 20 means that on average 1 in 20, or 5%, of all events will be sent.
+     *
+     * @deprecated This feature will be removed in a future version.
      */
     samplingInterval?: number;
 

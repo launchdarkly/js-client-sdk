@@ -80,7 +80,10 @@ export const bootstrapInvalid = function() {
 };
 
 export const deprecated = function(oldName, newName) {
-  return '[LaunchDarkly] "' + oldName + '" is deprecated, please use "' + newName + '"';
+  if (newName) {
+    return '[LaunchDarkly] "' + oldName + '" is deprecated, please use "' + newName + '"';
+  }
+  return '[LaunchDarkly] "' + oldName + '" is deprecated';
 };
 
 export const httpErrorMessage = function(status, context, retryMessage) {
