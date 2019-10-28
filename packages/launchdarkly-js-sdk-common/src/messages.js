@@ -114,8 +114,14 @@ export const streamConnecting = function(url) {
   return 'Opening stream connection to ' + url;
 };
 
-export const streamError = function(err) {
-  return 'Error on stream connection: ' + errorString(err);
+export const streamError = function(err, streamReconnectDelay) {
+  return (
+    'Error on stream connection: ' +
+    errorString(err) +
+    ', will continue retrying every ' +
+    streamReconnectDelay +
+    ' milliseconds.'
+  );
 };
 
 export const debugPolling = function(url) {
