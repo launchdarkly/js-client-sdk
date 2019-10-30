@@ -1,4 +1,4 @@
-const common = require('../../rollup.common.config');
+const common = require('./rollup.common.config');
 const pkg = require('./package.json');
 
 const config = Object.assign({}, common, {
