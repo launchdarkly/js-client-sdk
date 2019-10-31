@@ -62,6 +62,7 @@ describe('EventProcessor', () => {
     } else {
       expect(e.userKey).toEqual(source.user.key);
     }
+    expect(e.metricValue).toEqual(source.metricValue);
   }
 
   function checkSummaryEvent(e) {
@@ -344,6 +345,7 @@ describe('EventProcessor', () => {
       user: user,
       key: 'eventkey',
       data: { thing: 'stuff' },
+      metricValue: 1.5,
     };
     ep.enqueue(e);
     await ep.flush();

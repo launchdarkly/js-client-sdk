@@ -2,8 +2,14 @@
 // If no minimum level is specified, all messages will be logged. Setting the level to "none"
 // disables all logging.
 
-export default function createConsoleLogger(level) {
+export default function createConsoleLogger(level, maybePrefix) {
   const allLevels = ['debug', 'info', 'warn', 'error'];
+  let prefix;
+  if (maybePrefix !== null && maybePrefix !== undefined) {
+    prefix = maybePrefix === '' ? '' : maybePrefix + ' ';
+  } else {
+    prefix = 'LD: ';
+  }
   let minLevelIndex = 0;
   if (level) {
     if (level === 'none') {
@@ -17,7 +23,8 @@ export default function createConsoleLogger(level) {
 
   function log(levelIndex, outputFn, msg) {
     if (levelIndex >= minLevelIndex) {
-      outputFn(msg);
+      const levelName = levelIndex < allLevels.length ? allLevels[levelIndex] : '?';
+      outputFn(prefix + '[' + levelName + '] ' + msg);
     }
   }
 

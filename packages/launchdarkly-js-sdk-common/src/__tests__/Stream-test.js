@@ -1,6 +1,7 @@
 import EventSource, { sources, resetSources } from './EventSource-mock';
 import * as stubPlatform from './stubPlatform';
 import { asyncify, asyncSleep } from './testUtils';
+import * as messages from '../messages';
 import Stream from '../Stream';
 
 const noop = () => {};
@@ -11,10 +12,13 @@ describe('Stream', () => {
   const user = { key: 'me' };
   const encodedUser = 'eyJrZXkiOiJtZSJ9';
   const hash = '012345789abcde';
-  const defaultConfig = { streamUrl: baseUrl, logger: stubPlatform.logger() };
+  let logger;
+  let defaultConfig;
   let platform;
 
   beforeEach(() => {
+    logger = stubPlatform.logger();
+    defaultConfig = { streamUrl: baseUrl, logger };
     resetSources();
     platform = stubPlatform.defaults();
   });
@@ -123,7 +127,7 @@ describe('Stream', () => {
   });
 
   it('reconnects after encountering an error', async () => {
-    const config = Object.assign({}, defaultConfig, { streamReconnectDelay: 0.1, useReport: false });
+    const config = Object.assign({}, defaultConfig, { streamReconnectDelay: 1, useReport: false });
     const stream = new Stream(platform, config, envName);
     stream.connect(user);
 
@@ -149,5 +153,65 @@ describe('Stream', () => {
 
       es = es1;
     }
+  });
+
+  it('logs a warning for only the first failed connection attempt', async () => {
+    const config = Object.assign({}, defaultConfig, { streamReconnectDelay: 1 });
+    const stream = new Stream(platform, config, envName);
+    stream.connect(user);
+
+    let es = expectOneStream();
+    es.mockOpen();
+
+    const nAttempts = 5;
+    for (let i = 0; i < nAttempts; i++) {
+      const newEventSourcePromise = asyncify(onNewEventSource);
+
+      es.mockError('test error');
+      es = await newEventSourcePromise;
+      es.mockOpen();
+    }
+
+    // make sure there is just a single logged message rather than five (one per attempt)
+    expect(logger.output.warn).toEqual([messages.streamError('test error', 1)]);
+  });
+
+  it('logs a warning again after a successful connection', async () => {
+    const config = Object.assign({}, defaultConfig, { streamReconnectDelay: 1 });
+    const stream = new Stream(platform, config, envName);
+    const fakePut = jest.fn();
+    stream.connect(user, {
+      put: fakePut,
+    });
+
+    let es = expectOneStream();
+    es.mockOpen();
+
+    const nAttempts = 5;
+    for (let i = 0; i < nAttempts; i++) {
+      const newEventSourcePromise = asyncify(onNewEventSource);
+
+      es.mockError('test error #1');
+      es = await newEventSourcePromise;
+      es.mockOpen();
+    }
+
+    // simulate the re-establishment of a successful connection
+    es.mockEmit('put', 'something');
+    expect(fakePut).toHaveBeenCalled();
+
+    for (let i = 0; i < nAttempts; i++) {
+      const newEventSourcePromise = asyncify(onNewEventSource);
+
+      es.mockError('test error #2');
+      es = await newEventSourcePromise;
+      es.mockOpen();
+    }
+
+    // make sure there is just a single logged message rather than five (one per attempt)
+    expect(logger.output.warn).toEqual([
+      messages.streamError('test error #1', 1),
+      messages.streamError('test error #2', 1),
+    ]);
   });
 });

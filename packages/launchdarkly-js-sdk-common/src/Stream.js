@@ -18,6 +18,7 @@ export default function Stream(platform, config, environment, hash) {
   const useReport = config.useReport;
   const withReasons = config.evaluationReasons;
   const streamReconnectDelay = config.streamReconnectDelay;
+  let firstConnectionErrorLogged = false;
   let es = null;
   let reconnectTimeoutReference = null;
   let user = null;
@@ -25,7 +26,17 @@ export default function Stream(platform, config, environment, hash) {
 
   stream.connect = function(newUser, newHandlers) {
     user = newUser;
-    handlers = newHandlers;
+    handlers = {};
+    for (const key in newHandlers || {}) {
+      handlers[key] = function(e) {
+        // Reset the state for logging the first connection error so that the first
+        // connection error following a successful connection will once again be logged.
+        // We will decorate *all* handlers to do this to keep this abstraction agnostic
+        // for different stream implementations.
+        firstConnectionErrorLogged = false;
+        newHandlers[key] && newHandlers[key](e);
+      };
+    }
     tryConnect();
   };
 
@@ -40,7 +51,10 @@ export default function Stream(platform, config, environment, hash) {
   };
 
   function handleError(err) {
-    logger.warn(messages.streamError(err));
+    if (!firstConnectionErrorLogged) {
+      logger.warn(messages.streamError(err, streamReconnectDelay));
+      firstConnectionErrorLogged = true;
+    }
     closeConnection();
     tryConnect(streamReconnectDelay);
   }
