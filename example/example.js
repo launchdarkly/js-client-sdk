@@ -10,7 +10,6 @@ $(function() {
   var client;
   var clientConfig;
   var flagsShown = false;
-  var usingLocalBuild = true;
 
   // These functions are for redirecting log output from the SDK so we can see it on the page for debugging.
 
@@ -83,7 +82,7 @@ $(function() {
     if (s.startsWith('{') || s.startsWith('[')) {
       try {
         return JSON.parse(s);
-      } catch {}
+      } catch (e) {}
     }
     return s;
   }
@@ -251,10 +250,10 @@ $(function() {
     $('#usingWhichScript').addClass('local');
     startDemo();
   } else {
-    var hostedScriptUrl = 'https://app.launchdarkly.com/snippet/ldclient.min.js';
+    var hostedScriptUrl = 'https://unpkg.com/launchdarkly-js-client-sdk@2';
     var script = document.createElement('script');
     script.src = hostedScriptUrl;
-    script.crossOrigin = true;
+    script.crossOrigin = 'anonymous';
     script.onload = function() {
       $('#usingWhichScript').addClass('hosted');
       startDemo();
