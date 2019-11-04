@@ -83,7 +83,7 @@ $(function() {
     if (s.startsWith('{') || s.startsWith('[')) {
       try {
         return JSON.parse(s);
-      } catch {}
+      } catch (e) {}
     }
     return s;
   }
