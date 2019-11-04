@@ -100,7 +100,7 @@ export default function makeBrowserPlatform(options) {
         skipDefaultHeaders: true,
       };
 
-      const esOptions = Object.assign({}, defaultOptions, options);
+      const esOptions = { ...defaultOptions, ...options };
 
       return new eventSourceConstructor(url, esOptions);
     };
