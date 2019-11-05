@@ -1,0 +1,287 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>
+      LaunchDarkly browser test
+    </title>
+
+    <link rel="stylesheet" href="example.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <!-- UI helper scripts -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <!-- Polyfills for maximum browser compatibility -->
+    <script src="https://unpkg.com/es6-promise@4.2.4/dist/es6-promise.auto.min.js"></script>
+    <script src="https://unpkg.com/event-source-polyfill@0.0.12/src/eventsource.min.js"></script>
+    <script src="https://unpkg.com/polyfill-queryselector@1.0.2/querySelector.js"></script>
+
+    <script src="../dist/ldclient.js"></script>
+    <script src="./example.js"></script>
+  </head>
+
+  <body>
+    <div class="container">
+
+      <h2 class="mt-2">
+        LaunchDarkly browser test
+      </h2>
+
+      <p>
+        This is a simple front-end-only application using <a href="https://launchdarkly.com/">LaunchDarkly</a>.
+        <span id="usingWhichScript">(Using <span class="hosted"><a href="https://unpkg.com/launchdarkly-js-client-sdk@2">the hosted SDK script</a></span> <span class="local">a local SDK build</span> - version <span id="sdkVersion"></span>)</span> <a href="https://docs.launchdarkly.com/docs/js-sdk-reference">Learn more</a>
+      </p>
+
+      <div class="row">
+
+        <div class="col-sm">
+          <form>
+            <h4>
+              Environment ID
+            </h4>
+
+            <div class="form-group">
+              <input id="envIdField" type="text" class="form-control" value="" placeholder="use demo environment">
+              <small class="form-text text-muted">
+                The SDK always requires an environment ID. If none is specified here, this example will use feature flags from a demo environment set up by LaunchDarkly. You have read-only access to the demo environment, so in order to modify any flags you must use your own enviroment ID as shown on <a href="https://app.launchdarkly.com/settings/projects">your dashboard</a>.
+              </small>
+            </div>
+          </form>
+
+          <form>
+            <h4>
+              Configuration
+            </h4>
+
+            <div class="form-group row">
+              <div class="col-sm-2"></div>
+              <div class="col-sm-10">
+                <div class="form-check">
+                  <input id="streamingCheck" type="checkbox" class="form-check-input">
+                  <label for="streamingCheck" class="form-check-label">Live updates (streaming)</label>
+                </div>
+                <div class="form-check">
+                  <input id="reasonsCheck" type="checkbox" class="form-check-input">
+                  <label for="reasonsCheck" class="form-check-label">Evaluation reasons</label>
+                </div>
+                <div class="form-check">
+                  <input id="useReportCheck" type="checkbox" class="form-check-input">
+                  <label for="useReportCheck" class="form-check-label">Use REPORT mode</label>
+                </div>
+              </div>
+            </div>
+
+            <small class="form-text text-muted mb-2">
+              LaunchDarkly supports many other <a href="https://launchdarkly.github.io/js-client-sdk/interfaces/_launchdarkly_js_client_sdk_.ldoptions.html"
+              target="_blank">configuration</a> options. <a href="#" data-toggle="collapse" data-target="#moreConfig">Show/hide some more</a>
+            </small>
+          </form>
+
+          <div id="moreConfig" class="collapse">
+            <form>
+              <div class="form-group row">
+                <label for="flushIntervalField" class="col-sm-5 col-form-label">flushInterval</label>
+                <div class="col-sm-7">
+                  <input id="flushIntervalField" class="form-control">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="privateAttributeNamesField" class="col-sm-5 col-form-label">privateAttributeNames</label>
+                <div class="col-sm-7">
+                  <input id="privateAttributeNamesField" class="form-control">
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-5"></div>
+                <div class="form-check">
+                  <input id="allAttributesPrivateCheck" type="checkbox" class="form-check-input">
+                  <label for="allAttributesPrivateCheck" class="form-check-label">allAttributesPrivate</label>
+                </div>
+              </div>              
+            </form>
+          </div>
+
+          <form>
+            <h4>
+              User properties
+            </h4>
+
+            <div class="form-group row">
+              <label for="keyField" class="col-sm-3 col-form-label">Key</label>
+              <div class="col-sm-9">
+                <div class="input-group">
+                  <input id="keyField" type="text" class="form-control" value="test-user-key">
+                  <div class="input-group-append">
+                    <div class="input-group-text pl-4">
+                      <input id="userAnonymousCheck" type="checkbox" class="form-check-input">
+                      <label for="userAnonymousCheck" class="form-check-label">Anonymous</label>
+                    </div>
+                  </div>
+                </div>
+                <small class="form-text text-muted">
+                  Key is required unless the user is anonymous
+                </small>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="emailField" class="col-sm-3 col-form-label">Email</label>
+              <div class="col-sm-9">
+                <input id="emailField" type="email" class="form-control">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="nameField" class="col-sm-3 col-form-label">Name</label>
+              <div class="col-sm-9">
+                <input id="nameField" class="form-control">
+              </div>
+            </div>
+          </form>
+          <div id="moreUserProps" class="collapse">
+            <form>
+              <div class="form-group row">
+                <label for="firstNameField" class="col-sm-3 col-form-label">First name</label>
+                <div class="col-sm-9">
+                  <input id="firstNameField" class="form-control">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="lastNameField" class="col-sm-3 col-form-label">Last name</label>
+                <div class="col-sm-9">
+                  <input id="lastNameField" class="form-control">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="avatarField" class="col-sm-3 col-form-label">Avatar URL</label>
+                <div class="col-sm-9">
+                  <input id="avatarField" class="form-control">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="ipField" class="col-sm-3 col-form-label">IP</label>
+                <div class="col-sm-9">
+                  <input id="ipField" class="form-control">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="countryField" class="col-sm-3 col-form-label">Country</label>
+                <div class="col-sm-9">
+                  <input id="countryField" class="form-control">
+                </div>
+              </div>
+            </form>
+            <div class="form-group row">
+              <label class="col-sm-3 col-form-label">Custom fields</label>
+              <div class="col-sm-9">
+                <div id="customFieldsContainer"></div>
+                <button id="addCustomFieldButton" type="button" class="btn btn-secondary btn-sm">add</button>
+              </div>
+            </div>
+
+            <div id="customFieldTemplate" style="display:none">
+              <form class="form-inline mb-2">
+                <input type="text" class="form-control form-control-sm mr-2 customFieldName" placeholder="Name">
+                <input type="text" class="form-control form-control-sm mr-2 customFieldValue" placeholder="JSON value">
+                <button type="button" class="btn btn-secondary btn-sm removeCustomFieldButton">X</button>
+              </form>
+            </div>
+          </div>
+
+          <small class="form-text mb-2">
+            <a id="toggleUserProps" href="#" data-toggle="collapse" data-target="#moreUserProps">
+              Show/hide more user properties
+            </a>
+          </small>
+
+          <button id="reconnectButton" type="button" class="btn btn-primary btn-sm">
+            Update Configuration, Reconnect
+          </button>
+          <button id="identifyButton" type="button" class="btn btn-primary btn-sm">
+            Update User Only
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" data-toggle="collapse" data-target="#navActions" aria-expanded="false">
+            Navigation/Events
+          </button>
+        </div>
+
+        <div class="col-sm">
+          <h4>
+            Feature flags
+          </h4>
+
+          <small class="form-text text-muted mb-2">
+            Note that the browser SDK will only show flags that have the "Make this flag available to client-side SDKs" option checked.
+          </small>
+
+          <div id="flagsContainer">
+          </div>
+        </div>
+      </div>
+
+      <div class="row collapse" id="navActions">
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <p>
+                These actions are for testing LaunchDarkly's analytics events and A/B testing features.
+              </p>
+              <form class="form-inline mb-2">
+                <button id="pushUrlButton" class="btn btn-secondary btn-sm mr-2" type="button">
+                  Set URL (pushState) to:
+                </button>
+                <input id="urlField" type="text" class="form-control mr-4" value="page1">
+                <button id="pushRandomUrlButton" class="btn btn-secondary btn-sm mr-4" type="button">
+                  Set URL to a random value
+                </button>
+                <button id="pushRandomHashButton" class="btn btn-secondary btn-sm mr-4" type="button">
+                  Set hash to a random value
+                </button>
+                <button id="backButton" class="btn btn-secondary btn-sm" type="button">
+                  Go back
+                </button>
+              </form>
+              <small class="form-text text-muted mb-2">
+                The default demo environment has pageview goals for any URL containing "page1" or "page2", and a click goal for any link with the class "special".
+              </small>
+              <form class="form-inline">
+                <button id="customEventButton" class="btn btn-secondary btn-sm mr-2" type="button">
+                  Send custom event:
+                </button>
+                <input type="text" id="eventNameField" class="form-control mr-2" value="my-event-name">
+                <input type="text" id="eventDataField" class="form-control mr-4" placeholder="event JSON data">
+                Links for click goals:
+                <a href="#" id="specialLink1" class="special link1 ml-2">special link 1</a>
+                <a href="#" id="specialLink2" class="special link1 ml-2">special link 2</a>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h4 class="mt-3">
+        SDK messages
+      </h4>
+      <div id="logPanel"></div>
+      <small class="form-text text-muted mb-2">
+        Messages at WARN or ERROR level would go to the console by default, but you can <a href="https://launchdarkly.github.io/js-client-sdk/interfaces/_ldclient_js_.ldoptions.html#logger">customize this</a>. You can also listen for <a href="https://launchdarkly.github.io/js-client-sdk/interfaces/_ldclient_js_.ldclient.html#on">error events</a>.
+      </small>
+
+      <h3 class="mt-3">
+        Other
+      </h3>
+      <form class="form-inline">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="interceptBeforeUnloadCheck">
+          <label class="form-check-label" for="interceptBeforeUnloadCheck">
+            Test beforeunload event handler (alert when leaving page)
+          </label>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

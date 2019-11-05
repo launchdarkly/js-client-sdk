@@ -6,25 +6,22 @@ jobs:
     steps:
       - checkout
 
-      - run: npm install # this automatically runs "npm prepare" too
-        # Note that for CI to work properly, our lerna command for "npm prepare" in package.json needs to 
-        # have "--concurrency=2", otherwise we may run out of memory. This is a known issue with Lerna.
+      - run: npm install
       - run: npm run lint
-      - run: npm run build
+      - run: npm run build:min
 
-      # We could do "npm run test" here to run tests for all the packages, but then we would not be
-      # able to produce separate output files.
       - run: mkdir -p reports/junit
       - run:
-          command: cd ~/project/packages/launchdarkly-js-sdk-common && npm run test:junit
+          command: npm run test:junit
           environment:
             JEST_JUNIT_OUTPUT: "./reports/junit/js-common-test-results.xml"
-      - run:
-          command: cd ~/project/packages/launchdarkly-js-client-sdk && npm run test:junit
-          environment:
-            JEST_JUNIT_OUTPUT: "./reports/junit/js-test-results.xml"
 
-      - run: cd ~/project && npm run check-typescript
+      - run: npm run check-typescript
+
+      - run:
+          name: dependency audit
+          command: ./scripts/better-audit.sh
+
       - store_test_results:
           path: reports/junit/
       - store_artifacts:
