@@ -44,7 +44,7 @@ export function initialize(env, user, options = {}) {
   // We will not call client.close() though, since in the case of a beforeunload event the page
   // might not actually get closed, and with an unload event we know everything will get discarded
   // anyway.
-  const syncFlushHandler = () => () => {
+  const syncFlushHandler = () => {
     platform.synchronousFlush = true;
     client.flush().catch(() => {});
   };
