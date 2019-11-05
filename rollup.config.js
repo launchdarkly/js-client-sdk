@@ -1,3 +1,5 @@
+const pkg = require('./package.json');
+
 const resolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
 const babel = require('rollup-plugin-babel');
@@ -38,6 +40,18 @@ if (env === 'production') {
 }
 
 const config = {
+  input: 'src/index.js',
+  output: [
+    {
+      plugins: plugins,
+      name: 'LDClient',
+      file: process.env.NODE_ENV === 'production' ? './dist/ldclient.min.js' : './dist/ldclient.js',
+      format: 'umd',
+      sourcemap: true,
+    },
+    { file: pkg.main, format: 'cjs', sourcemap: true },
+    { file: pkg.module, format: 'es', sourcemap: true },
+  ],
   plugins: plugins,
 };
 
