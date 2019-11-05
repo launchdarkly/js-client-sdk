@@ -1,0 +1,25 @@
+
+#logPanel {
+  border: 1px solid #888;
+  font-family: monospace;
+  font-size: 9pt;
+  height: 140px;
+  overflow: scroll;
+  white-space: pre;
+}
+
+code {
+  font-size: 9pt;
+}
+
+.error {
+  color: red;
+}
+
+#usingWhichScript, #usingWhichScript .local, #usingWhichScript .hosted {
+  display: none;
+}
+
+#usingWhichScript.local, #usingWhichScript.hosted, #usingWhichScript.local .local, #usingWhichScript.hosted .hosted {
+  display: inline;
+}
