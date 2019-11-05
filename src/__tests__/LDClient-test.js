@@ -132,8 +132,8 @@ describe('LDClient', () => {
       await client.flush();
 
       expect(server.requests.length).toEqual(2);
-      expect(server.requests[0].async).toBe(true); // flags query
-      expect(server.requests[1].async).toBe(true); // events
+      // ignore first request because it's just a side effect of calling browserPlatform.httpAllowsPost()
+      expect(server.requests[1].async).toBe(true);
     });
 
     async function setupClientAndTriggerUnload() {
@@ -154,7 +154,7 @@ describe('LDClient', () => {
           await setupClientAndTriggerUnload();
 
           expect(server.requests.length).toEqual(2);
-          expect(server.requests[0].async).toBe(true); // flags query
+          // ignore first request because it's just a side effect of calling browserPlatform.httpAllowsPost()
           expect(server.requests[1].async).toBe(false); // events
         });
       }
