@@ -97,11 +97,15 @@ $(function() {
     var envId = $('#envIdField').val() || defaultEnvId;
     var streaming = $('#streamingCheck').prop('checked');
     clientConfig = {
-      streaming: streaming,
-      evaluationReasons: $('#reasonsCheck').prop('checked'),
-      useReport: $('#useReportCheck').prop('checked'),
-      logger: logger
+      streaming: streaming || undefined,
+      evaluationReasons: $('#reasonsCheck').prop('checked') || undefined,
+      useReport: $('#useReportCheck').prop('checked') || undefined,
+      flushInterval: $('#flushIntervalField').val() ? parseInt($('#flushIntervalField').val(), 10) : undefined,
+      privateAttributeNames: $('#privateAttributeNamesField').val() ? $('#privateAttributeNamesField').val().split(',') : undefined,
+      allAttributesPrivate: $('#allAttributesPrivateCheck').prop('checked') || undefined
     };
+    logger.debug('test app is using config: ' + JSON.stringify(clientConfig));
+    clientConfig.logger = logger;
     var user = makeUserObject();
 
     showFlagsPlaceholder('<h5>initializing client, please wait</h5>');
@@ -179,6 +183,10 @@ $(function() {
     flagsShown = true;
   }
 
+  function handleBeforeUnload(e) {
+    return 'Are you sure you want to leave this page?';
+  }
+
   $('#reconnectButton').on('click', function(e) {
     e.preventDefault();
     reconnect();
@@ -235,6 +243,14 @@ $(function() {
   $('#customFieldsContainer').on('click', '.removeCustomFieldButton', function(e) {
     e.preventDefault();
     $(e.target).closest('form').remove();
+  });
+
+  $('#interceptBeforeUnloadCheck').on('change', function(e) {
+    if ($('#interceptBeforeUnloadCheck').prop('checked')) {
+      $(window).on('beforeunload', handleBeforeUnload);
+    } else {
+      $(window).off('beforeunload');
+    }
   });
 
   // For this demo, we can use either a local build of the SDK (which is what index.html references), or the current
