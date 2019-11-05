@@ -5,7 +5,7 @@
 
 let version = process.env.VERSION;
 if (!version) {
-  const package = require('../packages/launchdarkly-js-client-sdk/package.json');
+  const package = require('../package.json');
   version = package.version;
 }
 
