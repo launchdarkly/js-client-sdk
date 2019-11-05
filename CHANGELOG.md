@@ -2,6 +2,20 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.15.0] - 2019-11-05
+### Changed:
+- Changed the behavior of the warning message that is logged on failing to establish a streaming connection. Rather than the current behavior where the warning message appears upon each failed attempt, it will now only appear on the first failure in each series of attempts. Also, the message has been changed to mention that retries will occur. ([#182](https://github.com/launchdarkly/js-client-sdk/issues/182))
+- The source code for the `launchdarkly-js-sdk-common` package has been moved out of this repository into [`js-sdk-common`](https://github.org/launchdarkly-js-sdk-common), and will now be versioned separately. Applications should never refer to the common package directly; it is brought in automatically by `launchdarkly-js-client-sdk`. Changes made in the common code that affect JS SDK functionality will be noted in the main changelog here.
+- There is a new, much fuller-featured demo application in the `example` directory, which may be useful for testing not only of the JS SDK but of feature flag evaluation in general.
+
+### Fixed:
+- The `beforeunload` event handler no longer calls `close` on the client, which was causing the SDK to become unusable if the page did not actually close after this event fired (for instance if the browser navigated to a URL that launched an external application, or if another `beforeunload` handler cancelled leaving the page). Instead, it now only flushes events. There is also an `unload` handler that flushes any additional events that might have been created by any code that ran during the `beforeunload` stage. ([#181](https://github.com/launchdarkly/js-client-sdk/issues/181))
+- Removed uses of `Object.assign` that caused errors in Internet Explorer unless a polyfill for that function was present. These were removed earlier in the 2.1.1 release, but had been mistakenly added again.
+
+### Deprecated:
+- The `samplingInterval` configuration property is deprecated and will be removed in a future version. The intended use case for the `samplingInterval` feature was to reduce analytics event network usage in high-traffic applications. This feature is being deprecated in favor of summary counters, which are meant to track all events.
+
+
 ## [2.14.0] - 2019-10-10
 ### Added:
 - Added support for upcoming LaunchDarkly experimentation features. See `LDClient.track()`.
