@@ -17,12 +17,13 @@ html: prepare
 	../node_modules/.bin/typedoc --options typedoc.js
 
 prepare:
+	cd .. && npm install typedoc
 	rm -rf build
 	mkdir build
 	@# Extract the whole module declaration from launchdarkly-js-sdk-common, then remove the first and last lines
-	sed -n '/^declare module/,/^}/p' ../packages/launchdarkly-js-sdk-common/typings.d.ts | \
+	sed -n '/^declare module/,/^}/p' ../node_modules/launchdarkly-js-sdk-common/typings.d.ts | \
 		sed '1d;$$d' \
 		>build/common-excerpt
 	@# Replace the block from DOCBUILD-START-REPLACE to DOCBUILD-END-REPLACE with that excerpt
-	sed -e '/DOCBUILD-END-REPLACE/r build/common-excerpt' ../packages/launchdarkly-js-client-sdk/typings.d.ts | \
+	sed -e '/DOCBUILD-END-REPLACE/r build/common-excerpt' ../typings.d.ts | \
 		sed -e '/DOCBUILD-START-REPLACE/,/DOCBUILD-END-REPLACE/d' >build/typings.d.ts
