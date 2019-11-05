@@ -3,11 +3,15 @@ import newHttpRequest from './httpRequest';
 export default function makeBrowserPlatform(options) {
   const ret = {};
 
-  ret.pageIsClosing = false; // this will be set to true by index.js if the page is closing
+  ret.synchronousFlush = false; // this will be set to true by index.js if the page is closing
 
   // XMLHttpRequest may not exist if we're running in a server-side rendering context
   if (window.XMLHttpRequest) {
-    ret.httpRequest = (method, url, headers, body) => newHttpRequest(method, url, headers, body, ret.pageIsClosing);
+    ret.httpRequest = (method, url, headers, body) => {
+      const syncFlush = ret.synchronousFlush;
+      ret.synchronousFlush = false;
+      return newHttpRequest(method, url, headers, body, syncFlush);
+    };
   }
 
   let hasCors;
