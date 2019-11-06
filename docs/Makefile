@@ -15,8 +15,12 @@
 
 html: prepare
 	../node_modules/.bin/typedoc --options typedoc.js
+	mv before-typedoc-package.json ../package.json
+	mv before-typedoc-package-lock.json ../package-lock.json
 
 prepare:
+	cp ../package.json before-typedoc-package.json
+	cp ../package-lock.json before-typedoc-package-lock.json
 	cd .. && npm install typedoc
 	rm -rf build
 	mkdir build

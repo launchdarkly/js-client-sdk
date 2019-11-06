@@ -79,8 +79,7 @@
   },
   "dependencies": {
     "escape-string-regexp": "1.0.5",
-    "launchdarkly-js-sdk-common": "2.14.1",
-    "typedoc": "0.15.0"
+    "launchdarkly-js-sdk-common": "2.14.1"
   },
   "repository": {
     "type": "git",
