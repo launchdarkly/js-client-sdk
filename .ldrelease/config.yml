@@ -12,3 +12,6 @@ template:
 documentation:
   githubPages: true
   title: LaunchDarkly JavaScript SDK
+
+sdk:
+  displayName: JavaScript
