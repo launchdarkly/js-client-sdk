@@ -2,6 +2,11 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.15.1] - 2019-11-06
+### Fixed:
+- A runtime dependency on `typedoc` was mistakenly added in the 2.15.0 release. This has been removed.
+
+
 ## [2.15.0] - 2019-11-05
 ### Changed:
 - Changed the behavior of the warning message that is logged on failing to establish a streaming connection. Rather than the current behavior where the warning message appears upon each failed attempt, it will now only appear on the first failure in each series of attempts. Also, the message has been changed to mention that retries will occur. ([#182](https://github.com/launchdarkly/js-client-sdk/issues/182))
