@@ -1,8 +1,8 @@
 **Requirements**
 
-- [ ] Added test coverage for new functionality
-- [ ] Followed the repository's [pull request submission guidelines](../blob/master/CONTRIBUTING.md#submitting-pull-requests)
-- [ ] Validated functionality against all supported platform versions
+- [ ] I have added test coverage for new or changed functionality
+- [ ] I have followed the repository's [pull request submission guidelines](../blob/master/CONTRIBUTING.md#submitting-pull-requests)
+- [ ] I have validated my changes against all supported platform versions
 
 **Related issues**
 
