@@ -2,6 +2,7 @@ import sinon from 'sinon';
 
 import * as common from 'launchdarkly-js-sdk-common';
 import * as LDClient from '../index';
+import * as pkg from '../../package.json';
 
 describe('LDClient', () => {
   const envName = 'UNKNOWN_ENVIRONMENT_ID';
@@ -28,6 +29,10 @@ describe('LDClient', () => {
 
   it('should exist', () => {
     expect(LDClient).toBeDefined();
+  });
+
+  it('should return current version', () => {
+    expect(LDClient.version).toEqual(pkg.version);
   });
 
   describe('initialization', () => {
