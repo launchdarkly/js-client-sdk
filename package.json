@@ -75,7 +75,7 @@
     "semver": "5.5.0",
     "semver-compare": "1.0.0",
     "sinon": "7.2.7",
-    "typescript": "3.0.1"
+    "typescript": "3.7.2"
   },
   "dependencies": {
     "escape-string-regexp": "1.0.5",
