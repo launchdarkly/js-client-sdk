@@ -1,58 +1,75 @@
 const pkg = require('./package.json');
-
 const resolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
 const babel = require('rollup-plugin-babel');
-const replace = require('rollup-plugin-replace');
-const uglify = require('rollup-plugin-uglify');
+const replace = require('@rollup/plugin-replace');
+const { terser } = require('rollup-plugin-terser');
+const { uglify } = require('rollup-plugin-uglify');
 const builtins = require('rollup-plugin-node-builtins');
-const globals = require('rollup-plugin-node-globals');
 const filesize = require('rollup-plugin-filesize');
 
 const env = process.env.NODE_ENV || 'development';
 const version = process.env.npm_package_version;
 
-let plugins = [
+const entryPoint = 'src/index.js';
+
+const basePlugins = [
   replace({
     'process.env.NODE_ENV': JSON.stringify(env),
     VERSION: JSON.stringify(version),
   }),
-  globals(),
   builtins(),
   resolve({
-    browser: true,
-    module: true,
-    jsnext: true,
-    main: true,
+    mainFields: ['browser', 'module', 'main'],
     preferBuiltins: true,
   }),
   commonjs(),
-  babel(),
+  babel({
+    exclude: 'node_modules/**',
+  }),
   filesize(),
 ];
 
-if (env === 'production') {
-  plugins = plugins.concat(
-    uglify({
-      compress: {},
-    })
-  );
-}
+const plugins = env === 'production' ?
+  basePlugins.concat(
+    uglify()
+  ) :
+  basePlugins;
 
-const config = {
-  input: 'src/index.js',
-  output: [
-    {
-      plugins: plugins,
+const esPlugins = env === 'production' ?
+  basePlugins.concat(
+    terser()
+  ) : basePlugins;
+
+const configs = [
+  {
+    input: entryPoint,
+    output: {
       name: 'LDClient',
       file: process.env.NODE_ENV === 'production' ? './dist/ldclient.min.js' : './dist/ldclient.js',
       format: 'umd',
       sourcemap: true,
     },
-    { file: pkg.main, format: 'cjs', sourcemap: true },
-    { file: pkg.module, format: 'es', sourcemap: true },
-  ],
-  plugins: plugins,
-};
+    plugins: plugins,
+  },
+  {
+    input: entryPoint,
+    output: {
+      file: pkg.main,
+      format: 'cjs',
+      sourcemap: true,
+    },
+    plugins: plugins,
+  },
+  {
+    input: entryPoint,
+    output: {
+      file: pkg.module,
+      format: 'es',
+      sourcemap: true,
+    },
+    plugins: esPlugins,
+  },
+];
 
-module.exports = config;
+module.exports = configs;
