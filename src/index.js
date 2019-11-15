@@ -56,7 +56,7 @@ export function initialize(env, user, options = {}) {
 
 export const createConsoleLogger = common.createConsoleLogger;
 
-export const version = common.version;
+export const version = VERSION;
 
 function deprecatedInitialize(env, user, options = {}) {
   console && console.warn && console.warn(common.messages.deprecated('default export', 'named LDClient export'));
