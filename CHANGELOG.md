@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.15.2] - 2019-11-15
+### Fixed:
+- Releases after 2.14.1 were continuing to report the `version` property as "2.14.1". This property will now once again be consistent with the actual release version.
+
 ## [2.15.1] - 2019-11-06
 ### Fixed:
 - A runtime dependency on `typedoc` was mistakenly added in the 2.15.0 release. This has been removed.
