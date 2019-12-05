@@ -134,6 +134,32 @@ describe('browserPlatform', () => {
     });
   });
 
+  describe('sessionStorage', () => {
+    const plat = browserPlatform({ bootstrap: 'sessionStorage' });
+
+    // Make sure that all of the get/set tests for the localStorage tests
+    // also work with sessionStorage.
+    it('returns null or undefined for missing value', async () => {
+      const value = await plat.localStorage.get(lsKeyPrefix + 'unused-key');
+      expect(value).not.toBe(expect.anything());
+    });
+
+    it('can get and set value', async () => {
+      const key = lsKeyPrefix + 'get-set-key';
+      await plat.localStorage.set(key, 'hello');
+      const value = await plat.localStorage.get(key);
+      expect(value).toEqual('hello');
+    });
+
+    it('can delete value', async () => {
+      const key = lsKeyPrefix + 'delete-key';
+      await plat.localStorage.set(key, 'hello');
+      await plat.localStorage.clear(key);
+      const value = plat.localStorage.get(key);
+      expect(value).not.toBe(expect.anything());
+    });
+  });
+
   describe('localStorage', () => {
     // Since we're not currently running these tests in an actual browser, this is really using a
     // mock implementation of window.localStorage, but these tests still verify that our async

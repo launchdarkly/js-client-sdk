@@ -39,20 +39,28 @@ export default function makeBrowserPlatform(options) {
   };
 
   try {
-    if (window.localStorage) {
+    // Allow the user to specify which storage type to use. If the user specifies session storage
+    // then use that. Otherwise default to local storage. Both of these implement the same
+    // storage interface, documentation here: https://developer.mozilla.org/en-US/docs/Web/API/Storage
+    const storage =
+      ((options || {}).bootstrap || '').toUpperCase() === 'SESSIONSTORAGE'
+        ? window.sessionStorage
+        : window.localStorage;
+
+    if (storage) {
       ret.localStorage = {
         get: key =>
           new Promise(resolve => {
-            resolve(window.localStorage.getItem(key));
+            resolve(storage.getItem(key));
           }),
         set: (key, value) =>
           new Promise(resolve => {
-            window.localStorage.setItem(key, value);
+            storage.setItem(key, value);
             resolve();
           }),
         clear: key =>
           new Promise(resolve => {
-            window.localStorage.removeItem(key);
+            storage.removeItem(key);
             resolve();
           }),
       };
