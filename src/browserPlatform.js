@@ -23,6 +23,12 @@ export default function makeBrowserPlatform(options) {
     return hasCors;
   };
 
+  // Image-based mechanism for sending events if POST isn't available
+  ret.httpFallbackPing = url => {
+    const img = new window.Image();
+    img.src = url;
+  };
+
   const eventUrlTransformer = options && options.eventUrlTransformer;
   ret.getCurrentUrl = () => (eventUrlTransformer ? eventUrlTransformer(window.location.href) : window.location.href);
 
