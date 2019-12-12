@@ -120,6 +120,18 @@ export default function makeBrowserPlatform(options) {
   }
 
   ret.userAgent = 'JSClient';
+  ret.version = VERSION;
+
+  ret.diagnosticSdkData = {
+    name: 'JS',
+    version: VERSION,
+  };
+
+  ret.diagnosticPlatformData = {
+    name: 'JS',
+  };
+
+  ret.diagnosticUseCombinedEvent = true; // the browser SDK uses the "diagnostic-combined" event format
 
   return ret;
 }
