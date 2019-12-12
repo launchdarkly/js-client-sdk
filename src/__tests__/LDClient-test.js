@@ -130,7 +130,7 @@ describe('LDClient', () => {
 
   describe('event flushing', () => {
     it('normally uses asynchronous XHR', async () => {
-      const config = { bootstrap: {}, flushInterval: 100000, fetchGoals: false };
+      const config = { bootstrap: {}, flushInterval: 100000, fetchGoals: false, diagnosticsOptOut: true };
       const client = LDClient.initialize(envName, user, config);
       await client.waitForInitialization();
 
@@ -142,7 +142,7 @@ describe('LDClient', () => {
     });
 
     async function setupClientAndTriggerUnload() {
-      const config = { bootstrap: {}, flushInterval: 100000, fetchGoals: false };
+      const config = { bootstrap: {}, flushInterval: 100000, fetchGoals: false, diagnosticsOptOut: true };
       const client = LDClient.initialize(envName, user, config);
       await client.waitForInitialization();
 
