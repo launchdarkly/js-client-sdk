@@ -3,14 +3,16 @@ import browserPlatform from './browserPlatform';
 import GoalManager from './GoalManager';
 
 const goalsEvent = 'goalsReady';
-const extraDefaults = {
-  fetchGoals: true,
+const extraOptionDefs = {
+  fetchGoals: { default: true },
+  hash: { type: 'string' },
+  eventUrlTransformer: { type: 'function' },
 };
 
 // Pass our platform object to the common code to create the browser version of the client
 export function initialize(env, user, options = {}) {
   const platform = browserPlatform(options);
-  const clientVars = common.initialize(env, user, options, platform, extraDefaults);
+  const clientVars = common.initialize(env, user, options, platform, extraOptionDefs);
 
   const client = clientVars.client;
   const validatedOptions = clientVars.options;

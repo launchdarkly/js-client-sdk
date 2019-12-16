@@ -1,11 +1,10 @@
 const pkg = require('./package.json');
-const resolve = require('rollup-plugin-node-resolve');
+const resolve = require('@rollup/plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
 const babel = require('rollup-plugin-babel');
 const replace = require('@rollup/plugin-replace');
 const { terser } = require('rollup-plugin-terser');
 const { uglify } = require('rollup-plugin-uglify');
-const builtins = require('rollup-plugin-node-builtins');
 const filesize = require('rollup-plugin-filesize');
 
 const env = process.env.NODE_ENV || 'development';
@@ -18,7 +17,6 @@ const basePlugins = [
     'process.env.NODE_ENV': JSON.stringify(env),
     VERSION: JSON.stringify(version),
   }),
-  builtins(),
   resolve({
     mainFields: ['browser', 'module', 'main'],
     preferBuiltins: true,
