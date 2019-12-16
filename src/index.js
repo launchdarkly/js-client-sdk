@@ -6,7 +6,7 @@ const goalsEvent = 'goalsReady';
 const extraOptionDefs = {
   fetchGoals: { default: true },
   hash: { type: 'string' },
-  eventUrlTransformer: { type: 'function' }
+  eventUrlTransformer: { type: 'function' },
 };
 
 // Pass our platform object to the common code to create the browser version of the client
