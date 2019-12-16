@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LDOptions | LaunchDarkly JavaScript SDK (2.15.2)</title>
+	<title>LDOptions | LaunchDarkly JavaScript SDK (2.16.0)</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">LaunchDarkly JavaScript SDK (2.15.2)</a>
+					<a href="../index.html" class="title">LaunchDarkly JavaScript SDK (2.16.0)</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -98,6 +98,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#baseurl" class="tsd-kind-icon">base<wbr>Url</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#bootstrap" class="tsd-kind-icon">bootstrap</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#evaluationreasons" class="tsd-kind-icon">evaluation<wbr>Reasons</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#eventcapacity" class="tsd-kind-icon">event<wbr>Capacity</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#eventurltransformer" class="tsd-kind-icon">event<wbr>Url<wbr>Transformer</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#eventsurl" class="tsd-kind-icon">events<wbr>Url</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#fetchgoals" class="tsd-kind-icon">fetch<wbr>Goals</a></li>
@@ -113,6 +114,8 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#streamurl" class="tsd-kind-icon">stream<wbr>Url</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#streaming" class="tsd-kind-icon">streaming</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#usereport" class="tsd-kind-icon">use<wbr>Report</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#wrappername" class="tsd-kind-icon">wrapper<wbr>Name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#wrapperversion" class="tsd-kind-icon">wrapper<wbr>Version</a></li>
 							</ul>
 						</section>
 					</div>
@@ -215,13 +218,36 @@
 						such information is not sent unless you set this option to true.</p>
 					</div>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="eventcapacity" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> event<wbr>Capacity</h3>
+					<div class="tsd-signature tsd-kind-icon">event<wbr>Capacity<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from LDOptionsBase.eventCapacity</p>
+						<ul>
+							<li>Defined in docs/build/typings.d.ts:206</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The capacity of the analytics events queue.</p>
+						</div>
+						<p>The client buffers up to this many events in memory before flushing. If the capacity is exceeded
+							before the queue is flushed, events will be discarded. Increasing the capacity means that events
+							are less likely to be discarded, at the cost of consuming more memory. Note that in regular usage
+							flag evaluations do not produce individual events, only summary counts, so you only need a large
+							capacity if you are generating a large number of click, pageview, or identify events (or if you
+						are using the event debugger).</p>
+						<p>The default value is 100.</p>
+					</div>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="eventurltransformer" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> event<wbr>Url<wbr>Transformer</h3>
 					<div class="tsd-signature tsd-kind-icon">event<wbr>Url<wbr>Transformer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in docs/build/typings.d.ts:670</li>
+							<li>Defined in docs/build/typings.d.ts:701</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -255,7 +281,7 @@
 					<div class="tsd-signature tsd-kind-icon">fetch<wbr>Goals<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in docs/build/typings.d.ts:663</li>
+							<li>Defined in docs/build/typings.d.ts:694</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -273,7 +299,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from LDOptionsBase.flushInterval</p>
 						<ul>
-							<li>Defined in docs/build/typings.d.ts:199</li>
+							<li>Defined in docs/build/typings.d.ts:213</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -289,7 +315,7 @@
 					<div class="tsd-signature tsd-kind-icon">hash<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in docs/build/typings.d.ts:655</li>
+							<li>Defined in docs/build/typings.d.ts:686</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -343,7 +369,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from LDOptionsBase.samplingInterval</p>
 						<ul>
-							<li>Defined in docs/build/typings.d.ts:208</li>
+							<li>Defined in docs/build/typings.d.ts:224</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -353,6 +379,11 @@
 						</div>
 						<p>When set to greater than zero, there is a 1 in <code>samplingInterval</code> chance that events will be
 						sent: for example, a value of 20 means that on average 1 in 20, or 5%, of all events will be sent.</p>
+						<dl class="tsd-comment-tags">
+							<dt>deprecated</dt>
+							<dd><p>This feature will be removed in a future version.</p>
+							</dd>
+						</dl>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
@@ -416,7 +447,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from LDOptionsBase.streamReconnectDelay</p>
 						<ul>
-							<li>Defined in docs/build/typings.d.ts:217</li>
+							<li>Defined in docs/build/typings.d.ts:233</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -486,6 +517,41 @@
 						<p>Do not use unless advised by LaunchDarkly.</p>
 					</div>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="wrappername" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> wrapper<wbr>Name</h3>
+					<div class="tsd-signature tsd-kind-icon">wrapper<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from LDOptionsBase.wrapperName</p>
+						<ul>
+							<li>Defined in docs/build/typings.d.ts:241</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>For use by wrapper libraries to set an identifying name for the wrapper being used.</p>
+						</div>
+						<p>This will be sent as diagnostic information to the LaunchDarkly servers to allow recording
+						metrics on the usage of these wrapper libraries.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="wrapperversion" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> wrapper<wbr>Version</h3>
+					<div class="tsd-signature tsd-kind-icon">wrapper<wbr>Version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from LDOptionsBase.wrapperVersion</p>
+						<ul>
+							<li>Defined in docs/build/typings.d.ts:248</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>For use by wrapper libraries to set version to be included alongside <code>wrapperName</code>.</p>
+						</div>
+						<p>If <code>wrapperName</code> is unset, this field will be ignored.</p>
+					</div>
+				</section>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -536,6 +602,9 @@
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_launchdarkly_js_client_sdk_.ldoptions.html#evaluationreasons" class="tsd-kind-icon">evaluation<wbr>Reasons</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="_launchdarkly_js_client_sdk_.ldoptions.html#eventcapacity" class="tsd-kind-icon">event<wbr>Capacity</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="_launchdarkly_js_client_sdk_.ldoptions.html#eventurltransformer" class="tsd-kind-icon">event<wbr>Url<wbr>Transformer</a>
 							</li>
@@ -580,6 +649,12 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_launchdarkly_js_client_sdk_.ldoptions.html#usereport" class="tsd-kind-icon">use<wbr>Report</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="_launchdarkly_js_client_sdk_.ldoptions.html#wrappername" class="tsd-kind-icon">wrapper<wbr>Name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="_launchdarkly_js_client_sdk_.ldoptions.html#wrapperversion" class="tsd-kind-icon">wrapper<wbr>Version</a>
 							</li>
 						</ul>
 					</li>
