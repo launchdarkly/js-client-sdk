@@ -2,6 +2,21 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.16.0] - 2019-12-16
+### Added:
+- Configuration property `eventCapacity`: the maximum number of analytics events (not counting evaluation counters) that can be held at once, to prevent the SDK from consuming unexpected amounts of memory in case an application generates events unusually rapidly. In JavaScript code this would not normally be an issue, since the SDK flushes events every two seconds by default, but you may wish to increase this value if you will intentionally be generating a high volume of custom or identify events. The default value is 100.
+- Configuration properties `wrapperName` and `wrapperVersion`: used by the React SDK, and potentially by third-party libraries, to identify a JS SDK instance that is being used with a wrapper API.
+
+### Changed:
+- The SDK now logs a warning if any configuration property has an inappropriate type, such as `baseUri:3` or `sendEvents:"no"`. For boolean properties, the SDK will still interpret the value in terms of truthiness, which was the previous behavior. For all other types, since there's no such commonly accepted way to coerce the type, it will fall back to the default setting for that property; previously, the behavior was undefined but most such mistakes would have caused the SDK to throw an exception at some later point.
+- Removed or updated some development dependencies that were causing vulnerability warnings.
+
+### Fixed:
+- When calling `identify`, the current user (as reported by `getUser()`) was being updated before the SDK had received the new flag values for that user, causing the client to be temporarily in an inconsistent state where flag evaluations would be associated with the wrong user in analytics events. Now, the current-user state will stay in sync with the flags and change only when they have finished changing. (Thanks, [edvinerikson](https://github.com/launchdarkly/js-sdk-common/pull/3)!)
+
+### Deprecated:
+- The `samplingInterval` configuration property was deprecated in the code in the previous minor version release, and in the changelog, but the deprecation notice was accidentally omitted from the documentation comments. It is hereby deprecated again.
+
 ## [2.15.2] - 2019-11-15
 ### Fixed:
 - Releases after 2.14.1 were continuing to report the `version` property as "2.14.1". This property will now once again be consistent with the actual release version.
