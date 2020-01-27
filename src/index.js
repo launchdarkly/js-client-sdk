@@ -49,6 +49,7 @@ export function initialize(env, user, options = {}) {
   const syncFlushHandler = () => {
     platform.synchronousFlush = true;
     client.flush().catch(() => {});
+    platform.synchronousFlush = false;
   };
   window.addEventListener('beforeunload', syncFlushHandler);
   window.addEventListener('unload', syncFlushHandler);

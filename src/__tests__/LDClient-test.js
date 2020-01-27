@@ -57,6 +57,38 @@ describe('LDClient', () => {
     });
   });
 
+  describe('identify', () => {
+    describe('Disables synchronous XHR if page did not unload', () => {
+      async function setupClient() {
+        const config = { bootstrap: {}, flushInterval: 100000, fetchGoals: false, sendEvents: false };
+        const client = LDClient.initialize(envName, user, config);
+        await client.waitForInitialization();
+        return client;
+      }
+      function testWithUserAgent(desc, ua) {
+        it('in ' + desc, async () => {
+          window.navigator.__defineGetter__('userAgent', () => ua);
+
+          const client = await setupClient();
+          expect(server.requests.length).toEqual(0);
+          window.dispatchEvent(new window.Event('beforeunload'));
+          await client.identify({ key: 'new-user' });
+          expect(server.requests.length).toEqual(1);
+          expect(server.requests[0].async).toBe(true);
+        });
+      }
+
+      testWithUserAgent(
+        'Chrome 72',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36'
+      );
+
+      testWithUserAgent('unknown browser', 'Special Kitty Cat Browser');
+
+      testWithUserAgent('empty user-agent', null);
+    });
+  });
+
   describe('goals', () => {
     it('fetches goals if fetchGoals is unspecified', async () => {
       const client = LDClient.initialize(envName, user, { sendEvents: false });
@@ -161,6 +193,32 @@ describe('LDClient', () => {
           expect(server.requests.length).toEqual(2);
           // ignore first request because it's just a side effect of calling browserPlatform.httpAllowsPost()
           expect(server.requests[1].async).toBe(false); // events
+        });
+      }
+
+      testWithUserAgent(
+        'Chrome 72',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36'
+      );
+
+      testWithUserAgent('unknown browser', 'Special Kitty Cat Browser');
+
+      testWithUserAgent('empty user-agent', null);
+    });
+
+    describe('Disables synchronous XHR if page did not unload', () => {
+      function testWithUserAgent(desc, ua) {
+        it('in ' + desc, async () => {
+          window.navigator.__defineGetter__('userAgent', () => ua);
+
+          const client = await setupClientAndTriggerUnload();
+          expect(server.requests.length).toEqual(2);
+          // ignore first request because it's just a side effect of calling browserPlatform.httpAllowsPost()
+          expect(server.requests[1].async).toBe(false); // events
+          client.track('Test'); // lets track a event that happen after a beforeunload event.
+          client.flush().catch(() => {}); // flush that event
+          expect(server.requests.length).toEqual(3); // assert the server got the request.
+          expect(server.requests[2].async).toBe(true);
         });
       }
 
