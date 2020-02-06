@@ -2,6 +2,14 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.16.3] - 2020-02-05
+### Fixed:
+- Changed some exact version dependencies to "highest compatible" dependencies, to avoid having modules that are also used by the host application loaded twice by NPM. The dependency on `js-sdk-common` is still an exact version dependency so that each release of `js-client-sdk` has well-defined behavior for that internal code.
+
+### Removed:
+- Removed an unused transitive dependency on `@babel/polyfill`. (Thanks, [bdwain](https://github.com/launchdarkly/js-sdk-common/pull/7)!)
+
+
 ## [2.16.2] - 2020-01-27
 ### Fixed:
 - If the user started to navigate away from the page, but then did not actually do so (for instance, if the application cancelled the `beforeunload` event, or if a nonstandard URL scheme caused the browser to launch an external app), the SDK could be left in a state where all of its HTTP requests would be made synchronously. This has been fixed so the only synchronous request the SDK makes is when it needs to flush events during a `beforeunload`. (Thanks, [edvinerikson](https://github.com/launchdarkly/js-client-sdk/pull/199)!)
