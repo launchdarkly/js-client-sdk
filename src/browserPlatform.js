@@ -123,7 +123,7 @@ export default function makeBrowserPlatform(options) {
   ret.version = VERSION;
 
   ret.diagnosticSdkData = {
-    name: 'JS',
+    name: 'js-client-sdk',
     version: VERSION,
   };
 
