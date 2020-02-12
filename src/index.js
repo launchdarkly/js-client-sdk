@@ -6,6 +6,7 @@ const goalsEvent = 'goalsReady';
 const extraOptionDefs = {
   fetchGoals: { default: true },
   hash: { type: 'string' },
+  eventProcessor: { type: 'object' }, // used only in tests
   eventUrlTransformer: { type: 'function' },
 };
 
