@@ -73,7 +73,7 @@ export default function GoalManager(clientVars, readyCallback) {
 
     poll(checkUrl, interval);
 
-    if (!!(window.history && window.history.pushState)) {
+    if (window.history && window.history.pushState) {
       window.addEventListener('popstate', checkUrl);
     } else {
       window.addEventListener('hashchange', checkUrl);
