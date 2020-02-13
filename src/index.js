@@ -63,7 +63,7 @@ export const createConsoleLogger = common.createConsoleLogger;
 export const version = VERSION;
 
 function deprecatedInitialize(env, user, options = {}) {
-  console && console.warn && console.warn(common.messages.deprecated('default export', 'named LDClient export'));
+  console && console.warn && console.warn(common.messages.deprecated('default export', 'named LDClient export')); // eslint-disable-line no-console
   return initialize(env, user, options);
 }
 
