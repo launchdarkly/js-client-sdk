@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LDOptions | LaunchDarkly JavaScript SDK (2.16.3)</title>
+	<title>LDOptions | LaunchDarkly JavaScript SDK (2.17.0)</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">LaunchDarkly JavaScript SDK (2.16.3)</a>
+					<a href="../index.html" class="title">LaunchDarkly JavaScript SDK (2.17.0)</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -97,6 +97,8 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#allowfrequentduplicateevents" class="tsd-kind-icon">allow<wbr>Frequent<wbr>Duplicate<wbr>Events</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#baseurl" class="tsd-kind-icon">base<wbr>Url</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#bootstrap" class="tsd-kind-icon">bootstrap</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#diagnosticoptout" class="tsd-kind-icon">diagnostic<wbr>Opt<wbr>Out</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#diagnosticrecordinginterval" class="tsd-kind-icon">diagnostic<wbr>Recording<wbr>Interval</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#evaluationreasons" class="tsd-kind-icon">evaluation<wbr>Reasons</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#eventcapacity" class="tsd-kind-icon">event<wbr>Capacity</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#eventurltransformer" class="tsd-kind-icon">event<wbr>Url<wbr>Transformer</a></li>
@@ -199,6 +201,45 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="diagnosticoptout" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> diagnostic<wbr>Opt<wbr>Out</h3>
+					<div class="tsd-signature tsd-kind-icon">diagnostic<wbr>Opt<wbr>Out<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from LDOptionsBase.diagnosticOptOut</p>
+						<ul>
+							<li>Defined in docs/build/typings.d.ts:244</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Set to true to opt out of sending diagnostics data.</p>
+						</div>
+						<p>Unless <code>diagnosticOptOut</code> is set to true, the client will send some diagnostics data to the LaunchDarkly
+							servers in order to assist in the development of future SDK improvements. These diagnostics consist of
+							an initial payload containing some details of SDK in use, the SDK&#39;s configuration, and the platform the
+							SDK is being run on, as well as payloads sent periodically with information on irregular occurrences such
+						as dropped events.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="diagnosticrecordinginterval" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> diagnostic<wbr>Recording<wbr>Interval</h3>
+					<div class="tsd-signature tsd-kind-icon">diagnostic<wbr>Recording<wbr>Interval<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from LDOptionsBase.diagnosticRecordingInterval</p>
+						<ul>
+							<li>Defined in docs/build/typings.d.ts:252</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The interval at which periodic diagnostic data is sent, in milliseconds.</p>
+						</div>
+						<p>The default is 900000 (every 15 minutes) and the minimum value is 6000. See <a href="_launchdarkly_js_client_sdk_.ldoptions.html#diagnosticoptout">diagnosticOptOut</a>
+						for more information on the diagnostics data being sent.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="evaluationreasons" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> evaluation<wbr>Reasons</h3>
 					<div class="tsd-signature tsd-kind-icon">evaluation<wbr>Reasons<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
@@ -247,7 +288,7 @@
 					<div class="tsd-signature tsd-kind-icon">event<wbr>Url<wbr>Transformer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in docs/build/typings.d.ts:701</li>
+							<li>Defined in docs/build/typings.d.ts:720</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -281,7 +322,7 @@
 					<div class="tsd-signature tsd-kind-icon">fetch<wbr>Goals<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in docs/build/typings.d.ts:694</li>
+							<li>Defined in docs/build/typings.d.ts:713</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -315,7 +356,7 @@
 					<div class="tsd-signature tsd-kind-icon">hash<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in docs/build/typings.d.ts:686</li>
+							<li>Defined in docs/build/typings.d.ts:705</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -524,7 +565,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from LDOptionsBase.wrapperName</p>
 						<ul>
-							<li>Defined in docs/build/typings.d.ts:241</li>
+							<li>Defined in docs/build/typings.d.ts:260</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -542,7 +583,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from LDOptionsBase.wrapperVersion</p>
 						<ul>
-							<li>Defined in docs/build/typings.d.ts:248</li>
+							<li>Defined in docs/build/typings.d.ts:267</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -598,6 +639,12 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_launchdarkly_js_client_sdk_.ldoptions.html#bootstrap" class="tsd-kind-icon">bootstrap</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="_launchdarkly_js_client_sdk_.ldoptions.html#diagnosticoptout" class="tsd-kind-icon">diagnostic<wbr>Opt<wbr>Out</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="_launchdarkly_js_client_sdk_.ldoptions.html#diagnosticrecordinginterval" class="tsd-kind-icon">diagnostic<wbr>Recording<wbr>Interval</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_launchdarkly_js_client_sdk_.ldoptions.html#evaluationreasons" class="tsd-kind-icon">evaluation<wbr>Reasons</a>
