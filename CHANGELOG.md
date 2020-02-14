@@ -2,6 +2,16 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.17.0] - 2020-02-14
+Note: if you are using the LaunchDarkly Relay Proxy to forward events, update the Relay to version 5.10.0 or later before updating to this Node SDK version.
+
+### Added:
+- The SDK now periodically sends diagnostic data to LaunchDarkly, describing the version and configuration of the SDK, the architecture and version of the runtime platform, and performance statistics. No credentials, hostnames, or other identifiable values are included. This behavior can be disabled with the `diagnosticOptOut` option, or configured with `diagnosticRecordingInterval`.
+
+### Fixed:
+- When using secure mode in conjunction with streaming mode, if an application specified a new `hash` parameter while changing the current user with `identify()`, the SDK was not using the new `hash` value when recomputing the stream URL, causing the stream to fail. (Thanks, [andrao](https://github.com/launchdarkly/js-sdk-common/issues/13)!)
+- The `LICENSE.txt` file was accidentally replaced with an incomplete license in an earlier release. The standard Apache 2.0 license file has been restored. ([#202](https://github.com/launchdarkly/js-client-sdk/issues/202))
+
 ## [2.16.3] - 2020-02-05
 ### Fixed:
 - Changed some exact version dependencies to "highest compatible" dependencies, to avoid having modules that are also used by the host application loaded twice by NPM. The dependency on `js-sdk-common` is still an exact version dependency so that each release of `js-client-sdk` has well-defined behavior for that internal code.
