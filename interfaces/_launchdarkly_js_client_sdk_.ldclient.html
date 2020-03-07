@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LDClient | LaunchDarkly JavaScript SDK (2.17.0)</title>
+	<title>LDClient | LaunchDarkly JavaScript SDK (2.17.1)</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">LaunchDarkly JavaScript SDK (2.17.0)</a>
+					<a href="../index.html" class="title">LaunchDarkly JavaScript SDK (2.17.1)</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -127,7 +127,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.allFlags</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:637</li>
+									<li>Defined in docs/build/typings.d.ts:671</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -153,7 +153,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.close</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:652</li>
+									<li>Defined in docs/build/typings.d.ts:686</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -190,7 +190,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.flush</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:513</li>
+									<li>Defined in docs/build/typings.d.ts:547</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -228,7 +228,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.getUser</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:496</li>
+									<li>Defined in docs/build/typings.d.ts:530</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -253,7 +253,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.identify</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:488</li>
+									<li>Defined in docs/build/typings.d.ts:522</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -309,7 +309,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.off</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:613</li>
+									<li>Defined in docs/build/typings.d.ts:647</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -371,7 +371,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.on</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:601</li>
+									<li>Defined in docs/build/typings.d.ts:635</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -460,7 +460,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.setStreaming</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:561</li>
+									<li>Defined in docs/build/typings.d.ts:595</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -493,7 +493,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.track</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:627</li>
+									<li>Defined in docs/build/typings.d.ts:661</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -534,7 +534,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.variation</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:528</li>
+									<li>Defined in docs/build/typings.d.ts:562</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -575,7 +575,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.variationDetail</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:550</li>
+									<li>Defined in docs/build/typings.d.ts:584</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -620,7 +620,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.waitForInitialization</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:461</li>
+									<li>Defined in docs/build/typings.d.ts:495</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -629,6 +629,23 @@
 								</div>
 								<p>The Promise will be resolved if the client successfully initializes, or rejected if client
 								initialization has irrevocably failed (for instance, if it detects that the SDK key is invalid).</p>
+								<pre><code>    <span class="hljs-comment">// using Promise then() and catch() handlers</span>
+    client.wait<span class="hljs-constructor">ForInitialization()</span>.<span class="hljs-keyword">then</span>(<span class="hljs-literal">()</span> =&gt; {
+        <span class="hljs-keyword">do</span><span class="hljs-constructor">SomethingWithSuccessfullyInitializedClient()</span>;
+    }).catch(err =&gt; {
+        <span class="hljs-keyword">do</span><span class="hljs-constructor">SomethingForFailedStartup(<span class="hljs-params">err</span>)</span>;
+    });
+
+    <span class="hljs-comment">// using async/await</span>
+    <span class="hljs-keyword">try</span> {
+        await client.wait<span class="hljs-constructor">ForInitialization()</span>;
+        <span class="hljs-keyword">do</span><span class="hljs-constructor">SomethingWithSuccessfullyInitializedClient()</span>;
+    } catch (err) {
+        <span class="hljs-keyword">do</span><span class="hljs-constructor">SomethingForFailedStartup(<span class="hljs-params">err</span>)</span>;
+    }</code></pre><p>It is important that you handle the rejection case; otherwise it will become an unhandled Promise
+									rejection, which is a serious error on some platforms. The Promise is not created unless you
+									request it, so if you never call <code>waitForInitialization()</code> then you do not have to worry about
+								unhandled rejections.</p>
 								<p>Note that you can also use event listeners (<a href="_launchdarkly_js_client_sdk_.ldclient.html#on">on</a>) for the same purpose: the event <code>&quot;initialized&quot;</code>
 								indicates success, and <code>&quot;failed&quot;</code> indicates failure.</p>
 							</div>
@@ -648,7 +665,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:747</li>
+									<li>Defined in docs/build/typings.d.ts:781</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -680,7 +697,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.waitUntilReady</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:446</li>
+									<li>Defined in docs/build/typings.d.ts:458</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -688,8 +705,16 @@
 									<p>Returns a Promise that tracks the client&#39;s initialization state.</p>
 								</div>
 								<p>The returned Promise will be resolved once the client has either successfully initialized
-								or failed to initialize (e.g. due to an invalid environment key or a server error).</p>
-								<p>If you want to distinguish between these success and failure conditions, use
+									or failed to initialize (e.g. due to an invalid environment key or a server error). It will
+								never be rejected.</p>
+								<pre><code>    <span class="hljs-comment">// using a Promise then() handler</span>
+    client.wait<span class="hljs-constructor">UntilReady()</span>.<span class="hljs-keyword">then</span>(<span class="hljs-literal">()</span> =&gt; {
+        <span class="hljs-keyword">do</span><span class="hljs-constructor">SomethingWithClient()</span>;
+    });
+
+    <span class="hljs-comment">// using async/await</span>
+    await client.wait<span class="hljs-constructor">UntilReady()</span>;
+    <span class="hljs-keyword">do</span><span class="hljs-constructor">SomethingWithClient()</span>;</code></pre><p>If you want to distinguish between these success and failure conditions, use
 								<a href="_launchdarkly_js_client_sdk_.ldclient.html#waitforinitialization">waitForInitialization</a> instead.</p>
 								<p>If you prefer to use event listeners (<a href="_launchdarkly_js_client_sdk_.ldclient.html#on">on</a>) rather than Promises, you can listen on the
 								client for a <code>&quot;ready&quot;</code> event, which will be fired in either case.</p>
