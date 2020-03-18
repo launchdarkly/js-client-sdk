@@ -80,7 +80,7 @@
   },
   "dependencies": {
     "escape-string-regexp": "^1.0.5",
-    "launchdarkly-js-sdk-common": "3.2.4"
+    "launchdarkly-js-sdk-common": "3.2.5"
   },
   "repository": {
     "type": "git",
