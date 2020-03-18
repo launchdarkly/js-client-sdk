@@ -76,8 +76,6 @@
       - error
       - props: true
     
-    no-prototype-builtins: warn
-    
     # https://eslint.org/docs/rules/no-return-assign
     no-return-assign: error
   
