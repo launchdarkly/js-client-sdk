@@ -27,7 +27,7 @@ export default function newHttpRequest(method, url, headers, body, pageIsClosing
   const xhr = new window.XMLHttpRequest();
   xhr.open(method, url, !pageIsClosing);
   for (const key in headers || {}) {
-    if (headers.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(headers, key)) {
       xhr.setRequestHeader(key, headers[key]);
     }
   }
