@@ -2,6 +2,11 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.17.3] - 2020-03-31
+### Fixed:
+- The default logging implementation (`createConsoleLogger`) could throw errors in Internet Explorer 11 if log output (of an enabled level) happened while the developer tools were _not_ open. This is because in IE 11, the `console` object [does not exist](https://www.beyondjava.net/console-log-surprises-with-internet-explorer-11-and-edge) unless the tools are open. This has been fixed so the logger does not try to use `console` unless it currently has a value.
+- Updated some dependency versions to resolve a security vulnerability in the transitive `acorn` dependency. This dependency is only used for development and as a result the security vulnerability did not affect customers.
+
 ## [2.17.2] - 2020-03-18
 ### Fixed:
 - Some users reported an error where the SDK said that the content type of a response was `application/json, application/json; charset=utf8`. It is invalid to have multiple Content-Type values in a response and the LaunchDarkly service does not do this, but an improperly configured proxy/gateway might add such a header. Now the SDK will tolerate a value like this as long as it starts with `application/json`. ([#205](https://github.com/launchdarkly/js-client-sdk/issues/205))
