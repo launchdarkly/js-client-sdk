@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.17.4] - 2020-04-30
+### Fixed:
+- Some diagnostic event data was being sent twice, resulting in extra HTTP requests. This did not affect analytics events, so customer data on the dashboard and in data export would still be correct.
+
 ## [2.17.3] - 2020-03-31
 ### Fixed:
 - The default logging implementation (`createConsoleLogger`) could throw errors in Internet Explorer 11 if log output (of an enabled level) happened while the developer tools were _not_ open. This is because in IE 11, the `console` object [does not exist](https://www.beyondjava.net/console-log-surprises-with-internet-explorer-11-and-edge) unless the tools are open. This has been fixed so the logger does not try to use `console` unless it currently has a value.
