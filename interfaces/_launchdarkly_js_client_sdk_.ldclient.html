@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LDClient | LaunchDarkly JavaScript SDK (2.17.4)</title>
-	<meta name="description" content="Documentation for LaunchDarkly JavaScript SDK (2.17.4)">
+	<title>LDClient | LaunchDarkly JavaScript SDK (2.17.5)</title>
+	<meta name="description" content="Documentation for LaunchDarkly JavaScript SDK (2.17.5)">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 </head>
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">LaunchDarkly JavaScript SDK (2.17.4)</a>
+					<a href="../index.html" class="title">LaunchDarkly JavaScript SDK (2.17.5)</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -127,7 +127,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.allFlags</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:671</li>
+									<li>Defined in docs/build/typings.d.ts:676</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -153,7 +153,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.close</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:686</li>
+									<li>Defined in docs/build/typings.d.ts:691</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -486,14 +486,14 @@
 					<a name="track" class="tsd-anchor"></a>
 					<h3>track</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">track<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, data<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">track<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, data<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span>, metricValue<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.track</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:661</li>
+									<li>Defined in docs/build/typings.d.ts:666</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -516,6 +516,15 @@
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> data: <span class="tsd-signature-type">any</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>  Additional information to associate with the event.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> metricValue: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>  An optional numeric value that can be used by the LaunchDarkly experimentation
+											feature in numeric custom metrics. Can be omitted if this event is used by only
+											non-numeric metrics. This field will also be returned as part of the custom event
+										for Data Export.</p>
 									</div>
 								</li>
 							</ul>
@@ -665,7 +674,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:781</li>
+									<li>Defined in docs/build/typings.d.ts:786</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
