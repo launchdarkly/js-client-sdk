@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.17.5] - 2020-05-13
+### Fixed:
+- The TypeScript declaration for `track()` was missing the optional `metricValue` parameter.
+
 ## [2.17.4] - 2020-04-30
 ### Fixed:
 - Some diagnostic event data was being sent twice, resulting in extra HTTP requests. This did not affect analytics events, so customer data on the dashboard and in data export would still be correct.
