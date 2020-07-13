@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.17.6] - 2020-07-13
+### Fixed:
+- Removed uses of `String.startsWith` that caused errors in Internet Explorer unless a polyfill for that function was present.
+
 ## [2.17.5] - 2020-05-13
 ### Fixed:
 - The TypeScript declaration for `track()` was missing the optional `metricValue` parameter.
