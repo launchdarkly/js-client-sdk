@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LDOptions | LaunchDarkly JavaScript SDK (2.17.6)</title>
-	<meta name="description" content="Documentation for LaunchDarkly JavaScript SDK (2.17.6)">
+	<title>LDOptions | LaunchDarkly JavaScript SDK (2.18.0)</title>
+	<meta name="description" content="Documentation for LaunchDarkly JavaScript SDK (2.18.0)">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 </head>
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">LaunchDarkly JavaScript SDK (2.17.6)</a>
+					<a href="../index.html" class="title">LaunchDarkly JavaScript SDK (2.18.0)</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -99,6 +99,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#bootstrap" class="tsd-kind-icon">bootstrap</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#diagnosticoptout" class="tsd-kind-icon">diagnostic<wbr>Opt<wbr>Out</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#diagnosticrecordinginterval" class="tsd-kind-icon">diagnostic<wbr>Recording<wbr>Interval</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#disablesynceventpost" class="tsd-kind-icon">disable<wbr>Sync<wbr>Event<wbr>Post</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#evaluationreasons" class="tsd-kind-icon">evaluation<wbr>Reasons</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#eventcapacity" class="tsd-kind-icon">event<wbr>Capacity</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_launchdarkly_js_client_sdk_.ldoptions.html#eventurltransformer" class="tsd-kind-icon">event<wbr>Url<wbr>Transformer</a></li>
@@ -237,6 +238,26 @@
 						</div>
 						<p>The default is 900000 (every 15 minutes) and the minimum value is 6000. See <a href="_launchdarkly_js_client_sdk_.ldoptions.html#diagnosticoptout">diagnosticOptOut</a>
 						for more information on the diagnostics data being sent.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="disablesynceventpost" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> disable<wbr>Sync<wbr>Event<wbr>Post</h3>
+					<div class="tsd-signature tsd-kind-icon">disable<wbr>Sync<wbr>Event<wbr>Post<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in docs/build/typings.d.ts:769</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>If set to true, this prevents the SDK from trying to use a synchronous HTTP request to deliver
+								analytics events if the page is being closed. Not all browsers allow such requests; the SDK
+								normally tries to avoid making them if not allowed, by using browser detection, but sometimes
+								browser detection may not work so if you are seeing errors like &quot;synchronous XHR request
+								during page dismissal&quot;, you may want to set this option. Since currently the SDK does not have
+							a better way to deliver events in this scenario, some events may be lost.</p>
+						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
@@ -645,6 +666,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_launchdarkly_js_client_sdk_.ldoptions.html#diagnosticrecordinginterval" class="tsd-kind-icon">diagnostic<wbr>Recording<wbr>Interval</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_launchdarkly_js_client_sdk_.ldoptions.html#disablesynceventpost" class="tsd-kind-icon">disable<wbr>Sync<wbr>Event<wbr>Post</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_launchdarkly_js_client_sdk_.ldoptions.html#evaluationreasons" class="tsd-kind-icon">evaluation<wbr>Reasons</a>
