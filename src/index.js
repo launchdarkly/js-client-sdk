@@ -8,6 +8,7 @@ const extraOptionDefs = {
   hash: { type: 'string' },
   eventProcessor: { type: 'object' }, // used only in tests
   eventUrlTransformer: { type: 'function' },
+  disableSyncEventPost: { default: false },
 };
 
 // Pass our platform object to the common code to create the browser version of the client

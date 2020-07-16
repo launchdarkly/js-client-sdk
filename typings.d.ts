@@ -79,6 +79,16 @@ declare module 'launchdarkly-js-client-sdk' {
      * and returns the value that should be stored in the event's `url` property.
      */
     eventUrlTransformer?: (url: string) => string;
+
+    /**
+     * If set to true, this prevents the SDK from trying to use a synchronous HTTP request to deliver
+     * analytics events if the page is being closed. Not all browsers allow such requests; the SDK
+     * normally tries to avoid making them if not allowed, by using browser detection, but sometimes
+     * browser detection may not work so if you are seeing errors like "synchronous XHR request
+     * during page dismissal", you may want to set this option. Since currently the SDK does not have
+     * a better way to deliver events in this scenario, some events may be lost.
+     */
+    disableSyncEventPost?: boolean;
   }
 
   /**

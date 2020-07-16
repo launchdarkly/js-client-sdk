@@ -28,6 +28,7 @@ var allOptions: ld.LDOptions = {
   samplingInterval: 1,
   streamReconnectDelay: 1,
   eventUrlTransformer: url => url + 'x',
+  disableSyncEventPost: true,
   logger: logger
 };
 var userWithKeyOnly: ld.LDUser = { key: 'user' };
