@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.18.0] - 2020-07-16
+### Added:
+- Configuration option `disableSyncEventPost`, for preventing the SDK from trying to do a synchronous HTTP request to deliver analytics events while the page is closing. Such requests are not supported in current versions of Chrome, and although the SDK uses browser detection to avoid doing them if they are not supported, the browser detection mechanism does not work in some test environments.
+
 ## [2.17.6] - 2020-07-13
 ### Fixed:
 - Removed uses of `String.startsWith` that caused errors in Internet Explorer unless a polyfill for that function was present.
