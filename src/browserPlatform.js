@@ -7,8 +7,9 @@ export default function makeBrowserPlatform(options) {
 
   // XMLHttpRequest may not exist if we're running in a server-side rendering context
   if (window.XMLHttpRequest) {
+    const disableSyncFlush = options && options.disableSyncEventPost;
     ret.httpRequest = (method, url, headers, body) => {
-      const syncFlush = ret.synchronousFlush;
+      const syncFlush = ret.synchronousFlush & !disableSyncFlush;
       ret.synchronousFlush = false;
       return newHttpRequest(method, url, headers, body, syncFlush);
     };
