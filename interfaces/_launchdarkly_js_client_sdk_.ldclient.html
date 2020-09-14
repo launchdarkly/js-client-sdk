@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LDClient | LaunchDarkly JavaScript SDK (2.18.0)</title>
-	<meta name="description" content="Documentation for LaunchDarkly JavaScript SDK (2.18.0)">
+	<title>LDClient | LaunchDarkly JavaScript SDK (2.18.1)</title>
+	<meta name="description" content="Documentation for LaunchDarkly JavaScript SDK (2.18.1)">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 </head>
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">LaunchDarkly JavaScript SDK (2.18.0)</a>
+					<a href="../index.html" class="title">LaunchDarkly JavaScript SDK (2.18.1)</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -651,7 +651,8 @@
         <span class="hljs-keyword">do</span><span class="hljs-constructor">SomethingWithSuccessfullyInitializedClient()</span>;
     } catch (err) {
         <span class="hljs-keyword">do</span><span class="hljs-constructor">SomethingForFailedStartup(<span class="hljs-params">err</span>)</span>;
-    }</code></pre><p>It is important that you handle the rejection case; otherwise it will become an unhandled Promise
+    }</code></pre>
+								<p>It is important that you handle the rejection case; otherwise it will become an unhandled Promise
 									rejection, which is a serious error on some platforms. The Promise is not created unless you
 									request it, so if you never call <code>waitForInitialization()</code> then you do not have to worry about
 								unhandled rejections.</p>
@@ -723,7 +724,8 @@
 
     <span class="hljs-comment">// using async/await</span>
     await client.wait<span class="hljs-constructor">UntilReady()</span>;
-    <span class="hljs-keyword">do</span><span class="hljs-constructor">SomethingWithClient()</span>;</code></pre><p>If you want to distinguish between these success and failure conditions, use
+    <span class="hljs-keyword">do</span><span class="hljs-constructor">SomethingWithClient()</span>;</code></pre>
+								<p>If you want to distinguish between these success and failure conditions, use
 								<a href="_launchdarkly_js_client_sdk_.ldclient.html#waitforinitialization">waitForInitialization</a> instead.</p>
 								<p>If you prefer to use event listeners (<a href="_launchdarkly_js_client_sdk_.ldclient.html#on">on</a>) rather than Promises, you can listen on the
 								client for a <code>&quot;ready&quot;</code> event, which will be fired in either case.</p>
