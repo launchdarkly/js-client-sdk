@@ -7,7 +7,7 @@ jobs:
       - checkout
 
       - run: npm install
-      - run: npm run lint
+      - run: npm run lint:all
       - run: npm run build:min
 
       - run: mkdir -p reports/junit
