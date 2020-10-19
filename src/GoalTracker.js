@@ -1,7 +1,9 @@
 import escapeStringRegexp from 'escape-string-regexp';
 
-function doesUrlMatch(matcher, href, search, hash) {
-  const canonicalUrl = href.replace(search, '').replace(hash, '');
+export function doesUrlMatch(matcher, href, search, hash) {
+  const keepHash = (matcher.kind === 'substring' || matcher.kind === 'regex') && hash.includes('/');
+  const canonicalUrl = (keepHash ? href : href.replace(hash, '')).replace(search, '');
+
   let regex;
   let testUrl;
 
