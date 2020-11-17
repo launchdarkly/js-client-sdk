@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;launchdarkly-js-client-sdk&quot; | LaunchDarkly JavaScript SDK (2.18.2)</title>
-	<meta name="description" content="Documentation for LaunchDarkly JavaScript SDK (2.18.2)">
+	<title>&quot;launchdarkly-js-client-sdk&quot; | LaunchDarkly JavaScript SDK (2.18.3)</title>
+	<meta name="description" content="Documentation for LaunchDarkly JavaScript SDK (2.18.3)">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
 </head>
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">LaunchDarkly JavaScript SDK (2.18.2)</a>
+					<a href="index.html" class="title">LaunchDarkly JavaScript SDK (2.18.3)</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -82,17 +82,18 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.ldclient.html" class="tsd-kind-icon">LDClient</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.ldevaluationdetail.html" class="tsd-kind-icon">LDEvaluation<wbr>Detail</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.ldevaluationreason.html" class="tsd-kind-icon">LDEvaluation<wbr>Reason</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.ldflagchangeset.html" class="tsd-kind-icon">LDFlag<wbr>Changeset</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.ldflagset.html" class="tsd-kind-icon">LDFlag<wbr>Set</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.ldlogger.html" class="tsd-kind-icon">LDLogger</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.ldoptions.html" class="tsd-kind-icon">LDOptions</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.lduser.html" class="tsd-kind-icon">LDUser</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.nonnullableldevaluationreason.html" class="tsd-kind-icon">Non<wbr>NullableLDEvaluation<wbr>Reason</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="index.html#ldevaluationreason" class="tsd-kind-icon">LDEvaluation<wbr>Reason</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="index.html#ldflagvalue" class="tsd-kind-icon">LDFlag<wbr>Value</a></li>
 							</ul>
 						</section>
@@ -114,6 +115,23 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Type aliases</h2>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="ldevaluationreason" class="tsd-anchor"></a>
+					<h3>LDEvaluation<wbr>Reason</h3>
+					<div class="tsd-signature tsd-kind-icon">LDEvaluation<wbr>Reason<span class="tsd-signature-symbol">:</span> <a href="interfaces/_launchdarkly_js_client_sdk_.nonnullableldevaluationreason.html" class="tsd-signature-type">NonNullableLDEvaluationReason</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in docs/build/typings.d.ts:405</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Describes the reason that a flag evaluation produced a particular value. This is
+							part of the <a href="interfaces/_launchdarkly_js_client_sdk_.ldevaluationdetail.html">LDEvaluationDetail</a> object returned by <a href="interfaces/_launchdarkly_js_client_sdk_.ldclient.html#variationdetail">LDClient.variationDetail</a>.</p>
+						</div>
+						<p>Will be null when <code>&lt;a href=&quot;interfaces/_launchdarkly_js_client_sdk_.ldoptions.html#evaluationreasons&quot;&gt;LDOptions.evaluationReasons&lt;/a&gt;</code> is <code>false</code>.</p>
+					</div>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
 					<a name="ldflagvalue" class="tsd-anchor"></a>
 					<h3>LDFlag<wbr>Value</h3>
@@ -193,7 +211,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:721</li>
+									<li>Defined in docs/build/typings.d.ts:733</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -258,9 +276,6 @@ import LaunchDarkly <span class="hljs-keyword">from</span> <span class="hljs-str
 						<a href="interfaces/_launchdarkly_js_client_sdk_.ldevaluationdetail.html" class="tsd-kind-icon">LDEvaluation<wbr>Detail</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="interfaces/_launchdarkly_js_client_sdk_.ldevaluationreason.html" class="tsd-kind-icon">LDEvaluation<wbr>Reason</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="interfaces/_launchdarkly_js_client_sdk_.ldflagchangeset.html" class="tsd-kind-icon">LDFlag<wbr>Changeset</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
@@ -274,6 +289,12 @@ import LaunchDarkly <span class="hljs-keyword">from</span> <span class="hljs-str
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="interfaces/_launchdarkly_js_client_sdk_.lduser.html" class="tsd-kind-icon">LDUser</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="interfaces/_launchdarkly_js_client_sdk_.nonnullableldevaluationreason.html" class="tsd-kind-icon">Non<wbr>NullableLDEvaluation<wbr>Reason</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="index.html#ldevaluationreason" class="tsd-kind-icon">LDEvaluation<wbr>Reason</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
 						<a href="index.html#ldflagvalue" class="tsd-kind-icon">LDFlag<wbr>Value</a>
