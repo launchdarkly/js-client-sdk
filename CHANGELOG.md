@@ -2,6 +2,11 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.18.3] - 2020-11-17
+### Fixed:
+- Updated the `LDEvaluationDetail.reason` type definition to be nullable. This value will be `null` when `LDOptions.evaluationReasons` is `false`.
+
+
 ## [2.18.2] - 2020-10-19
 ### Changed:
 - With goals that use substring or regex mode for URL matching, the SDK previously was not able to match anything in a URL&#39;s hash fragment. Since some applications use path-like hash fragments (`http://example.com/url/path#/additional/path`), the SDK now considers any hash string that contains a slash to be part of the URL for matching purposes, _if_ the matching mode is substring or regex. Hash strings that do not contain a slash are assumed to be simple HTML anchors and are not included in matching.
