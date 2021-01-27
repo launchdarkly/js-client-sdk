@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LDClient | LaunchDarkly JavaScript SDK (2.18.3)</title>
-	<meta name="description" content="Documentation for LaunchDarkly JavaScript SDK (2.18.3)">
+	<title>LDClient | LaunchDarkly JavaScript SDK (2.19.0)</title>
+	<meta name="description" content="Documentation for LaunchDarkly JavaScript SDK (2.19.0)">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 </head>
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">LaunchDarkly JavaScript SDK (2.18.3)</a>
+					<a href="../index.html" class="title">LaunchDarkly JavaScript SDK (2.19.0)</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -95,6 +95,7 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldclient.html#alias" class="tsd-kind-icon">alias</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldclient.html#allflags" class="tsd-kind-icon">all<wbr>Flags</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldclient.html#close" class="tsd-kind-icon">close</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="_launchdarkly_js_client_sdk_.ldclient.html#flush" class="tsd-kind-icon">flush</a></li>
@@ -117,6 +118,48 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+					<a name="alias" class="tsd-anchor"></a>
+					<h3>alias</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">alias<span class="tsd-signature-symbol">(</span>user<span class="tsd-signature-symbol">: </span><a href="_launchdarkly_js_client_sdk_.lduser.html" class="tsd-signature-type">LDUser</a>, previousUser<span class="tsd-signature-symbol">: </span><a href="_launchdarkly_js_client_sdk_.lduser.html" class="tsd-signature-type">LDUser</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from LDClientBase.alias</p>
+								<ul>
+									<li>Defined in docs/build/typings.d.ts:701</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Associates two users for analytics purposes.</p>
+								</div>
+								<p>This can be helpful in the situation where a person is represented by multiple
+									LaunchDarkly users. This may happen, for example, when a person initially logs into
+									an application-- the person might be represented by an anonymous user prior to logging
+								in and a different user after logging in, as denoted by a different user key.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>user: <a href="_launchdarkly_js_client_sdk_.lduser.html" class="tsd-signature-type">LDUser</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>  The newly identified user.</p>
+									</div>
+								</li>
+								<li>
+									<h5>previousUser: <a href="_launchdarkly_js_client_sdk_.lduser.html" class="tsd-signature-type">LDUser</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>  The previously identified user.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
 					<a name="allflags" class="tsd-anchor"></a>
 					<h3>all<wbr>Flags</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
@@ -127,7 +170,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.allFlags</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:688</li>
+									<li>Defined in docs/build/typings.d.ts:711</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -153,7 +196,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.close</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:703</li>
+									<li>Defined in docs/build/typings.d.ts:726</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -190,7 +233,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.flush</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:559</li>
+									<li>Defined in docs/build/typings.d.ts:567</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -228,7 +271,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.getUser</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:542</li>
+									<li>Defined in docs/build/typings.d.ts:550</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -253,7 +296,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.identify</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:534</li>
+									<li>Defined in docs/build/typings.d.ts:542</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -309,7 +352,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.off</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:659</li>
+									<li>Defined in docs/build/typings.d.ts:667</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -371,7 +414,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.on</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:647</li>
+									<li>Defined in docs/build/typings.d.ts:655</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -460,7 +503,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.setStreaming</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:607</li>
+									<li>Defined in docs/build/typings.d.ts:615</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -493,7 +536,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.track</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:678</li>
+									<li>Defined in docs/build/typings.d.ts:686</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -543,7 +586,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.variation</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:574</li>
+									<li>Defined in docs/build/typings.d.ts:582</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -584,7 +627,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.variationDetail</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:596</li>
+									<li>Defined in docs/build/typings.d.ts:604</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -629,7 +672,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.waitForInitialization</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:507</li>
+									<li>Defined in docs/build/typings.d.ts:515</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -651,7 +694,8 @@
         <span class="hljs-keyword">do</span><span class="hljs-constructor">SomethingWithSuccessfullyInitializedClient()</span>;
     } catch (err) {
         <span class="hljs-keyword">do</span><span class="hljs-constructor">SomethingForFailedStartup(<span class="hljs-params">err</span>)</span>;
-    }</code></pre>
+    }
+</code></pre>
 								<p>It is important that you handle the rejection case; otherwise it will become an unhandled Promise
 									rejection, which is a serious error on some platforms. The Promise is not created unless you
 									request it, so if you never call <code>waitForInitialization()</code> then you do not have to worry about
@@ -675,7 +719,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:808</li>
+									<li>Defined in docs/build/typings.d.ts:831</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -707,7 +751,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from LDClientBase.waitUntilReady</p>
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:470</li>
+									<li>Defined in docs/build/typings.d.ts:478</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -724,7 +768,8 @@
 
     <span class="hljs-comment">// using async/await</span>
     await client.wait<span class="hljs-constructor">UntilReady()</span>;
-    <span class="hljs-keyword">do</span><span class="hljs-constructor">SomethingWithClient()</span>;</code></pre>
+    <span class="hljs-keyword">do</span><span class="hljs-constructor">SomethingWithClient()</span>;
+</code></pre>
 								<p>If you want to distinguish between these success and failure conditions, use
 								<a href="_launchdarkly_js_client_sdk_.ldclient.html#waitforinitialization">waitForInitialization</a> instead.</p>
 								<p>If you prefer to use event listeners (<a href="_launchdarkly_js_client_sdk_.ldclient.html#on">on</a>) rather than Promises, you can listen on the
@@ -752,6 +797,9 @@
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
 						<a href="_launchdarkly_js_client_sdk_.ldclient.html" class="tsd-kind-icon">LDClient</a>
 						<ul>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+								<a href="_launchdarkly_js_client_sdk_.ldclient.html#alias" class="tsd-kind-icon">alias</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_launchdarkly_js_client_sdk_.ldclient.html#allflags" class="tsd-kind-icon">all<wbr>Flags</a>
 							</li>
