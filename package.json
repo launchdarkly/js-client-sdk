@@ -1,6 +1,6 @@
 {
   "name": "launchdarkly-js-client-sdk",
-  "version": "2.19.0",
+  "version": "2.19.1",
   "description": "LaunchDarkly SDK for JavaScript",
   "author": "LaunchDarkly <team@launchdarkly.com>",
   "license": "Apache-2.0",
