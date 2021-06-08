@@ -2,6 +2,12 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.19.2] - 2021-06-08
+### Fixed:
+- Events for the [LaunchDarkly debugger](https://docs.launchdarkly.com/home/flags/debugger) are now properly pre-processed to omit private user attributes, as well as enforce only expected top level attributes are sent.
+- Events for the [LaunchDarkly debugger](https://docs.launchdarkly.com/home/flags/debugger) now include the index of the variation responsible for the evaluation result.
+
+
 ## [2.19.1] - 2021-04-01
 ### Fixed:
 - The property `LDOptions.inlineUsersInEvents` was not included in the TypeScript definitions.
