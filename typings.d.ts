@@ -4,7 +4,7 @@
  * In typical usage, you will call [[initialize]] once at startup time to obtain an instance of
  * [[LDClient]], which provides access to all of the SDK's functionality.
  *
- * For more information, see the [SDK reference guide](http://docs.launchdarkly.com/docs/js-sdk-reference).
+ * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/sdk/client-side/javascript).
  */
 declare module 'launchdarkly-js-client-sdk' {
 
@@ -61,7 +61,7 @@ declare module 'launchdarkly-js-client-sdk' {
      * The signed user key for Secure Mode.
      *
      * For more information, see the JavaScript SDK Reference Guide on
-     * [Secure mode](https://docs.launchdarkly.com/docs/js-sdk-reference#section-secure-mode).
+     * [Secure mode](https://docs.launchdarkly.com/sdk/features/secure-mode#configuring-secure-mode-in-the-javascript-client-side-sdk).
      */
     hash?: string;
 
@@ -96,7 +96,7 @@ declare module 'launchdarkly-js-client-sdk' {
    *
    * Applications should configure the client at page load time and reuse the same instance.
    *
-   * For more information, see the [SDK Reference Guide](https://docs.launchdarkly.com/docs/js-sdk-reference).
+   * For more information, see the [SDK Reference Guide](https://docs.launchdarkly.com/sdk/client-side/javascript).
    */
   export interface LDClient extends LDClientBase {
     /**
@@ -111,7 +111,7 @@ declare module 'launchdarkly-js-client-sdk' {
      * The returned Promise will be resolved once the client has received goals data. If
      * you prefer to use event handlers rather than Promises, you can listen on the client
      * for a `"goalsReady"` event instead.
-     * 
+     *
      * @returns
      *   A Promise containing the initialization state of the client.
      */
