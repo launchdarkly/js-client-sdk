@@ -147,32 +147,32 @@ Note that the React SDK code has moved to its own repository, [`react-client-sdk
 ### Added:
 - A `jsdelivr` entry to `package.json` to specify the primary build artifact and simplify the jsDelivr snippet URL.
 - In the React SDK, the new `reactOptions` parameter to `withLDProvider` provides React-specific options that do not affect the underlying JavaScript SDK. Currently, the only such option is `useCamelCaseFlagKeys`, which is true by default but can be set to false to disable the automatic camel-casing of flag keys.
- 
+
 ### Changed:
 - In the React SDK, when omitting the `user` parameter to `withLDProvider`, an anonymous user will be created. This user will remain constant across browser sessions. Previously a new user was generated on each page load.
 
 ## [2.12.5] - 2019-07-29
 ### Changed:
 - The error messages logged upon having an invalid environment/client-side ID have been updated to better clarify what went wrong. ([#165](https://github.com/launchdarkly/js-client-sdk/issues/165))
- 
+
 ### Fixed:
 - The React SDK was incompatible with Internet Explorer 11 due to using `String.startsWith()`. (Thanks, [cvetanov](https://github.com/launchdarkly/js-client-sdk/pull/169)!)
 - There was a broken documentation link in the error message logged when initially sending an event without identifying a user. The broken link has been fixed.
 
 ## [2.12.4] - 2019-07-10
 ### Changed:
-- The `useReport` property, which tells the SDK to use the REPORT method for HTTP requests so that user data will not appear in the URL path, was only actually using REPORT for requesting all flags at once— not for streaming updates, because streaming uses the EventSource API which normally can only use the GET method; so, to avoid exposing user data in the URL for the streaming connection, the SDK had to use a different and slower mechanism (in which all of the flags are reloaded whenever there is a change) if `useReport` was true. That is still the case by default; but, if you load the specific EventSource [polyfill implementation](https://docs.launchdarkly.com/docs/js-sdk-requirements-and-polyfills) [`launchdarkly-eventsource`](https://github.com/launchdarkly/js-eventsource) (v1.1.0 or later), the SDK _can_ now use REPORT for streaming connections.
- 
+- The `useReport` property, which tells the SDK to use the REPORT method for HTTP requests so that user data will not appear in the URL path, was only actually using REPORT for requesting all flags at once— not for streaming updates, because streaming uses the EventSource API which normally can only use the GET method; so, to avoid exposing user data in the URL for the streaming connection, the SDK had to use a different and slower mechanism (in which all of the flags are reloaded whenever there is a change) if `useReport` was true. That is still the case by default; but, if you load the specific EventSource [polyfill implementation](https://docs.launchdarkly.com/sdk/client-side/javascript/requirements-polyfills) [`launchdarkly-eventsource`](https://github.com/launchdarkly/js-eventsource) (v1.1.0 or later), the SDK _can_ now use REPORT for streaming connections.
+
 ### Fixed:
 - The `homepage` attribute in the `launchdarkly-react-client-sdk` and `launchdarkly-react-client-sdk-example` packages has been updated to the correct value.
 
 ## [2.12.3] - 2019-07-08
 ### Added:
 - The SDK now logs a message at `info` level when the stream connection is started or stopped. It also logs a message at `warn` level if it detects that the stream had to be restarted due to a connection failure; however, in browsers that have native support for EventSource, connection restarts may be handled internally by the browser in which case there will be no log message.
- 
+
 ### Changed:
 - When providing precomputed flag values to the SDK via the `bootstrap` option, these values will now be immediately available as soon as `initialize()` returns. That was already the behavior in earlier versions of the SDK, but ever since version 2.10.0 the values only became available once the client was officially ready (i.e. the `ready` event had fired or the `waitUntilInitialized()` promise had resolved), so they could not be used in non-asynchronous application code. The correct behavior had never been explicitly defined, so this had not been documented as a change. The behavior is now as it was prior to 2.10.0, and is now documented as such. ([#162](https://github.com/launchdarkly/js-client-sdk/issues/162))
- 
+
 ### Fixed:
 - Under some circumstances, the SDK would fail to restart a streaming connection if it had already been dropped and restarted before. This normally would not happen when using a built-in browser implementation of EventSource, but could happen with some EventSource polyfills.
 - Fixed a broken link in the project README.
@@ -185,7 +185,7 @@ Note that the React SDK code has moved to its own repository, [`react-client-sdk
 ## [2.12.1] - 2019-06-28
 ### Added:
 - The SDK now logs a message at `info` level when the stream connection is started or stopped. It also logs a message at `warn` level if it detects that the stream had to be restarted due to a connection failure; however, in browsers that have native support for EventSource, connection restarts may be handled internally by the browser in which case there will be no log message.
- 
+
 ### Fixed:
 - Under some circumstances, the SDK would fail to restart a streaming connection if it had already been dropped and restarted before. This normally would not happen when using a built-in browser implementation of EventSource, but could happen with some EventSource polyfills.
 - Fixed a broken link in the project README.
@@ -206,10 +206,10 @@ Note that the React SDK code has moved to its own repository, [`react-client-sdk
 ### Fixed:
 - Streaming updates did not work if `useReport` was enabled, or if the SDK was connecting through the LaunchDarkly relay proxy. This bug was introduced in version 2.10.0.
 
-## [2.10.3] - 2019-05-08 
+## [2.10.3] - 2019-05-08
 ### Changed:
 - Changed the package names from `ldclient-js`, `ldclient-react`, and `ldclient-js-common` to `launchdarkly-js-client-sdk`, `launchdarkly-react-client-sdk`, and `launchdarkly-js-sdk-common`, respectively.
- 
+
 There are no other changes in this release. Substituting `ldclient-js`, `ldclient-react`, and `ldclient-js-common` version 2.10.2 with `launchdarkly-js-client-sdk`, `launchdarkly-react-client-sdk`, and `launchdarkly-js-sdk-common` version 2.10.3 will not affect functionality.
 
 ### Fixed:
@@ -302,7 +302,7 @@ This release was an error and has been removed.
 
 ## [2.7.2] - 2018-10-17
 ### Fixed:
-- Disconnecting from the stream does not close the browser tab anymore. 
+- Disconnecting from the stream does not close the browser tab anymore.
 (Thanks, [Sawtaytoes](https://github.com/launchdarkly/js-client/issues/119).)
 - The configuration property `evaluationReasons` was misnamed as `evaluationExplanations` in the TypeScript definitions.
 
@@ -377,7 +377,7 @@ This release was an error and has been removed.
 
 ## [2.0.0] - 2018-05-25
 ### Changed
-- To reduce the network bandwidth used for analytics events, feature request events are now sent as counters rather than individual events, and user details are now sent only at intervals rather than in each event. These behaviors can be modified through the LaunchDarkly UI and with the new configuration option `inlineUsersInEvents`. For more details, see [Analytics Data Stream Reference](https://docs.launchdarkly.com/v2.0/docs/analytics-data-stream-reference).
+- To reduce the network bandwidth used for analytics events, feature request events are now sent as counters rather than individual events, and user details are now sent only at intervals rather than in each event. These behaviors can be modified through the LaunchDarkly UI and with the new configuration option `inlineUsersInEvents`. For more details, see [Data Export](https://docs.launchdarkly.com/home/data-export).
 - In every function that takes an optional callback parameter, if you provide a callback, the function will not return a promise; a promise will be returned only if you omit the callback. Previously, it would always return a promise which would be resolved/rejected at the same time that the callback (if any) was called; this caused problems if you had not registered an error handler for the promise.
 - When sending analytics events, if there is a connection error or an HTTP 5xx response, the client will try to send the events again one more time after a one-second delay.
 - Analytics are now sent with an HTTP `POST` request if the browser supports CORS, or via image loading if it does not. Previously, they were always sent via image loading.
@@ -472,7 +472,7 @@ _This release was broken and should not be used._
 
 ### Added
 
-* Support for [private user attributes](https://docs.launchdarkly.com/docs/private-user-attributes).
+* Support for [private user attributes](https://docs.launchdarkly.com/home/users/attributes#creating-private-user-attributes).
 * New `sendEvents` option to control whether the SDK should send events back to LaunchDarkly or not. Defaults to `true`.
 * It is now possible to wait for SDK readiness using `waitUntilReady` which returns a `Promise`. `identify` also returns a `Promise` (while still supporting the callback argument), which should make
   it easier to integrate into code that relies heavily on `Promise`'s for asynchronous code.
