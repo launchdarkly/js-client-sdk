@@ -1,3 +1,5 @@
+version: 2
+
 repo:
   public: js-client-sdk
   private: js-client-sdk-private
@@ -6,11 +8,14 @@ publications:
   - url: https://www.npmjs.com/package/launchdarkly-js-client-sdk
     description: npm
 
-template:
-  name: npm
+jobs:
+  - docker:
+      image: node:12-buster
+    template:
+      name: npm
 
 documentation:
-  githubPages: true
+  gitHubPages: true
   title: LaunchDarkly JavaScript SDK
 
 sdk:

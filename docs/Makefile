@@ -17,6 +17,7 @@ html: prepare
 	../node_modules/.bin/typedoc --options typedoc.js
 	mv before-typedoc-package.json ../package.json
 	mv before-typedoc-package-lock.json ../package-lock.json
+	if [ -n "$(LD_RELEASE_DOCS_DIR)" ]; then cp -r build/html/* "$(LD_RELEASE_DOCS_DIR)"; fi
 
 prepare:
 	cp ../package.json before-typedoc-package.json
