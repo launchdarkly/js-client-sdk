@@ -1,6 +1,5 @@
 import sinon from 'sinon';
 
-import * as common from 'launchdarkly-js-sdk-common';
 import * as LDClient from '../index';
 import * as pkg from '../../package.json';
 
