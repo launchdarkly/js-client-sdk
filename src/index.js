@@ -30,7 +30,6 @@ export function initialize(env, user, options = {}) {
 
   if (validatedOptions.fetchGoals) {
     const goalManager = GoalManager(clientVars, () => emitter.emit(goalsEvent));
-    platform.customEventFilter = goalManager.goalKeyExists;
   } else {
     emitter.emit(goalsEvent);
   }
