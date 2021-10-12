@@ -9,18 +9,6 @@ export default function GoalManager(clientVars, readyCallback) {
 
   const ret = {};
 
-  ret.goalKeyExists = key => {
-    if (!goals) {
-      return true;
-    }
-    for (let i = 0; i < goals.length; i++) {
-      if (goals[i].kind === 'custom' && goals[i].key === key) {
-        return true;
-      }
-    }
-    return false;
-  };
-
   function getGoalsPath() {
     return '/sdk/goals/' + clientVars.getEnvironmentId();
   }

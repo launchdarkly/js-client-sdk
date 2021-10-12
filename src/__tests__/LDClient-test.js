@@ -1,6 +1,5 @@
 import sinon from 'sinon';
 
-import * as common from 'launchdarkly-js-sdk-common';
 import * as LDClient from '../index';
 import * as pkg from '../../package.json';
 
@@ -148,7 +147,7 @@ describe('LDClient', () => {
       expect(errorSpy).not.toHaveBeenCalled();
     });
 
-    it('should warn when tracking an unknown custom goal event', async () => {
+    it('should not warn when tracking an unknown custom goal event', async () => {
       server.respondWith([200, { 'Content-Type': 'application/json' }, '[{"key": "known", "kind": "custom"}]']);
 
       const client = LDClient.initialize(envName, user, { bootstrap: {}, sendEvents: false });
@@ -156,7 +155,8 @@ describe('LDClient', () => {
       await client.waitUntilGoalsReady();
 
       client.track('unknown');
-      expect(warnSpy).toHaveBeenCalledWith('LD: [warn] ' + common.messages.unknownCustomEventKey('unknown'));
+      expect(warnSpy).not.toHaveBeenCalled();
+      expect(errorSpy).not.toHaveBeenCalled();
     });
   });
 
