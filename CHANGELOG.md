@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.19.3] - 2021-10-12
+### Fixed:
+- Removed an obsolete warning that would appear in the browser console after calling `track`: `Custom event "_____" does not exist`. Originally, the SDK had an expectation that `track` would be used only for event keys that had been previously defined as custom goals in the LaunchDarkly dashboard. That is still often the case, but it is not required and LaunchDarkly no longer sends custom goal names to the SDK, so the warning was happening even if such a goal did exist.
+
 ## [2.19.2] - 2021-06-08
 ### Fixed:
 - Events for the [LaunchDarkly debugger](https://docs.launchdarkly.com/home/flags/debugger) are now properly pre-processed to omit private user attributes, as well as enforce only expected top level attributes are sent.
