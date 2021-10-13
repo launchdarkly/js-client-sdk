@@ -16,7 +16,7 @@ Note: _If you are using JavaScript in a non-browser environment,_ please see our
 
 Please note that the JavaScript SDK has two special requirements in terms of your LaunchDarkly environment. First, in terms of the credentials for your environment that appear on your [Account Settings](https://app.launchdarkly.com/settings/projects) dashboard, the JavaScript SDK uses the "Client-side ID"-- not the "SDK key" or the "Mobile key". Second, for any feature flag that you will be using in JavaScript code, you must check the "Make this flag available to client-side SDKs" box on that flag's Settings page.
 
-### ReactJS
+## ReactJS
 
 The SDK does not require any particular JavaScript framework. However, if you are using [React](https://reactjs.org/), there is an add-on to simplify use of the SDK. See [`react-client-sdk`](https://github.com/launchdarkly/react-client-sdk).
 
@@ -24,7 +24,7 @@ The SDK does not require any particular JavaScript framework. However, if you ar
 
 The LaunchDarkly SDK can be used in all major browsers. However, web browsers vary widely in their support of specific features and standards. Three features that are used by the LaunchDarkly SDK that may not be available on every browser are `Promise`, `EventSource`, and `document.querySelectorAll()`. For more information on whether you may need to use a polyfill to ensure compatibility, and how to do so, see ["JS SDK requirements and polyfills"](https://docs.launchdarkly.com/sdk/client-side/javascript/requirements-polyfills).
 
-### Logging
+## Logging
 
 By default, the SDK sends log output to the browser console. There are four logging levels: `debug`, `info`, `warn`, and `error`; by default, `debug` and `info` messages are hidden. See [`LDOptions.logger`](https://launchdarkly.github.io/js-client-sdk/interfaces/_launchdarkly_js_client_sdk_.ldoptions.html#logger) and [`createConsoleLogger`](https://launchdarkly.github.io/js-client-sdk/index.html#createconsolelogger) for more details.
 

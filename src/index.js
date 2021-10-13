@@ -29,8 +29,9 @@ export function initialize(env, user, options = {}) {
   client.waitUntilGoalsReady = () => goalsPromise;
 
   if (validatedOptions.fetchGoals) {
-    const goalManager = GoalManager(clientVars, () => emitter.emit(goalsEvent));
-    platform.customEventFilter = goalManager.goalKeyExists;
+    GoalManager(clientVars, () => emitter.emit(goalsEvent));
+    // Don't need to save a reference to the GoalManager - its constructor takes care of setting
+    // up the necessary event wiring
   } else {
     emitter.emit(goalsEvent);
   }
