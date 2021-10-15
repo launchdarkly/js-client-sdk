@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.20.0] - 2021-10-15
+### Added:
+- New property `LDOptions.requestHeaderTransform` allows custom headers to be added to all HTTP requests. This may be necessary if you have an Internet gateway that uses a custom header for authentication. Note that custom headers may cause cross-origin browser requests to be rejected unless you have a way to ensure that the header name also appears in `Access-Control-Allow-Headers` for CORS preflight responses; if you are connecting to the LaunchDarkly Relay Proxy, it has a way to configure this.
+
 ## [2.19.4] - 2021-10-12
 ### Fixed:
 - Removed an obsolete warning that would appear in the browser console after calling `track`: `Custom event "_____" does not exist`. Originally, the SDK had an expectation that `track` would be used only for event keys that had been previously defined as custom goals in the LaunchDarkly dashboard. That is still often the case, but it is not required and LaunchDarkly no longer sends custom goal names to the SDK, so the warning was happening even if such a goal did exist.
