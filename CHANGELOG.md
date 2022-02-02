@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.20.1] - 2022-02-02
+### Fixed:
+- If the browser local storage mechanism throws an exception (for instance, if it is disabled or if storage is full), the SDK now correctly catches the exception and logs a message about the failure. It will only log this message once during the lifetime of the SDK client. ([#54](https://github.com/launchdarkly/js-sdk-common/issues/54))
+
 ## [2.20.0] - 2021-10-15
 ### Added:
 - New property `LDOptions.requestHeaderTransform` allows custom headers to be added to all HTTP requests. This may be necessary if you have an Internet gateway that uses a custom header for authentication. Note that custom headers may cause cross-origin browser requests to be rejected unless you have a way to ensure that the header name also appears in `Access-Control-Allow-Headers` for CORS preflight responses; if you are connecting to the LaunchDarkly Relay Proxy, it has a way to configure this.
