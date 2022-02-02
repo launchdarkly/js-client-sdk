@@ -13,4 +13,4 @@ workflows:
       - empty-job:
           filters:
             branches: 
-			  only: not-gh-pages
+              only: not-gh-pages
