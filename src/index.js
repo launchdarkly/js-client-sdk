@@ -1,4 +1,5 @@
 import * as common from 'launchdarkly-js-sdk-common';
+import * as importBasicLogger from './basicLogger';
 import browserPlatform from './browserPlatform';
 import GoalManager from './GoalManager';
 
@@ -59,6 +60,8 @@ export function initialize(env, user, options = {}) {
 
   return client;
 }
+
+export const basicLogger = importBasicLogger.basicLogger;
 
 export const createConsoleLogger = common.createConsoleLogger;
 
