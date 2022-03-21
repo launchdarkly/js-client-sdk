@@ -10,7 +10,13 @@ declare module 'launchdarkly-js-client-sdk' {
 
 //// DOCBUILD-START-REPLACE  (see docs/Makefile)
   export * from 'launchdarkly-js-sdk-common';
-  import { LDClientBase, LDOptionsBase, LDUser } from 'launchdarkly-js-sdk-common';
+  import {
+    BasicLoggerOptions,
+    LDClientBase,
+    LDLogger,
+    LDOptionsBase,
+    LDUser
+  } from 'launchdarkly-js-sdk-common';
 //// DOCBUILD-END-REPLACE
 
   /**
@@ -117,4 +123,34 @@ declare module 'launchdarkly-js-client-sdk' {
      */
     waitUntilGoalsReady(): Promise<void>;
   }
+
+  /**
+   * Provides a simple [[LDLogger]] implementation.
+   *
+   * This logging implementation uses a simple format that includes only the log level
+   * and the message text. By default, output is written to `console` methods (`console.info`
+   * for normal informational messages, `console.warn` for warnings, `console.error` for
+   * errors, and `console.log` for debug output) and the default minimum level is `info`
+   * (that is, debug output is suppressed). You can filter by log level or change the output
+   * destination with [[BasicLoggerOptions]].
+   *
+   * To use the logger created by this function, put it into [[LDOptions.logger]]. If
+   * you do not set [[LDOptions.logger]] to anything, the SDK uses a default logger
+   * that is equivalent to `ld.basicLogger({ level: 'info' })`.
+   *
+   * @param options Configuration for the logger. If no options are specified, the
+   *   logger uses `{ level: 'info' }`.
+   * 
+   * @example
+   * This example shows how to use `basicLogger` in your SDK options to enable console
+   * logging only at `warn` and `error` levels.
+   * ```javascript
+   *   const ldOptions = {
+   *     logger: ld.basicLogger({ level: 'warn' }),
+   *   };
+   * ```
+   */
+   export function basicLogger(
+    options?: BasicLoggerOptions
+  ): LDLogger;
 }
