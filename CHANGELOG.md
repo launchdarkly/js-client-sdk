@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.21.0] - 2022-03-21
+### Added:
+- Added `basicLogger`, a replacement for the deprecated `createConsoleLogger`.
+
 ## [2.20.2] - 2022-02-18
 ### Fixed:
 - If the SDK receives invalid JSON data from a streaming connection (possibly as a result of the connection being cut off), it now uses its regular error-handling logic: the error is emitted as an `error` event or, if there are no `error` event listeners, it is logged. Previously, the error would be thrown as an unhandled exception.
