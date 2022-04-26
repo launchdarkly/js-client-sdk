@@ -9,3 +9,4 @@ lib
 .vscode/
 test-types.js
 docs/build/
+package-lock.json
