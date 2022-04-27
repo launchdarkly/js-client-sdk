@@ -2,6 +2,12 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.22.1] - 2022-04-27
+This release is functionally identical to the 2.22.0 release. Due to an oversight the release process re-introduced the `package-lock.json`.
+
+### Removed:
+- The `package-lock.json` file is no longer in source control. As this is a library project, the lockfile never affected application code that used the SDK, but only affected the SDK's CI build. It is preferable for the CI build to refer only to package.json so that it resolves dependencies the same way an application using the SDK would, rather than using pinned dependencies that an application would not use.
+
 ## [2.22.0] - 2022-04-26
 ### Added:
 - `LDOptions.application`, for configuration of application metadata that may be used in LaunchDarkly analytics or other product features. This does not affect feature flag evaluations.
