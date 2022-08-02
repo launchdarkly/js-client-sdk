@@ -13,9 +13,9 @@ declare module 'launchdarkly-js-client-sdk' {
   import {
     BasicLoggerOptions,
     LDClientBase,
+    LDContext,
     LDLogger,
     LDOptionsBase,
-    LDUser
   } from 'launchdarkly-js-sdk-common';
 //// DOCBUILD-END-REPLACE
 
@@ -46,13 +46,13 @@ declare module 'launchdarkly-js-client-sdk' {
    * @return
    *   The new client instance.
    */
-  export function initialize(envKey: string, user: LDUser, options?: LDOptions): LDClient;
+  export function initialize(envKey: string, user: LDContext, options?: LDOptions): LDClient;
 
   // This is @ignored because TypeDoc does not show default exports correctly. We'll just explain
   // the export situation in the comment for initialize().
   /** @ignore */
   const LaunchDarkly: {
-    initialize: (envKey: string, user: LDUser, options?: LDOptions) => LDClient;
+    initialize: (envKey: string, user: LDContext, options?: LDOptions) => LDClient;
     version: string;
   };
 
