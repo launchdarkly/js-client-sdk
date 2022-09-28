@@ -79,7 +79,7 @@
     "typescript": "^3.7.5"
   },
   "dependencies": {
-    "escape-string-regexp": "^5.0.0",
+    "escape-string-regexp": "^1.0.0",
     "launchdarkly-js-sdk-common": "^4.1.1"
   },
   "repository": {
