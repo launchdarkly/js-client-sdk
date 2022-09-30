@@ -95,7 +95,7 @@ describe('browserPlatform', () => {
     });
 
     it('calls URL transformer if specified', () => {
-      const p = browserPlatform({ eventUrlTransformer: url => url + '/x' });
+      const p = browserPlatform({ eventUrlTransformer: (url) => url + '/x' });
       expect(p.getCurrentUrl()).toEqual(expectedUrl + '/x');
     });
   });

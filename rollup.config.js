@@ -1,10 +1,9 @@
 const pkg = require('./package.json');
-const resolve = require('@rollup/plugin-node-resolve');
+const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
 const babel = require('rollup-plugin-babel');
 const replace = require('@rollup/plugin-replace');
 const { terser } = require('rollup-plugin-terser');
-const { uglify } = require('rollup-plugin-uglify');
 const filesize = require('rollup-plugin-filesize');
 
 const env = process.env.NODE_ENV || 'development';
@@ -17,7 +16,7 @@ const basePlugins = [
     'process.env.NODE_ENV': JSON.stringify(env),
     VERSION: JSON.stringify(version),
   }),
-  resolve({
+  nodeResolve({
     mainFields: ['browser', 'module', 'main'],
     preferBuiltins: true,
   }),
@@ -29,12 +28,6 @@ const basePlugins = [
 ];
 
 const plugins = env === 'production' ?
-  basePlugins.concat(
-    uglify()
-  ) :
-  basePlugins;
-
-const esPlugins = env === 'production' ?
   basePlugins.concat(
     terser()
   ) : basePlugins;
@@ -66,7 +59,7 @@ const configs = [
       format: 'es',
       sourcemap: true,
     },
-    plugins: esPlugins,
+    plugins: plugins,
   },
 ];
 

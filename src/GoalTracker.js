@@ -75,7 +75,7 @@ export default function GoalTracker(goals, onEvent) {
   }
 
   if (clickGoals.length > 0) {
-    listenerFn = function(event) {
+    listenerFn = function (event) {
       const goals = findGoalsForClick(event, clickGoals);
       for (let i = 0; i < goals.length; i++) {
         onEvent('click', goals[i]);
@@ -85,7 +85,7 @@ export default function GoalTracker(goals, onEvent) {
     document.addEventListener('click', listenerFn);
   }
 
-  tracker.dispose = function() {
+  tracker.dispose = function () {
     document.removeEventListener('click', listenerFn);
   };
 

@@ -21,7 +21,7 @@ export function initialize(env, user, options = {}) {
   const validatedOptions = clientVars.options;
   const emitter = clientVars.emitter;
 
-  const goalsPromise = new Promise(resolve => {
+  const goalsPromise = new Promise((resolve) => {
     const onGoals = emitter.on(goalsEvent, () => {
       emitter.off(goalsEvent, onGoals);
       resolve();

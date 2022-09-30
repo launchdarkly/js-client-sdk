@@ -116,7 +116,7 @@ describe('LDClient', () => {
       expect(server.requests[0].url).toMatch(/sdk\/eval/);
     });
 
-    it('should resolve waitUntilGoalsReady when goals are loaded', done => {
+    it('should resolve waitUntilGoalsReady when goals are loaded', (done) => {
       const handleGoalsReady = jest.fn();
       const client = LDClient.initialize(envName, user, { bootstrap: {}, sendEvents: false });
 

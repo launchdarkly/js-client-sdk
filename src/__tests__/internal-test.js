@@ -1,12 +1,12 @@
 import { doesUrlMatch } from '../GoalTracker';
 
 describe('url matching', () => {
-  const getHash = url => {
+  const getHash = (url) => {
     const idx = url.indexOf('#');
     return idx === -1 ? '' : url.substring(idx, url.length);
   };
 
-  const getSearch = url => {
+  const getSearch = (url) => {
     const idx = url.indexOf('?');
     return idx === -1 ? '' : url.substring(idx, url.length);
   };
@@ -208,9 +208,9 @@ describe('url matching', () => {
     },
   ];
 
-  tests.forEach(method => {
+  tests.forEach((method) => {
     describe(method.type + ' matching', () => {
-      method.tests.forEach(each => {
+      method.tests.forEach((each) => {
         it(`expects \`${each.goal}\` to ${each.match ? 'match' : 'not match'} \`${each.path}\``, async () => {
           method.matcher(each.path, each.goal).toEqual(each.match);
         });
