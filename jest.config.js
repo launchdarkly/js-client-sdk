@@ -7,11 +7,14 @@ module.exports = {
   setupFiles: ['jest-localstorage-mock', './jest.setup.js'],
   testMatch: ['**/__tests__/**/*-test.js'],
   transform: {
-    '^.+\\.js$': 'babel-jest',
+    '^.+\\.js$': ['babel-jest', { rootMode: 'upward' }],
   },
   globals: {
     window: true,
     VERSION: version,
   },
-  testURL: 'https://mydomain.com/some/path',
+  testEnvironmentOptions: {
+    url: 'https://mydomain.com/some/path',
+  },
+  testEnvironment: 'jsdom',
 };

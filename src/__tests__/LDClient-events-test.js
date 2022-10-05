@@ -17,10 +17,10 @@ describe('LDClient', () => {
   describe('event generation', () => {
     function stubEventProcessor() {
       const ep = { events: [] };
-      ep.start = function() {};
-      ep.flush = function() {};
-      ep.stop = function() {};
-      ep.enqueue = function(e) {
+      ep.start = function () {};
+      ep.flush = function () {};
+      ep.stop = function () {};
+      ep.enqueue = function (e) {
         ep.events.push(e);
       };
       return ep;
@@ -65,7 +65,7 @@ describe('LDClient', () => {
       const client = LDClient.initialize(envName, user, {
         eventProcessor: ep,
         bootstrap: {},
-        eventUrlTransformer: url => url + suffix,
+        eventUrlTransformer: (url) => url + suffix,
       });
       await client.waitForInitialization();
       client.track('eventkey');
