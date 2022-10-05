@@ -10,7 +10,7 @@ publications:
 
 jobs:
   - docker:
-      image: node:12-buster
+      image: node:14-buster
     template:
       name: npm
 
