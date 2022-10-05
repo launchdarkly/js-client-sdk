@@ -2,6 +2,17 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.23.0] - 2022-10-05
+### Changed:
+- Updated `js-sdk-common` version which removed event de-duplication functionality which was made redundant by support of summary events. This will improve the default event behavior when using experimentation.
+
+- Updated `escape-string-regexp` to version 4.
+
+- Updated development dependencies to recent versions.
+
+### Deprecated:
+- Deprecated the `allowFrequentDuplicateEvents` configuration option. Setting the option will no longer have any effect, and it will be removed in a future version.
+
 ## [2.22.1] - 2022-04-27
 This release is functionally identical to the 2.22.0 release. Due to an oversight the release process re-introduced the `package-lock.json`.
 
