@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LDEvaluationDetail | LaunchDarkly JavaScript SDK (2.24.0)</title>
+	<title>LDInspectionFlagDetailChangedHandler | LaunchDarkly JavaScript SDK (2.24.0)</title>
 	<meta name="description" content="Documentation for LaunchDarkly JavaScript SDK (2.24.0)">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../index.html">&quot;launchdarkly-js-client-sdk&quot;</a>
 				</li>
 				<li>
-					<a href="_launchdarkly_js_client_sdk_.ldevaluationdetail.html">LDEvaluationDetail</a>
+					<a href="_launchdarkly_js_client_sdk_.ldinspectionflagdetailchangedhandler.html">LDInspectionFlagDetailChangedHandler</a>
 				</li>
 			</ul>
-			<h1>Interface LDEvaluationDetail</h1>
+			<h1>Interface LDInspectionFlagDetailChangedHandler</h1>
 		</div>
 	</div>
 </header>
@@ -69,18 +69,20 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>An object that combines the result of a feature flag evaluation with information about
-						how it was calculated.</p>
+						<p>Callback interface for collecting information about the SDK at runtime.</p>
 					</div>
-					<p>This is the result of calling <a href="_launchdarkly_js_client_sdk_.ldclient.html#variationdetail">LDClient.variationDetail</a>.</p>
-					<p>For more information, see the <a href="https://docs.launchdarkly.com/sdk/features/evaluation-reasons#javascript">SDK reference guide</a>.</p>
+					<p>This interface is used to collect changes to flag data, but does not provide the initial
+						data. It can be combined with {@link LDInspectionFlagValuesChangedHandler} to track the
+					entire flag state.</p>
+					<p>This interface should not be used by the application to access flags for the purpose of controlling application
+					flow. It is intended for monitoring, analytics, or debugging purposes.</p>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">LDEvaluationDetail</span>
+						<span class="target">LDInspectionFlagDetailChangedHandler</span>
 					</li>
 				</ul>
 			</section>
@@ -91,9 +93,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_launchdarkly_js_client_sdk_.ldevaluationdetail.html#reason" class="tsd-kind-icon">reason</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_launchdarkly_js_client_sdk_.ldevaluationdetail.html#value" class="tsd-kind-icon">value</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_launchdarkly_js_client_sdk_.ldevaluationdetail.html#variationindex" class="tsd-kind-icon">variation<wbr>Index</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_launchdarkly_js_client_sdk_.ldinspectionflagdetailchangedhandler.html#method" class="tsd-kind-icon">method</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_launchdarkly_js_client_sdk_.ldinspectionflagdetailchangedhandler.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_launchdarkly_js_client_sdk_.ldinspectionflagdetailchangedhandler.html#type" class="tsd-kind-icon">type</a></li>
 							</ul>
 						</section>
 					</div>
@@ -102,51 +104,69 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="reason" class="tsd-anchor"></a>
-					<h3>reason</h3>
-					<div class="tsd-signature tsd-kind-icon">reason<span class="tsd-signature-symbol">:</span> <a href="../index.html#ldevaluationreason" class="tsd-signature-type">LDEvaluationReason</a></div>
+					<a name="method" class="tsd-anchor"></a>
+					<h3>method</h3>
+					<div class="tsd-signature tsd-kind-icon">method<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>flagKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, detail<span class="tsd-signature-symbol">: </span><a href="_launchdarkly_js_client_sdk_.ldevaluationdetail.html" class="tsd-signature-type">LDEvaluationDetail</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in docs/build/typings.d.ts:493</li>
+							<li>Defined in docs/build/typings.d.ts:947</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>An object describing the main factor that influenced the flag evaluation value.</p>
+							<p>This method is called when a flag is updated. It will not be called
+							when all flags are updated.</p>
+						</div>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>flagKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, detail<span class="tsd-signature-symbol">: </span><a href="_launchdarkly_js_client_sdk_.ldevaluationdetail.html" class="tsd-signature-type">LDEvaluationDetail</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>flagKey: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>detail: <a href="_launchdarkly_js_client_sdk_.ldevaluationdetail.html" class="tsd-signature-type">LDEvaluationDetail</a></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="name" class="tsd-anchor"></a>
+					<h3>name</h3>
+					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in docs/build/typings.d.ts:941</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Name of the inspector. Will be used for logging issues with the inspector.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="value" class="tsd-anchor"></a>
-					<h3>value</h3>
-					<div class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">:</span> <a href="../index.html#ldflagvalue" class="tsd-signature-type">LDFlagValue</a></div>
+					<a name="type" class="tsd-anchor"></a>
+					<h3>type</h3>
+					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"flag-detail-changed"</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in docs/build/typings.d.ts:482</li>
+							<li>Defined in docs/build/typings.d.ts:936</li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The result of the flag evaluation. This will be either one of the flag&#39;s variations or
-							the default value that was passed to <a href="_launchdarkly_js_client_sdk_.ldclient.html#variationdetail">LDClient.variationDetail</a>.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="variationindex" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> variation<wbr>Index</h3>
-					<div class="tsd-signature tsd-kind-icon">variation<wbr>Index<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in docs/build/typings.d.ts:488</li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The index of the returned value within the flag&#39;s list of variations, e.g. 0 for the
-							first variation-- or <code>null</code> if the default value was returned.</p>
-						</div>
-					</div>
 				</section>
 			</section>
 		</div>
@@ -166,33 +186,33 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="_launchdarkly_js_client_sdk_.ldclient.html" class="tsd-kind-icon">LDClient</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="_launchdarkly_js_client_sdk_.ldevaluationdetail.html" class="tsd-kind-icon">LDEvaluation<wbr>Detail</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_launchdarkly_js_client_sdk_.ldevaluationdetail.html#reason" class="tsd-kind-icon">reason</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_launchdarkly_js_client_sdk_.ldevaluationdetail.html#value" class="tsd-kind-icon">value</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_launchdarkly_js_client_sdk_.ldevaluationdetail.html#variationindex" class="tsd-kind-icon">variation<wbr>Index</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="_launchdarkly_js_client_sdk_.ldflagchangeset.html" class="tsd-kind-icon">LDFlag<wbr>Changeset</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="_launchdarkly_js_client_sdk_.ldflagset.html" class="tsd-kind-icon">LDFlag<wbr>Set</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface tsd-parent-kind-module">
 						<a href="_launchdarkly_js_client_sdk_.ldinspectionflagdetailchangedhandler.html" class="tsd-kind-icon">LDInspection<wbr>Flag<wbr>Detail<wbr>Changed<wbr>Handler</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_launchdarkly_js_client_sdk_.ldinspectionflagdetailchangedhandler.html#method" class="tsd-kind-icon">method</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_launchdarkly_js_client_sdk_.ldinspectionflagdetailchangedhandler.html#name" class="tsd-kind-icon">name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_launchdarkly_js_client_sdk_.ldinspectionflagdetailchangedhandler.html#type" class="tsd-kind-icon">type</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="_launchdarkly_js_client_sdk_.ldinspectionflagdetailschangedhandler.html" class="tsd-kind-icon">LDInspection<wbr>Flag<wbr>Details<wbr>Changed<wbr>Handler</a>
 					</li>

@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;launchdarkly-js-client-sdk&quot; | LaunchDarkly JavaScript SDK (2.23.0)</title>
-	<meta name="description" content="Documentation for LaunchDarkly JavaScript SDK (2.23.0)">
+	<title>&quot;launchdarkly-js-client-sdk&quot; | LaunchDarkly JavaScript SDK (2.24.0)</title>
+	<meta name="description" content="Documentation for LaunchDarkly JavaScript SDK (2.24.0)">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
 </head>
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">LaunchDarkly JavaScript SDK (2.23.0)</a>
+					<a href="index.html" class="title">LaunchDarkly JavaScript SDK (2.24.0)</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -85,6 +85,10 @@
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.ldevaluationdetail.html" class="tsd-kind-icon">LDEvaluation<wbr>Detail</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.ldflagchangeset.html" class="tsd-kind-icon">LDFlag<wbr>Changeset</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.ldflagset.html" class="tsd-kind-icon">LDFlag<wbr>Set</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.ldinspectionflagdetailchangedhandler.html" class="tsd-kind-icon">LDInspection<wbr>Flag<wbr>Detail<wbr>Changed<wbr>Handler</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.ldinspectionflagdetailschangedhandler.html" class="tsd-kind-icon">LDInspection<wbr>Flag<wbr>Details<wbr>Changed<wbr>Handler</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.ldinspectionflagusedhandler.html" class="tsd-kind-icon">LDInspection<wbr>Flag<wbr>Used<wbr>Handler</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.ldinspectionidentifyhandler.html" class="tsd-kind-icon">LDInspection<wbr>Identify<wbr>Handler</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.ldlogger.html" class="tsd-kind-icon">LDLogger</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.ldoptions.html" class="tsd-kind-icon">LDOptions</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="interfaces/_launchdarkly_js_client_sdk_.lduser.html" class="tsd-kind-icon">LDUser</a></li>
@@ -96,6 +100,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="index.html#ldevaluationreason" class="tsd-kind-icon">LDEvaluation<wbr>Reason</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="index.html#ldflagvalue" class="tsd-kind-icon">LDFlag<wbr>Value</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="index.html#ldinspection" class="tsd-kind-icon">LDInspection</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="index.html#ldloglevel" class="tsd-kind-icon">LDLog<wbr>Level</a></li>
 							</ul>
 						</section>
@@ -124,7 +129,7 @@
 					<div class="tsd-signature tsd-kind-icon">LDEvaluation<wbr>Reason<span class="tsd-signature-symbol">:</span> <a href="interfaces/_launchdarkly_js_client_sdk_.nonnullableldevaluationreason.html" class="tsd-signature-type">NonNullableLDEvaluationReason</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in docs/build/typings.d.ts:462</li>
+							<li>Defined in docs/build/typings.d.ts:467</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -152,12 +157,22 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="ldinspection" class="tsd-anchor"></a>
+					<h3>LDInspection</h3>
+					<div class="tsd-signature tsd-kind-icon">LDInspection<span class="tsd-signature-symbol">:</span> <a href="interfaces/_launchdarkly_js_client_sdk_.ldinspectionflagusedhandler.html" class="tsd-signature-type">LDInspectionFlagUsedHandler</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/_launchdarkly_js_client_sdk_.ldinspectionflagdetailschangedhandler.html" class="tsd-signature-type">LDInspectionFlagDetailsChangedHandler</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/_launchdarkly_js_client_sdk_.ldinspectionflagdetailchangedhandler.html" class="tsd-signature-type">LDInspectionFlagDetailChangedHandler</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/_launchdarkly_js_client_sdk_.ldinspectionidentifyhandler.html" class="tsd-signature-type">LDInspectionIdentifyHandler</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in docs/build/typings.d.ts:972</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
 					<a name="ldloglevel" class="tsd-anchor"></a>
 					<h3>LDLog<wbr>Level</h3>
 					<div class="tsd-signature tsd-kind-icon">LDLog<wbr>Level<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"debug"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"info"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"warn"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"error"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"none"</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in docs/build/typings.d.ts:867</li>
+							<li>Defined in docs/build/typings.d.ts:872</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -201,7 +216,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:1000</li>
+									<li>Defined in docs/build/typings.d.ts:1106</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -289,7 +304,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in docs/build/typings.d.ts:896</li>
+									<li>Defined in docs/build/typings.d.ts:1002</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -364,6 +379,18 @@ import LaunchDarkly <span class="hljs-keyword">from</span> <span class="hljs-str
 						<a href="interfaces/_launchdarkly_js_client_sdk_.ldflagset.html" class="tsd-kind-icon">LDFlag<wbr>Set</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="interfaces/_launchdarkly_js_client_sdk_.ldinspectionflagdetailchangedhandler.html" class="tsd-kind-icon">LDInspection<wbr>Flag<wbr>Detail<wbr>Changed<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="interfaces/_launchdarkly_js_client_sdk_.ldinspectionflagdetailschangedhandler.html" class="tsd-kind-icon">LDInspection<wbr>Flag<wbr>Details<wbr>Changed<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="interfaces/_launchdarkly_js_client_sdk_.ldinspectionflagusedhandler.html" class="tsd-kind-icon">LDInspection<wbr>Flag<wbr>Used<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="interfaces/_launchdarkly_js_client_sdk_.ldinspectionidentifyhandler.html" class="tsd-kind-icon">LDInspection<wbr>Identify<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="interfaces/_launchdarkly_js_client_sdk_.ldlogger.html" class="tsd-kind-icon">LDLogger</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
@@ -380,6 +407,9 @@ import LaunchDarkly <span class="hljs-keyword">from</span> <span class="hljs-str
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
 						<a href="index.html#ldflagvalue" class="tsd-kind-icon">LDFlag<wbr>Value</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="index.html#ldinspection" class="tsd-kind-icon">LDInspection</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
 						<a href="index.html#ldloglevel" class="tsd-kind-icon">LDLog<wbr>Level</a>
