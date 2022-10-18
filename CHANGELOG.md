@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.24.0] - 2022-10-18
+### Changed:
+- Upgrade to `js-sdk-common` `3.8.1` which added support for `Inspectors` that can be used for collecting information for monitoring, analytics, and debugging.
+
 ## [2.23.0] - 2022-10-05
 ### Changed:
 - Updated `js-sdk-common` version which removed event de-duplication functionality which was made redundant by support of summary events. This will improve the default event behavior when using experimentation.
