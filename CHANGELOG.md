@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [2.24.2] - 2022-10-20
+### Changed:
+- Updated to `js-sdk-common` `3.8.2` which includes jitter and backoff for re-connection attempts for streaming connections.
+
 ## [2.24.0] - 2022-10-18
 ### Changed:
 - Upgrade to `js-sdk-common` `3.8.1` which added support for `Inspectors` that can be used for collecting information for monitoring, analytics, and debugging.
