@@ -12,8 +12,7 @@ if (!version) {
 module.exports = {
   out: './build/html',
   name: 'LaunchDarkly JavaScript SDK (' + version + ')',
-  readme: 'none',                // don't add a home page with a copy of README.md
-  mode: 'file',                  // don't treat "typings.d.ts" itself as a parent module
-  includeDeclarations: true,     // allows it to process a .d.ts file instead of actual TS code
-  entryPoint: '"launchdarkly-js-client-sdk"'    // note extra quotes - workaround for a TypeDoc bug
+  readme: 'doc.md',
+  entryPointStrategy: 'resolve', // Allows us to specify the specific entrypoints.
+  entryPoints: ["./build/typings.d.ts"] // This is the updated version created by the makefile.
 };
