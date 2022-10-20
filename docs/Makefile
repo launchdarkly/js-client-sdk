@@ -22,7 +22,7 @@ html: prepare
 prepare:
 	cp ../package.json before-typedoc-package.json
 	cp ../package-lock.json before-typedoc-package-lock.json
-	cd .. && npm install "typedoc@<0.20.0"
+	cd .. && npm install "typedoc@0.23.17"
 	rm -rf build
 	mkdir build
 	@# Extract the whole module declaration from launchdarkly-js-sdk-common, then remove the first and last lines
