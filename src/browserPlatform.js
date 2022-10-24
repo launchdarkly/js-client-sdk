@@ -1,7 +1,9 @@
 import newHttpRequest from './httpRequest';
 
 export default function makeBrowserPlatform(options) {
-  const ret = {};
+  const ret = {
+    userAgentHeaderName: 'X-LaunchDarkly-User-Agent',
+  };
 
   ret.synchronousFlush = false; // this will be set to true by index.js if the page is closing
 
@@ -25,7 +27,7 @@ export default function makeBrowserPlatform(options) {
   };
 
   // Image-based mechanism for sending events if POST isn't available
-  ret.httpFallbackPing = url => {
+  ret.httpFallbackPing = (url) => {
     const img = new window.Image();
     img.src = url;
   };
@@ -48,17 +50,17 @@ export default function makeBrowserPlatform(options) {
   try {
     if (window.localStorage) {
       ret.localStorage = {
-        get: key =>
-          new Promise(resolve => {
+        get: (key) =>
+          new Promise((resolve) => {
             resolve(window.localStorage.getItem(key));
           }),
         set: (key, value) =>
-          new Promise(resolve => {
+          new Promise((resolve) => {
             window.localStorage.setItem(key, value);
             resolve();
           }),
-        clear: key =>
-          new Promise(resolve => {
+        clear: (key) =>
+          new Promise((resolve) => {
             window.localStorage.removeItem(key);
             resolve();
           }),
@@ -116,7 +118,7 @@ export default function makeBrowserPlatform(options) {
       return new eventSourceConstructor(url, esOptions);
     };
 
-    ret.eventSourceIsActive = es =>
+    ret.eventSourceIsActive = (es) =>
       es.readyState === window.EventSource.OPEN || es.readyState === window.EventSource.CONNECTING;
   }
 

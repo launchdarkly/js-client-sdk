@@ -17,10 +17,10 @@ describe('LDClient', () => {
   describe('event generation', () => {
     function stubEventProcessor() {
       const ep = { events: [] };
-      ep.start = function() {};
-      ep.flush = function() {};
-      ep.stop = function() {};
-      ep.enqueue = function(e) {
+      ep.start = function () {};
+      ep.flush = function () {};
+      ep.stop = function () {};
+      ep.enqueue = function (e) {
         ep.events.push(e);
       };
       return ep;
@@ -40,7 +40,7 @@ describe('LDClient', () => {
       const trackEvent = ep.events[1];
       expect(trackEvent.kind).toEqual('custom');
       expect(trackEvent.key).toEqual('eventkey');
-      expect(trackEvent.user).toEqual(user);
+      expect(trackEvent.context).toEqual(user);
       expect(trackEvent.data).toEqual(data);
       expect(trackEvent.url).toEqual(urlShouldBe);
     });
@@ -65,7 +65,7 @@ describe('LDClient', () => {
       const client = LDClient.initialize(envName, user, {
         eventProcessor: ep,
         bootstrap: {},
-        eventUrlTransformer: url => url + suffix,
+        eventUrlTransformer: (url) => url + suffix,
       });
       await client.waitForInitialization();
       client.track('eventkey');
@@ -74,7 +74,7 @@ describe('LDClient', () => {
       const trackEvent = ep.events[1];
       expect(trackEvent.kind).toEqual('custom');
       expect(trackEvent.key).toEqual('eventkey');
-      expect(trackEvent.user).toEqual(user);
+      expect(trackEvent.context).toEqual(user);
       expect(trackEvent.url).toEqual(urlShouldBe);
     });
   });

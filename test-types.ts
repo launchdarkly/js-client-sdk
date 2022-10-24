@@ -4,11 +4,13 @@
 
 import * as ld from 'launchdarkly-js-client-sdk';
 
-var ver: string = ld.version;
+import LaunchDarkly from 'launchdarkly-js-client-sdk';
 
-var emptyOptions: ld.LDOptions = {};
-var logger: ld.LDLogger = ld.basicLogger({ level: 'info' });
-var allOptions: ld.LDOptions = {
+const ver: string = LaunchDarkly.version;
+
+const emptyOptions: ld.LDOptions = {};
+const logger: ld.LDLogger = ld.basicLogger({ level: 'info' });
+const allOptions: ld.LDOptions = {
   bootstrap: { },
   hash: '',
   baseUrl: '',
@@ -21,21 +23,17 @@ var allOptions: ld.LDOptions = {
   fetchGoals: true,
   sendEvents: true,
   allAttributesPrivate: true,
-  privateAttributeNames: [ 'x' ],
-  inlineUsersInEvents: true,
-  allowFrequentDuplicateEvents: true,
+  privateAttributes: [ 'x' ],
   sendEventsOnlyForVariation: true,
   flushInterval: 1,
-  samplingInterval: 1,
   streamReconnectDelay: 1,
   eventUrlTransformer: url => url + 'x',
   disableSyncEventPost: true,
   logger: logger,
-  autoAliasingOptOut: true
 };
-var userWithKeyOnly: ld.LDUser = { key: 'user' };
-var anonymousUser: ld.LDUser = { key: 'anon-user', anonymous: true };
-var user: ld.LDUser = {
+const userWithKeyOnly: ld.LDUser = { key: 'user' };
+const anonymousUser: ld.LDUser = { key: 'anon-user', anonymous: true };
+const user: ld.LDUser = {
   key: 'user',
   name: 'name',
   firstName: 'first',
@@ -55,7 +53,35 @@ var user: ld.LDUser = {
   },
   privateAttributeNames: [ 'name', 'email' ]
 };
-var client: ld.LDClient = ld.initialize('env', user, allOptions);
+
+const singleKindContext: ld.LDContext = {
+  kind: 'user',
+  key: 'user',
+  aCustomValue: {
+    some: 'value'
+  },
+  _meta: {
+    privateAttributes: ['aCustomValue']
+  }
+}
+
+const multiKindContext: ld.LDContext = {
+  kind: 'multi',
+  user: {
+    key: 'user',
+    aCustomValue: {
+      some: 'value'
+    },
+    _meta: {
+      privateAttributes: ['aCustomValue']
+    }
+  },
+  device: {
+    key: 'device'
+  }
+}
+
+const client: ld.LDClient = ld.initialize('env', user, allOptions);
 
 client.waitUntilReady().then(() => {});
 client.waitForInitialization().then(() => {});
@@ -65,21 +91,27 @@ client.identify(user).then(() => {});
 client.identify(user, undefined, () => {});
 client.identify(user, 'hash').then(() => {});
 
-client.alias(user, anonymousUser);
+client.identify(singleKindContext).then(() => {});
+client.identify(singleKindContext, undefined, () => {});
+client.identify(singleKindContext, 'hash').then(() => {});
 
-var user: ld.LDUser = client.getUser();
+client.identify(multiKindContext).then(() => {});
+client.identify(multiKindContext, undefined, () => {});
+client.identify(multiKindContext, 'hash').then(() => {});
+
+const context: ld.LDContext = client.getContext();
 
 client.flush(() => {});
 client.flush().then(() => {});
 
-var boolFlagValue: ld.LDFlagValue = client.variation('key', false);
-var numberFlagValue: ld.LDFlagValue = client.variation('key', 2);
-var stringFlagValue: ld.LDFlagValue = client.variation('key', 'default');
+const boolFlagValue: ld.LDFlagValue = client.variation('key', false);
+const numberFlagValue: ld.LDFlagValue = client.variation('key', 2);
+const stringFlagValue: ld.LDFlagValue = client.variation('key', 'default');
 
-var detail: ld.LDEvaluationDetail = client.variationDetail('key', 'default');
-var detailValue: ld.LDFlagValue = detail.value;
-var detailIndex: number | undefined = detail.variationIndex;
-var detailReason: ld.LDEvaluationReason = detail.reason;
+const detail: ld.LDEvaluationDetail = client.variationDetail('key', 'default');
+const detailValue: ld.LDFlagValue = detail.value;
+const detailIndex: number | undefined = detail.variationIndex;
+const detailReason: ld.LDEvaluationReason | undefined = detail.reason;
 
 client.setStreaming(true);
 client.setStreaming();
@@ -92,8 +124,8 @@ client.track('event');
 client.track('event', { someData: 'x' });
 client.track('event', null, 3.5);
 
-var flagSet: ld.LDFlagSet = client.allFlags();
-var flagSetValue: ld.LDFlagValue = flagSet['key'];
+const flagSet: ld.LDFlagSet = client.allFlags();
+const flagSetValue: ld.LDFlagValue = flagSet['key'];
 
 client.close(() => {});
 client.close().then(() => {});

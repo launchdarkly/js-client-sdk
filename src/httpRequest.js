@@ -43,7 +43,7 @@ export default function newHttpRequest(method, url, headers, body, pageIsClosing
         }
         resolve({
           status: xhr.status,
-          header: key => xhr.getResponseHeader(key),
+          header: (key) => xhr.getResponseHeader(key),
           body: xhr.responseText,
         });
       });

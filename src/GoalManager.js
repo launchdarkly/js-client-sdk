@@ -75,7 +75,7 @@ export default function GoalManager(clientVars, readyCallback) {
 
   clientVars.requestor
     .fetchJSON(getGoalsPath())
-    .then(g => {
+    .then((g) => {
       if (g && g.length > 0) {
         goals = g;
         goalTracker = GoalTracker(goals, sendGoalEvent);
@@ -83,7 +83,7 @@ export default function GoalManager(clientVars, readyCallback) {
       }
       readyCallback();
     })
-    .catch(err => {
+    .catch((err) => {
       clientVars.emitter.maybeReportError(
         new common.errors.LDUnexpectedResponseError('Error fetching goals: ' + (err && err.message) ? err.message : err)
       );
