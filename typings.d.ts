@@ -1,11 +1,4 @@
-/**
- * This is the API reference for the LaunchDarkly SDK for browser JavaScript.
- *
- * In typical usage, you will call [[initialize]] once at startup time to obtain an instance of
- * [[LDClient]], which provides access to all of the SDK's functionality.
- *
- * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/sdk/client-side/javascript).
- */
+// Put top level documentation into docs/doc.md.
 declare module 'launchdarkly-js-client-sdk' {
 
 //// DOCBUILD-START-REPLACE  (see docs/Makefile)
