@@ -33,10 +33,6 @@ export default function GoalManager(clientVars, readyCallback) {
       contextKeys: common.getContextKeys(context),
     };
 
-    if (kind === 'click') {
-      event.selector = goal.selector;
-    }
-
     return clientVars.enqueueEvent(event);
   }
 
