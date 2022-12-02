@@ -6,9 +6,9 @@ declare module 'launchdarkly-js-client-sdk' {
   import {
     BasicLoggerOptions,
     LDClientBase,
+    LDContext,
     LDLogger,
     LDOptionsBase,
-    LDUser
   } from 'launchdarkly-js-sdk-common';
 //// DOCBUILD-END-REPLACE
 
@@ -24,7 +24,7 @@ declare module 'launchdarkly-js-client-sdk' {
    *
    *     // Preferred usage:
    *     import { initialize } from 'launchdarkly-js-client-sdk';
-   *     const client = initialize(envKey, user, options);
+   *     const client = initialize(envKey, context, options);
    *
    *     // Deprecated usage:
    *     import LaunchDarkly from 'launchdarkly-js-client-sdk';
@@ -32,20 +32,20 @@ declare module 'launchdarkly-js-client-sdk' {
    *
    * @param envKey
    *   The environment ID.
-   * @param user
-   *   The initial user properties. These can be changed later with [[LDClient.identify]].
+   * @param context
+   *   The initial context properties. These can be changed later with [[LDClient.identify]].
    * @param options
    *   Optional configuration settings.
    * @return
    *   The new client instance.
    */
-  export function initialize(envKey: string, user: LDUser, options?: LDOptions): LDClient;
+  export function initialize(envKey: string, context: LDContext, options?: LDOptions): LDClient;
 
   // This is @ignored because TypeDoc does not show default exports correctly. We'll just explain
   // the export situation in the comment for initialize().
   /** @ignore */
   const LaunchDarkly: {
-    initialize: (envKey: string, user: LDUser, options?: LDOptions) => LDClient;
+    initialize: (envKey: string, context: LDContext, options?: LDOptions) => LDClient;
     version: string;
   };
 
@@ -57,7 +57,7 @@ declare module 'launchdarkly-js-client-sdk' {
    */
   export interface LDOptions extends LDOptionsBase {
     /**
-     * The signed user key for Secure Mode.
+     * The signed context key for Secure Mode.
      *
      * For more information, see the JavaScript SDK Reference Guide on
      * [Secure mode](https://docs.launchdarkly.com/sdk/features/secure-mode#configuring-secure-mode-in-the-javascript-client-side-sdk).

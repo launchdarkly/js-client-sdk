@@ -1,7 +1,9 @@
 import newHttpRequest from './httpRequest';
 
 export default function makeBrowserPlatform(options) {
-  const ret = {};
+  const ret = {
+    userAgentHeaderName: 'X-LaunchDarkly-User-Agent',
+  };
 
   ret.synchronousFlush = false; // this will be set to true by index.js if the page is closing
 
