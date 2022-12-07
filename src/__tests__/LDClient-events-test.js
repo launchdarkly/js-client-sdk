@@ -40,7 +40,7 @@ describe('LDClient', () => {
       const trackEvent = ep.events[1];
       expect(trackEvent.kind).toEqual('custom');
       expect(trackEvent.key).toEqual('eventkey');
-      expect(trackEvent.user).toEqual(user);
+      expect(trackEvent.context).toEqual(user);
       expect(trackEvent.data).toEqual(data);
       expect(trackEvent.url).toEqual(urlShouldBe);
     });
@@ -74,7 +74,7 @@ describe('LDClient', () => {
       const trackEvent = ep.events[1];
       expect(trackEvent.kind).toEqual('custom');
       expect(trackEvent.key).toEqual('eventkey');
-      expect(trackEvent.user).toEqual(user);
+      expect(trackEvent.context).toEqual(user);
       expect(trackEvent.url).toEqual(urlShouldBe);
     });
   });

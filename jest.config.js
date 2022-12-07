@@ -9,6 +9,9 @@ module.exports = {
   transform: {
     '^.+\\.js$': ['babel-jest', { rootMode: 'upward' }],
   },
+  transformIgnorePatterns: [
+    "node_modules/(?!uuid)"
+  ],
   globals: {
     window: true,
     VERSION: version,

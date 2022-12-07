@@ -139,13 +139,13 @@ $(function() {
   // client.variation() to get individual values by flag key, but here we are iterating through them all.
 
   function showAllFlags(changes) {
-    var userJson = JSON.stringify(client.getUser(), null, ' ');
+    var contextJson = JSON.stringify(client.getContext(), null, ' ');
     var allFlags = client.allFlags();
     var keys = Object.keys(allFlags).sort();
 
     $content = $('<div></div>');
     $content.append('These are the feature flag values from the current environment for the user:');
-    $content.append($('<code></code>').text(' ' + userJson)).append('<br><br>');
+    $content.append($('<code></code>').text(' ' + contextJson)).append('<br><br>');
 
     var $table = $('<table></table>').addClass('table').addClass('table-sm');
     var $thead = $('<thead></thead>');

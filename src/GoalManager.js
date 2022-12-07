@@ -23,19 +23,15 @@ export default function GoalManager(clientVars, readyCallback) {
   }
 
   function sendGoalEvent(kind, goal) {
-    const user = clientVars.ident.getUser();
+    const context = clientVars.ident.getContext();
     const event = {
       kind: kind,
       key: goal.key,
       data: null,
       url: window.location.href,
-      user: user,
       creationDate: new Date().getTime(),
+      contextKeys: common.getContextKeys(context),
     };
-
-    if (user && user.anonymous) {
-      event.contextKind = 'anonymousUser';
-    }
 
     if (kind === 'click') {
       event.selector = goal.selector;
