@@ -5,7 +5,7 @@ export default function makeBrowserPlatform(options) {
     userAgentHeaderName: 'X-LaunchDarkly-User-Agent',
   };
 
-  ret.synchronousFlush = false; // this will be set to true by index.js if the page is closing
+  ret.synchronousFlush = false; // this will be set to true by index.js if the page is hidden
 
   // XMLHttpRequest may not exist if we're running in a server-side rendering context
   if (window.XMLHttpRequest) {

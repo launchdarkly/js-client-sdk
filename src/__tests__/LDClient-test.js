@@ -173,12 +173,18 @@ describe('LDClient', () => {
       expect(server.requests[1].async).toBe(true);
     });
 
-    async function setupClientAndTriggerUnload() {
+    async function setupClientAndTriggerPageHide() {
       const config = { bootstrap: {}, flushInterval: 100000, fetchGoals: false, diagnosticOptOut: true };
       const client = LDClient.initialize(envName, user, config);
       await client.waitForInitialization();
 
-      window.dispatchEvent(new window.Event('beforeunload'));
+      Object.defineProperty(document, 'visibilityState', {
+        configurable: true,
+        get: function () {
+          return 'hidden';
+        },
+      });
+      document.dispatchEvent(new window.Event('visibilitychange'));
 
       return client;
     }
@@ -188,7 +194,7 @@ describe('LDClient', () => {
         it('in ' + desc, async () => {
           window.navigator.__defineGetter__('userAgent', () => ua);
 
-          await setupClientAndTriggerUnload();
+          await setupClientAndTriggerPageHide();
 
           expect(server.requests.length).toEqual(2);
           // ignore first request because it's just a side effect of calling browserPlatform.httpAllowsPost()
@@ -211,7 +217,7 @@ describe('LDClient', () => {
         it('in ' + desc, async () => {
           window.navigator.__defineGetter__('userAgent', () => ua);
 
-          const client = await setupClientAndTriggerUnload();
+          const client = await setupClientAndTriggerPageHide();
           expect(server.requests.length).toEqual(2);
           // ignore first request because it's just a side effect of calling browserPlatform.httpAllowsPost()
           expect(server.requests[1].async).toBe(false); // events
@@ -237,7 +243,7 @@ describe('LDClient', () => {
         it('in ' + desc, async () => {
           window.navigator.__defineGetter__('userAgent', () => ua);
 
-          await setupClientAndTriggerUnload();
+          await setupClientAndTriggerPageHide();
 
           window.dispatchEvent(new window.Event('beforeunload'));
 
