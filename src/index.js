@@ -52,13 +52,9 @@ export function initialize(env, user, options = {}) {
     platform.synchronousFlush = false;
   };
 
-  // When the visibility of the page changes to hidden we want to do a couple things.
-  // 1.) Flush any pending events.
-  // 2.) Disable logging of connection events.
-  // If the page becomes visible again, then we will want to resume
-  // our previous level of logging.
+  // When the visibility of the page changes to hidden we want to flush any pending events.
   //
-  // These are handled with a visibility , instead of beforeunload/unload
+  // This is handled with visibility, instead of beforeunload/unload
   // because those events are not compatible with the bfcache and are unlikely
   // to be called in many situations. For more information see: https://developer.chrome.com/blog/page-lifecycle-api/
   //
