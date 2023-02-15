@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.1.1] - 2023-02-15
+### Changed:
+- Upgrade to `js-sdk-common` version `5.0.2`. This removes usage of optional chaining (`?.`) to allow for use with older transpilers.
+
 ## [3.1.0] - 2023-01-18
 ### Changed:
 - Changed event flushing on page close to be based on page visibility. This should increase compatibility with the bfcache.
