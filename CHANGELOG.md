@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.1.2] - 2023-03-21
+### Changed:
+- Update `LDContext` to allow for key to be optional. This is used when making an anonymous context with a generated key.
+
 ## [3.1.1] - 2023-02-15
 ### Changed:
 - Upgrade to `js-sdk-common` version `5.0.2`. This removes usage of optional chaining (`?.`) to allow for use with older transpilers.
