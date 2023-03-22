@@ -8,7 +8,7 @@ For a more realistic example of a LaunchDarkly-enabled application with both a f
 
 Most of the demo can be used without a real HTTP server; just start your browser and tell it to open the `index.html` file in this directory. The only thing that will not work in that mode is the "Set URL" feature under Navigation/Events.
 
-To access the demo via a basic HTTP server, there are several ways but the simplest-- if you have Python-- is to run `python3 -m http.server 8000` or `python2 -m SimpleHttpServer 8000` from a command line at the SDK root directory, and then browse to this location.
+To access the demo via a basic HTTP server, there are several ways but the simplest-- if you have Python-- is to run `python3 -m http.server 8000` or `python2 -m SimpleHTTPServer 8000` from a command line at the SDK root directory, and then browse to this location.
 
 Note that by default, the demo uses the latest release of the JS SDK script that is hosted on `app.launchdarkly.com`. However, if it detects that you have built the SDK locally, it will use the local SDK code instead. Therefore, it can be used for testing changes to the SDK. To build from the SDK root directory, run `npm run build`.
 
