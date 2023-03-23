@@ -266,7 +266,7 @@ $(function() {
     $('#usingWhichScript').addClass('local');
     startDemo();
   } else {
-    var hostedScriptUrl = 'https://unpkg.com/launchdarkly-js-client-sdk@2';
+    var hostedScriptUrl = 'https://unpkg.com/launchdarkly-js-client-sdk@3';
     var script = document.createElement('script');
     script.src = hostedScriptUrl;
     script.crossOrigin = 'anonymous';
