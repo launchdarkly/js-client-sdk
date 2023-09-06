@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.1.4] - 2023-09-06
+### Fixed:
+- #283 Catch xhr errors on page close and ignore them to reduce noise.
+
 ## [3.1.3] - 2023-04-12
 ### Fixed:
 - Fixed an issue that was preventing page view/click events from being sent. (Thanks, [seanr-cardless](https://github.com/launchdarkly/js-client-sdk/pull/276)!)
