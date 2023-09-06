@@ -65,10 +65,10 @@ declare module 'launchdarkly-js-client-sdk' {
     hash?: string;
 
     /**
-     * Whether the client should make a request to LaunchDarkly for A/B testing goals.
+     * Whether the client should make a request to LaunchDarkly for Experimentation metrics (goals).
      *
      * This is true by default, meaning that this request will be made on every page load.
-     * Set it to false if you are not using A/B testing and want to skip the request.
+     * Set it to false if you are not using Experimentation and want to skip the request.
      */
     fetchGoals?: boolean;
 
@@ -99,15 +99,15 @@ declare module 'launchdarkly-js-client-sdk' {
    */
   export interface LDClient extends LDClientBase {
     /**
-     * Allows you to wait until the client has received goals data from LaunchDarkly.
+     * Allows you to wait until the client has received metrics (goals) data from LaunchDarkly.
      *
-     * This is only relevant if you are using A/B testing features like click events and
-     * pageview events; until the client has received the configuration for these (which
-     * happens immediately after the initial request for feature flags), click events and
+     * This is only relevant if you are using Experimentation features like click events and
+     * pageview events. Until the client has received the configuration for these, which
+     * happens immediately after the initial request for feature flags, click events and
      * pageview events will not work, so you may wish to wait using this method before
      * doing anything that you expect to generate those events.
      *
-     * The returned Promise will be resolved once the client has received goals data. If
+     * The returned Promise will be resolved once the client has received metrics data. If
      * you prefer to use event handlers rather than Promises, you can listen on the client
      * for a `"goalsReady"` event instead.
      *
