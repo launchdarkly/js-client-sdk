@@ -32,7 +32,11 @@ export default function newHttpRequest(method, url, headers, body, pageIsClosing
     }
   }
   if (pageIsClosing) {
-    xhr.send(body); // We specified synchronous mode when we called xhr.open
+    try {
+      xhr.send(body); // We specified synchronous mode when we called xhr.open
+    } catch (e) {
+      // do nothing intentionally to suppress noise for now
+    }
     return emptyResult; // Again, we never want a request to be retried in this case, so we must say it succeeded.
   } else {
     let cancelled;

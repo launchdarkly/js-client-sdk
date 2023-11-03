@@ -30,7 +30,7 @@ export default function GoalManager(clientVars, readyCallback) {
       data: null,
       url: window.location.href,
       creationDate: new Date().getTime(),
-      contextKeys: common.getContextKeys(context),
+      context: context,
     };
 
     if (kind === 'click') {
