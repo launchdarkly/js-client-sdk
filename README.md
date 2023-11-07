@@ -26,7 +26,7 @@ The LaunchDarkly SDK can be used in all major browsers. However, web browsers va
 
 ## Logging
 
-By default, the SDK sends log output to the browser console. There are four logging levels: `debug`, `info`, `warn`, and `error`; by default, `debug` and `info` messages are hidden. See [`LDOptions.logger`](https://launchdarkly.github.io/js-client-sdk/interfaces/LDOptions.html#logger) and [`createConsoleLogger`](https://launchdarkly.github.io/js-client-sdk/index.html#createconsolelogger) for more details.
+By default, the SDK sends log output to the browser console. There are four logging levels: `debug`, `info`, `warn`, and `error`; by default, `debug` and `info` messages are hidden. See [`LDOptions.logger`](https://launchdarkly.github.io/js-client-sdk/interfaces/LDOptions.html#logger) and [`basicLogger`](https://launchdarkly.github.io/js-client-sdk/functions/basicLogger.html) for more details.
 
 ## Learn more
 
