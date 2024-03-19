@@ -168,9 +168,8 @@ describe('LDClient', () => {
 
       await client.flush();
 
-      expect(server.requests.length).toEqual(2);
-      // ignore first request because it's just a side effect of calling browserPlatform.httpAllowsPost()
-      expect(server.requests[1].async).toBe(true);
+      expect(server.requests.length).toEqual(1);
+      expect(server.requests[0].async).toBe(true);
     });
 
     async function setupClientAndTriggerPageHide() {
@@ -196,9 +195,8 @@ describe('LDClient', () => {
 
           await setupClientAndTriggerPageHide();
 
-          expect(server.requests.length).toEqual(2);
-          // ignore first request because it's just a side effect of calling browserPlatform.httpAllowsPost()
-          expect(server.requests[1].async).toBe(false); // events
+          expect(server.requests.length).toEqual(1);
+          expect(server.requests[0].async).toBe(false); // events
         });
       }
 
@@ -218,13 +216,12 @@ describe('LDClient', () => {
           window.navigator.__defineGetter__('userAgent', () => ua);
 
           const client = await setupClientAndTriggerPageHide();
-          expect(server.requests.length).toEqual(2);
-          // ignore first request because it's just a side effect of calling browserPlatform.httpAllowsPost()
-          expect(server.requests[1].async).toBe(false); // events
+          expect(server.requests.length).toEqual(1);
+          expect(server.requests[0].async).toBe(false); // events
           client.track('Test'); // lets track a event that happen after a beforeunload event.
           client.flush().catch(() => {}); // flush that event
-          expect(server.requests.length).toEqual(3); // assert the server got the request.
-          expect(server.requests[2].async).toBe(true);
+          expect(server.requests.length).toEqual(2); // assert the server got the request.
+          expect(server.requests[1].async).toBe(true);
         });
       }
 
@@ -236,30 +233,6 @@ describe('LDClient', () => {
       testWithUserAgent('unknown browser', 'Special Kitty Cat Browser');
 
       testWithUserAgent('empty user-agent', null);
-    });
-
-    describe('discards events during page unload', () => {
-      function testWithUserAgent(desc, ua) {
-        it('in ' + desc, async () => {
-          window.navigator.__defineGetter__('userAgent', () => ua);
-
-          await setupClientAndTriggerPageHide();
-
-          window.dispatchEvent(new window.Event('beforeunload'));
-
-          expect(server.requests.length).toEqual(1); // flags query
-        });
-      }
-
-      testWithUserAgent(
-        'Chrome 73',
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
-      );
-
-      testWithUserAgent(
-        'Chrome 74',
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3683.103 Safari/537.36'
-      );
     });
   });
 });
