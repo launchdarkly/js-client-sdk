@@ -2,6 +2,11 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.2.0] - 2024-03-19
+### Changed:
+- Redact anonymous attributes within feature events
+- Always inline contexts for feature events
+
 ## [3.1.4] - 2023-09-06
 ### Fixed:
 - #283 Catch xhr errors on page close and ignore them to reduce noise.
