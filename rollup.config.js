@@ -40,6 +40,9 @@ const configs = [
       file: process.env.NODE_ENV === 'production' ? './dist/ldclient.min.js' : './dist/ldclient.js',
       format: 'umd',
       sourcemap: true,
+      amd: {
+        define: 'launchdarklyDefine',
+      },
     },
     plugins: plugins,
   },
