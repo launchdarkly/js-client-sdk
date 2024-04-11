@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "sdks": {
+    "js-client-sdk": {
+      "name": "JavaScript Client SDK",
+      "type": "client-side",
+      "languages": [
+        "JavaScript", "TypeScript"
+      ]
+    }
+  }
+}
