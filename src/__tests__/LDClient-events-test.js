@@ -33,7 +33,7 @@ describe('LDClient', () => {
       const client = LDClient.initialize(envName, user, { eventProcessor: ep, bootstrap: {} });
       const data = { thing: 'stuff' };
 
-      await client.waitForInitialization();
+      await client.waitForInitialization(5);
       client.track('eventkey', data);
 
       expect(ep.events.length).toEqual(2);
@@ -52,7 +52,7 @@ describe('LDClient', () => {
       const client = LDClient.initialize(envName, user, { eventProcessor: ep, bootstrap: {} });
       const data = { thing: 'stuff' };
 
-      await client.waitForInitialization();
+      await client.waitForInitialization(5);
       client.track('eventkey', data);
 
       expect(ep.events.length).toEqual(0);
@@ -67,7 +67,7 @@ describe('LDClient', () => {
         bootstrap: {},
         eventUrlTransformer: (url) => url + suffix,
       });
-      await client.waitForInitialization();
+      await client.waitForInitialization(5);
       client.track('eventkey');
 
       expect(ep.events.length).toEqual(2);

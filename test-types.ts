@@ -84,7 +84,7 @@ const multiKindContext: ld.LDContext = {
 const client: ld.LDClient = ld.initialize('env', user, allOptions);
 
 client.waitUntilReady().then(() => {});
-client.waitForInitialization().then(() => {});
+client.waitForInitialization(5).then(() => {});
 client.waitUntilGoalsReady().then(() => {});
 
 client.identify(user).then(() => {});
