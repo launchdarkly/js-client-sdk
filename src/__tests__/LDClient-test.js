@@ -37,19 +37,19 @@ describe('LDClient', () => {
   describe('initialization', () => {
     it('should trigger the ready event', async () => {
       const client = LDClient.initialize(envName, user, { bootstrap: {}, sendEvents: false });
-      await client.waitForInitialization();
+      await client.waitForInitialization(5);
     });
 
     it('should not fetch flag settings if bootstrap is provided, but should still fetch goals', async () => {
       const client = LDClient.initialize(envName, user, { bootstrap: {}, sendEvents: false });
-      await client.waitForInitialization();
+      await client.waitForInitialization(5);
       expect(server.requests.length).toEqual(1);
       expect(server.requests[0].url).toMatch(/sdk\/goals/);
     });
 
     it('sends correct User-Agent in request', async () => {
       const client = LDClient.initialize(envName, user, { fetchGoals: false, sendEvents: false });
-      await client.waitForInitialization();
+      await client.waitForInitialization(5);
 
       expect(server.requests.length).toEqual(1);
       expect(server.requests[0].requestHeaders['X-LaunchDarkly-User-Agent']).toMatch(/^JSClient\//);
@@ -61,7 +61,7 @@ describe('LDClient', () => {
       async function setupClient() {
         const config = { bootstrap: {}, flushInterval: 100000, fetchGoals: false, sendEvents: false };
         const client = LDClient.initialize(envName, user, config);
-        await client.waitForInitialization();
+        await client.waitForInitialization(5);
         return client;
       }
       function testWithUserAgent(desc, ua) {
@@ -91,7 +91,7 @@ describe('LDClient', () => {
   describe('goals', () => {
     it('fetches goals if fetchGoals is unspecified', async () => {
       const client = LDClient.initialize(envName, user, { sendEvents: false });
-      await client.waitForInitialization();
+      await client.waitForInitialization(5);
       expect(server.requests.length).toEqual(2);
       // The following line uses arrayContaining because we can't be sure whether the goals request will
       // be made before or after the flags request.
@@ -102,7 +102,7 @@ describe('LDClient', () => {
 
     it('fetches goals if fetchGoals is true', async () => {
       const client = LDClient.initialize(envName, user, { fetchGoals: true, sendEvents: false });
-      await client.waitForInitialization();
+      await client.waitForInitialization(5);
       expect(server.requests.length).toEqual(2);
       expect(server.requests).toEqual(
         expect.arrayContaining([expect.objectContaining({ url: expect.stringMatching(/sdk\/goals/) })])
@@ -111,7 +111,7 @@ describe('LDClient', () => {
 
     it('does not fetch goals if fetchGoals is false', async () => {
       const client = LDClient.initialize(envName, user, { fetchGoals: false, sendEvents: false });
-      await client.waitForInitialization();
+      await client.waitForInitialization(5);
       expect(server.requests.length).toEqual(1);
       expect(server.requests[0].url).toMatch(/sdk\/eval/);
     });
@@ -139,7 +139,7 @@ describe('LDClient', () => {
       server.respondWith([200, { 'Content-Type': 'application/json' }, '[{"key": "known", "kind": "custom"}]']);
 
       const client = LDClient.initialize(envName, user, { bootstrap: {}, sendEvents: false });
-      await client.waitForInitialization();
+      await client.waitForInitialization(5);
       await client.waitUntilGoalsReady();
 
       client.track('known');
@@ -151,7 +151,7 @@ describe('LDClient', () => {
       server.respondWith([200, { 'Content-Type': 'application/json' }, '[{"key": "known", "kind": "custom"}]']);
 
       const client = LDClient.initialize(envName, user, { bootstrap: {}, sendEvents: false });
-      await client.waitForInitialization();
+      await client.waitForInitialization(5);
       await client.waitUntilGoalsReady();
 
       client.track('unknown');
@@ -164,7 +164,7 @@ describe('LDClient', () => {
     it('normally uses asynchronous XHR', async () => {
       const config = { bootstrap: {}, flushInterval: 100000, fetchGoals: false, diagnosticOptOut: true };
       const client = LDClient.initialize(envName, user, config);
-      await client.waitForInitialization();
+      await client.waitForInitialization(5);
 
       await client.flush();
 
@@ -175,7 +175,7 @@ describe('LDClient', () => {
     async function setupClientAndTriggerPageHide() {
       const config = { bootstrap: {}, flushInterval: 100000, fetchGoals: false, diagnosticOptOut: true };
       const client = LDClient.initialize(envName, user, config);
-      await client.waitForInitialization();
+      await client.waitForInitialization(5);
 
       Object.defineProperty(document, 'visibilityState', {
         configurable: true,

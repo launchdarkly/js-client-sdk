@@ -115,7 +115,7 @@ $(function() {
     client.on('change', function(allChanges) {
       showAllFlags(allChanges);
     });
-    client.waitForInitialization().then(function() { showAllFlags(); });
+    client.waitForInitialization(5).then(function() { showAllFlags(); });
   }
 
   function identifyUser() {
