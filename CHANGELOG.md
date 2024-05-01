@@ -2,6 +2,16 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.3.0] - 2024-05-01
+### Added:
+- Added an optional timeout to the `waitForInitialization` method. When a timeout is specified the returned promise will be rejected after the timeout elapses if the client has not finished initializing within that time. When no timeout is specified the returned promise will not be resolved or rejected until the initialization either completes or fails.
+
+### Changed:
+- The track method now validates that the provided metricValue is a number. If a metric value is provided, and it is not a number, then a warning will be logged.
+
+### Fixed:
+- Fixed the documentation for `evaluationReasons` for the `identify` method.
+
 ## [3.2.0] - 2024-03-19
 ### Changed:
 - Redact anonymous attributes within feature events
