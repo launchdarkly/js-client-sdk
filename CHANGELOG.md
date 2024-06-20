@@ -2,6 +2,10 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.4.0] - 2024-06-20
+### Changed:
+- Updated to launchdarkly-js-sdk-common 5.3.0 which supports synchronous inspectors.
+
 ## [3.3.0] - 2024-05-01
 ### Added:
 - Added an optional timeout to the `waitForInitialization` method. When a timeout is specified the returned promise will be rejected after the timeout elapses if the client has not finished initializing within that time. When no timeout is specified the returned promise will not be resolved or rejected until the initialization either completes or fails.
