@@ -1,3 +1,5 @@
+[![Open in DevZero](https://assets.devzero.io/open-in-devzero.svg)](https://www.devzero.io/dashboard/recipes/new?repo-url=https://github.com/launchdarkly/js-client-sdk)
+
 # LaunchDarkly SDK for Browser JavaScript
 
 [![Circle CI](https://circleci.com/gh/launchdarkly/js-client-sdk/tree/main.svg?style=svg)](https://circleci.com/gh/launchdarkly/js-client-sdk/tree/main)
