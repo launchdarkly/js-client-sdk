@@ -1,0 +1,17 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "launchdarkly-js-client-sdk",
+  "includeVersion": true,
+  "entryPoints": [
+    "typings.d.ts",
+  ],
+  "readme": "none",
+  "visibilityFilters": {
+    "protected": false,
+    "private": false,
+    "inherited": true,
+    "external": true,
+    "@alpha": false,
+    "@beta": false
+  }
+}

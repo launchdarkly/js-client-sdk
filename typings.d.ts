@@ -1,7 +1,16 @@
-// Put top level documentation into docs/doc.md.
+/**
+ * This is the API reference for the LaunchDarkly SDK for browser JavaScript.
+ *
+ * In typical usage, you will call {@link initialize} once at startup time to obtain an instance of
+ * {@link LDClient}, which provides access to all of the SDK's functionality.
+ *
+ * For more information, see the [SDK reference guide](https://docs.launchdarkly.com/sdk/client-side/javascript).
+ *
+ * @packageDocumentation
+ */
+
 declare module 'launchdarkly-js-client-sdk' {
 
-//// DOCBUILD-START-REPLACE  (see docs/Makefile)
   export * from 'launchdarkly-js-sdk-common';
   import {
     BasicLoggerOptions,
@@ -10,7 +19,6 @@ declare module 'launchdarkly-js-client-sdk' {
     LDLogger,
     LDOptionsBase,
   } from 'launchdarkly-js-sdk-common';
-//// DOCBUILD-END-REPLACE
 
   /**
    * Creates an instance of the LaunchDarkly client.
@@ -133,7 +141,7 @@ declare module 'launchdarkly-js-client-sdk' {
    *
    * @param options Configuration for the logger. If no options are specified, the
    *   logger uses `{ level: 'info' }`.
-   * 
+   *
    * @example
    * This example shows how to use `basicLogger` in your SDK options to enable console
    * logging only at `warn` and `error` levels.

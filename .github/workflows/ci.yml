@@ -1,0 +1,41 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md' #Do not need to run CI for markdown changes.
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  build-test:
+    strategy:
+      matrix:
+        variations: [
+          {os: ubuntu-latest, node: latest},
+          {os: ubuntu-latest, node: 18}
+        ]
+
+    runs-on: ${{ matrix.variations.os }}
+    env:
+      TEST_SERVICE_PORT: 8000
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.variations.node }}
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install
+        run: npm install
+      - name: Test
+        run: npm test
+      - name: Lint
+        run: npm run lint:all
+      - name: Check typescript
+        run: npm run check-typescript
+      - name: Build Docs
+        run: npm run doc
