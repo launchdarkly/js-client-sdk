@@ -1,0 +1,57 @@
+name: Release Please
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+
+  publish-package:
+    runs-on: ubuntu-latest
+    needs: ['release-please']
+    permissions:
+      id-token: write
+      contents: write
+    if: ${{ needs.release-please.outputs.release_created == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - uses: launchdarkly/gh-actions/actions/release-secrets@release-secrets-v1.2.0
+        name: 'Get NPM token'
+        with:
+          aws_assume_role: ${{ vars.AWS_ROLE_ARN }}
+          ssm_parameter_pairs: '/production/common/releasing/npm/token = NODE_AUTH_TOKEN'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - id: publish-npm
+        name: Publish NPM Package
+        uses: ./.github/actions/publish-npm
+        with:
+          dry-run: 'false'
+          prerelease: 'false'
+
+      - name: Build Documentation
+        run: npm run doc
+
+      - id: publish-docs
+        name: Publish Documentation
+        uses: ./.github/actions/publish-docs
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
