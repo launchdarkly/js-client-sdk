@@ -2,6 +2,13 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.5.0](https://github.com/launchdarkly/js-client-sdk/compare/3.4.0...3.5.0) (2024-10-18)
+
+
+### Features
+
+* Add support for client-side prerequisite events. ([#306](https://github.com/launchdarkly/js-client-sdk/issues/306)) ([fe51da0](https://github.com/launchdarkly/js-client-sdk/commit/fe51da0c2b974fb9b4d5fe99ad46cea35993a704))
+
 ## [3.4.0] - 2024-06-20
 ### Changed:
 - Updated to launchdarkly-js-sdk-common 5.3.0 which supports synchronous inspectors.
