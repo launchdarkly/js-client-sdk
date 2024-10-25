@@ -1,6 +1,6 @@
 # LaunchDarkly SDK for Browser JavaScript
 
-[![Circle CI](https://circleci.com/gh/launchdarkly/js-client-sdk/tree/main.svg?style=svg)](https://circleci.com/gh/launchdarkly/js-client-sdk/tree/main)
+[![Build and Test](https://github.com/launchdarkly/js-client-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/launchdarkly/js-client-sdk/actions/workflows/ci.yml)
 
 ## LaunchDarkly overview
 
