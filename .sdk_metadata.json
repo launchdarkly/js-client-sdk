@@ -6,7 +6,8 @@
       "type": "client-side",
       "languages": [
         "JavaScript", "TypeScript"
-      ]
+      ],
+      "userAgents": ["JSClient"]
     }
   }
 }
