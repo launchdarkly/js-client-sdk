@@ -2,6 +2,14 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.6.0](https://github.com/launchdarkly/js-client-sdk/compare/3.5.0...3.6.0) (2025-04-21)
+
+
+### Features
+
+* Add hooks support.  ([46f4571](https://github.com/launchdarkly/js-client-sdk/commit/46f4571922eff6e68f66bcc35ea2b03b57da6b2c))
+* Inline contexts in custom events. ([46f4571](https://github.com/launchdarkly/js-client-sdk/commit/46f4571922eff6e68f66bcc35ea2b03b57da6b2c))
+
 ## [3.5.0](https://github.com/launchdarkly/js-client-sdk/compare/3.4.0...3.5.0) (2024-10-18)
 
 
