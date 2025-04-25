@@ -84,5 +84,8 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/launchdarkly/js-client-sdk.git"
+  },
+  "overrides": {
+    "parse5": "7.2.1"
   }
 }
