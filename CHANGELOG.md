@@ -2,6 +2,13 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.8.0](https://github.com/launchdarkly/js-client-sdk/compare/3.7.0...3.8.0) (2025-05-23)
+
+
+### Features
+
+* Add support for per-context summary events. ([#321](https://github.com/launchdarkly/js-client-sdk/issues/321)) ([f5a1f80](https://github.com/launchdarkly/js-client-sdk/commit/f5a1f800920cd2667bb0f4cdee6d52a380c20ae5))
+
 ## [3.7.0](https://github.com/launchdarkly/js-client-sdk/compare/3.6.1...3.7.0) (2025-04-29)
 
 
