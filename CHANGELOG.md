@@ -2,6 +2,15 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.9.0](https://github.com/launchdarkly/js-client-sdk/compare/3.8.1...3.9.0) (2025-09-09)
+
+
+### Features
+
+* Add experimental debug override functionality. ([9af8be9](https://github.com/launchdarkly/js-client-sdk/commit/9af8be91e2167cfd3369c0fffe0330a404cf9404))
+* Add experimental debug override functionality. ([9fcac21](https://github.com/launchdarkly/js-client-sdk/commit/9fcac210e1152160d8b940383a8a85035b06a467))
+* Add experimental debug override functionality. ([#326](https://github.com/launchdarkly/js-client-sdk/issues/326)) ([9af8be9](https://github.com/launchdarkly/js-client-sdk/commit/9af8be91e2167cfd3369c0fffe0330a404cf9404))
+
 ## [3.8.1](https://github.com/launchdarkly/js-client-sdk/compare/3.8.0...3.8.1) (2025-05-30)
 
 
