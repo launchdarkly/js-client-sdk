@@ -10,7 +10,7 @@ jobs:
   generate-nodejs-sbom:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
       - name: Generate SBOM
         uses: launchdarkly/gh-actions/actions/dependency-scan/generate-sbom@main
@@ -22,7 +22,7 @@ jobs:
     needs:
       - generate-nodejs-sbom
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
       - name: Evaluate SBOM Policy
         uses: launchdarkly/gh-actions/actions/dependency-scan/evaluate-policy@main
