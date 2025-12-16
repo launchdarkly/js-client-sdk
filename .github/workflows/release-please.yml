@@ -4,10 +4,20 @@ on:
   push:
     branches:
       - main
-
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: 'Is this a dry run. If so no package will be published.'
+        type: boolean
+        required: true
+      prerelease:
+          description: 'Is this a prerelease. If so, then the latest tag will not be updated in npm.'
+          type: boolean
+          required: true
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
     steps:
@@ -28,14 +38,13 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: 24.x
           registry-url: 'https://registry.npmjs.org'
 
-      - uses: launchdarkly/gh-actions/actions/release-secrets@release-secrets-v1.2.0
-        name: 'Get NPM token'
-        with:
-          aws_assume_role: ${{ vars.AWS_ROLE_ARN }}
-          ssm_parameter_pairs: '/production/common/releasing/npm/token = NODE_AUTH_TOKEN'
+      - name: Update NPM
+        shell: bash
+        # Must be greater than 11.5.1 for OIDC.
+        run: npm install -g npm@11.6.2
 
       - name: Install Dependencies
         run: npm install
@@ -55,3 +64,31 @@ jobs:
         uses: ./.github/actions/publish-docs
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+  manual-publish-package:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Update NPM
+        shell: bash
+        # Must be greater than 11.5.1 for OIDC.
+        run: npm install -g npm@11.6.2
+
+      - name: Install Dependencies
+        run: npm install
+
+      - id: publish-npm
+        name: Publish NPM Package
+        uses: ./.github/actions/publish-npm
+        with:
+          dry-run: ${{ inputs.dry-run }}
+          prerelease: ${{ inputs.prerelease }}
