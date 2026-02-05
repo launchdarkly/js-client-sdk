@@ -1,5 +1,12 @@
 # LaunchDarkly SDK for Browser JavaScript
 
+# Use [@launchdarkly/js-client-sdk](https://www.npmjs.com/package/@launchdarkly/js-client-sdk) instead of this package.
+
+The `launchdarkly-js-client-sdk` project has been renamed `@launchdarkly/js-client-sdk` and all future releases will be made from the
+[new repository](https://github.com/launchdarkly/js-core/tree/main/packages/sdk/browser). Please consider upgrading and filing issues
+and request in that repository's [issue tracker](https://github.com/launchdarkly/js-core/issues?q=is%3Aissue+is%3Aopen+label%3A%22package%3A+sdk%2Fbrowser%22+sort%3Aupdated-desc).
+# ☝️☝️☝️☝️☝️☝️
+
 [![Build and Test](https://github.com/launchdarkly/js-client-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/launchdarkly/js-client-sdk/actions/workflows/ci.yml)
 
 ## LaunchDarkly overview
