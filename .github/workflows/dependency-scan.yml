@@ -1,0 +1,30 @@
+name: Dependency Scan
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate-nodejs-sbom:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+
+      - name: Generate SBOM
+        uses: launchdarkly/gh-actions/actions/dependency-scan/generate-sbom@main
+        with:
+          types: 'nodejs'
+
+  evaluate-policy:
+    runs-on: ubuntu-latest
+    needs:
+      - generate-nodejs-sbom
+    steps:
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+
+      - name: Evaluate SBOM Policy
+        uses: launchdarkly/gh-actions/actions/dependency-scan/evaluate-policy@main
+        with:
+          artifacts-pattern: bom-*
