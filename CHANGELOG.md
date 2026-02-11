@@ -2,6 +2,20 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.10.0](https://github.com/launchdarkly/js-client-sdk/compare/3.9.0...3.10.0) (2026-02-11)
+
+
+### Features
+
+* [SEC-7263] Add dependency-scan GitHub Actions workflow ([e07d652](https://github.com/launchdarkly/js-client-sdk/commit/e07d65267c69c68a34b07d62f3da12aca7393f20))
+* [SEC-7263] Add dependency-scan GitHub Actions workflow ([#328](https://github.com/launchdarkly/js-client-sdk/issues/328)) ([ba690fb](https://github.com/launchdarkly/js-client-sdk/commit/ba690fb87bdf4805171476c75e0d0d7a8a89094e))
+
+
+### Bug Fixes
+
+* use correct pinned SHA for actions/checkout@v4 ([4fd3cb3](https://github.com/launchdarkly/js-client-sdk/commit/4fd3cb302b7923581ac54c46429ee70ef163a9ed))
+* use pinned SHA for actions/checkout instead of version tag ([5e42a0b](https://github.com/launchdarkly/js-client-sdk/commit/5e42a0b69fbf27722b5a1f0edc2ca6b8c0dc070c))
+
 ## [3.9.0](https://github.com/launchdarkly/js-client-sdk/compare/3.8.1...3.9.0) (2025-09-09)
 
 
