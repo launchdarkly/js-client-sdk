@@ -17,6 +17,9 @@ on:
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     if: github.event_name == 'push'
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
