@@ -32,6 +32,7 @@ jobs:
     permissions:
       id-token: write
       contents: write
+      pull-requests: write
     if: ${{ needs.release-please.outputs.release_created == 'true' }}
     steps:
       - uses: actions/checkout@v4
