@@ -2,6 +2,15 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.9.1](https://github.com/launchdarkly/js-client-sdk/compare/3.9.0...3.9.1) (2026-04-06)
+
+
+### Changed:
+
+* The `launchdarkly-js-client-sdk` project has been renamed `@launchdarkly/js-client-sdk` and all future releases will be made from the
+[new repository](https://github.com/launchdarkly/js-core/tree/main/packages/sdk/browser). Please consider upgrading and filing issues
+and request in that repository's [issue tracker](https://github.com/launchdarkly/js-core/issues?q=is%3Aissue+is%3Aopen+label%3A%22package%3A+sdk%2Fbrowser%22+sort%3Aupdated-desc).
+
 ## [3.9.0](https://github.com/launchdarkly/js-client-sdk/compare/3.8.1...3.9.0) (2025-09-09)
 
 
