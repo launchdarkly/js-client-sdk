@@ -2,13 +2,6 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
-## [3.9.1](https://github.com/launchdarkly/js-client-sdk/compare/3.9.1...3.9.1) (2026-05-26)
-
-
-### Bug Fixes
-
-* update launchdarkly-js-sdk-common to 5.8.1 ([#341](https://github.com/launchdarkly/js-client-sdk/issues/341)) ([41c99a9](https://github.com/launchdarkly/js-client-sdk/commit/41c99a953454e697ac7f8fd16ba24d19198aab5b))
-
 ## [3.9.1](https://github.com/launchdarkly/js-client-sdk/compare/3.9.0...3.9.1) (2026-04-06)
 
 
