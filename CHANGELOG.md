@@ -2,6 +2,13 @@
 
 All notable changes to the LaunchDarkly client-side JavaScript SDKs will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.9.3](https://github.com/launchdarkly/js-client-sdk/compare/3.9.2...3.9.3) (2026-05-29)
+
+
+### Bug Fixes
+
+* goal manager bypasses event transformer ([#345](https://github.com/launchdarkly/js-client-sdk/issues/345)) ([a1ef119](https://github.com/launchdarkly/js-client-sdk/commit/a1ef1193e4a74fedf773b9b46bb4545bb7bab318))
+
 ## [3.9.2](https://github.com/launchdarkly/js-client-sdk/compare/3.9.1...3.9.2) (2026-05-26)
 
 
