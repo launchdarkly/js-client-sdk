@@ -30,7 +30,7 @@ export function initialize(env, user, options = {}) {
   client.waitUntilGoalsReady = () => goalsPromise;
 
   if (validatedOptions.fetchGoals) {
-    GoalManager(clientVars, () => emitter.emit(goalsEvent));
+    GoalManager(clientVars, platform, () => emitter.emit(goalsEvent));
     // Don't need to save a reference to the GoalManager - its constructor takes care of setting
     // up the necessary event wiring
   } else {

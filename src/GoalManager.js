@@ -3,7 +3,7 @@ import GoalTracker from './GoalTracker';
 
 const locationWatcherInterval = 300;
 
-export default function GoalManager(clientVars, readyCallback) {
+export default function GoalManager(clientVars, platform, readyCallback) {
   let goals;
   let goalTracker;
 
@@ -28,7 +28,7 @@ export default function GoalManager(clientVars, readyCallback) {
       kind: kind,
       key: goal.key,
       data: null,
-      url: window.location.href,
+      url: platform.getCurrentUrl(),
       creationDate: new Date().getTime(),
       context: context,
     };
