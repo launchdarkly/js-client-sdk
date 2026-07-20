@@ -75,11 +75,12 @@
     "sinon": "^14.0.0",
     "typescript": "~5.4.5",
     "typedoc": "^0.25.13",
-    "@types/estree": "^1.0.0"
+    "@types/estree": "^1.0.0",
+    "@types/node": "^20.0.0"
   },
   "dependencies": {
     "escape-string-regexp": "^4.0.0",
-    "launchdarkly-js-sdk-common": "5.8.1"
+    "launchdarkly-js-sdk-common": "5.8.2"
   },
   "repository": {
     "type": "git",
