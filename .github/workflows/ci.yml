@@ -30,7 +30,7 @@ jobs:
           node-version: ${{ matrix.variations.node }}
           registry-url: 'https://registry.npmjs.org'
       - name: Use npm version supporting min-release-age
-        run: npm install -g npm@^11.6.0
+        run: npm install -g npm@^11.9.1
       - name: Install
         run: npm install
       - name: Test
