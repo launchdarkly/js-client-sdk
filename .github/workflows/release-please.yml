@@ -45,6 +45,11 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
 
+      - name: Update NPM
+        shell: bash
+        # Must be greater than 11.5.1 for OIDC, and >=11.17.0 for min-release-age-exclude.
+        run: npm install -g npm@^11.17.0
+
       - name: Install Dependencies
         run: npm install
 
@@ -77,6 +82,11 @@ jobs:
           node-version: 24.x
           registry-url: 'https://registry.npmjs.org'
 
+
+      - name: Update NPM
+        shell: bash
+        # Must be greater than 11.5.1 for OIDC, and >=11.17.0 for min-release-age-exclude.
+        run: npm install -g npm@^11.17.0
 
       - name: Install Dependencies
         run: npm install
