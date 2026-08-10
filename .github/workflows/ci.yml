@@ -16,7 +16,7 @@ jobs:
       matrix:
         variations: [
           {os: ubuntu-latest, node: latest},
-          {os: ubuntu-latest, node: 22}
+          {os: ubuntu-latest, node: 24}
         ]
 
     runs-on: ${{ matrix.variations.os }}
@@ -29,8 +29,6 @@ jobs:
         with:
           node-version: ${{ matrix.variations.node }}
           registry-url: 'https://registry.npmjs.org'
-      - name: Use npm version supporting min-release-age
-        run: npm install -g npm@^11.17.0
       - name: Install
         run: npm install
       - name: Test
