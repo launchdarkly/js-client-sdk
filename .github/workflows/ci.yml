@@ -29,10 +29,6 @@ jobs:
         with:
           node-version: ${{ matrix.variations.node }}
           registry-url: 'https://registry.npmjs.org'
-      - name: Update NPM
-        shell: bash
-        # Must be >=11.17.0 for min-release-age-exclude.
-        run: npm install -g npm@^11.17.0
       - name: Install
         run: npm install
       - name: Test
