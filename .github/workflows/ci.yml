@@ -16,7 +16,7 @@ jobs:
       matrix:
         variations: [
           {os: ubuntu-latest, node: latest},
-          {os: ubuntu-latest, node: 24}
+          {os: ubuntu-latest, node: '^24.19.0'}
         ]
 
     runs-on: ${{ matrix.variations.os }}
