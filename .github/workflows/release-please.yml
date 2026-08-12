@@ -41,13 +41,9 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 24.x
+          node-version: '^24.19.0'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Update NPM
-        shell: bash
-        # Must be greater than 11.5.1 for OIDC.
-        run: npm install -g npm@11.6.2
 
       - name: Install Dependencies
         run: npm install
@@ -78,13 +74,9 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 24.x
+          node-version: '^24.19.0'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Update NPM
-        shell: bash
-        # Must be greater than 11.5.1 for OIDC.
-        run: npm install -g npm@11.6.2
 
       - name: Install Dependencies
         run: npm install
