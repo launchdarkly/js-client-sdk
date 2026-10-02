@@ -81,7 +81,9 @@ export default function GoalManager(clientVars, platform, readyCallback) {
     })
     .catch((err) => {
       clientVars.emitter.maybeReportError(
-        new common.errors.LDUnexpectedResponseError('Error fetching goals: ' + (err && err.message) ? err.message : err)
+        new common.errors.LDUnexpectedResponseError(
+          'Error fetching goals: ' + (err && err.message ? err.message : err)
+        )
       );
       readyCallback();
     });
